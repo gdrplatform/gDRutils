@@ -1,11 +1,11 @@
 Package: gDRutils
 Type: Package
-Title: A package with helper functions for dealing with drug reponse data
-Version: 0.0.1
-Date: 2020-04-14
-Author: Bartosz Czech, Arkadiusz Gladki, Marc Haffner, Natalia Potocka, Dariusz Scigocki
+Title: A package with helper functions for dealing with drug response data
+Version: 0.0.2
+Date: 2020-04-27
+Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
 Maintainer: Marc Hafner <hafner.marc@gene.com>
-Description: A package with helper functions for dealing with drug reponse data
+Description: A package with helper functions for dealing with drug response data
 License: file GNE_LICENSE
 LazyLoad: yes
 Imports:

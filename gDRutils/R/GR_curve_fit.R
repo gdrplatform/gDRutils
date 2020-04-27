@@ -22,30 +22,28 @@ RVGRfits <- function(df_,
                      GR_0 = 1,
                      range_conc = c(5e-3, 5),
                      force = FALSE) {
-  if (sum(!is.na(df_$RelativeViability))<5) {
-    df_RV = NA
-  } else {
-    df_RV = gDRutils::logisticFit(
-      df_$Concentration,
-      df_$RelativeViability,
-      x_0 = e_0,
-      curve_type = "RV",
-      range_conc = range_conc,
-      force = force
-    )
-  }
-  if (sum(!is.na(df_$GRvalue))<5) {
-    df_GR = NA
-  } else {
-    df_GR = gDRutils::logisticFit(
-      df_$Concentration,
-      df_$GRvalue,
-      x_0 = GR_0,
-      curve_type = "GR",
-      range_conc = range_conc,
-      force = force
-    )
-  }
+
+  df_RV = gDRutils::logisticFit(
+    df_$Concentration,
+    df_$RelativeViability,
+    df_$std_RelativeViability,
+    x_0 = e_0,
+    curve_type = "RV",
+    range_conc = range_conc,
+    force = force,
+    n_point_cutoff = 5
+  )
+
+  df_GR = gDRutils::logisticFit(
+    df_$Concentration,
+    df_$GRvalue,
+    df_$std_GRvalue,
+    x_0 = GR_0,
+    curve_type = "GR",
+    range_conc = range_conc,
+    force = force,
+    n_point_cutoff = 5
+  )
 
   df_metrics = rbind(df_RV, df_GR)
   rownames(df_metrics) <- c("RV", "GR")
@@ -64,12 +62,14 @@ RVGRfits <- function(df_,
 #'
 #' @import reshape2
 #' @param log10concs log10 of concentrations
-#' @param normValues values
-#' @param x_0 upper limit; =1 by default )
+#' @param normValues normalized response values (Untreated = 1)
+#' @param std_normValues std of values
+#' @param x_0 upper limit; ( =1 by default)
 #' @param curve_type response curve: either RV ([0,1]) or GR([-1,1])
+#' @param range_conc range of concentration for calculating AOC_range
 #' @param force use signifcance or not
-#' @param cap enforce x_0
-#' @return vector of parameters
+#' @param cap enforce values stay below (x_0+cap)
+#' @return DataFrame with metrics and fit parameters
 #' @examples
 #' sum(1:10)
 #' @importFrom drc drm drmc LL.3u
@@ -77,11 +77,13 @@ RVGRfits <- function(df_,
 logisticFit <-
   function(concs,
            normValues,
+           std_normValues,
            x_0 = 1,
            curve_type = c("RV", "GR"),
            range_conc = c(5e-3, 5),
            force = FALSE,
-           cap = 0.1) {
+           cap = 0.1,
+           n_point_cutoff = 4) {
     # Implementation of the genedata approach for curve fit: https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
     #
 
@@ -90,14 +92,40 @@ logisticFit <-
     df_ <- data.frame(log10conc = log10concs,
                      normValues = pmin(normValues, x_0 + cap))
 
-    fit_para <- c("h", "x_inf", "c50")
+    out <- matrix(NA, 1, length(gDRutils::get_header("response_metrics")))
+    colnames(out) <- gDRutils::get_header("response_metrics")
+    # transform to a matrix to allow for string (for fitting model name)
+    out = DataFrame(out)
+    out$maxlog10Concentration <- max(log10concs)
+    out$N_conc <- length(unique(log10concs))
+    out$x_sd_avg <- mean(std_normValues, rm.na=T)
 
-    out <- array(NA, length(gDRutils::get_header("response_metrics")))
-    names(out) <- gDRutils::get_header("response_metrics")
-    out["maxlog10Concentration"] <- max(log10concs)
-    out["N_conc"] <- length(unique(log10concs))
+    # non-fitted metrics
+    xAvg <- aggregate(
+      df_$normValues,
+      by = list(log10conc = df_$log10conc),
+      FUN = function(x)
+        mean(x, na.rm = T)
+    )
+    colnames(xAvg)[2] <- "normValues"
+    l <- dim(xAvg)[1]
+
+    out$x_max <- min(xAvg$normValues[c(l, l - 1)], na.rm = TRUE)
+    # temp values if fit  fails
+    out$x_mean <- mean(xAvg$normValues, na.rm = T)
+    out$x_AOC <- 1 - out$x_mean
+
+    if (sum(!is.na(xAvg$normValues)) < n_point_cutoff) {
+      out$fit_type = 'DRCTooFewPointsToFit'
+      # best estimate if the data cannot be fit
+      out$xc50 <- ifelse(all(df_$normValues > .5), Inf,
+                    ifelse(all(df_$normValues < .5), -Inf,
+                      NA))
+      return(out)
+    }
 
     # fit parameters and boundaries
+    fit_para <- c("h", "x_inf", "c50")
     if (curve_type == "RV") {
       priors <- c(2, 0.4, median(concs))
       lower <- c(.1, 0, min(concs) / 10)
@@ -113,7 +141,7 @@ logisticFit <-
     controls$rmNA <- TRUE
 
     ######################################
-    # RV curve fitting
+    # curve fitting
     if (!is.na(x_0)) {
       output_model_new = try(drc::drm(
         normValues ~ log10conc,
@@ -126,10 +154,10 @@ logisticFit <-
         control = controls,
         na.action = na.omit
       ))
-      out["fit_type"] = 'DRC3pHillFitModelFixS0'
-      out["x_0"] <- x_0
+      out$fit_type = 'DRC3pHillFitModelFixS0'
+      out$x_0 <- x_0
     } else {
-      fit_para <- c("h", "x_inf", 'x_0', "c50")
+      fit_para <- c(fit_para[1:2], 'x_0', fit_para[3])
       output_model_new = try(drc::drm(
         normValues ~ log10conc,
         data = df_,
@@ -137,21 +165,21 @@ logisticFit <-
         fct = drc::LL.4(names = fit_para),
         start = c(priors[1:2], 1, priors[3]),
         lowerl = lower[c(1:2, 2, 3)],
-        upperl = c(5, 1, 1, max(concs) * 10),
+        upperl = c(5, 1, 1 + cap, max(concs) * 10),
         control = controls,
         na.action = na.omit
       ))
-      out["fit_type"] = 'DRC4pHillFitModel'
+      out$fit_type = 'DRC4pHillFitModel'
     }
     # assuming proper fit result
     if (class(output_model_new) != "try-error") {
       for (p in fit_para) {
         out[p] = stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
       }
-      out['x_mean'] = mean(stats::predict(output_model_new, data.frame(
+      out$x_mean = mean(stats::predict(output_model_new, data.frame(
           concs = seq(min(df_$log10conc), max(df_$log10conc), .03))), na.rm = T)
-      out['x_AOC'] = 1 - out['x_mean']
-      out['x_AOC_range'] = 1 - mean(stats::predict(output_model_new, data.frame(
+      out$x_AOC = 1 - out$x_mean
+      out$x_AOC_range = 1 - mean(stats::predict(output_model_new, data.frame(
           concs = seq(log10(range_conc[1]), log10(range_conc[2]), .03))), na.rm = T)
       # F-test for the significance of the sigmoidal fit
       Npara <- 3 + (is.na(x_0)*1) # N of parameters in the growth curve; if x_0 == NA -> 4
@@ -163,47 +191,43 @@ logisticFit <-
       df2 <- (length(na.omit(df_$normValues)) - Npara + 1)
       f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
       f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
-      out["r2"] <- 1 - RSS2 / RSS1
+      out$r2 <- 1 - RSS2 / RSS1
+
+      # analytical solution for ic50
+      out$xc50 <- out$c50 * ((x_0 - out$x_inf) / (0.5 - out$x_inf) - 1) ^
+        (1 / out$h)
+    } else {
+      # fit error
+      out$r2 = 0
+      out$fit_type = 'DRCInvalidFitResult'
+      # best estimate if the data cannot be fit
+      out$xc50 <- ifelse(all(df_$normValues > .5), Inf,
+                    ifelse(all(df_$normValues < .5), -Inf,
+                      NA))
+      return(out)
     }
-
-
-    # non-fitted metrics
-    xAvg <- aggregate(
-      df_$normValues,
-      by = list(log10conc = df_$log10conc),
-      FUN = function(x)
-        mean(x, na.rm = T)
-    )
-    colnames(xAvg)[2] <- "normValues"
-    l <- dim(xAvg)[1]
-
-    out["x_max"] <- min(xAvg$normValues[c(l, l - 1)], na.rm = TRUE)
-
-    # analytical solution for ic50
-    out["xc50"] <- out["c50"] * ((x_0 - out["x_inf"]) / (0.5 - out["x_inf"]) - 1) ^
-      (1 / out["h"])
 
     # testing the significance of the fit and replacing with flat function if required
     pcutoff <- ifelse(force, 1, .05)
     if (!is.na(f_pval)) {
-      out["fit_type"] <- ifelse(f_pval >= pcutoff |
-                                 is.na(out["c50"]), 'DRCConstantFitResult', out["fit_type"])
+      out$fit_type <- ifelse(f_pval >= pcutoff |
+                                 is.na(out$c50), 'DRCConstantFitResult', out$fit_type)
     } else {
-      out["fit_type"] <- ifelse(is.na(out["c50"]), 'DRCConstantFitResult', out["fit_type"])
+      out$fit_type <- ifelse(is.na(out$c50), 'DRCConstantFitResult', out$fit_type)
     }
 
     # Replace values for flat fits: c50 = 0, h = 0.01 and xc50 = +/- Inf
-    if (out["fit_type"] == 'DRCConstantFitResult') {
-      out["c50"] <- 0
-      out["h"] <- 0.0001
-      out["xc50"] <- ifelse(mean(xAvg$normValues) > .5, Inf,-Inf)
-      out["x_inf"] <- out["x_mean"] <- mean(xAvg$normValues)
-      out["RV_AOC_range"] <- out["x_AOC"] <- 1 - mean(xAvg$normValues)
+    if (out$fit_type == 'DRCConstantFitResult') {
+      out$c50 <- 0
+      out$h <- 0.0001
+      out$xc50 <- ifelse(mean(xAvg$normValues) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues)
+      out$RV_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues)
     }
 
     # Add xc50 = +/-Inf for any curves that don"t reach RelativeViability = 0.5
-    if (is.na(out["xc50"])) {
-      out["xc50"] <- ifelse(out["x_inf"] > .5, Inf,-Inf)
+    if (is.na(out$xc50)) {
+      out$xc50 <- ifelse(out$x_inf > .5, Inf,-Inf)
     }
     return(out)
   }

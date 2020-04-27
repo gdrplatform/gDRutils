@@ -53,6 +53,7 @@ get_header <- function(x = NULL) {
       "x_0",
       "h",
       "r2",
+      "x_sd_avg",
       "fit_type"
     ),
     add_clid = c("CellLineName", "Tissue", "ReferenceDivisionTime")
@@ -71,6 +72,7 @@ get_header <- function(x = NULL) {
         "e_0",
         "h_RV",
         "RV_r2",
+        "RV_sd_avg",
         "fit_type_RV"
       ),
       dimnames = headersList["response_metrics"]
@@ -88,6 +90,7 @@ get_header <- function(x = NULL) {
         "GR_0",
         "h_GR",
         "GR_r2",
+        "GR_sd_avg",
         "flat_fit_GR"
       ),
       dimnames = headersList["response_metrics"]
