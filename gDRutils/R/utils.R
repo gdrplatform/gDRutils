@@ -2,16 +2,16 @@
 get_identifier <- function(x = NULL) {
   identifiersList <- list(
     duration = "Duration",
-    
+
     cellline = "clid",
-    
+
     drug = "Gnumber",
     drugname = "DrugName",
     # corresponds to the fieLd  'gcsi_drug_name' from gCellGenomics::getDrugs()
-    
+
     untreated_tag = c("untreated", "vehicle"),
     # flag to identify control treatments
-    
+
     WellPosition = c("WellRow", "WellColumn")
   )
   if (!is.null(x) &&
@@ -45,6 +45,7 @@ get_header <- function(x = NULL) {
     response_metrics = c(
       "x_mean",
       "x_AOC",
+      "x_AOC_range",
       "xc50",
       "x_max",
       "c50",
@@ -52,24 +53,25 @@ get_header <- function(x = NULL) {
       "x_0",
       "h",
       "r2",
-      "flat_fit"
+      "fit_type"
     ),
     add_clid = c("CellLineName", "Tissue", "ReferenceDivisionTime")
     # corresponds to the fieLd  "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
   )
-  headersList[["IC_metrics"]] <-
+  headersList[["RV_metrics"]] <-
     array(
       c(
-        "mean_viability",
-        "ic_AOC",
+        "RV_mean",
+        "RV_AOC",
+        "RV_AOC_range",
         "ic50",
         "e_max",
         "ec50",
         "e_inf",
         "e_0",
-        "h_ic",
-        "ic_r2",
-        "flat_fit_ic"
+        "h_RV",
+        "RV_r2",
+        "fit_type_RV"
       ),
       dimnames = headersList["response_metrics"]
     )
@@ -78,6 +80,7 @@ get_header <- function(x = NULL) {
       c(
         "mean_GR",
         "GR_AOC",
+        "RG_AOC_range",
         "GR50",
         "GR_max",
         "GEC50",
@@ -93,7 +96,7 @@ get_header <- function(x = NULL) {
     c("maxlog10Concentration",
       "N_conc",
       headersList[["response_metrics"]],
-      headersList[["IC_metrics"]],
+      headersList[["RV_metrics"]],
       headersList[["GR_metrics"]])
   headersList[["controlled"]] <- c(
     get_identifier("cellline"),
@@ -115,7 +118,7 @@ get_header <- function(x = NULL) {
       "WellRow",
       "WellColumn"
     )
-  
+
   headersList[["ordered_1"]] <- c(
     headersList[["add_clid"]][1:2],
     get_identifier("duration"),
@@ -139,7 +142,7 @@ get_header <- function(x = NULL) {
     "WellRow",
     "WellColumn"
   )
-  
+
   if (!is.null(x) &&
       x %in% names(headersList))
     return(headersList[[x]])
