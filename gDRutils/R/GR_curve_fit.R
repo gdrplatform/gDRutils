@@ -90,7 +90,7 @@ logisticFit <-
     # define variables and prepare data
     log10concs <- log10(concs)
     df_ <- data.frame(log10conc = log10concs,
-                     normValues = pmin(normValues, x_0 + cap))
+                     normValues = pmin(normValues, ifelse(is.na(x_0),1,x_0) + cap))
 
     out <- matrix(NA, 1, length(gDRutils::get_header("response_metrics")))
     colnames(out) <- gDRutils::get_header("response_metrics")
@@ -194,7 +194,7 @@ logisticFit <-
       out$r2 <- 1 - RSS2 / RSS1
 
       # analytical solution for ic50
-      out$xc50 <- out$c50 * ((x_0 - out$x_inf) / (0.5 - out$x_inf) - 1) ^
+      out$xc50 <- out$c50 * ((out$x_0 - out$x_inf) / (0.5 - out$x_inf) - 1) ^
         (1 / out$h)
     } else {
       # fit error
