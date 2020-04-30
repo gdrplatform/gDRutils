@@ -20,6 +20,7 @@
 RVGRfits <- function(df_,
                      e_0 = 1,
                      GR_0 = 1,
+                     n_point_cutoff = 4,
                      range_conc = c(5e-3, 5),
                      force = FALSE) {
 
@@ -31,7 +32,7 @@ RVGRfits <- function(df_,
     curve_type = "RV",
     range_conc = range_conc,
     force = force,
-    n_point_cutoff = 5
+    n_point_cutoff = n_point_cutoff
   )
 
   df_GR = gDRutils::logisticFit(
@@ -42,7 +43,7 @@ RVGRfits <- function(df_,
     curve_type = "GR",
     range_conc = range_conc,
     force = force,
-    n_point_cutoff = 5
+    n_point_cutoff = n_point_cutoff
   )
 
   df_metrics = rbind(df_RV, df_GR)
@@ -222,7 +223,7 @@ logisticFit <-
       out$h <- 0.0001
       out$xc50 <- ifelse(mean(xAvg$normValues) > .5, Inf,-Inf)
       out$x_inf <- out$x_mean <- mean(xAvg$normValues)
-      out$RV_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues)
     }
 
     # Add xc50 = +/-Inf for any curves that don"t reach RelativeViability = 0.5
@@ -242,6 +243,21 @@ logisticFit <-
 #' @export
 logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
   Vinf + (V0 - Vinf) / (1 + (c / EC50) ^ h)
+}
+
+logistic_metrics <- function(c, x_metrics) {
+  metrics = c('x_inf', 'x_0', 'h', 'c50')
+  if (all(metrics %in% names(x_metrics))) DRC_metrics = as.vector(x_metrics[metrics])
+  else if (all(get_header('GR_metrics')[metrics] %in% names(x_metrics))) {
+    DRC_metrics = as.vector(x_metrics[get_header('GR_metrics')[metrics]])
+    names(DRC_metrics) = metrics
+  } else if (all(get_header('IC_metrics')[metrics] %in% names(x_metrics))) {
+    DRC_metrics = as.vector(x_metrics[get_header('IC_metrics')[metrics]])
+    names(DRC_metrics) = metrics
+  } else stop('wrong input parameters')
+
+  DRC_metrics$x_inf + (DRC_metrics$x_0 - DRC_metrics$x_inf) / 
+                          (1 + (c / DRC_metrics$c50) ^ DRC_metrics$h)
 }
 
 # TODO: remove this function once there are no dependcies in gDRcore
