@@ -146,9 +146,11 @@ get_header <- function(x = NULL) {
     "WellColumn"
   )
 
-  if (!is.null(x) &&
-      x %in% names(headersList))
+
+  if (!is.null(x)) { 
+    stopifnot(x %in% names(headersList))
     return(headersList[[x]])
-  else
+  } else { 
     return(headersList)
+  }
 }
