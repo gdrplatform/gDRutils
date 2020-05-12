@@ -1,0 +1,25 @@
+Package: gDRutils
+Type: Package
+Title: A package with helper functions for dealing with drug response data
+Version: 0.0.2
+Date: 2020-04-27
+Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
+Maintainer: Marc Hafner <hafner.marc@gene.com>
+Description: A package with helper functions for dealing with drug response data
+License: file GNE_LICENSE
+LazyLoad: yes
+Imports:
+    checkmate,
+    drc,
+    reshape2,
+    stats,
+    testthat
+Suggests:
+    futile.logger,
+    knitr
+VignetteBuilder: knitr
+ByteCompile: TRUE
+RoxygenNote: 6.1.1
+SwitchrLibrary: gDRutils
+DeploySubPath: gDRutils
+Encoding: UTF-8
