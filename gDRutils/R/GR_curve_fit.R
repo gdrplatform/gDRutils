@@ -116,11 +116,21 @@ logisticFit <-
     out$x_mean <- mean(xAvg$normValues, na.rm = T)
     out$x_AOC <- 1 - out$x_mean
 
+    if (length(unique(xAvg$normValues[!is.na(xAvg$normValues)])) == 1) {
+      out$fit_type == 'DRCConstantFitResult'
+      out$c50 <- 0
+      out$h <- 0.0001
+      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues, rm.na = T)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = T)
+      return(out)
+    }
+
     if (sum(!is.na(xAvg$normValues)) < n_point_cutoff) {
       out$fit_type = 'DRCTooFewPointsToFit'
       # best estimate if the data cannot be fit
-      out$xc50 <- ifelse(all(df_$normValues > .5), Inf,
-                    ifelse(all(df_$normValues < .5), -Inf,
+      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = T), Inf,
+                    ifelse(all(df_$normValues < .5, na.rm = T), -Inf,
                       NA))
       return(out)
     }
@@ -202,8 +212,8 @@ logisticFit <-
       out$r2 = 0
       out$fit_type = 'DRCInvalidFitResult'
       # best estimate if the data cannot be fit
-      out$xc50 <- ifelse(all(df_$normValues > .5), Inf,
-                    ifelse(all(df_$normValues < .5), -Inf,
+      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = T), Inf,
+                    ifelse(all(df_$normValues < .5, na.rm = T), -Inf,
                       NA))
       return(out)
     }
@@ -221,9 +231,9 @@ logisticFit <-
     if (out$fit_type == 'DRCConstantFitResult') {
       out$c50 <- 0
       out$h <- 0.0001
-      out$xc50 <- ifelse(mean(xAvg$normValues) > .5, Inf,-Inf)
-      out$x_inf <- out$x_mean <- mean(xAvg$normValues)
-      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues)
+      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues, na.rm = T)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = T)
     }
 
     # Add xc50 = +/-Inf for any curves that don"t reach RelativeViability = 0.5
@@ -256,7 +266,7 @@ logistic_metrics <- function(c, x_metrics) {
     names(DRC_metrics) = metrics
   } else stop('wrong input parameters')
 
-  DRC_metrics$x_inf + (DRC_metrics$x_0 - DRC_metrics$x_inf) / 
+  DRC_metrics$x_inf + (DRC_metrics$x_0 - DRC_metrics$x_inf) /
                           (1 + (c / DRC_metrics$c50) ^ DRC_metrics$h)
 }
 
