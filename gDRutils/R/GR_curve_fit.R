@@ -96,7 +96,7 @@ logisticFit <-
     out <- matrix(NA, 1, length(gDRutils::get_header("response_metrics")))
     colnames(out) <- gDRutils::get_header("response_metrics")
     # transform to a matrix to allow for string (for fitting model name)
-    out = DataFrame(out)
+    out = S4Vectors::DataFrame(out)
     out$maxlog10Concentration <- max(log10concs)
     out$N_conc <- length(unique(log10concs))
     out$x_sd_avg <- mean(std_normValues, rm.na=T)
