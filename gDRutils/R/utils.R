@@ -12,6 +12,9 @@ get_identifier <- function(x = NULL) {
     untreated_tag = c("untreated", "vehicle"),
     # flag to identify control treatments
 
+    masked_tag = 'masked',
+    # flag for masked wells
+
     WellPosition = c("WellRow", "WellColumn")
   )
   if (!is.null(x) &&
@@ -31,7 +34,8 @@ get_header <- function(x = NULL) {
       "ReadoutValue",
       "BackgroundValue",
       "UntrtReadout",
-      "Day0Readout"
+      "Day0Readout",
+      get_identifier('masked_tag')
     ),
     normalized_results = c(
       "CorrectedReadout",
@@ -113,6 +117,7 @@ get_header <- function(x = NULL) {
     c(
       headersList[["add_clid"]],
       get_identifier("drugname"),
+      get_identifier("masked_tag"),
       paste0(get_identifier("drugname"), "_", 2:10),
       headersList[["raw_data"]],
       headersList[["normalized_results"]],
@@ -147,10 +152,10 @@ get_header <- function(x = NULL) {
   )
 
 
-  if (!is.null(x)) { 
+  if (!is.null(x)) {
     stopifnot(x %in% names(headersList))
     return(headersList[[x]])
-  } else { 
+  } else {
     return(headersList)
   }
 }
