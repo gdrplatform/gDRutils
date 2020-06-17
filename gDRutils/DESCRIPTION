@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.4
-Date: 2020-06-10
+Version: 0.0.5
+Date: 2020-06-17
 Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
 Maintainer: Marc Hafner <hafner.marc@gene.com>
 Description: A package with helper functions for dealing with drug response data
@@ -13,6 +13,7 @@ Imports:
     drc,
     reshape2,
     stats,
+    SummarizedExperiment,
     testthat
 Suggests:
     futile.logger,
