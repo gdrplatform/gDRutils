@@ -175,7 +175,7 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
   stopifnot(any("SummarizedExperiment" %in% class(se)))
   # Assertions:
   checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assert_string(assay_name)
+  checkmate::assertTRUE(checkmate::test_count(assay_name) || checkmate::test_string(assay_name))
   checkmate::assert_logical(merge_metrics)
 
   # define data.frame with data from rowData/colData
