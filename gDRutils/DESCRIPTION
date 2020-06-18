@@ -20,7 +20,7 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 ByteCompile: TRUE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 SwitchrLibrary: gDRutils
 DeploySubPath: gDRutils
 Encoding: UTF-8

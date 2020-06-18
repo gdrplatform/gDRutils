@@ -4,24 +4,37 @@
 \alias{logisticFit}
 \title{Actual fitting function}
 \usage{
-logisticFit(concs, normValues, x_0 = 1, curve_type = c("IC", "GR"),
-  force = FALSE, cap = 0.1)
+logisticFit(
+  concs,
+  normValues,
+  std_normValues,
+  x_0 = 1,
+  curve_type = c("RV", "GR"),
+  range_conc = c(0.005, 5),
+  force = FALSE,
+  cap = 0.1,
+  n_point_cutoff = 4
+)
 }
 \arguments{
-\item{normValues}{values}
+\item{normValues}{normalized response values (Untreated = 1)}
 
-\item{x_0}{upper limit; =1 by default )}
+\item{std_normValues}{std of values}
 
-\item{curve_type}{response curve: either IC ([0,1]) or GR([-1,1])}
+\item{x_0}{upper limit; ( =1 by default)}
+
+\item{curve_type}{response curve: either RV ([0,1]) or GR([-1,1])}
+
+\item{range_conc}{range of concentration for calculating AOC_range}
 
 \item{force}{use signifcance or not}
 
-\item{cap}{enforce x_0}
+\item{cap}{enforce values stay below (x_0+cap)}
 
 \item{log10concs}{log10 of concentrations}
 }
 \value{
-vector of parameters
+DataFrame with metrics and fit parameters
 }
 \description{
 \code{logisticFit} returns fit parameters
