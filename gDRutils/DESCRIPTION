@@ -11,6 +11,7 @@ LazyLoad: yes
 Imports:
     checkmate,
     drc,
+    magrittr,
     reshape2,
     stats,
     SummarizedExperiment,
