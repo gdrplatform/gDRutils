@@ -307,7 +307,7 @@ ICGRlogisticFit <-
     GR_data_exp <-
       data.frame(log10conc = log10concs, GRvalue = GRvalues)
     concs <- 10 ** log10concs
-    ICfit_parameters <- c("h_ic", "e_inf", "ec50")
+    ICfit_parameters <- c("h_rv", "e_inf", "ec50")
     GRfit_parameters <- c("h_GR", "GRinf", "GEC50")
 
     out <- array(NA, length(get_header("metrics_results")))
@@ -364,7 +364,7 @@ ICGRlogisticFit <-
         (length(na.omit(IC_data_exp$RelativeViability)) - Npara + 1)
       f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
       f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
-      out["ic_r2"] <- 1 - RSS2 / RSS1
+      out["rv_r2"] <- 1 - RSS2 / RSS1
     }
 
 
@@ -381,26 +381,26 @@ ICGRlogisticFit <-
     out["e_max"] <-
       min(ICavg$RelativeViability[c(l, l - 1)], na.rm = TRUE)
 
-    out["mean_viability"] <- mean(ICavg$RelativeViability)
+    out["rv_mean"] <- mean(ICavg$RelativeViability)
 
     # analytical solution for ic50
     out["ic50"] <-
       out["ec50"] * ((e_0 - out["e_inf"]) / (0.5 - out["e_inf"]) - 1) ^ (1 /
-                                                                           out["h_ic"])
+                                                                           out["h_rv"])
 
     # testing the significance of the fit and replacing with flat function if required
     pcutoff <- ifelse(force, 1, .05)
     if (!is.na(f_pval)) {
-      out["flat_fit_ic"] <- ifelse(f_pval >= pcutoff |
+      out["fit_model_rv"] <- ifelse(f_pval >= pcutoff |
                                      is.na(out["ec50"]), 1, 0)
     } else {
-      out["flat_fit_ic"] <- ifelse(is.na(out["ec50"]), 1, 0)
+      out["fit_model_rv"] <- ifelse(is.na(out["ec50"]), 1, 0)
     }
 
-    # Replace values for flat fits: ec50 = 0, h_ic = 0.01 and ic50 = +/- Inf
-    if (out["flat_fit_ic"] == 1) {
+    # Replace values for flat fits: ec50 = 0, h_rv = 0.01 and ic50 = +/- Inf
+    if (out["fit_model_rv"] == 1) {
       out["ec50"] <- 0
-      out["h_ic"] <- 0.0001
+      out["h_rv"] <- 0.0001
       out["ic50"] <-
         ifelse(mean(ICavg$RelativeViability) > .5, Inf, -Inf)
       out["e_inf"] <- mean(ICavg$RelativeViability)
