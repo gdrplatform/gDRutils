@@ -222,15 +222,16 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
   if (assay_name == "Metrics") {
     asDf$dr_metric <- c("IC", "GR")
     if (merge_metrics) {
+
       colnames_IC <- gDRutils::get_header("RV_metrics")
       diff_RV_columns <- setdiff(names(colnames_IC), colnames(asDf))
-      if (!is.null(diff_RV_columns)) {
+      if (length(diff_RV_columns) > 0) {
         warning(paste("missing column(s) in SE:", paste(diff_RV_columns, collapse = ", ")))
         colnames_IC <- colnames_IC[!names(colnames_IC) %in% diff_RV_columns]
       }
       colnames_GR <- gDRutils::get_header("GR_metrics")
       diff_GR_columns <- setdiff(names(colnames_GR), colnames(asDf))
-      if (!is.null(diff_GR_columns)) {
+      if (length(diff_GR_columns) > 0) {
         warning(paste("missing column(s) in SE:", paste(diff_GR_columns, collapse = ", ")))
         colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
       }
