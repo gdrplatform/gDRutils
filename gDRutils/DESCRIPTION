@@ -1,7 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.7
+Version: 0.0.8
+Date: 2020-07-02
 Date: 2020-08-25
 Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
 Maintainer: Marc Hafner <hafner.marc@gene.com>

@@ -1,3 +1,9 @@
+# Changes to v.0.0.8
+- update logic as per new db model
+
+# Changes to v.0.0.7
+- update variable names as per new db model
+
 # Changes to v.0.0.6 - 2020.07.02
 - import pipes from magrittr
 

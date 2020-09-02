@@ -86,7 +86,7 @@ get_header <- function(x = NULL) {
       c(
         "mean_GR",
         "GR_AOC",
-        "RG_AOC_range",
+        "GR_AOC_range",
         "GR50",
         "GR_max",
         "GEC50",
