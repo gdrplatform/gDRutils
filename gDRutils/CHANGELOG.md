@@ -1,3 +1,6 @@
+# Changes to v.0.0.9
+- add small fixes for assays with empty DataFrame
+
 # Changes to v.0.0.8
 - update logic as per new db model
 
