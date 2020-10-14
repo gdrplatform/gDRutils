@@ -7,7 +7,7 @@ get_identifier <- function(x = NULL) {
 
     drug = "Gnumber",
     drugname = "DrugName",
-    # corresponds to the fieLd  'gcsi_drug_name' from gCellGenomics::getDrugs()
+    # corresponds to the field 'gcsi_drug_name' from gCellGenomics::getDrugs()
 
     untreated_tag = c("untreated", "vehicle"),
     # flag to identify control treatments
@@ -17,6 +17,7 @@ get_identifier <- function(x = NULL) {
 
     WellPosition = c("WellRow", "WellColumn")
   )
+
   if (!is.null(x) &&
       x %in% names(identifiersList))
     return(identifiersList[[x]])
@@ -25,11 +26,15 @@ get_identifier <- function(x = NULL) {
 }
 
 #######-------------------------------------------------------
-# these should not be changed and are protected field names
+# Protected field names that should not change
 #' @export
 get_header <- function(x = NULL) {
   headersList <- list(
-    manifest = c("Barcode", "Template", get_identifier("duration")),
+    manifest = c(
+      "Barcode", 
+      "Template", 
+      get_identifier("duration")
+    ),
     raw_data = c(
       "ReadoutValue",
       "BackgroundValue",
@@ -45,7 +50,10 @@ get_header <- function(x = NULL) {
       "RefGRvalue",
       "RefRelativeViability"
     ),
-    averaged_results = c("std_GRvalue", "std_RelativeViability"),
+    averaged_results = c(
+      "std_GRvalue", 
+      "std_RelativeViability"
+    ),
     response_metrics = c(
       "x_mean",
       "x_AOC",
@@ -60,9 +68,14 @@ get_header <- function(x = NULL) {
       "x_sd_avg",
       "fit_type"
     ),
-    add_clid = c("CellLineName", "Tissue", "ReferenceDivisionTime")
-    # corresponds to the fieLd  "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
+    # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
+    add_clid = c(
+      "CellLineName",
+      "Tissue",
+      "ReferenceDivisionTime"
+    )
   )
+
   headersList[["RV_metrics"]] <-
     array(
       c(
@@ -81,6 +94,7 @@ get_header <- function(x = NULL) {
       ),
       dimnames = headersList["response_metrics"]
     )
+
   headersList[["GR_metrics"]] <-
     array(
       c(
@@ -99,12 +113,15 @@ get_header <- function(x = NULL) {
       ),
       dimnames = headersList["response_metrics"]
     )
-  headersList[["metrics_results"]] <-
-    c("maxlog10Concentration",
+
+  headersList[["metrics_results"]] <- c(
+      "maxlog10Concentration",
       "N_conc",
       headersList[["response_metrics"]],
       headersList[["RV_metrics"]],
-      headersList[["GR_metrics"]])
+      headersList[["GR_metrics"]]
+  )
+
   headersList[["controlled"]] <- c(
     get_identifier("cellline"),
     headersList[["manifest"]],
@@ -113,6 +130,7 @@ get_header <- function(x = NULL) {
     paste0(get_identifier("drug"), "_", 2:10),
     paste0("Concentration_", 2:10)
   )
+
   headersList[["reserved"]] <-
     c(
       headersList[["add_clid"]],
@@ -132,11 +150,10 @@ get_header <- function(x = NULL) {
     get_identifier("duration"),
     get_identifier("drugname"),
     "Concentration",
-    paste0(c(
-      paste0(get_identifier("drugname"), "_"), "Concentration_"
-    ),
-    sort(c(2:10, 2:10)))
+    paste0(c(paste0(get_identifier("drugname"), "_"), "Concentration_"), 
+      sort(c(2:10, 2:10)))
   )
+
   headersList[["ordered_2"]] <- c(
     headersList[["normalized_results"]],
     headersList[["averaged_results"]],
@@ -151,102 +168,10 @@ get_header <- function(x = NULL) {
     "WellColumn"
   )
 
-
   if (!is.null(x)) {
     stopifnot(x %in% names(headersList))
     return(headersList[[x]])
   } else {
     return(headersList)
   }
-}
-
-#' assay_to_df
-#'
-#' Convert SE assay to data.frame
-#'
-#' @param se  SummarizedExperiment object with dose-response data
-#' @param assay_name string name of the assay
-#' @param merge_metrics a logical indicating whether the metrics should be merged
-#'
-#' @return data.frame with dose-reponse data
-#'
-#' @export
-assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
-  stopifnot(any("SummarizedExperiment" %in% class(se)))
-  # Assertions:
-  checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assertTRUE(checkmate::test_count(assay_name) || checkmate::test_string(assay_name))
-  checkmate::assert_logical(merge_metrics)
-
-  # define data.frame with data from rowData/colData
-  ids <- expand.grid(rownames(SummarizedExperiment::rowData(se)), rownames(SummarizedExperiment::colData(se)))
-  colnames(ids) <- c("rId", "cId")
-  ids[] <- lapply(ids, as.character)
-  rData <- data.frame(SummarizedExperiment::rowData(se), stringsAsFactors = FALSE)
-  rData$rId <- rownames(rData)
-  cData <- data.frame(SummarizedExperiment::colData(se), stringsAsFactors = FALSE)
-  cData$cId <- rownames(cData)
-  annotTbl <-
-    dplyr::left_join(ids, rData, by = "rId")
-  annotTbl <-
-    dplyr::left_join(annotTbl, cData, by = "cId")
-
-  #merge assay data with data from colData/rowData
-  SE_assay = SummarizedExperiment::assay(se, assay_name)
-  asL <- lapply(1:nrow(SummarizedExperiment::colData(se)), function(x) {
-    myL <- SE_assay[, x]
-    # if only one row (nrow==1), the name of the row is not kept which results in a bug
-    names(myL) = rownames(SE_assay) # this line is not affecting results if now>1
-
-    # in some datasets there might be no data for given drug/cell_line combination
-    # under such circumstances DataFrame will be empty
-    # and should be filtered out
-    # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-    myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-
-    myV <- vapply(myL, nrow, integer(1))
-    rCol <- rep(names(myV), as.numeric(myV))
-    # there might be DataFrames with different number of columns
-    # let's fill with NAs where necessary
-    if (length(unique(sapply(myL, ncol))) > 1) {
-      df <- do.call(plyr::rbind.fill, lapply(myL, data.frame))
-    } else {
-      df <- data.frame(do.call(rbind, myL))
-    }
-    if(nrow(df)==0) return()
-    df$rId <- rCol
-    df$cId <- rownames(SummarizedExperiment::colData(se))[x]
-    full.df <- dplyr::left_join(df, annotTbl, by = c("rId", "cId"))
-  })
-  asDf <- data.frame(do.call(rbind, asL))
-  if (assay_name == "Metrics") {
-    asDf$dr_metric <- c("IC", "GR")
-    if (merge_metrics) {
-
-      colnames_IC <- gDRutils::get_header("RV_metrics")
-      diff_RV_columns <- setdiff(names(colnames_IC), colnames(asDf))
-      if (length(diff_RV_columns) > 0) {
-        warning(paste("missing column(s) in SE:", paste(diff_RV_columns, collapse = ", ")))
-        colnames_IC <- colnames_IC[!names(colnames_IC) %in% diff_RV_columns]
-      }
-      colnames_GR <- gDRutils::get_header("GR_metrics")
-      diff_GR_columns <- setdiff(names(colnames_GR), colnames(asDf))
-      if (length(diff_GR_columns) > 0) {
-        warning(paste("missing column(s) in SE:", paste(diff_GR_columns, collapse = ", ")))
-        colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
-      }
-
-      Df_IC <- subset(asDf, dr_metric == "IC", select = c("rId", "cId", names(colnames_IC)))
-      Df_GR <- subset(asDf, dr_metric == "GR") %>% dplyr::select(-dr_metric)
-
-      data.table::setnames(Df_IC,
-                           old = names(colnames_IC),
-                           new = unname(colnames_IC))
-      data.table::setnames(Df_GR,
-                           old = names(colnames_GR),
-                           new = unname(colnames_GR))
-      asDf <- dplyr::full_join(Df_IC, Df_GR, by = c("rId", "cId"))
-    }
-  }
-  asDf
 }
