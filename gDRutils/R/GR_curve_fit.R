@@ -8,13 +8,14 @@
 #' @param log10concs concentrations
 #' @param RelativeViability values
 #' @param GRvalues values
-#' @param e_0 = 1 by default
-#' @param GR_0 = 1 by default
+#' @param e_0
+#' Defaults to \code{1}.
+#' @param GR_0
+#' Defaults to \code{1}.
 #' @param force use signifcance or not
 #' @param cap enforce e_0 and GR_0
 #' @return vector of parameters
 #' @examples
-#' sum(1:10)
 #' @importFrom drc drm drmc LL.3u LL.4
 #' @export
 RVGRfits <- function(df_,
@@ -53,26 +54,24 @@ RVGRfits <- function(df_,
 }
 
 
-
-
 #' Actual fitting function
 #'
 #' \code{logisticFit} returns fit parameters
 #'
-#' returns fit parameters
-#'
-#' @import reshape2
 #' @param log10concs log10 of concentrations
 #' @param normValues normalized response values (Untreated = 1)
 #' @param std_normValues std of values
-#' @param x_0 upper limit; ( =1 by default)
+#' @param x_0 upper limit
+#' Defaults to \code{1}. 
 #' @param curve_type response curve: either RV ([0,1]) or GR([-1,1])
 #' @param range_conc range of concentration for calculating AOC_range
 #' @param force use signifcance or not
 #' @param cap enforce values stay below (x_0+cap)
 #' @return DataFrame with metrics and fit parameters
 #' @examples
-#' sum(1:10)
+#' @details
+#' Implementation of the genedata approach for curve fit: https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
+#' @import reshape2
 #' @importFrom drc drm drmc LL.3u
 #' @export
 logisticFit <-
@@ -85,8 +84,6 @@ logisticFit <-
            force = FALSE,
            cap = 0.1,
            n_point_cutoff = 4) {
-    # Implementation of the genedata approach for curve fit: https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
-    #
 
     # define variables and prepare data
     log10concs <- log10(concs)
@@ -244,10 +241,6 @@ logisticFit <-
   }
 
 
-
-
-
-
 # TODO: replace by drc::LL.4
 # logistic function (not used in the file but useful for plotting externally)
 #' @export
@@ -270,14 +263,13 @@ logistic_metrics <- function(c, x_metrics) {
                           (1 + (c / DRC_metrics$c50) ^ DRC_metrics$h)
 }
 
-# TODO: remove this function once there are no dependcies in gDRcore
+# TODO: remove this function once there are no dependencies in gDRcore
 #' Actual fitting function
 #'
 #' \code{ICGRlogisticFit} returns fit parameters
 #'
 #' returns fit parameters
 #'
-#' @import reshape2
 #' @param log10concs concentrations
 #' @param RelativeViability values
 #' @param GRvalues values
@@ -288,6 +280,7 @@ logistic_metrics <- function(c, x_metrics) {
 #' @return vector of parameters
 #' @examples
 #' sum(1:10)
+#' @import reshape2
 #' @importFrom drc drm drmc LL.3u
 #' @export
 ICGRlogisticFit <-
@@ -410,9 +403,6 @@ ICGRlogisticFit <-
     if (is.na(out["ic50"])) {
       out["ic50"] <- ifelse(out["e_inf"] > .5, Inf, -Inf)
     }
-
-
-
 
     ######################################
     # GR curve fitting
