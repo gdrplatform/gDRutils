@@ -1,3 +1,6 @@
+# Changes to v.0.0.10
+- minor refactor
+
 # Changes to v.0.0.9
 - add small fixes for assays with empty DataFrame
 
