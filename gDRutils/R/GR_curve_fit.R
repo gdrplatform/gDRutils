@@ -16,7 +16,6 @@
 #' @param cap enforce e_0 and GR_0
 #' @return vector of parameters
 #' @examples
-#' @importFrom drc drm drmc LL.3u LL.4
 #' @export
 RVGRfits <- function(df_,
                      e_0 = 1,
