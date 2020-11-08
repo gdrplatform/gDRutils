@@ -21,7 +21,8 @@ logisticFit(
 
 \item{std_normValues}{std of values}
 
-\item{x_0}{upper limit; ( =1 by default)}
+\item{x_0}{upper limit
+Defaults to \code{1}.}
 
 \item{curve_type}{response curve: either RV ([0,1]) or GR([-1,1])}
 
@@ -40,8 +41,5 @@ DataFrame with metrics and fit parameters
 \code{logisticFit} returns fit parameters
 }
 \details{
-returns fit parameters
-}
-\examples{
-sum(1:10)
+Implementation of the genedata approach for curve fit: https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
 }

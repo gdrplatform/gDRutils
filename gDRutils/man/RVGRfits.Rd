@@ -14,9 +14,9 @@ RVGRfits(
 )
 }
 \arguments{
-\item{e_0}{= 1 by default}
+\item{e_0}{Defaults to \code{1}.}
 
-\item{GR_0}{= 1 by default}
+\item{GR_0}{Defaults to \code{1}.}
 
 \item{force}{use signifcance or not}
 
@@ -36,7 +36,4 @@ vector of parameters
 }
 \details{
 returns fit parameters
-}
-\examples{
-sum(1:10)
 }
