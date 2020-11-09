@@ -1,3 +1,6 @@
+# Changes to v.0.0.11
+- update namespaces
+
 # Changes to v.0.0.10
 - minor refactor
 
