@@ -4,7 +4,6 @@
 #'
 #' returns fit parameters
 #'
-#' @import reshape2
 #' @param log10concs concentrations
 #' @param RelativeViability values
 #' @param GRvalues values
@@ -70,8 +69,6 @@ RVGRfits <- function(df_,
 #' @examples
 #' @details
 #' Implementation of the genedata approach for curve fit: https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
-#' @import reshape2
-#' @importFrom drc drm drmc LL.3u
 #' @export
 logisticFit <-
   function(concs,
@@ -279,8 +276,6 @@ logistic_metrics <- function(c, x_metrics) {
 #' @return vector of parameters
 #' @examples
 #' sum(1:10)
-#' @import reshape2
-#' @importFrom drc drm drmc LL.3u
 #' @export
 ICGRlogisticFit <-
   function(log10concs,
