@@ -3,7 +3,7 @@
 #' \code{RVGRfits} returns fit parameters
 #'
 #' returns fit parameters
-#'
+#' @import reshape2
 #' @param log10concs concentrations
 #' @param RelativeViability values
 #' @param GRvalues values
@@ -56,6 +56,7 @@ RVGRfits <- function(df_,
 #'
 #' \code{logisticFit} returns fit parameters
 #'
+#' @import reshape2
 #' @param log10concs log10 of concentrations
 #' @param normValues normalized response values (Untreated = 1)
 #' @param std_normValues std of values
@@ -266,6 +267,7 @@ logistic_metrics <- function(c, x_metrics) {
 #'
 #' returns fit parameters
 #'
+#' @import reshape2
 #' @param log10concs concentrations
 #' @param RelativeViability values
 #' @param GRvalues values

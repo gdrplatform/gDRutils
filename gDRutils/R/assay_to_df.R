@@ -1,7 +1,7 @@
 #' Transform a SummarizedExperiment assay to a long data.frame.
 #'
 #' Transform a SummarizedExperiment assay to a long data.frame with a single entry for each row and column combination.
-#'
+#' @import reshape2
 #' @param se SummarizedExperiment object with dose-response data.
 #' @param assay_name String of name of the assay in the /code{se}.
 #' @param merge_metrics Logical indicating whether the metrics should be merged.
