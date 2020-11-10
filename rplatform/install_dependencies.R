@@ -17,10 +17,10 @@
 # Install packages using multiple cores
 if (!require(parallel)) rp::installAndVerify(package = "parallel", requirement = "*")
 options(Ncpus = parallel::detectCores())
-
-pkgs_to_install <- c(
-  # Add your dependencies here
-)
-rp::installAndVerify(package = pkgs_to_install)
+# 
+# pkgs_to_install <- c(
+#   # Add your dependencies here
+# )
+# rp::installAndVerify(package = pkgs_to_install)
 
 
