@@ -1,0 +1,323 @@
+#' load, convert and process the GDS data into a gDR object
+#'
+#' @param qcs 
+#' @param Gnumbers 
+#' @param clids 
+#' @param exclude_combo 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+GDS_qcs_to_gDR_metricsSE = function(qcs, Gnumbers = NULL, clids = NULL, exclude_combo = T) {
+  # extract data and convert columns names
+  df_ = GeneDataScreenR::process_normdata_from_qcs(qcs,
+          Gnumber = Gnumber,
+          clids = clids,
+          exclude_combo = exclude_combo)
+
+  # clean up to fit gDR format
+  df_normed = gDR::cleanup_metadata(df_)
+
+  # create SE and process the data as gDR data
+  normSE = GeneDataScreenR::df_GDSnormed_to_normSE(df_normed)
+  avgSE = gDR::average_SE(normSE)
+  metricsSE = gDR::metrics_SE(avgSE)
+
+  # replace fit results with original metrics
+  final_metricsSE = GeneDataScreenR::replace_metrics_w_original(metricsSE, qcs)
+  final_metricsSE = gDR::add_codrug_group(final_metricsSE)
+
+  return(final_metricsSE) # ready to be used or pushed to the database
+}
+
+
+
+#' process_normdata_from_qcs: get the well-level data from a qcs and
+#   format it as a data.frame comparible with gDR
+#'
+#' @param qcs 
+#' @param Gnumbers 
+#' @param clids 
+#' @param exclude_combo 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+process_normdata_from_qcs = function(qcs, Gnumbers = NULL, clids = NULL, exclude_combo = F) {
+
+  # columns headers
+  colnames_selected_substitutions = list(
+      c('series.CLID', 'clid'),     # project <= 38
+      c('CLID', 'clid'),            # project 39
+      c('series.Drug1', 'Gnumber'), # project <= 38
+      c('d1_id', 'Gnumber'),        # project 39
+      c('d1_conc', 'Concentration'),
+      c('d2_conc', 'Concentration_2'),
+      c('series.Drug2', 'Gnumber_2'), # project <= 38
+      c('d2_id', 'Gnumber_2'),        # project >=39
+      c('activities', 'RelativeViability', function(x) 1+(as.numeric(x)/100)),
+      c('masked', 'masked'),
+      c('compoundId', 'compoundId')   #  --> create an issue because assigned as row identifier whereas it is a 'unit' identifier
+  )
+
+  # getting the project number based on experiment name
+  exp_name = qcs@qcs_name
+  project_number = as.numeric(substr(exp_name,
+    attr(regexpr('^P[A-Za-z]*', exp_name), 'match.length')+1,
+    attr(regexpr('^P[A-Za-z]*\\d\\d?_', exp_name), 'match.length')-1))
+
+  # get the data
+  df_ = as.data.frame(GeneDataScreenR::wells(qcs))
+
+  # rename columns and select the ones of interest
+  for (sel_sub in colnames_selected_substitutions) {
+    if (sel_sub[[1]] %in% colnames(df_) && !(sel_sub[[2]] %in% colnames(df_))) {
+      colnames(df_)[colnames(df_) == sel_sub[[1]]] = sel_sub[[2]]
+      if (length(sel_sub) == 3) df_[,sel_sub[[2]]] = sel_sub[[3]](df_[,sel_sub[[2]]])
+    }
+  }
+  if (exclude_combo) df_ = df_[df_$Concentration_2 %in% 'NA' |
+                                  is.na(df_$Concentration_2), ]
+
+  # convert the CLID and Gnumbers
+  # levels(df_$Gnumber) = c(substr(levels(df_$Gnumber), 1,9),
+  #                             gDRutils::get_identifier('untreated_tag')[1])
+  df_$Gnumber = as.character(df_$Gnumber) %>%
+    gsub("\\..*", "", .) %>%
+    ifelse(is.na(stringr::str_extract(., "G[0-9].*")), ., stringr::str_extract(., "G[0-9].*"))
+  # levels(df_$Gnumber_2) = c(substr(levels(df_$Gnumber_2), 1,9),
+  #                             gDRutils::get_identifier('untreated_tag')[1])
+  df_$Gnumber_2 = as.character(df_$Gnumber_2) %>%
+    gsub("\\..*", "", .) %>%
+    ifelse(is.na(stringr::str_extract(., "G[0-9].*")), ., stringr::str_extract(., "G[0-9].*"))
+  levels(df_$clid) = paste0('CL', levels(df_$clid))
+  df_$clid = as.character(df_$clid)
+
+  # convert the concentration in numeric values (from factors)
+  df_$Concentration = as.numeric(as.character(df_$Concentration))
+  df_$Concentration_2 = as.numeric(as.character(df_$Concentration_2))
+
+  # select the data based on Gnumber and clids
+  df_ = df_[, intersect(sapply(colnames_selected_substitutions, '[[', 2), colnames(df_))]
+
+  # convert into hours for gDR
+  df_$Duration = as.numeric(qcs@treated_time) * 24
+
+  # replace NA with untreated for second agent
+  df_$Concentration_2[ is.na(df_$Concentration_2) ] = 0
+  if (any(df_$Concentration_2 %in% 0)) {
+    df_$Gnumber_2[df_$Concentration_2 %in% 0] = gDRutils::get_identifier('untreated_tag')[1]
+  }
+
+  # swap Gnumber_2 and Gnumber if Concentration == 0
+  if (any(df_$Concentration %in% 0)) {
+    df_$Gnumber[df_$Concentration %in% 0] = gDRutils::get_identifier('untreated_tag')[1]
+  }
+
+  # filter data if selected
+  if (!is.null(Gnumbers)) {
+    df_ = df_[
+      (df_$Gnumber %in% c(Gnumbers, gDRutils::get_identifier('untreated_tag')[1]) &
+        df_$Gnumber_2 %in% c(Gnumbers, gDRutils::get_identifier('untreated_tag')[1])) |
+      (substr(df_$Gnumber,1,9) %in% c(Gnumbers,gDRutils::get_identifier('untreated_tag')[1]) &
+        substr(df_$Gnumber_2,1,9) %in% c(Gnumbers,gDRutils::get_identifier('untreated_tag')[1])),]
+  }
+  if (!is.null(clids))    df_ = df_[df_$clid %in% clids,]
+
+  # swap for getting avoiding untreated as Gnumber (primary)
+  if (any(df_$Gnumber == gDRutils::get_identifier('untreated_tag')[1])) {
+    temp_df = df_[df_$Gnumber == gDRutils::get_identifier('untreated_tag')[1], ]
+    temp_df$Gnumber = temp_df$Gnumber_2
+    temp_df$Concentration = temp_df$Concentration_2
+    temp_df$Gnumber_2 = gDRutils::get_identifier('untreated_tag')[1]
+    temp_df$Concentration_2 = 0
+    df_ = rbind(df_[df_$Gnumber != gDRutils::get_identifier('untreated_tag')[1], ], temp_df)
+  }
+
+
+  return(df_)
+}
+
+
+#' Convert a data.frame into a SE object at the normalized data stage
+#'
+#' @param df_normed 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+df_GDSnormed_to_normSE = function(df_normed) {
+  ## TODO: keep masked data when 'masked' is implemented in gDR
+  # if ('masked' %in% colnames(df_normed)) {
+  #   df_raw_data = df_normed[!df_normed$masked,]
+  #   # temporary hacked: remove masked data
+  #   df_raw_data$masked = NULL
+  # } else
+  df_raw_data = df_normed
+
+
+  # convert to characters (necessary for gDR operations)
+  df_raw_data$DrugName = as.character(df_raw_data$DrugName)
+  df_raw_data$Gnumber = as.character(df_raw_data$Gnumber)
+  if ('DrugName_2' %in% colnames(df_raw_data)) {
+    df_raw_data$DrugName_2 = as.character(df_raw_data$DrugName_2)
+    df_raw_data$Gnumber_2 = as.character(df_raw_data$Gnumber_2)
+  }
+  # create dummy untreated for fitting gDR scheme
+  df_ctrl = unique(df_raw_data[, !(colnames(df_raw_data) %in%
+        c('Concentration', 'RelativeViability', 'DrugName', 'Gnumber', 'masked')) ])
+  df_ctrl$RelativeViability = 1
+  df_ctrl$Concentration = 0
+  df_ctrl$Gnumber = df_ctrl$DrugName = 'vehicle'
+  df_ctrl$masked = F
+  if ('Gnumber_2' %in% colnames(df_raw_data)) {
+    df_ctrl = df_ctrl[df_ctrl$Gnumber_2 %in% 'untreated',]
+  }
+  # stack the data and contols
+  df_raw_data = dplyr::bind_rows(df_raw_data, df_ctrl)
+  colnames(df_raw_data)[colnames(df_raw_data) == 'RelativeViability'] = 'ReadoutValue'
+  df_raw_data$BackgroundValue = 0
+
+  # remove the compoundId column because it confused the assignment of row and col in the SE
+  temp_df = df_raw_data
+  temp_df$compoundId = NULL
+
+  # convert into a SE with the right formating (to test for combo experiments)
+  normSE = gDR::normalize_SE(temp_df)
+  # add the qcs compoundId back
+  metadata(normSE)$df_raw_data = df_raw_data
+
+  return(normSE)
+}
+
+#' add_qcs_info_SE
+#'
+#' @param SE 
+#' @param qcs 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+add_qcs_info_SE = function(SE, qcs) {
+  metadata(SE)$experiment_metadata = data.frame(
+    description = sprintf(paste('gCSI experiment %s (%s - %s); imported from folder %s.',
+        'Done in %s-well plate on %s (update %s)'),
+        qcs@qcs_name, qcs@qcs_id, qcs@exp_id, qcs@exp_folder,
+        qcs@plate_form, qcs@creation_date, qcs@updated_date),
+    name = paste(qcs@qcs_id, qcs@qcs_name),
+    experimentalist = qcs@creator
+  )
+  return(SE)
+}
+
+#' replace_metrics_w_original
+#'
+#' @param metricsSE 
+#' @param qcs 
+#' @param capping_fold 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+replace_metrics_w_original = function(metricsSE, qcs, capping_fold = 5) {
+  # get the original values
+  df_metrics = GeneDataScreenR::treatments(qcs)
+
+  # skip it if no 'compoundId' which is used for Matrix synergy experiments
+  if (!('compoundId' %in% colnames(df_metrics))) return(metricsSE)
+
+  ic50_function = function(x, var_name, log_factor = 6) {
+    if (x[['fitModelName']] == 'DRCConstantFitResult') {
+      return(ifelse(x[['qAC50Mode']] == '>', Inf, -Inf))
+    }
+    qic50 = x[[var_name]] * (10 ** log_factor)
+    if (is.na(qic50)) {
+      if (x[['SInf']] > -50) { qic50 = Inf
+      } else if (x[['S0']] < -50) { qic50 = -Inf
+      } else { qic50 = 1e6 * x[["linearAC50"]] * (( (x[['S0']]/100) - (x[['SInf']]/100)) /
+            (-0.5 -(x[['SInf']]/100))-1) ^ (1 / x[["hillCoefficient"]])
+    }}
+    qic50 = ifelse(qic50 > x[['max_conc']]*capping_fold, Inf, qic50)  # capping
+    qic50 = ifelse(qic50 < x[['max_conc']]/(capping_fold * 1e5), -Inf, qic50) # capping
+    return(qic50)
+  }
+
+  metrics_mapping = list(
+    c('c50', 'linearAC50', function(x) x[['linearAC50']] * 1e6),
+    c('x_0', 'S0', function(x) 1+( x[['S0']] /100)),
+    c('x_inf', 'SInf', function(x) 1+( x[['SInf']] /100)),
+    c('h', 'hillCoefficient', function(x) x[['hillCoefficient']]),
+    c('x_mean', 'meanviability.meanviability', function(x)
+          x[['meanviability.meanviability']]),
+    c('x_mean', 'MV', function(x) x[['MV']]),
+    c('xc50', 'meanviability.ic50', function(x) ic50_function(x, 'meanviability.ic50')),
+    c('xc50', 'IC50', function(x) ic50_function(x, 'IC50')),
+    c('fit_type', 'fitModelName', function(x) as.character(x[['fitModelName']]))
+  )
+
+  df_raw_data = metadata(metricsSE)$df_raw_data
+  metrics_mx = SummarizedExperiment::assay(metricsSE, 'Metrics')
+  metrics_col = SummarizedExperiment::colData(metricsSE)
+  metrics_row = SummarizedExperiment::rowData(metricsSE)
+  for (i in rownames(metrics_mx)) {
+      for (j in colnames(metrics_mx)) {
+        if (is.null(metrics_mx[[i,j]]) || nrow(metrics_mx[[i,j]])==0) next
+        # get the compoundId for each condition in the SE
+        rowIdx = array(T, nrow(df_raw_data))
+        for (mdata in intersect(colnames(metrics_row),
+                  colnames(df_raw_data))) {
+          if (!is.na(metrics_row[i,mdata] )) {
+            rowIdx = rowIdx &
+              (df_raw_data[,mdata] %in% metrics_row[i,mdata])
+        }}
+
+
+        for (mdata in intersect(colnames(metrics_col),
+                  colnames(df_raw_data))) {
+            if (!is.na(metrics_col[j,mdata] )) {
+              rowIdx = rowIdx &
+                (df_raw_data[,mdata] %in% metrics_col[j,mdata])
+        }}
+        # df_raw_data[rowIdx,]
+        compoundId_match = unique(df_raw_data$compoundId[rowIdx])
+        stopifnot(length(compoundId_match) == 1)
+
+        original_metrics = df_metrics[df_metrics$compoundId == as.character(compoundId_match),]
+
+        # skip replacement if this is a drug matrix experiment
+        if (any(original_metrics$fitStrategy %in% 'Synergy Model')) next
+
+        original_metrics[['max_conc']] = 10**metrics_mx[[i,j]]$maxlog10Concentration[1]
+        for (sel_sub in metrics_mapping) {
+          if (sel_sub[[2]] %in% names(original_metrics)) {
+          metrics_mx[[i,j]]['RV', sel_sub[[1]]] = sel_sub[[3]](original_metrics)
+        }}
+
+        # replace x_AOC
+        metrics_mx[[i,j]]['RV', 'x_AOC'] = 1 - metrics_mx[[i,j]]['RV', 'x_mean']
+
+
+        # need to handle the cases of a flat fit
+        #   --> copied from the gDR function (TODO: make a separate function to be called)
+        if (original_metrics$fitModelName == 'DRCConstantFitResult') {
+          metrics_mx[[i,j]]['RV', "c50"] <- 0
+          metrics_mx[[i,j]]['RV', "h"] <- 0.0001
+          metrics_mx[[i,j]]['RV', "xc50"] <- ifelse(metrics_mx[[i,j]]['RV', 'x_mean'] > .5,
+                      Inf,-Inf)
+          metrics_mx[[i,j]]['RV', "x_inf"] <- metrics_mx[[i,j]]['RV', 'x_mean']
+        }
+        # Add xc50 = +/-Inf for any curves that don"t reach RelativeViability = 0.5
+        if (is.na(metrics_mx[[i,j]]['RV', "xc50"])) {
+          metrics_mx[[i,j]]['RV', "xc50"] <- ifelse(metrics_mx[[i,j]]['RV', "x_inf"] > .5, Inf,-Inf)
+        }
+      }
+    }
+
+  SummarizedExperiment::assay(metricsSE, 'Metrics') = metrics_mx
+  return(metricsSE)
+}

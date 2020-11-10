@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589463478700.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3079618678",
+    "id" : "CB0A9E60",
+    "lastKnownWriteTime" : 1604911444,
+    "last_content_update" : 1604911444,
+    "path" : "~/git/gDRcore/gDRutils/gDRutils/R/utils.R",
+    "project_path" : "R/utils.R",
+    "properties" : {
+        "cursorPosition" : "177,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

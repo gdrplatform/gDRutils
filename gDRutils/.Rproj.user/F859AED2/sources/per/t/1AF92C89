@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1597851973814.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "196641422",
+    "id" : "1AF92C89",
+    "lastKnownWriteTime" : 1599742124,
+    "last_content_update" : 1599742124,
+    "path" : "~/git/gDRcore/GeneDataScreenR/R/GDS_to_gDR_SE.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "145,20",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

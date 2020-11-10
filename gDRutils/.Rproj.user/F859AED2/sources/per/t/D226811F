@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1597934957767.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2838595152",
+    "id" : "D226811F",
+    "lastKnownWriteTime" : 1604930469,
+    "last_content_update" : 1604930469026,
+    "path" : "~/git/gDRcore/gDRutils/gDRutils/CHANGELOG.md",
+    "project_path" : "CHANGELOG.md",
+    "properties" : {
+        "cursorPosition" : "1,17",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "markdown"
+}

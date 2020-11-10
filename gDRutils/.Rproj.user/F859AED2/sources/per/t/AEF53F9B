@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604922256172.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1905714937",
+    "id" : "AEF53F9B",
+    "lastKnownWriteTime" : 1604930400,
+    "last_content_update" : 1604930407627,
+    "path" : "~/git/gDRcore/gDRutils/gDRutils/R/assay_to_df.R",
+    "project_path" : "R/assay_to_df.R",
+    "properties" : {
+        "cursorPosition" : "6,2",
+        "scrollLine" : "6"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
