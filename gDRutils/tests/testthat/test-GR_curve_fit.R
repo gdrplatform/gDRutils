@@ -4,7 +4,7 @@ context("RVGRfits")
 
 test_that("RVGRfits fails with expected errors", {
   expect_error(RVGRfits(list()),
-  regexp = "inherits\\(df_, \"data.frame\"\\) is not TRUE")
+  regexp = "non-numeric argument to mathematical function")
 })
 
 test_that("Synthetic data", {
@@ -40,4 +40,4 @@ test_that("Synthetic data", {
   apply(is.na(as.data.frame(df_result[,names(params)])),1,all)
   as.data.frame(df_result)[,'fit_type',drop=F] == 'DRCTooFewPointsToFit'
 
-}
+})
