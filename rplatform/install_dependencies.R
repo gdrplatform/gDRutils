@@ -17,10 +17,25 @@
 # Install packages using multiple cores
 if (!require(parallel)) rp::installAndVerify(package = "parallel", requirement = "*")
 options(Ncpus = parallel::detectCores())
+
+.wd <- "/mnt/vol"
+
 # 
 # pkgs_to_install <- c(
 #   # Add your dependencies here
 # )
 # rp::installAndVerify(package = pkgs_to_install)
+# Extract dependencies from DESCRIPTION file
+deps <- yaml::read_yaml(file.path(.wd, "rplatform", "DESCRIPTION_dependencies.yaml"))
+deps <- deps[!(names(deps) %in% dont.install)]
+# packages needed in
+# deps <- rbind(deps, data.frame(type = rep("Suggests", 3),
+#                               package = c("attempt", "urltools", "config"),
+#                               version = rep("*", 3)))
 
+for (nm in names(deps)) {
+  devtools::install_version(
+    package = nm,
+    version = if (deps[[nm]] == "*") NULL else deps[[nm]])
+}
 
