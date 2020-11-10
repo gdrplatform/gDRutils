@@ -49,6 +49,7 @@ COPY rplatform/ssh_keys/id_rsa.pub /home/rstudio/.ssh/id_rsa.pub
 
 ## Define your system dependencies in this Dockerfile
 
+COPY rplatform/DESCRIPTION_dependencies.yaml /mnt/vol/rplatform/DESCRIPTION_dependencies.yaml
 COPY rplatform/install_dependencies.R /mnt/vol/rplatform/install_dependencies.R
 RUN R -f /mnt/vol/rplatform/install_dependencies.R
 
