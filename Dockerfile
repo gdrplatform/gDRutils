@@ -67,8 +67,8 @@ RUN R -f /mnt/vol/rplatform/install_dependencies.R
 #COPY /path/to/package_source_dir /mnt/vol/package_source_dir
 
 ## Uncomment following to install package(s) from source dir or Bitbucket
-#COPY rplatform/install_from_source.R /mnt/vol/rplatform/install_from_source.R
-#RUN R -f /mnt/vol/rplatform/install_from_source.R
+COPY rplatform/install_from_source.R /mnt/vol/rplatform/install_from_source.R
+RUN R -f /mnt/vol/rplatform/install_from_source.R
 
 RUN rm -rf /mnt/vol/*
 
