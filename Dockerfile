@@ -70,9 +70,7 @@ RUN R -f /mnt/vol/rplatform/install_dependencies.R
 COPY rplatform/install_from_source.R /mnt/vol/rplatform/install_from_source.R
 RUN R -f /mnt/vol/rplatform/install_from_source.R
 
-RUN rm -rf /mnt/vol/*
-
-USER rstudio
+RUN sudo rm -rf /mnt/vol/*
 
 LABEL GENERATE_SINGULARITY_IMAGE=false
 LABEL production=false
