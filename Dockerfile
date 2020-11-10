@@ -20,8 +20,32 @@ LABEL NAME=gdrutils
 LABEL CACHE_IMAGE="registry.rplatform.org:5000/githubroche/gdrplatform/gdrutils"
 
 # ----------------------------------------------------------------------------------------------------------------
+# install system dependencies
+RUN sudo apt-get update && sudo apt-get install -y \
+    libssl-dev \
+    libsasl2-dev \
+    libxml2-dev \
+    libicu-dev \
+    bzip2 \
+    liblzma-dev \
+    libbz2-dev \
+    subversion \
+    curl \
+    libmariadbclient-dev \
+    libv8-dev \
+    procps \
+    systemd \
+    libmagick++-dev \
+    libssh2-1-dev \
+    ssh \
+    openssl \
+    supervisor \
+    passwd \
+    vim
 
-USER root
+#================= copy ssh keys
+COPY rplatform/ssh_keys/id_rsa /home/rstudio/.ssh/id_rsa
+COPY rplatform/ssh_keys/id_rsa.pub /home/rstudio/.ssh/id_rsa.pub
 
 ## Define your system dependencies in this Dockerfile
 
