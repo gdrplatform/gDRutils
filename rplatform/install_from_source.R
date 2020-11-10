@@ -1,4 +1,4 @@
-# RP package template version >= 0.0.79
+# RP package template version >= 0.0.78
 
 ## Uncomment following code to install package from source directory
 # rp::installAndVerify(
@@ -6,19 +6,10 @@
 #   requirement = sprintf("== %s", desc::desc_get_version("/mnt/vol/package_source_dir")),
 #   package = "/mnt/vol/package_source_dir"
 # )
-install.packages("git2r", repos = paste0("https://mran.microsoft.com/snapshot/", Sys.getenv("MRAN_SNAPSHOT_DATE")))
 
+install.packages("git2r", repos = paste0("https://mran.microsoft.com/snapshot/", Sys.getenv("MRAN_SNAPSHOT_DATE")))
 
 ## Uncomment following code to install package(s) directly from Bitbucket repository
 ## SSH keys should be copied to container before installation
-# ssh_keys <- git2r::cred_ssh_key(file.path("/home/rstudio/.ssh/id_rsa.pub"), file.path("/home/rstudio/.ssh/id_rsa"))
-# rp::installAndVerify(
-#     install = devtools::install_git,
-#     url = "ssh://git@stash.intranet.roche.com:7999/some/repo/url.git",
-#     ref = "master", # branch name or commit hash
-#     credentials = ssh_keys,
-#     package = "package_name",
-#     requirement = "*",
-#     subdir = NULL, # provide if package is in subdir
-#     upgrade = "never"
-#   )
+ssh_keys <- git2r::cred_ssh_key(file.path("/home/rstudio/.ssh/id_rsa.pub"), file.path("/home/rstudio/.ssh/id_rsa"))
+.wd <- "/mnt/vol"
