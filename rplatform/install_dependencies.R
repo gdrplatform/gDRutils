@@ -1,6 +1,6 @@
-# RP package template version >= 0.0.79
+# RP package template version >= 0.0.78
 
-# The base image makes use of the stable GRAN repository corresponding to image's R version as a source of packages. 
+# The base image makes use of the stable GRAN repository corresponding to image's R version as a source of packages.
 # If you wish to install custom package versions from other source you'll need to
 # modify the "repos" option or provide the repository url explicitly during package installation.
 
@@ -15,19 +15,23 @@
 # 's:sha1' - github SHA1
 
 # Install packages using multiple cores
-if (!require(parallel)) rp::installAndVerify(package = "parallel", requirement = "*")
+if (!require(parallel)) install.packages("parallel")
 options(Ncpus = parallel::detectCores())
 
 .wd <- "/mnt/vol"
 
-# 
-# pkgs_to_install <- c(
-#   # Add your dependencies here
-# )
-# rp::installAndVerify(package = pkgs_to_install)
+# don't install these packages - they will be installed separately
+dont.install <- c(
+  "dplyr"
+)
+
+# Install packages from github
+devtools::install_url("https://cran.r-project.org/src/contrib/Archive/dplyr/dplyr_0.8.5.tar.gz")
+
+
 # Extract dependencies from DESCRIPTION file
 deps <- yaml::read_yaml(file.path(.wd, "rplatform", "DESCRIPTION_dependencies.yaml"))
-# deps <- deps[!(names(deps) %in% dont.install)]
+deps <- deps[!(names(deps) %in% dont.install)]
 # packages needed in
 # deps <- rbind(deps, data.frame(type = rep("Suggests", 3),
 #                               package = c("attempt", "urltools", "config"),
@@ -38,4 +42,3 @@ for (nm in names(deps)) {
     package = nm,
     version = if (deps[[nm]] == "*") NULL else deps[[nm]])
 }
-
