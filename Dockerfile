@@ -67,10 +67,6 @@ RUN R -f /mnt/vol/rplatform/install_dependencies.R
 ## the one from `install_from_source.R` if using it)
 #COPY /path/to/package_source_dir /mnt/vol/package_source_dir
 
-## Uncomment following to install package(s) from source dir or Bitbucket
-COPY rplatform/install_from_source.R /mnt/vol/rplatform/install_from_source.R
-RUN R -f /mnt/vol/rplatform/install_from_source.R
-
 RUN sudo rm -rf /mnt/vol/*
 
 LABEL GENERATE_SINGULARITY_IMAGE=false
