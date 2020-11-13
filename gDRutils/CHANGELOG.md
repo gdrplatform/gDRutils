@@ -1,3 +1,6 @@
+# Changes to v.0.0.13
+- add CI
+
 # Changes to v.0.0.12
 - fix assay_to_df
 
