@@ -1,0 +1,5 @@
+checkmate: '*'
+drc: '*'
+reshape2: '*'
+SummarizedExperiment: '*'
+dplyr: '== 0.8.5'
