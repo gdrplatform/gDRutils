@@ -11,7 +11,7 @@ install.packages(c("git2r", "desc", "devtools", "stringr", "withr", "DelayedMatr
 ssh_keys <- git2r::cred_ssh_key(file.path("/root", ".ssh", "id_rsa.pub"), file.path("/root", ".ssh", "id_rsa"))
 
 devtools::install_git(
-  url = "ssh://git@stash.intranet.roche.com:7999/rp/rp-package.git",
+  url = "ssh://git@bitbucket.roche.com:7999/rp/rp-package.git",
   ref = "master",
   credentials = ssh_keys,
   upgrade = "never"
