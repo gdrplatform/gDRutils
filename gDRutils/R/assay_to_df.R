@@ -20,9 +20,9 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
   ids <- expand.grid(rownames(SummarizedExperiment::rowData(se)), rownames(SummarizedExperiment::colData(se)))
   colnames(ids) <- c("rId", "cId")
   ids[] <- lapply(ids, as.character)
-  rData <- data.table::data.table(SummarizedExperiment::rowData(se), stringsAsFactors = FALSE)
+  rData <- data.table::as.data.table(SummarizedExperiment::rowData(se), stringsAsFactors = FALSE)
   rData$rId <- rownames(rData)
-  cData <- data.table::data.table(SummarizedExperiment::colData(se), stringsAsFactors = FALSE)
+  cData <- data.table::as.data.table(SummarizedExperiment::colData(se), stringsAsFactors = FALSE)
   cData$cId <- rownames(cData)
   annotTbl <- merge(ids, rData, by = "rId", all.x = TRUE)
   annotTbl <- merge(annotTbl, cData, by = "cId", all.x = TRUE)
@@ -45,7 +45,7 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
     # there might be DataFrames with different number of columns
     # let's fill with NAs where necessary
     if (length(unique(sapply(myL, ncol))) > 1) {
-      df <- do.call(plyr::rbind.fill, lapply(myL, data.table::data.table))
+      df <- do.call(plyr::rbind.fill, lapply(myL, data.table::as.data.table))
     } else {
       df <- data.table::data.table(do.call(rbind, myL))
     }
@@ -54,9 +54,9 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
     df$cId <- rownames(SummarizedExperiment::colData(se))[x]
     full.df <- merge(df, annotTbl, by = c("rId", "cId"), all.x = TRUE)
   })
-  asDf <- data.table::data.table(do.call(rbind, asL))
+  asDf <- data.table::as.data.table(do.call(rbind, asL))
   if (assay_name == "Metrics") {
-    asDf$dr_metric <- c("RV", "GR")
+    asDf$dr_metric <- rep(c("RV", "GR"), nrow(asDf)/2)
     if (merge_metrics) {
       
       colnames_RV <- gDRutils::get_header("RV_metrics")
