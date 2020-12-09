@@ -251,8 +251,8 @@ logistic_metrics <- function(c, x_metrics) {
   else if (all(get_header('GR_metrics')[metrics] %in% names(x_metrics))) {
     DRC_metrics = as.vector(x_metrics[get_header('GR_metrics')[metrics]])
     names(DRC_metrics) = metrics
-  } else if (all(get_header('IC_metrics')[metrics] %in% names(x_metrics))) {
-    DRC_metrics = as.vector(x_metrics[get_header('IC_metrics')[metrics]])
+  } else if (all(get_header('RV_metrics')[metrics] %in% names(x_metrics))) {
+    DRC_metrics = as.vector(x_metrics[get_header('RV_metrics')[metrics]])
     names(DRC_metrics) = metrics
   } else stop('wrong input parameters')
 
@@ -307,9 +307,9 @@ ICGRlogisticFit <-
     out["GR_0"] <- GR_0
 
     # fit parameters and boundaries
-    ICpriors <- c(2, 0.4, median(concs))
+    RVpriors <- c(2, 0.4, median(concs))
     GRpriors <- c(2, 0.1, median(concs))
-    IClower <- c(.1, 0, min(concs) / 10)
+    RVlower <- c(.1, 0, min(concs) / 10)
     GRlower <- c(.1, -1, min(concs) / 10)
     upper <- c(5, 1, max(concs) * 10)
 
@@ -320,14 +320,14 @@ ICGRlogisticFit <-
     controls$rmNA <- TRUE
 
     ######################################
-    # IC curve fitting
+    # RV curve fitting
     output_model_new <- try(drc::drm(
       RelativeViability ~ log10conc,
-      data = IC_data_exp,
+      data = RV_data_exp,
       logDose = 10,
-      fct = drc::LL.3u(upper = e_0, names = ICfit_parameters),
-      start = ICpriors,
-      lowerl = IClower,
+      fct = drc::LL.3u(upper = e_0, names = RVfit_parameters),
+      start = RVpriors,
+      lowerl = RVlower,
       upperl = upper,
       control = controls,
       na.action = na.omit
@@ -335,7 +335,7 @@ ICGRlogisticFit <-
 
     # assuming proper fit result
     if (class(output_model_new) != "try-error") {
-      for (p in ICfit_parameters) {
+      for (p in RVfit_parameters) {
         out[p] <- stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
       }
       # F-test for the significance of the sigmoidal fit
@@ -345,12 +345,12 @@ ICGRlogisticFit <-
         sum(stats::residuals(output_model_new) ^ 2, na.rm = TRUE)
       RSS1 <-
         sum((
-          IC_data_exp$RelativeViability - mean(IC_data_exp$RelativeViability,
+          RV_data_exp$RelativeViability - mean(RV_data_exp$RelativeViability,
                                                na.rm = TRUE)
         ) ^ 2, na.rm = TRUE)
       df1 <- (Npara - Npara_flat)
       df2 <-
-        (length(na.omit(IC_data_exp$RelativeViability)) - Npara + 1)
+        (length(na.omit(RV_data_exp$RelativeViability)) - Npara + 1)
       f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
       f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
       out["rv_r2"] <- 1 - RSS2 / RSS1
@@ -358,19 +358,19 @@ ICGRlogisticFit <-
 
 
     # non-fitted metrics
-    ICavg <-
+    RVavg <-
       aggregate(
-        IC_data_exp$RelativeViability,
-        by = list(log10conc = IC_data_exp$log10conc),
+        RV_data_exp$RelativeViability,
+        by = list(log10conc = RV_data_exp$log10conc),
         FUN = mean
       )
-    colnames(ICavg)[2] <- "RelativeViability"
-    l <- dim(ICavg)[1]
+    colnames(RVavg)[2] <- "RelativeViability"
+    l <- dim(RVavg)[1]
 
     out["e_max"] <-
-      min(ICavg$RelativeViability[c(l, l - 1)], na.rm = TRUE)
+      min(RVavg$RelativeViability[c(l, l - 1)], na.rm = TRUE)
 
-    out["rv_mean"] <- mean(ICavg$RelativeViability)
+    out["rv_mean"] <- mean(RVavg$RelativeViability)
 
     # analytical solution for ic50
     out["ic50"] <-
