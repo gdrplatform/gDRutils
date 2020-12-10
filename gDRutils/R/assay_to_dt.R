@@ -10,7 +10,7 @@
 #' @return data.table with dose-response data
 #'
 #' @export
-assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
+assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   # check arguments
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assertTRUE(checkmate::test_count(assay_name) || checkmate::test_string(assay_name))
