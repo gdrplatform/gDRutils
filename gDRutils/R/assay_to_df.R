@@ -20,9 +20,9 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
   ids <- expand.grid(rownames(SummarizedExperiment::rowData(se)), rownames(SummarizedExperiment::colData(se)))
   colnames(ids) <- c("rId", "cId")
   ids[] <- lapply(ids, as.character)
-  rData <- data.table::as.data.table(SummarizedExperiment::rowData(se), stringsAsFactors = FALSE)
+  rData <- SummarizedExperiment::rowData(se)
   rData$rId <- rownames(rData)
-  cData <- data.table::as.data.table(SummarizedExperiment::colData(se), stringsAsFactors = FALSE)
+  cData <- SummarizedExperiment::colData(se)
   cData$cId <- rownames(cData)
   annotTbl <- merge(ids, rData, by = "rId", all.x = TRUE)
   annotTbl <- merge(annotTbl, cData, by = "cId", all.x = TRUE)
@@ -47,7 +47,7 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
     if (length(unique(sapply(myL, ncol))) > 1) {
       df <- do.call(plyr::rbind.fill, lapply(myL, data.table::as.data.table))
     } else {
-      df <- data.table::data.table(do.call(rbind, myL))
+      df <- data.table::as.data.table(do.call(rbind, myL))
     }
     if(nrow(df)==0) return()
     df$rId <- rCol
@@ -73,7 +73,7 @@ assay_to_df <- function(se, assay_name, merge_metrics = FALSE) {
       }
       
       Df_RV <- subset(asDf, dr_metric == "RV", select = c("rId", "cId", names(colnames_RV)))
-      Df_GR <- subset(asDf, dr_metric == "GR")[, !"dr_metric", with = FALSE]
+      Df_GR <- subset(asDf, dr_metric == "GR", select = -c(dr_metric))
       
       data.table::setnames(Df_RV,
                            old = names(colnames_RV),
