@@ -56,7 +56,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   })
   asDf <- data.table::as.data.table(do.call(rbind, asL))
   if (assay_name == "Metrics") {
-    asDf$dr_metric <- rep(c("RV", "GR"), nrow(asDf)/2)
+    asDf[, dr_metric := rep_len(c("RV", "GR"), .N)]
     if (merge_metrics) {
       
       colnames_RV <- gDRutils::get_header("RV_metrics")

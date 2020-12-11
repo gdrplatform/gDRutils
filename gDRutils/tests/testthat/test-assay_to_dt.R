@@ -10,3 +10,4 @@ test_that("assay_to_dt works as expected", {
   normalizedRef <- normalizedRef[, order(colnames(normalizedRef))]
   testthat::expect_identical(sort(normalized), sort(normalizedRef))
 })
+
