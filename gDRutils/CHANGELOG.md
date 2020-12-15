@@ -1,3 +1,7 @@
+# Changes to v.0.0.14
+- totally, finally, and unscrupulously remove dplyr package from gDRutils
+- replace IC by RV
+
 # Changes to v.0.0.13
 - add CI
 
