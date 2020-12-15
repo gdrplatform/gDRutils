@@ -112,6 +112,7 @@ logisticFit <-
 
     if (length(unique(xAvg$normValues[!is.na(xAvg$normValues)])) == 1) {
       out$fit_type == 'DRCConstantFitResult'
+      out$x_0 <- x_0
       out$c50 <- 0
       out$h <- 0.0001
       out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
