@@ -3,5 +3,6 @@
 #' @docType package
 #' @name gDRutils
 #' @importFrom magrittr %$% %>% %<>%
+#' @import data.table
 NULL
 

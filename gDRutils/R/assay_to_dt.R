@@ -54,9 +54,9 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
     df$cId <- rownames(SummarizedExperiment::colData(se))[x]
     full.df <- merge(df, annotTbl, by = c("rId", "cId"), all.x = TRUE)
   })
-  asDf <- data.table::as.data.table(do.call(rbind, asL))
+  asDf <- data.table::rbindlist(asL)
   if (assay_name == "Metrics") {
-    asDf[, dr_metric := rep_len(c("RV", "GR"), .N)]
+    asDf <- asDf[, dr_metric := rep_len(c("RV", "GR"), .N)]
     if (merge_metrics) {
       
       colnames_RV <- gDRutils::get_header("RV_metrics")
