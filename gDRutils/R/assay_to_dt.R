@@ -74,7 +74,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       
       vars <- c("rId", "cId", names(colnames_RV))
       Df_RV <- asDf[dr_metric == "RV", ..vars]
-      Df_GR <- asDf[dr_metric == "GR", -..dr_metric]
+      Df_GR <- asDf[dr_metric == "GR", -"dr_metric"]
       
       data.table::setnames(Df_RV,
                            old = names(colnames_RV),
