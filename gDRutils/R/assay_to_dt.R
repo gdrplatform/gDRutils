@@ -14,7 +14,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   # check arguments
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assertTRUE(checkmate::test_count(assay_name) || checkmate::test_string(assay_name))
-  checkmate::assert_logical(merge_metrics)
+  checkmate::assert_flag(merge_metrics)
 
   # define data.table with data from rowData/colData
   ids <- expand.grid(rownames(SummarizedExperiment::rowData(se)), rownames(SummarizedExperiment::colData(se)))
