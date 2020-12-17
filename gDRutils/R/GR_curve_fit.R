@@ -100,31 +100,32 @@ logisticFit <-
       df_$normValues,
       by = list(log10conc = df_$log10conc),
       FUN = function(x)
-        mean(x, na.rm = T)
+        mean(x, na.rm = TRUE)
     )
     colnames(xAvg)[2] <- "normValues"
     l <- dim(xAvg)[1]
 
     out$x_max <- min(xAvg$normValues[c(l, l - 1)], na.rm = TRUE)
     # temp values if fit  fails
-    out$x_mean <- mean(xAvg$normValues, na.rm = T)
+    out$x_mean <- mean(xAvg$normValues, na.rm = TRUE)
     out$x_AOC <- 1 - out$x_mean
 
     if (length(unique(xAvg$normValues[!is.na(xAvg$normValues)])) == 1) {
       out$fit_type == 'DRCConstantFitResult'
+      out$x_0 <- x_0
       out$c50 <- 0
       out$h <- 0.0001
-      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
-      out$x_inf <- out$x_mean <- mean(xAvg$normValues, rm.na = T)
-      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = T)
+      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = TRUE) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues, rm.na = TRUE)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = TRUE)
       return(out)
     }
 
     if (sum(!is.na(xAvg$normValues)) < n_point_cutoff) {
       out$fit_type = 'DRCTooFewPointsToFit'
       # best estimate if the data cannot be fit
-      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = T), Inf,
-                    ifelse(all(df_$normValues < .5, na.rm = T), -Inf,
+      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = TRUE), Inf,
+                    ifelse(all(df_$normValues < .5, na.rm = TRUE), -Inf,
                       NA))
       return(out)
     }
@@ -182,10 +183,10 @@ logisticFit <-
         out[p] = stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
       }
       out$x_mean = mean(stats::predict(output_model_new, data.frame(
-          concs = seq(min(df_$log10conc), max(df_$log10conc), .03))), na.rm = T)
+          concs = seq(min(df_$log10conc), max(df_$log10conc), .03))), na.rm = TRUE)
       out$x_AOC = 1 - out$x_mean
       out$x_AOC_range = 1 - mean(stats::predict(output_model_new, data.frame(
-          concs = seq(log10(range_conc[1]), log10(range_conc[2]), .03))), na.rm = T)
+          concs = seq(log10(range_conc[1]), log10(range_conc[2]), .03))), na.rm = TRUE)
       # F-test for the significance of the sigmoidal fit
       Npara <- 3 + (is.na(x_0)*1) # N of parameters in the growth curve; if x_0 == NA -> 4
       Npara_flat <- 1 # F-test for the models
@@ -206,8 +207,8 @@ logisticFit <-
       out$r2 = 0
       out$fit_type = 'DRCInvalidFitResult'
       # best estimate if the data cannot be fit
-      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = T), Inf,
-                    ifelse(all(df_$normValues < .5, na.rm = T), -Inf,
+      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = TRUE), Inf,
+                    ifelse(all(df_$normValues < .5, na.rm = TRUE), -Inf,
                       NA))
       return(out)
     }
@@ -225,9 +226,9 @@ logisticFit <-
     if (out$fit_type == 'DRCConstantFitResult') {
       out$c50 <- 0
       out$h <- 0.0001
-      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
-      out$x_inf <- out$x_mean <- mean(xAvg$normValues, na.rm = T)
-      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = T)
+      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = TRUE) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues, na.rm = TRUE)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = TRUE)
     }
 
     # Add xc50 = +/-Inf for any curves that don"t reach RelativeViability = 0.5
@@ -251,8 +252,8 @@ logistic_metrics <- function(c, x_metrics) {
   else if (all(get_header('GR_metrics')[metrics] %in% names(x_metrics))) {
     DRC_metrics = as.vector(x_metrics[get_header('GR_metrics')[metrics]])
     names(DRC_metrics) = metrics
-  } else if (all(get_header('IC_metrics')[metrics] %in% names(x_metrics))) {
-    DRC_metrics = as.vector(x_metrics[get_header('IC_metrics')[metrics]])
+  } else if (all(get_header('RV_metrics')[metrics] %in% names(x_metrics))) {
+    DRC_metrics = as.vector(x_metrics[get_header('RV_metrics')[metrics]])
     names(DRC_metrics) = metrics
   } else stop('wrong input parameters')
 
@@ -307,9 +308,9 @@ ICGRlogisticFit <-
     out["GR_0"] <- GR_0
 
     # fit parameters and boundaries
-    ICpriors <- c(2, 0.4, median(concs))
+    RVpriors <- c(2, 0.4, median(concs))
     GRpriors <- c(2, 0.1, median(concs))
-    IClower <- c(.1, 0, min(concs) / 10)
+    RVlower <- c(.1, 0, min(concs) / 10)
     GRlower <- c(.1, -1, min(concs) / 10)
     upper <- c(5, 1, max(concs) * 10)
 
@@ -320,14 +321,14 @@ ICGRlogisticFit <-
     controls$rmNA <- TRUE
 
     ######################################
-    # IC curve fitting
+    # RV curve fitting
     output_model_new <- try(drc::drm(
       RelativeViability ~ log10conc,
-      data = IC_data_exp,
+      data = RV_data_exp,
       logDose = 10,
-      fct = drc::LL.3u(upper = e_0, names = ICfit_parameters),
-      start = ICpriors,
-      lowerl = IClower,
+      fct = drc::LL.3u(upper = e_0, names = RVfit_parameters),
+      start = RVpriors,
+      lowerl = RVlower,
       upperl = upper,
       control = controls,
       na.action = na.omit
@@ -335,7 +336,7 @@ ICGRlogisticFit <-
 
     # assuming proper fit result
     if (class(output_model_new) != "try-error") {
-      for (p in ICfit_parameters) {
+      for (p in RVfit_parameters) {
         out[p] <- stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
       }
       # F-test for the significance of the sigmoidal fit
@@ -345,12 +346,12 @@ ICGRlogisticFit <-
         sum(stats::residuals(output_model_new) ^ 2, na.rm = TRUE)
       RSS1 <-
         sum((
-          IC_data_exp$RelativeViability - mean(IC_data_exp$RelativeViability,
+          RV_data_exp$RelativeViability - mean(RV_data_exp$RelativeViability,
                                                na.rm = TRUE)
         ) ^ 2, na.rm = TRUE)
       df1 <- (Npara - Npara_flat)
       df2 <-
-        (length(na.omit(IC_data_exp$RelativeViability)) - Npara + 1)
+        (length(na.omit(RV_data_exp$RelativeViability)) - Npara + 1)
       f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
       f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
       out["rv_r2"] <- 1 - RSS2 / RSS1
@@ -358,19 +359,19 @@ ICGRlogisticFit <-
 
 
     # non-fitted metrics
-    ICavg <-
+    RVavg <-
       aggregate(
-        IC_data_exp$RelativeViability,
-        by = list(log10conc = IC_data_exp$log10conc),
+        RV_data_exp$RelativeViability,
+        by = list(log10conc = RV_data_exp$log10conc),
         FUN = mean
       )
-    colnames(ICavg)[2] <- "RelativeViability"
-    l <- dim(ICavg)[1]
+    colnames(RVavg)[2] <- "RelativeViability"
+    l <- dim(RVavg)[1]
 
     out["e_max"] <-
-      min(ICavg$RelativeViability[c(l, l - 1)], na.rm = TRUE)
+      min(RVavg$RelativeViability[c(l, l - 1)], na.rm = TRUE)
 
-    out["rv_mean"] <- mean(ICavg$RelativeViability)
+    out["rv_mean"] <- mean(RVavg$RelativeViability)
 
     # analytical solution for ic50
     out["ic50"] <-

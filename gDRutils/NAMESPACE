@@ -2,7 +2,7 @@
 
 export(ICGRlogisticFit)
 export(RVGRfits)
-export(assay_to_df)
+export(assay_to_dt)
 export(get_header)
 export(get_identifier)
 export(logisticFit)

@@ -1,7 +1,7 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.13
+Version: 0.0.14
 Date: 2020-11-12
 Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
 Maintainer: Marc Hafner <hafner.marc@gene.com>
@@ -10,6 +10,7 @@ License: file GNE_LICENSE
 LazyLoad: yes
 Imports:
     checkmate,
+    data.table,
     drc,
     magrittr,
     reshape2,
