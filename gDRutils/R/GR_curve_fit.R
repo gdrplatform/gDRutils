@@ -100,14 +100,14 @@ logisticFit <-
       df_$normValues,
       by = list(log10conc = df_$log10conc),
       FUN = function(x)
-        mean(x, na.rm = T)
+        mean(x, na.rm = TRUE)
     )
     colnames(xAvg)[2] <- "normValues"
     l <- dim(xAvg)[1]
 
     out$x_max <- min(xAvg$normValues[c(l, l - 1)], na.rm = TRUE)
     # temp values if fit  fails
-    out$x_mean <- mean(xAvg$normValues, na.rm = T)
+    out$x_mean <- mean(xAvg$normValues, na.rm = TRUE)
     out$x_AOC <- 1 - out$x_mean
 
     if (length(unique(xAvg$normValues[!is.na(xAvg$normValues)])) == 1) {
@@ -115,17 +115,17 @@ logisticFit <-
       out$x_0 <- x_0
       out$c50 <- 0
       out$h <- 0.0001
-      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
-      out$x_inf <- out$x_mean <- mean(xAvg$normValues, rm.na = T)
-      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = T)
+      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = TRUE) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues, rm.na = TRUE)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = TRUE)
       return(out)
     }
 
     if (sum(!is.na(xAvg$normValues)) < n_point_cutoff) {
       out$fit_type = 'DRCTooFewPointsToFit'
       # best estimate if the data cannot be fit
-      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = T), Inf,
-                    ifelse(all(df_$normValues < .5, na.rm = T), -Inf,
+      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = TRUE), Inf,
+                    ifelse(all(df_$normValues < .5, na.rm = TRUE), -Inf,
                       NA))
       return(out)
     }
@@ -183,10 +183,10 @@ logisticFit <-
         out[p] = stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
       }
       out$x_mean = mean(stats::predict(output_model_new, data.frame(
-          concs = seq(min(df_$log10conc), max(df_$log10conc), .03))), na.rm = T)
+          concs = seq(min(df_$log10conc), max(df_$log10conc), .03))), na.rm = TRUE)
       out$x_AOC = 1 - out$x_mean
       out$x_AOC_range = 1 - mean(stats::predict(output_model_new, data.frame(
-          concs = seq(log10(range_conc[1]), log10(range_conc[2]), .03))), na.rm = T)
+          concs = seq(log10(range_conc[1]), log10(range_conc[2]), .03))), na.rm = TRUE)
       # F-test for the significance of the sigmoidal fit
       Npara <- 3 + (is.na(x_0)*1) # N of parameters in the growth curve; if x_0 == NA -> 4
       Npara_flat <- 1 # F-test for the models
@@ -207,8 +207,8 @@ logisticFit <-
       out$r2 = 0
       out$fit_type = 'DRCInvalidFitResult'
       # best estimate if the data cannot be fit
-      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = T), Inf,
-                    ifelse(all(df_$normValues < .5, na.rm = T), -Inf,
+      out$xc50 <- ifelse(all(df_$normValues > .5, na.rm = TRUE), Inf,
+                    ifelse(all(df_$normValues < .5, na.rm = TRUE), -Inf,
                       NA))
       return(out)
     }
@@ -226,9 +226,9 @@ logisticFit <-
     if (out$fit_type == 'DRCConstantFitResult') {
       out$c50 <- 0
       out$h <- 0.0001
-      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = T) > .5, Inf,-Inf)
-      out$x_inf <- out$x_mean <- mean(xAvg$normValues, na.rm = T)
-      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = T)
+      out$xc50 <- ifelse(mean(xAvg$normValues, na.rm = TRUE) > .5, Inf,-Inf)
+      out$x_inf <- out$x_mean <- mean(xAvg$normValues, na.rm = TRUE)
+      out$x_AOC_range <- out$x_AOC <- 1 - mean(xAvg$normValues, na.rm = TRUE)
     }
 
     # Add xc50 = +/-Inf for any curves that don"t reach RelativeViability = 0.5

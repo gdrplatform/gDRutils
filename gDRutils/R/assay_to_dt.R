@@ -3,7 +3,7 @@
 #' Transform a SummarizedExperiment assay to a long data.table with a single entry for each row and column combination.
 #' @import reshape2
 #' @param se SummarizedExperiment object with dose-response data.
-#' @param assay_name String of name of the assay in the /code{se}.
+#' @param assay_name String of name of the assay or index of the assay in the \code{se}.
 #' @param merge_metrics Logical indicating whether the metrics should be merged.
 #' Defaults to \code{FALSE}.
 #'
@@ -47,7 +47,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
     if (length(unique(sapply(myL, ncol))) > 1) {
       df <- do.call(plyr::rbind.fill, lapply(myL, data.table::as.data.table))
     } else {
-      df <- data.table::as.data.table(do.call(rbind, myL))
+      df <- data.table::rbindlist(lapply(myL, as.data.frame), fill = TRUE)
     }
     if(nrow(df)==0) return()
     df$rId <- rCol
@@ -72,8 +72,9 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
         colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
       }
       
-      Df_RV <- subset(asDf, dr_metric == "RV", select = c("rId", "cId", names(colnames_RV)))
-      Df_GR <- subset(asDf, dr_metric == "GR", select = -c(dr_metric))
+      vars <- c("rId", "cId", names(colnames_RV))
+      Df_RV <- asDf[df_metric == "RV", ..vars]
+      Df_GR <- asDf[df_metric == "GR", -..dr_metric]
       
       data.table::setnames(Df_RV,
                            old = names(colnames_RV),
