@@ -1,15 +1,3 @@
-#' @include global_cache.R
-
-#' @export
-get_header <- function(x = NULL) {
-  global_cache$get_head(x)
-}
-
-
-############
-# Constants
-############
-
 ## The following is an internal function that will return a list of headers
 ## for a given data type. It utilized the get_identifier function which can be
 ## changed at run time, which is why it needs to be wrapped in a function. 

@@ -1,4 +1,4 @@
-library(testthat); library(gDRutils)
+#library(testthat); library(gDRutils)
 
 test_that("get_identifier works", {
   expect_error(get_identifier("BOGUS"))
@@ -16,11 +16,4 @@ test_that("get_identifier works", {
                                       untreated_tag = c("untreated", "vehicle"), 
                                       masked_tag = "masked", 
                                       WellPosition = c("WellRow", "WellColumn")))
-})
-
-
-test_that("get_header works", {
-  expect_error(get_header("BOGUS"))
-  expect_equal(get_header("manifest"), c("Barcode", "Template", "Duration"))
-  expect_equal(length(get_header()), 13)
 })
