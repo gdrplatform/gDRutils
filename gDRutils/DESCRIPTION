@@ -1,7 +1,7 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.14
+Version: 0.0.15
 Date: 2020-11-12
 Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
 Maintainer: Marc Hafner <hafner.marc@gene.com>
@@ -36,3 +36,4 @@ Collate:
     'get_identifier.R'
     'headers_list.R'
     'packages.R'
+Config/testthat/start-first: assays_to_dt, get_identifier, get_header, GR_curve_fit
