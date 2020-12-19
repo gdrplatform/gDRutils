@@ -36,4 +36,3 @@ Collate:
     'get_identifier.R'
     'headers_list.R'
     'packages.R'
-Config/testthat/start-first: assays_to_dt, get_identifier, get_header, GR_curve_fit

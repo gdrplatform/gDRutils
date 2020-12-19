@@ -1,10 +1,10 @@
 #library(testthat); library(gDRutils)
 
 test_that("get_identifier works", {
+  print("get_identifier test is getting called")
   expect_error(get_identifier("BOGUS"))
 
   expect_equal(get_identifier("duration"), "Duration")
-  expect_error(set_identifier("duration", "BLAH"))
 
   set_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_identifier("cellline"), "my_personal_cell_line_identifiers")
