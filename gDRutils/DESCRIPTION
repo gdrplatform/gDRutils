@@ -16,8 +16,7 @@ Imports:
     reshape2,
     stats,
     SummarizedExperiment,
-    testthat,
-    dplyr
+    testthat
 Suggests:
     futile.logger,
     knitr
