@@ -22,7 +22,6 @@ options(Ncpus = parallel::detectCores())
 
 # Extract dependencies from DESCRIPTION file
 deps <- yaml::read_yaml(file.path(.wd, "rplatform", "DESCRIPTION_dependencies.yaml"))
-deps <- deps[!(names(deps) %in% dont.install)]
 # packages needed in
 # deps <- rbind(deps, data.frame(type = rep("Suggests", 3),
 #                               package = c("attempt", "urltools", "config"),
