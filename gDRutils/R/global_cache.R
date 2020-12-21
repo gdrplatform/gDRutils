@@ -3,76 +3,69 @@
 ## This function maintains a cache of identifiers, headers, and their respective values at run time. 
 ## It allows users to set identifier values using the 'set_identifier' function.
 make_global_cache <- function() {
-  identifiers_list <- list()
+  identifiers_list <- IDENTIFIERS_LIST
   headers_list <- list()
 
   valid_ids <- names(IDENTIFIERS_LIST) 
 
-  .get_id <- function(x = NULL) {
-    if (!is.null(x)) {
-      if (! x %in% valid_ids) {
+  .get_id <- function(k = NULL) {
+    if (!is.null(k)) {
+      checkmate::assert_string(k, null.ok = TRUE)
+      checkmate::assert_choice(k, choices = valid_ids)
+
+      if (! k %in% valid_ids) {
 	stop(sprintf("'%s' is not one of the valid identifiers: '%s'", 
-	  x, paste0(valid_ids, collapse=", ")))
+	  k, paste0(valid_ids, collapse=", ")))
       }
 
-      v <- identifiers_list[[x]]
-      if (is.null(v)) {
-	identifiers_list[[x]] <<- IDENTIFIERS_LIST[[x]]
-        v <- identifiers_list[[x]]
-      }
-      return(v)
+      return(identifiers_list[[k]])
     } else {
-      missing_ids <- setdiff(names(IDENTIFIERS_LIST), names(identifiers_list))
-      if (length(missing_ids) != 0L) {
-        sapply(missing_ids, get_identifier) 
-      }
       return(identifiers_list)
     }
   }
 
-  .set_id <- function(x, v) {
-    if (is.null(identifiers_list[[x]])) {
-      if (! x %in% valid_ids) {
-	stop(sprintf("'%s' is not one of the valid identifiers: '%s'", 
-	  x, paste0(valid_ids, collapse=", ")))
-      }
-      identifiers_list[[x]] <<- v
-    } else {
-      stop(sprintf("cannot set '%s' to '%s', already set to '%s'", x, v, identifiers_list[[x]]))
+  .set_id <- function(k, v) {
+    if (! k %in% valid_ids) {
+      stop(sprintf("'%s' is not one of the valid identifiers: '%s'", 
+	k, paste0(valid_ids, collapse=", ")))
     }
+    identifiers_list[[k]] <<- v
   }
 
-  .get_header <- function(x = NULL) {
-    ## The following HEADERS_LIST call is needed inside the function
-    ## because otherwise the collation order has cyclical dependencies.
+  .get_header <- function(k = NULL) {
+    ## The following .getHeadersList() call is inside the function .get_header
+    ## to avoid cyclical dependencies and collation order problems.
 
     if (length(headers_list) == 0L) {
-      HEADERS_LIST <<- .getHeadersList()
+      assign(x = "headers_list", value = .getHeadersList(), pos = parent.frame())
     }
 
-    if (!is.null(x)) {
+    if (!is.null(k)) {
       valid_headers <- names(HEADERS_LIST) 
-      if (! x %in% valid_headers) {
+
+      checkmate::assert_string(k, null.ok = TRUE)
+      checkmate::assert_choice(k, choices = valid_headers)
+
+      if (! k %in% valid_headers) {
 	stop(sprintf("'%s' is not one of the valid headers: '%s'", 
-	  x, paste0(valid_headers, collapse=", ")))
+	  k, paste0(valid_headers, collapse=", ")))
       }
 
-      v <- headers_list[[x]]
-      if (is.null(v)) {
-	headers_list[[x]] <<- HEADERS_LIST[[x]]
-        v <- headers_list[[x]]
-      }
-      return(v)
+      return(headers_list[[k]])
     } else {
-      missing_headers <- setdiff(names(HEADERS_LIST), names(headers_list))
-      if (length(missing_headers) != 0L) {
-        sapply(missing_headers, get_header) 
-      }
       return(headers_list)
     }
   }
 
-  list(get_id=.get_id, set_id=.set_id, get_head=.get_header)
+  .reset_ids <- function() {
+    assign(x = identifiers_list, value = list(), pos = parent.frame())
+  }
+
+  .reset_headers <- function() {
+    assign(x = headers_list, value = list(), pos = parent.frame())
+  }
+
+  list(get_id=.get_id, set_id=.set_id, get_head=.get_header, reset_ids=.reset_ids, reset_heads=.reset_headers)
 }
 
 global_cache <- make_global_cache()
