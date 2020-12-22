@@ -6,7 +6,7 @@ make_global_cache <- function() {
   identifiers_list <- IDENTIFIERS_LIST
   headers_list <- list()
 
-  valid_ids <- names(IDENTIFIERS_LIST) 
+  valid_ids <- names(identifiers_list)
 
   .get_id <- function(k = NULL) {
     if (!is.null(k)) {
@@ -31,6 +31,7 @@ make_global_cache <- function() {
     }
     identifiers_list[[k]] <<- v
   }
+
 
   .get_header <- function(k = NULL) {
     ## The following .getHeadersList() call is inside the function .get_header
