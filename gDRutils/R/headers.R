@@ -41,6 +41,6 @@ get_header <- function(k = NULL) {
 #' @export
 #' 
 reset_headers <- function() {
-  global_cache$reset_head()
+  global_cache$reset_heads()
   invisible(NULL)
 }

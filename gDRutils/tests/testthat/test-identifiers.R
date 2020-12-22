@@ -3,6 +3,8 @@
 context("test functions relating to getting, setting, and resetting headers")
 
 test_that("get_identifier and set_identifier work", {
+  reset_identifiers()
+
   expect_error(get_identifier("BOGUS"))
 
   expect_equal(get_identifier("duration"), "Duration")
@@ -21,12 +23,14 @@ test_that("get_identifier and set_identifier work", {
 
 
 test_that("reset_identifiers works", {
+  reset_identifiers()
+
   d <- get_identifier()
   expect_true(length(d) != 0L)
   set_identifier("duration", "TEST_DURATION")
   expect_equal(get_identifier("duration"), "TEST_DURATION")
 
-  elist <- reset_identifiers()
+  ilist <- reset_identifiers()
   expect_equal(ilist, NULL)
   expect_equal(get_identifier("duration"), "Duration")
 })

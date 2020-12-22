@@ -52,6 +52,6 @@ set_identifier <- function(k, v) {
 #' @export
 #' 
 reset_identifiers <- function() {
-  global_cache$reset_id()
+  global_cache$reset_ids()
   invisible(NULL)
 }
