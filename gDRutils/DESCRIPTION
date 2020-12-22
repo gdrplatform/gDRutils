@@ -15,12 +15,11 @@ Imports:
     magrittr,
     reshape2,
     stats,
-    SummarizedExperiment,
-    testthat,
-    dplyr
+    SummarizedExperiment
 Suggests:
     futile.logger,
-    knitr
+    knitr,
+    testthat
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.1
@@ -32,7 +31,7 @@ Collate:
     'assay_to_dt.R'
     'identifiers_list.R'
     'global_cache.R'
-    'get_header.R'
-    'get_identifier.R'
+    'headers.R'
     'headers_list.R'
+    'identifiers.R'
     'packages.R'
