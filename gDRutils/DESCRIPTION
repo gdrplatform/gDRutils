@@ -1,7 +1,7 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.14
+Version: 0.0.15
 Date: 2020-11-12
 Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
 Maintainer: Marc Hafner <hafner.marc@gene.com>
@@ -15,14 +15,23 @@ Imports:
     magrittr,
     reshape2,
     stats,
-    SummarizedExperiment,
-    testthat
+    SummarizedExperiment
 Suggests:
     futile.logger,
-    knitr
+    knitr,
+    testthat
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.1
 SwitchrLibrary: gDRutils
 DeploySubPath: gDRutils
 Encoding: UTF-8
+Collate: 
+    'GR_curve_fit.R'
+    'assay_to_dt.R'
+    'identifiers_list.R'
+    'global_cache.R'
+    'headers.R'
+    'headers_list.R'
+    'identifiers.R'
+    'packages.R'

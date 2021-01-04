@@ -3,4 +3,12 @@
 \docType{package}
 \name{gDRutils}
 \alias{gDRutils}
+\alias{.datatable.aware}
 \title{'gDRutils - a package with utils'}
+\format{
+An object of class \code{logical} of length 1.
+}
+\usage{
+.datatable.aware
+}
+\keyword{datasets}

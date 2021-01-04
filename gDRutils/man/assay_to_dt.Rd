@@ -9,7 +9,7 @@ assay_to_dt(se, assay_name, merge_metrics = FALSE)
 \arguments{
 \item{se}{SummarizedExperiment object with dose-response data.}
 
-\item{assay_name}{String of name of the assay in the /code{se}.}
+\item{assay_name}{String of name of the assay or index of the assay in the \code{se}.}
 
 \item{merge_metrics}{Logical indicating whether the metrics should be merged.
 Defaults to \code{FALSE}.}
