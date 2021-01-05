@@ -1,5 +1,3 @@
-#' @include global_cache.R
-
 #' @title Get or reset headers for one or all header field(s) respectively
 #'
 #' @description Get the expected header(s) for one field or reset all header fields
@@ -30,7 +28,7 @@ NULL
 #' 
 get_header <- function(k = NULL) {
   checkmate::assert_string(k, null.ok = TRUE)
-  global_cache$get_head(k)
+  .get_header(k)
 }
 
 
@@ -41,6 +39,5 @@ get_header <- function(k = NULL) {
 #' @export
 #' 
 reset_headers <- function() {
-  global_cache$reset_heads()
-  invisible(NULL)
+  .reset_headers()
 }

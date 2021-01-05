@@ -1,6 +1,7 @@
-## The following is an internal function that will return a list of headers
-## for a given data type. It utilized the get_identifier function which can be
+## The following function utilizes the get_identifier() function which can be
 ## changed at run time, which is why it needs to be wrapped in a function. 
+
+#' @keywords internal
 .getHeadersList <- function() {
   HEADERS_LIST <- list(
     manifest = c(

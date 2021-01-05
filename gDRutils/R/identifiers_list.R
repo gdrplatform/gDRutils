@@ -1,5 +1,6 @@
 ## The following are the default values that will be used for critical metadata fields
-## if no overriding is performed via `set_identifier`.
+## if no overriding is performed via `set_identifier()`.
+
 IDENTIFIERS_LIST <- list(
   duration = "Duration",
 

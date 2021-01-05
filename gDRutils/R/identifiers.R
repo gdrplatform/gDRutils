@@ -26,7 +26,7 @@ NULL
 #' @export
 #' 
 get_identifier <- function(k = NULL) {
-  global_cache$get_id(k)
+  .get_id(k)
 }
 
 
@@ -40,8 +40,7 @@ get_identifier <- function(k = NULL) {
 #' @export
 #' 
 set_identifier <- function(k, v) {
-  global_cache$set_id(k, v)
-  invisible(NULL)
+  .set_id(k, v)
 }
 
 
@@ -52,6 +51,5 @@ set_identifier <- function(k, v) {
 #' @export
 #' 
 reset_identifiers <- function() {
-  global_cache$reset_ids()
-  invisible(NULL)
+  .reset_ids()
 }
