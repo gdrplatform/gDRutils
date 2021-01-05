@@ -1,5 +1,3 @@
-#' @include global_cache.R
-
 #' @title Get, set, or reset identifiers for one or all identifier field(s)
 #'
 #' @description Get, set, or reset the expected identifier(s) for one or all identifier field(s)

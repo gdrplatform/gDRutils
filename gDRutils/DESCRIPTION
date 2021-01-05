@@ -31,12 +31,3 @@ RoxygenNote: 7.1.1
 SwitchrLibrary: gDRutils
 DeploySubPath: gDRutils
 Encoding: UTF-8
-Collate: 
-    'GR_curve_fit.R'
-    'assay_to_dt.R'
-    'global_cache.R'
-    'headers.R'
-    'headers_list.R'
-    'identifiers.R'
-    'identifiers_list.R'
-    'packages.R'
