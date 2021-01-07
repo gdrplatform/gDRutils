@@ -21,11 +21,6 @@ global_cache$headers_list <- list()
     checkmate::assert_string(k, null.ok = TRUE)
     checkmate::assert_choice(k, choices = valid_ids)
 
-    if (! k %in% valid_ids) {
-      stop(sprintf("'%s' is not one of the valid identifiers: '%s'", 
-	k, paste0(valid_ids, collapse=", ")))
-    }
-
     return(global_cache$identifiers_list[[k]])
   } else {
     missing_ids <- setdiff(valid_ids, names(global_cache$identifiers_list))	
@@ -45,10 +40,6 @@ global_cache$headers_list <- list()
   checkmate::assert_string(k, null.ok = TRUE)
   checkmate::assert_choice(k, choices = valid_ids)
 
-  if (! k %in% valid_ids) {
-    stop(sprintf("'%s' is not one of the valid identifiers: '%s'", 
-      k, paste0(valid_ids, collapse=", ")))
-  }
   global_cache$identifiers_list[[k]] <- v
   invisible(NULL)
 }
@@ -79,11 +70,6 @@ global_cache$headers_list <- list()
 
     checkmate::assert_string(k, null.ok = TRUE)
     checkmate::assert_choice(k, choices = valid_headers)
-
-    if (! k %in% valid_headers) {
-      stop(sprintf("'%s' is not one of the valid headers: '%s'", 
-	k, paste0(valid_headers, collapse=", ")))
-    }
 
     return(global_cache$headers_list[[k]])
   } else {
