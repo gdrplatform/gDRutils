@@ -14,11 +14,15 @@ test_that("get_identifier and set_identifier work", {
 
   expect_equal(get_identifier(), list(duration = "Duration", 
                                       cellline = "my_personal_cell_line_identifiers", 
+                                      cellline_name = "CellLineName",
+                                      cellline_tissue = "Tissue",
+                                      cellline_ref_div_time = "ReferenceDivisionTime",
                                       drug = "Gnumber",
                                       drugname = "DrugName",
                                       untreated_tag = c("untreated", "vehicle"), 
                                       masked_tag = "masked", 
-                                      WellPosition = c("WellRow", "WellColumn")))
+                                      WellPosition = c("WellRow", "WellColumn"), 
+                                      well_position = c("WellRow", "WellColumn")))
 })
 
 
