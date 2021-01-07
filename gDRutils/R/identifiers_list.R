@@ -20,6 +20,6 @@ IDENTIFIERS_LIST <- list(
   # flag for masked wells
 
   WellPosition = c("WellRow", "WellColumn"), 
-  # TODO: Delete once all references to WellPosition are replaced with wel_position
+  # TODO: Delete once all references to WellPosition are replaced with well_position
   well_position = c("WellRow", "WellColumn")
 )
