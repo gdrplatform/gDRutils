@@ -1,14 +1,14 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.15
-Date: 2020-11-12
+Version: 0.0.16
+Date: 2021-01-07
 Authors@R: c(person("Bartosz", "Czech", role=c("cre"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
              person("Marc", "Hafner", role=c("aut")),
              person("Dariusz", "Scigocki", role=c("aut")),
-	     person("Allison", "Vuong", role=c("aut")))
+             person("Allison", "Vuong", role=c("aut")))
 Maintainer: Bartosz Czech <bartosz.czech@contractors.roche.com>
 Description: A package with helper functions for dealing with drug response data
 License: file GNE_LICENSE
