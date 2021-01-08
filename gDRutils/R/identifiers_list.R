@@ -5,6 +5,9 @@ IDENTIFIERS_LIST <- list(
   duration = "Duration",
 
   cellline = "clid",
+  cellline_name = "CellLineName",
+  cellline_tissue = "Tissue",
+  cellline_ref_div_time = "ReferenceDivisionTime",
 
   drug = "Gnumber",
   drugname = "DrugName",
@@ -16,5 +19,7 @@ IDENTIFIERS_LIST <- list(
   masked_tag = 'masked',
   # flag for masked wells
 
-  WellPosition = c("WellRow", "WellColumn")
+  WellPosition = c("WellRow", "WellColumn"), 
+  # TODO: Delete once all references to WellPosition are replaced with well_position
+  well_position = c("WellRow", "WellColumn")
 )

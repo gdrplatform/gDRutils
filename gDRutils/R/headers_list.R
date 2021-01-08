@@ -49,9 +49,9 @@
 
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
     add_clid = c(
-      "CellLineName",
-      "Tissue",
-      "ReferenceDivisionTime"
+      get_identifier("cellline_name"),
+      get_identifier("cellline_tissue"),
+      get_identifier("cellline_ref_div_time")
     )
   )
 
@@ -115,12 +115,12 @@
     HEADERS_LIST[["normalized_results"]],
     HEADERS_LIST[["averaged_results"]],
     HEADERS_LIST[["metrics_results"]],
-    "WellRow",
-    "WellColumn"
+    get_identifier("well_position")
   )
 
   HEADERS_LIST[["ordered_1"]] <- c(
-    HEADERS_LIST[["add_clid"]][1:2],
+    get_identifier("cellline_name"),
+    get_identifier("cellline_tissue"),
     get_identifier("duration"),
     get_identifier("drugname"),
     "Concentration",
@@ -133,7 +133,7 @@
     HEADERS_LIST[["averaged_results"]],
     HEADERS_LIST[["metrics_results"]],
     HEADERS_LIST[["raw_data"]],
-    HEADERS_LIST[["add_clid"]][-2:-1],
+    get_identifier("cellline_ref_div_time"),
     get_identifier("cellline"),
     get_identifier("drug"),
     paste0(get_identifier("drug"), "_", 2:10),
