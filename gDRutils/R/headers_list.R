@@ -115,8 +115,7 @@
     HEADERS_LIST[["normalized_results"]],
     HEADERS_LIST[["averaged_results"]],
     HEADERS_LIST[["metrics_results"]],
-    "WellRow",
-    "WellColumn"
+    get_identifier("well_position")
   )
 
   HEADERS_LIST[["ordered_1"]] <- c(
