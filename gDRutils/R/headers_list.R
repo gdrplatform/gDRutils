@@ -138,8 +138,7 @@
     get_identifier("drug"),
     paste0(get_identifier("drug"), "_", 2:10),
     HEADERS_LIST[["manifest"]],
-    "WellRow",
-    "WellColumn"
+    get_identifier("well_position")
   )
 
   HEADERS_LIST
