@@ -78,10 +78,10 @@ df_to_assay <-
 
     if (data_type == "untreated") {
       untreatedConds <-
-        .get_untreated_conditions(seRowData)
+        gDR::.get_untreated_conditions(seRowData)
       return(final.set[rownames(final.set) %in% untreatedConds, , drop = FALSE])
     } else if (data_type == "treated") {
-      treatedConds <- .get_treated_conditions(seRowData)
+      treatedConds <- gDR::.get_treated_conditions(seRowData)
       return(final.set[rownames(final.set) %in% treatedConds, , drop = FALSE])
     } else if (data_type == "all") {
       return(final.set)
