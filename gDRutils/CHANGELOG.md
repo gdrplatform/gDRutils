@@ -1,3 +1,8 @@
+# Change to v.0.0.18
+- move df_to_assay.R from gDRcore to gDRutils
+- move df_to_bm_assay.R from gDRcore to gDRutils
+- update identifiers_list.R
+
 # Changes to v.0.0.15
 - refactor get_identifiers and get_headers to be settable and cached
 
