@@ -24,6 +24,7 @@ df_to_assay <-
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     ####
     data <- methods::as(data, "DataFrame")
+    
     allMetadata <- gDR::getMetaData(data, discard_keys = discard_keys)
 
     seColData <- allMetadata$colData
@@ -31,27 +32,28 @@ df_to_assay <-
     seRowData <- allMetadata$rowData
     cond_entries <-
       setdiff(colnames(seRowData), c("row_id", "name_"))
+    
     dataCols <- allMetadata$dataCols
 
     complete <-
       S4Vectors::DataFrame(
-        expand.grid(
+        base::expand.grid(
           row_id = seRowData$row_id,
           col_id = seColData$col_id,
           stringsAsFactors = FALSE
         )
       )
-    complete <- merge(merge(complete, seRowData, by = "row_id"),
+    complete <- S4Vectors::merge(S4Vectors::merge(complete, seRowData, by = "row_id"),
                       seColData, by = "col_id")
     complete <- complete[ order(complete$col_id, complete$row_id), ]
     complete$factor_id <- seq_len(nrow(complete))
     
     data_assigned <-
-      merge(data, complete, by = c(cond_entries, cl_entries))
+      S4Vectors::merge(data, complete, by = c(cond_entries, cl_entries))
     
-    by_factor <- lapply(1:nrow(complete), function(x)
+    by_factor <- lapply(seq_len(nrow(complete)), function(x)
       data_assigned[data_assigned$factor_id == x, dataCols])
-    names(by_factor) <- 1:nrow(complete)
+    names(by_factor) <- seq_len(nrow(complete))
 
     stopifnot(nrow(data) == sum(sapply(by_factor, nrow)))
     stopifnot(length(by_factor) == nrow(complete))
