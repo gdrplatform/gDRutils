@@ -1,6 +1,6 @@
 #' df_to_assay
 #'
-#' Convert data.frame with dose-reponse data to the assay.
+#' Convert data.frame with dose-reponse data to an assay object.
 #'
 #' The 'assay' object is simply a matrix with rownames being the treatment ids,
 #' colnames being the ids of the cell lines and values being the DataFrames with
@@ -19,11 +19,11 @@ df_to_assay <-
            data_type = c("all", "treated", "untreated"),
            discard_keys = NULL) {
     # Assertions:
-    stopifnot(any(inherits(data, "data.frame"), checkmate::test_character(data), inherits(data, "DataFrame")))
+    stopifnot(any(inherits(data, "data.frame"), inherits(data, "tbl_df"), checkmate::test_character(data), inherits(data, "DataFrame")))
     checkmate::assert_character(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     ####
-    data <- as(data, "DataFrame")
+    data <- methods::as(data, "DataFrame")
     allMetadata <- gDR::getMetaData(data, discard_keys = discard_keys)
 
     seColData <- allMetadata$colData
@@ -44,7 +44,8 @@ df_to_assay <-
     complete <- merge(merge(complete, seRowData, by = "row_id"),
                       seColData, by = "col_id")
     complete <- complete[ order(complete$col_id, complete$row_id), ]
-    complete$factor_id <- 1:nrow(complete)
+    complete$factor_id <- seq_len(nrow(complete))
+    
     data_assigned <-
       merge(data, complete, by = c(cond_entries, cl_entries))
     
