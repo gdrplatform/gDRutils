@@ -20,18 +20,8 @@ options(Ncpus = parallel::detectCores())
 
 .wd <- "/mnt/vol"
 
-# don't install these packages - they will be installed separately
-dont.install <- c(
-  "dplyr"
-)
-
-# Install packages from github
-devtools::install_url("https://cran.r-project.org/src/contrib/Archive/dplyr/dplyr_0.8.5.tar.gz")
-
-
 # Extract dependencies from DESCRIPTION file
 deps <- yaml::read_yaml(file.path(.wd, "rplatform", "DESCRIPTION_dependencies.yaml"))
-deps <- deps[!(names(deps) %in% dont.install)]
 # packages needed in
 # deps <- rbind(deps, data.frame(type = rep("Suggests", 3),
 #                               package = c("attempt", "urltools", "config"),

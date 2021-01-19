@@ -1,10 +1,15 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.14
-Date: 2020-11-12
-Author: Bartosz Czech, Arkadiusz Gladki, Marc Hafner, Natalia Potocka, Dariusz Scigocki
-Maintainer: Marc Hafner <hafner.marc@gene.com>
+Version: 0.0.17
+Date: 2021-01-08
+Authors@R: c(person("Bartosz", "Czech", role=c("cre"), email="bartosz.czech@contractors.roche.com"),
+             person("Arkadiusz", "Gladki", role=c("aut")),
+             person("Aleksander", "Chlebowski", role=c("aut")),
+             person("Marc", "Hafner", role=c("aut")),
+             person("Dariusz", "Scigocki", role=c("aut")),
+             person("Allison", "Vuong", role=c("aut")))
+Maintainer: Bartosz Czech <bartosz.czech@contractors.roche.com>
 Description: A package with helper functions for dealing with drug response data
 License: file GNE_LICENSE
 LazyLoad: yes
@@ -15,12 +20,11 @@ Imports:
     magrittr,
     reshape2,
     stats,
-    SummarizedExperiment,
-    testthat,
-    dplyr
+    SummarizedExperiment
 Suggests:
     futile.logger,
-    knitr
+    knitr,
+    testthat
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.1

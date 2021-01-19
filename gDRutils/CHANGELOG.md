@@ -1,3 +1,6 @@
+# Changes to v.0.0.15
+- refactor get_identifiers and get_headers to be settable and cached
+
 # Changes to v.0.0.14
 - totally, finally, and unscrupulously remove dplyr package from gDRutils
 - replace IC by RV
