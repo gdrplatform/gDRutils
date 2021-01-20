@@ -25,25 +25,23 @@ RVGRfits <- function(df_,
 #' Defaults to \code{1}.
 #' @param n_point_cutoff integer of how many points should be considered the minimum required to try to fit a curve.
 #' @param range_conc numeric vector of length 2 indicating the lower and upper concentration ranges. See details.
-#' @param force boolean indicating whether or not to force a constant fit
-#' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit
+#' @param force boolean indicating whether or not to force a constant fit.
+#' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
 #'
 #' @return data.frame of RV and GR fit parameters.
 #'
 #' @details
 #' The \code{df_} expects the following columns:
 #' \itemize{
-#'  \item{\code{Concentration}}{}, 
-#'  \item{}{normalized values},
-#'  \item{}{standardized normalized values}
+#'  \item{\code{Concentration}}{unlogged concentration values}, 
+#'  \item{\code{RelativeViability}}{normalized values},
+#'  \item\code{std_RelativeViability}{standardized normalized values}
 #' }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
 #' The purpose of this statistic is to enable comparison across different experiments with slightly 
 #' different concentration ranges. 
 #'
-#' @examples
-#' # Set up the data.frame.
 #' @export
 #'
 fit_curves <- function(df_,
@@ -95,20 +93,20 @@ fit_curves <- function(df_,
 #' Fit a logistic curve to drug response data.
 #'
 #' @param concs concentrations that have not been transformed into log space.
-#' @param norm_values normalized response values (Untreated = 1)
-#' @param std_norm_values std of values
-#' @param x_0 upper limit
+#' @param norm_values normalized response values (Untreated = 1).
+#' @param std_norm_values std of values.
+#' @param x_0 upper limit.
 #' Defaults to \code{1}. For co-treatments, this value should be set to \code{NA}.
-#' @param priors numeric vector containing starting values for all
+#' @param priors numeric vector containing starting values for all.
 #' mean parameters in the model. Overrules any self starter function.
 #' @param lower numeric vector of lower limits for all parameters in a 4-param model.
-#' @param range_conc range of concentration for calculating AOC_range
-#' @param force boolean indicating whether or not to force a constant fit
-#' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit
-#' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap)
-#' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve
+#' @param range_conc range of concentration for calculating AOC_range.
+#' @param force boolean indicating whether or not to force a constant fit.
+#' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
+#' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
+#' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
 #'
-#' @return named list with metrics and fit parameters
+#' @return named list with metrics and fit parameters.
 #'
 #' @details
 #' Implementation of the genedata approach for curve fit: 
@@ -123,17 +121,17 @@ fit_curves <- function(df_,
 #'  \item{c50}{The drug concentration at half-maximal effect}
 #'  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response data as concentration goes to infinity}
 #'  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 for the primary drug}
-#'  \item{h}{}
-#'  \item{r2}{}
-#'  \item{x_sd_avg}{}
+#'  \item{h}{The hill coefficient of the fitted curve, which reflects how steep the dose-response curve is}
+#'  \item{r2}{The goodness of the fit}
+#'  \item{x_sd_avg}{The standard deviation of GR/IC}
 #'  \item{fit_type}{This will be given by one of the following:
-#'    \item{"DRC4pHillFitModel"}{}
-#'    \item{"DRC3pHillFitModelFixS0"}{}
-#'    \item{"DRCConstantFitResult"}{}
-#'    \item{"DRCTooFewPointsToFit"}{}
-#'    \item{"DRCInvalidFitResult"}{}
+#'    \item{"DRC4pHillFitModel"}{Successfully fit with a 4-parameter model}
+#'    \item{"DRC3pHillFitModelFixS0"}{Successfully fit with a 3-parameter model}
+#'    \item{"DRCConstantFitResult"}{Successfully fit with a constant fit}
+#'    \item{"DRCTooFewPointsToFit"}{Not enough points to run a fit}
+#'    \item{"DRCInvalidFitResult"}{Fit was attempted but failed}
 #'  }
-#'  \item{maxlog10Concentration}{}
+#'  \item{maxlog10Concentration}{The highest log10 concentration}
 #'  \item{N_conc}{Number of unique concentrations}
 #' }
 #'
@@ -158,7 +156,7 @@ logisticFit <-
 
     # Check that values have not been logged yet. 
     if (any(concs < 0)) {
-      stop("function accepts only unlogged values but negative concentrations are detected")
+      stop("function accepts only unlogged concentrations, negative concentrations are detected")
     }
 
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
@@ -206,7 +204,6 @@ logisticFit <-
       if (!is.na(x_0)) {
         warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
       }
-      #TODO: Do we need to set a out$r2? 
       out
     }
 
@@ -279,11 +276,13 @@ logisticFit <-
       out[[p]] <- stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
     }
 
-    out$x_mean <- mean(stats::predict(output_model_new, data.frame(
-	concs = seq(min(df_$concs), max(df_$concs), 0.03))), na.rm = TRUE)
+    out$x_mean <- mean(stats::predict(output_model_new, 
+        data.frame(concs = seq(min(df_$concs), max(df_$concs), (max(df_$concs) - min(df_$concs)/100)))), 
+        na.rm = TRUE)
     out$x_AOC <- 1 - out$x_mean
-    out$x_AOC_range <- 1 - mean(stats::predict(output_model_new, data.frame(
-	concs = seq(range_conc[1], range_conc[2], 0.03))), na.rm = TRUE)
+    out$x_AOC_range <- 1 - mean(stats::predict(output_model_new, 
+      data.frame(concs = seq(range_conc[1], range_conc[2], ((range_conc[2] - range_conc[1])/100))), 
+      na.rm = TRUE))
 
     # F-test for the significance of the sigmoidal fit.
     RSS2 <- sum(stats::residuals(output_model_new) ^ 2, na.rm = TRUE)
@@ -309,7 +308,6 @@ logisticFit <-
       return(out)
     }
 
-    # TODO: Honestly, I still do not really understand this.
     # Add xc50 = +/-Inf for any curves that do not reach RelativeViability = 0.5
     if (is.na(out$xc50)) {
       out$xc50 <- .estimate_xc50(out$x_inf)
@@ -319,8 +317,6 @@ logisticFit <-
   }
 
 
-# TODO: replace by drc::LL.4
-# logistic function (not used in the file but useful for plotting externally)
 #' @export
 logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
   Vinf + (V0 - Vinf) / (1 + (c / EC50) ^ h)
