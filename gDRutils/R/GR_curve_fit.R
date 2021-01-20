@@ -150,6 +150,10 @@ logisticFit <-
            cap = 0.1,
            n_point_cutoff = 4) {
 
+    if (length(concs) != length(norm_values)) {
+      stop("unequal vector lengths for 'conc' and 'norm_values'")
+    }
+
     resp_metric_cols <- c(gDRutils::get_header("response_metrics"), "maxlog10Concentration", "N_conc")
     out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
     names(out) <- resp_metric_cols
