@@ -2,44 +2,79 @@
 % Please edit documentation in R/GR_curve_fit.R
 \name{logisticFit}
 \alias{logisticFit}
-\title{Actual fitting function}
+\title{Logistic fit}
 \usage{
 logisticFit(
   concs,
-  normValues,
-  std_normValues,
+  norm_values,
+  std_norm_values,
   x_0 = 1,
-  curve_type = c("RV", "GR"),
+  priors = NULL,
+  lower = NULL,
   range_conc = c(0.005, 5),
   force = FALSE,
+  pcutoff = 0.05,
   cap = 0.1,
   n_point_cutoff = 4
 )
 }
 \arguments{
-\item{normValues}{normalized response values (Untreated = 1)}
+\item{concs}{concentrations that have not been transformed into log space.}
 
-\item{std_normValues}{std of values}
+\item{norm_values}{normalized response values (Untreated = 1)}
+
+\item{std_norm_values}{std of values}
 
 \item{x_0}{upper limit
-Defaults to \code{1}.}
+Defaults to \code{1}. For co-treatments, this value should be set to \code{NA}.}
 
-\item{curve_type}{response curve: either RV ([0,1]) or GR([-1,1])}
+\item{priors}{numeric vector containing starting values for all
+mean parameters in the model. Overrules any self starter function.}
+
+\item{lower}{numeric vector of lower limits for all parameters in a 4-param model.}
 
 \item{range_conc}{range of concentration for calculating AOC_range}
 
-\item{force}{use signifcance or not}
+\item{force}{boolean indicating whether or not to force a constant fit}
 
-\item{cap}{enforce values stay below (x_0+cap)}
+\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit}
 
-\item{log10concs}{log10 of concentrations}
+\item{cap}{numeric value capping \code{norm_values} to stay below (\code{x_0} + cap)}
+
+\item{n_point_cutoff}{integer indicating number of unique concentrations required to fit curve}
 }
 \value{
-DataFrame with metrics and fit parameters
+named list with metrics and fit parameters
 }
 \description{
-\code{logisticFit} returns fit parameters
+Fit a logistic curve to drug response data.
 }
 \details{
-Implementation of the genedata approach for curve fit: https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
+Implementation of the genedata approach for curve fit: 
+https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
+
+\itemize{
+ \item{x_mean}{The mean of a given dose-response metric}
+ \item{x_AOC_range}{The range of the area over the curve}
+ \item{x_AOC}{The area over the GR curve or, respectively, under the relative cell count curve, averaged over the range of concentration values}
+ \item{xc50}{The concentration at which the effect reaches a value of 0.5 based on interpolation of the fitted curve}
+ \item{x_max}{The maximum effect of the drug}
+ \item{c50}{The drug concentration at half-maximal effect}
+ \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response data as concentration goes to infinity}
+ \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 for the primary drug}
+ \item{h}{}
+ \item{r2}{}
+ \item{x_sd_avg}{}
+ \item{fit_type}{This will be given by one of the following:
+   \item{"DRC4pHillFitModel"}{}
+   \item{"DRC3pHillFitModelFixS0"}{}
+   \item{"DRCConstantFitResult"}{}
+   \item{"DRCTooFewPointsToFit"}{}
+   \item{"DRCInvalidFitResult"}{}
+ }
+ \item{maxlog10Concentration}{}
+ \item{N_conc}{Number of unique concentrations}
+}
+
+Note that the fit parameters are returned on the non-logged space.
 }
