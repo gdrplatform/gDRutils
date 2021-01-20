@@ -27,9 +27,9 @@ Defaults to \code{1}.}
 
 \item{range_conc}{numeric vector of length 2 indicating the lower and upper concentration ranges. See details.}
 
-\item{force}{boolean indicating whether or not to force a constant fit}
+\item{force}{boolean indicating whether or not to force a constant fit.}
 
-\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit}
+\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.}
 }
 \value{
 data.frame of RV and GR fit parameters.
@@ -40,15 +40,12 @@ Fit GR and RV curves from a data.frame.
 \details{
 The \code{df_} expects the following columns:
 \itemize{
- \item{\code{Concentration}}{}, 
- \item{}{normalized values},
- \item{}{standardized normalized values}
+ \item{\code{Concentration}}{unlogged concentration values}, 
+ \item{\code{RelativeViability}}{normalized values},
+ \item\code{std_RelativeViability}{standardized normalized values}
 }
 
 The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
 The purpose of this statistic is to enable comparison across different experiments with slightly 
 different concentration ranges.
-}
-\examples{
-# Set up the data.frame.
 }

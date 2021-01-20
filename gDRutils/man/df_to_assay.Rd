@@ -22,7 +22,7 @@ or for treated conditions only ('treated')}
 matrix
 }
 \description{
-Convert data.frame with dose-reponse data to the assay.
+Convert data.frame with dose-reponse data to an assay object.
 }
 \details{
 The 'assay' object is simply a matrix with rownames being the treatment ids,

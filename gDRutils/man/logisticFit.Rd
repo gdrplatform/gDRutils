@@ -21,30 +21,30 @@ logisticFit(
 \arguments{
 \item{concs}{concentrations that have not been transformed into log space.}
 
-\item{norm_values}{normalized response values (Untreated = 1)}
+\item{norm_values}{normalized response values (Untreated = 1).}
 
-\item{std_norm_values}{std of values}
+\item{std_norm_values}{std of values.}
 
-\item{x_0}{upper limit
+\item{x_0}{upper limit.
 Defaults to \code{1}. For co-treatments, this value should be set to \code{NA}.}
 
-\item{priors}{numeric vector containing starting values for all
+\item{priors}{numeric vector containing starting values for all.
 mean parameters in the model. Overrules any self starter function.}
 
 \item{lower}{numeric vector of lower limits for all parameters in a 4-param model.}
 
-\item{range_conc}{range of concentration for calculating AOC_range}
+\item{range_conc}{range of concentration for calculating AOC_range.}
 
-\item{force}{boolean indicating whether or not to force a constant fit}
+\item{force}{boolean indicating whether or not to force a constant fit.}
 
-\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit}
+\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.}
 
-\item{cap}{numeric value capping \code{norm_values} to stay below (\code{x_0} + cap)}
+\item{cap}{numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).}
 
-\item{n_point_cutoff}{integer indicating number of unique concentrations required to fit curve}
+\item{n_point_cutoff}{integer indicating number of unique concentrations required to fit curve.}
 }
 \value{
-named list with metrics and fit parameters
+named list with metrics and fit parameters.
 }
 \description{
 Fit a logistic curve to drug response data.
@@ -62,19 +62,17 @@ https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dos
  \item{c50}{The drug concentration at half-maximal effect}
  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response data as concentration goes to infinity}
  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 for the primary drug}
- \item{h}{}
- \item{r2}{}
- \item{x_sd_avg}{}
+ \item{h}{The hill coefficient of the fitted curve, which reflects how steep the dose-response curve is}
+ \item{r2}{The goodness of the fit}
+ \item{x_sd_avg}{The standard deviation of GR/IC}
  \item{fit_type}{This will be given by one of the following:
-   \item{"DRC4pHillFitModel"}{}
-   \item{"DRC3pHillFitModelFixS0"}{}
-   \item{"DRCConstantFitResult"}{}
-   \item{"DRCTooFewPointsToFit"}{}
-   \item{"DRCInvalidFitResult"}{}
+   \item{"DRC4pHillFitModel"}{Successfully fit with a 4-parameter model}
+   \item{"DRC3pHillFitModelFixS0"}{Successfully fit with a 3-parameter model}
+   \item{"DRCConstantFitResult"}{Successfully fit with a constant fit}
+   \item{"DRCTooFewPointsToFit"}{Not enough points to run a fit}
+   \item{"DRCInvalidFitResult"}{Fit was attempted but failed}
  }
- \item{maxlog10Concentration}{}
+ \item{maxlog10Concentration}{The highest log10 concentration}
  \item{N_conc}{Number of unique concentrations}
 }
-
-Note that the fit parameters are returned on the non-logged space.
 }

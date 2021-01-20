@@ -2,9 +2,9 @@
 
 export(RVGRfits)
 export(assay_to_dt)
-export(fit_curves)
 export(df_to_assay)
 export(df_to_bm_assay)
+export(fit_curves)
 export(get_header)
 export(get_identifier)
 export(logisticFit)
