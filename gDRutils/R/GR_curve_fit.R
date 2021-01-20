@@ -165,7 +165,7 @@ logisticFit <-
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
 
     ## Calculate metrics that do not require fitting.
-    out$maxlog10conc <- log10(max(concs))
+    out$maxlog10Concentration <- log10(max(concs))
     out$N_conc <- length(unique(concs))
     out$x_sd_avg <- mean(std_norm_values, na.rm = TRUE)
 
@@ -198,12 +198,14 @@ logisticFit <-
     # Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
     .set_constant_fit_params <- function(out) {
       out$fit_type <- 'DRCConstantFitResult'
-      out$x_0 <- x_0
       out$c50 <- 0
       out$h <- 0.0001
       out$xc50 <- .estimate_xc50(mean_norm_value)
-      out$x_inf <- out$x_mean <- mean_norm_value
+      out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
       out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
+      if (!is.na(x_0)) {
+        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
+      }
       #TODO: Do we need to set a out$r2? 
       out
     }
