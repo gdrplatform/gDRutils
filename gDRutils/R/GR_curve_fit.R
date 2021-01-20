@@ -112,6 +112,7 @@ fit_curves <- function(df_,
 #' Implementation of the genedata approach for curve fit: 
 #' https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
 #'
+#' Parameter names correspond to the following definitions:
 #' \itemize{
 #'  \item{x_mean}{The mean of a given dose-response metric}
 #'  \item{x_AOC_range}{The range of the area over the curve}
