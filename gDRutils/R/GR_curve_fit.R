@@ -10,7 +10,7 @@ RVGRfits <- function(df_,
                       pcutoff = 0.05) {
   .Deprecated("fit_curves", package="gDRutils")
   fit_curves(df_ = df_, e_0 = e_0, GR_0 = GR_0, n_point_cutoff = n_point_cutoff, 
-    range_conc = range_conc, force = force, pcutoff = pcutoff)
+    range_conc = range_conc, force_fit = force, pcutoff = pcutoff)
 }
 
 
@@ -24,19 +24,20 @@ RVGRfits <- function(df_,
 #' @param GR_0 numeric value representing the \code{x_0} value for the GR curve.
 #' Defaults to \code{1}.
 #' @param n_point_cutoff integer of how many points should be considered the minimum required to try to fit a curve.
+#' Defaults to \code{4}.
 #' @param range_conc numeric vector of length 2 indicating the lower and upper concentration ranges. See details.
-#' @param force boolean indicating whether or not to force a constant fit.
+#' @param force_fit boolean indicating whether or not to force a constant fit.
 #' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
 #'
 #' @return data.frame of RV and GR fit parameters.
 #'
 #' @details
 #' The \code{df_} expects the following columns:
-#' \itemize{
-#'  \item{\code{Concentration}}{unlogged concentration values}, 
-#'  \item{\code{RelativeViability}}{normalized values},
-#'  \item\code{std_RelativeViability}{standardized normalized values}
-#' }
+#'  \itemize{
+#'   \item{Concentration} unlogged concentration values
+#'   \item{RelativeViability} normalized values
+#'   \item{std_RelativeViability} standardized normalized values
+#'  }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
 #' The purpose of this statistic is to enable comparison across different experiments with slightly 
@@ -49,7 +50,7 @@ fit_curves <- function(df_,
 		       GR_0 = 1,
 		       n_point_cutoff = 4,
 		       range_conc = c(5e-3, 5),
-		       force = FALSE, 
+		       force_fit = FALSE, 
                        pcutoff = 0.05) {
 
   checkmate::assert_class(df_, "data.frame")
@@ -65,7 +66,7 @@ fit_curves <- function(df_,
     priors = c(2, 0.4, 1, med_conc),
     lower = c(0.1, 0, 0, min_conc / 10),
     range_conc = range_conc,
-    force = force,
+    force_fit = force_fit,
     pcutoff = pcutoff, 
     n_point_cutoff = n_point_cutoff
   )
@@ -78,7 +79,7 @@ fit_curves <- function(df_,
     priors = c(2, 0.1, 1, med_conc),
     lower = c(0.1, -1, -1, min_conc / 10),
     range_conc = range_conc,
-    force = force,
+    force_fit = force_fit,
     pcutoff = pcutoff, 
     n_point_cutoff = n_point_cutoff
   )
@@ -103,7 +104,7 @@ fit_curves <- function(df_,
 #' mean parameters in the model. Overrules any self starter function.
 #' @param lower numeric vector of lower limits for all parameters in a 4-param model.
 #' @param range_conc range of concentration for calculating AOC_range.
-#' @param force boolean indicating whether or not to force a parameter-based fit.
+#' @param force_fit boolean indicating whether or not to force a parameter-based fit.
 #' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
@@ -114,8 +115,8 @@ fit_curves <- function(df_,
 #' Implementation of the genedata approach for curve fit: 
 #' https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
 #'
-#' Parameter names correspond to the following definitions:
-#' \itemize{
+#' The output parameter names correspond to the following definitions:
+#' \describe{
 #'  \item{x_mean}{The mean of a given dose-response metric}
 #'  \item{x_AOC_range}{The range of the area over the curve}
 #'  \item{x_AOC}{The area over the GR curve or, respectively, under the relative cell count curve, averaged over the range of concentration values}
@@ -128,11 +129,13 @@ fit_curves <- function(df_,
 #'  \item{r2}{The goodness of the fit}
 #'  \item{x_sd_avg}{The standard deviation of GR/IC}
 #'  \item{fit_type}{This will be given by one of the following:
-#'    \item{"DRC4pHillFitModel"}{Successfully fit with a 4-parameter model}
-#'    \item{"DRC3pHillFitModelFixS0"}{Successfully fit with a 3-parameter model}
-#'    \item{"DRCConstantFitResult"}{Successfully fit with a constant fit}
-#'    \item{"DRCTooFewPointsToFit"}{Not enough points to run a fit}
-#'    \item{"DRCInvalidFitResult"}{Fit was attempted but failed}
+#'   \itemize{
+#'    \item{"DRC4pHillFitModel"} Successfully fit with a 4-parameter model
+#'    \item{"DRC3pHillFitModelFixS0"} Successfully fit with a 3-parameter model
+#'    \item{"DRCConstantFitResult"} Successfully fit with a constant fit
+#'    \item{"DRCTooFewPointsToFit"} Not enough points to run a fit
+#'    \item{"DRCInvalidFitResult"} Fit was attempted but failed
+#'   }
 #'  }
 #'  \item{maxlog10Concentration}{The highest log10 concentration}
 #'  \item{N_conc}{Number of unique concentrations}
@@ -148,7 +151,7 @@ logisticFit <-
            priors = NULL,
            lower = NULL,
            range_conc = c(5e-3, 5),
-           force = FALSE,
+           force_fit = FALSE,
            pcutoff = 0.05,
            cap = 0.1,
            n_point_cutoff = 4) {
@@ -311,7 +314,7 @@ logisticFit <-
       (1 / out$h)
 
     # Test the significance of the fit and replace with flat function if required.
-    if ((!force) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
+    if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
       out <- .set_constant_fit_params(out)
       return(out)
     }

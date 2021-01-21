@@ -12,7 +12,7 @@ logisticFit(
   priors = NULL,
   lower = NULL,
   range_conc = c(0.005, 5),
-  force = FALSE,
+  force_fit = FALSE,
   pcutoff = 0.05,
   cap = 0.1,
   n_point_cutoff = 4
@@ -35,7 +35,7 @@ mean parameters in the model. Overrules any self starter function.}
 
 \item{range_conc}{range of concentration for calculating AOC_range.}
 
-\item{force}{boolean indicating whether or not to force a parameter-based fit.}
+\item{force_fit}{boolean indicating whether or not to force a parameter-based fit.}
 
 \item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.}
 
@@ -53,8 +53,8 @@ Fit a logistic curve to drug response data.
 Implementation of the genedata approach for curve fit: 
 https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
 
-Parameter names correspond to the following definitions:
-\itemize{
+The output parameter names correspond to the following definitions:
+\describe{
  \item{x_mean}{The mean of a given dose-response metric}
  \item{x_AOC_range}{The range of the area over the curve}
  \item{x_AOC}{The area over the GR curve or, respectively, under the relative cell count curve, averaged over the range of concentration values}
@@ -67,11 +67,13 @@ Parameter names correspond to the following definitions:
  \item{r2}{The goodness of the fit}
  \item{x_sd_avg}{The standard deviation of GR/IC}
  \item{fit_type}{This will be given by one of the following:
-   \item{"DRC4pHillFitModel"}{Successfully fit with a 4-parameter model}
-   \item{"DRC3pHillFitModelFixS0"}{Successfully fit with a 3-parameter model}
-   \item{"DRCConstantFitResult"}{Successfully fit with a constant fit}
-   \item{"DRCTooFewPointsToFit"}{Not enough points to run a fit}
-   \item{"DRCInvalidFitResult"}{Fit was attempted but failed}
+  \itemize{
+   \item{"DRC4pHillFitModel"} Successfully fit with a 4-parameter model
+   \item{"DRC3pHillFitModelFixS0"} Successfully fit with a 3-parameter model
+   \item{"DRCConstantFitResult"} Successfully fit with a constant fit
+   \item{"DRCTooFewPointsToFit"} Not enough points to run a fit
+   \item{"DRCInvalidFitResult"} Fit was attempted but failed
+  }
  }
  \item{maxlog10Concentration}{The highest log10 concentration}
  \item{N_conc}{Number of unique concentrations}

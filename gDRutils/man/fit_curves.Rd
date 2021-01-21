@@ -10,7 +10,7 @@ fit_curves(
   GR_0 = 1,
   n_point_cutoff = 4,
   range_conc = c(0.005, 5),
-  force = FALSE,
+  force_fit = FALSE,
   pcutoff = 0.05
 )
 }
@@ -23,11 +23,12 @@ Defaults to \code{1}.}
 \item{GR_0}{numeric value representing the \code{x_0} value for the GR curve.
 Defaults to \code{1}.}
 
-\item{n_point_cutoff}{integer of how many points should be considered the minimum required to try to fit a curve.}
+\item{n_point_cutoff}{integer of how many points should be considered the minimum required to try to fit a curve.
+Defaults to \code{4}.}
 
 \item{range_conc}{numeric vector of length 2 indicating the lower and upper concentration ranges. See details.}
 
-\item{force}{boolean indicating whether or not to force a constant fit.}
+\item{force_fit}{boolean indicating whether or not to force a constant fit.}
 
 \item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.}
 }
@@ -39,11 +40,11 @@ Fit GR and RV curves from a data.frame.
 }
 \details{
 The \code{df_} expects the following columns:
-\itemize{
- \item{\code{Concentration}}{unlogged concentration values}, 
- \item{\code{RelativeViability}}{normalized values},
- \item\code{std_RelativeViability}{standardized normalized values}
-}
+ \itemize{
+  \item{Concentration} unlogged concentration values
+  \item{RelativeViability} normalized values
+  \item{std_RelativeViability} standardized normalized values
+ }
 
 The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
 The purpose of this statistic is to enable comparison across different experiments with slightly 

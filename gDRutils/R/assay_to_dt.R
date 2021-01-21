@@ -2,7 +2,7 @@
 #'
 #' Transform a SummarizedExperiment assay to a long data.table with a single entry for each row and column combination.
 #' @import reshape2
-#' @param se SummarizedExperiment object with dose-response data.
+#' @param se \linkS4class{SummarizedExperiment} object with dose-response data.
 #' @param assay_name String of name of the assay or index of the assay in the \code{se}.
 #' @param merge_metrics Logical indicating whether the metrics should be merged.
 #' Defaults to \code{FALSE}.
@@ -20,19 +20,22 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   ids <- expand.grid(rownames(SummarizedExperiment::rowData(se)), rownames(SummarizedExperiment::colData(se)))
   colnames(ids) <- c("rId", "cId")
   ids[] <- lapply(ids, as.character)
+
   rData <- SummarizedExperiment::rowData(se)
   rData$rId <- rownames(rData)
+
   cData <- SummarizedExperiment::colData(se)
   cData$cId <- rownames(cData)
+
   annotTbl <- merge(ids, rData, by = "rId", all.x = TRUE)
   annotTbl <- merge(annotTbl, cData, by = "cId", all.x = TRUE)
   
   #merge assay data with data from colData/rowData
-  SE_assay = SummarizedExperiment::assay(se, assay_name)
-  asL <- lapply(1:nrow(SummarizedExperiment::colData(se)), function(x) {
+  SE_assay <- SummarizedExperiment::assay(se, assay_name)
+  asL <- lapply(seq_len(nrow(cData)), function(x) {
     myL <- SE_assay[, x]
     # if only one row (nrow==1), the name of the row is not kept which results in a bug
-    names(myL) = rownames(SE_assay) # this line is not affecting results if now>1
+    names(myL) <- rownames(SE_assay) # this line is not affecting results if now>1
     
     # in some datasets there might be no data for given drug/cell_line combination
     # under such circumstances DataFrame will be empty
@@ -51,7 +54,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
     }
     if(nrow(df)==0) return()
     df$rId <- rCol
-    df$cId <- rownames(SummarizedExperiment::colData(se))[x]
+    df$cId <- rownames(cData)[x]
     full.df <- merge(df, annotTbl, by = c("rId", "cId"), all.x = TRUE)
   })
   asDf <- data.table::rbindlist(asL)
