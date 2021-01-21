@@ -206,11 +206,12 @@ logisticFit <-
       out$c50 <- 0
       out$h <- 0.0001
       out$xc50 <- .estimate_xc50(mean_norm_value)
-      out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
-      out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
+
       if (!is.na(x_0)) {
         warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
       }
+      out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
+      out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
       out
     }
 
@@ -241,7 +242,7 @@ logisticFit <-
 	priors <- priors[-3]
 	lower <- lower[-3]
 
-	output_model_new <- try(drc::drm(
+	output_model_new <- drc::drm(
 	  norm_values ~ concs,
 	  data = df_,
 	  logDose = NULL,
@@ -251,12 +252,12 @@ logisticFit <-
 	  upperl = c(5, min(x_0 + cap, 1), max(concs) * 10),
 	  control = controls,
 	  na.action = na.omit
-	))
+	)
 	out$fit_type <- 'DRC3pHillFitModelFixS0'
 	out$x_0 <- x_0
 
       } else {
-	output_model_new <- try(drc::drm(
+	output_model_new <- drc::drm(
 	  norm_values ~ concs,
 	  data = df_,
 	  logDose = NULL,
@@ -266,7 +267,7 @@ logisticFit <-
 	  upperl = c(5, 1, 1 + cap, max(concs) * 10), 
 	  control = controls,
 	  na.action = na.omit
-	))
+	)
 	out$fit_type <- 'DRC4pHillFitModel'
       }
     }, error = function(e) {
@@ -284,8 +285,8 @@ logisticFit <-
     }
 
     out$x_mean <- mean(stats::predict(output_model_new, 
-        data.frame(concs = seq(log10(min(df_$concs)), log10(max(df_$concs)), (log10(max(df_$concs)) - log10(min(df_$concs)))/100))), 
-        na.rm = TRUE)
+      data.frame(concs = seq(log10(min(df_$concs)), log10(max(df_$concs)), (log10(max(df_$concs)) - log10(min(df_$concs)))/100))), 
+      na.rm = TRUE)
     out$x_AOC <- 1 - out$x_mean
     out$x_AOC_range <- 1 - mean(stats::predict(output_model_new, 
       data.frame(concs = seq(log10(range_conc[1]), log10(range_conc[2]), ((log10(range_conc[2]) - log10(range_conc[1]))/100))), 
