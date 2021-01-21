@@ -35,7 +35,7 @@ mean parameters in the model. Overrules any self starter function.}
 
 \item{range_conc}{range of concentration for calculating AOC_range.}
 
-\item{force}{boolean indicating whether or not to force a constant fit.}
+\item{force}{boolean indicating whether or not to force a parameter-based fit.}
 
 \item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.}
 
@@ -44,7 +44,7 @@ mean parameters in the model. Overrules any self starter function.}
 \item{n_point_cutoff}{integer indicating number of unique concentrations required to fit curve.}
 }
 \value{
-named list with metrics and fit parameters.
+data.frame with metrics and fit parameters.
 }
 \description{
 Fit a logistic curve to drug response data.
@@ -53,6 +53,7 @@ Fit a logistic curve to drug response data.
 Implementation of the genedata approach for curve fit: 
 https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
 
+Parameter names correspond to the following definitions:
 \itemize{
  \item{x_mean}{The mean of a given dose-response metric}
  \item{x_AOC_range}{The range of the area over the curve}

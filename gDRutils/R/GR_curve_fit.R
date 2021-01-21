@@ -45,12 +45,12 @@ RVGRfits <- function(df_,
 #' @export
 #'
 fit_curves <- function(df_,
-		      e_0 = 1,
-		      GR_0 = 1,
-		      n_point_cutoff = 4,
-		      range_conc = c(5e-3, 5),
-		      force = FALSE, 
-                      pcutoff = 0.05) {
+		       e_0 = 1,
+		       GR_0 = 1,
+		       n_point_cutoff = 4,
+		       range_conc = c(5e-3, 5),
+		       force = FALSE, 
+                       pcutoff = 0.05) {
 
   checkmate::assert_class(df_, "data.frame")
 
@@ -108,7 +108,7 @@ fit_curves <- function(df_,
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
 #'
-#' @return named list with metrics and fit parameters.
+#' @return data.frame with metrics and fit parameters.
 #'
 #' @details
 #' Implementation of the genedata approach for curve fit: 
