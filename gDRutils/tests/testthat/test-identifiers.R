@@ -1,7 +1,5 @@
 #library(testthat); library(gDRutils)
 
-context("test functions relating to getting, setting, and resetting headers")
-
 test_that("get_identifier and set_identifier work", {
   reset_identifiers()
 
