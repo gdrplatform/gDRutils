@@ -52,6 +52,8 @@ fit_curves <- function(df_,
 		      force = FALSE, 
                       pcutoff = 0.05) {
 
+  checkmate::assert_class(df_, "data.frame")
+
   med_conc <- stats::median(df_$Concentration)
   min_conc <- min(df_$Concentration)
 
@@ -101,7 +103,7 @@ fit_curves <- function(df_,
 #' mean parameters in the model. Overrules any self starter function.
 #' @param lower numeric vector of lower limits for all parameters in a 4-param model.
 #' @param range_conc range of concentration for calculating AOC_range.
-#' @param force boolean indicating whether or not to force a constant fit.
+#' @param force boolean indicating whether or not to force a parameter-based fit.
 #' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
@@ -240,7 +242,7 @@ logisticFit <-
 	lower <- lower[-3]
 
 	output_model_new <- try(drc::drm(
-	  norm_values ~ conc,
+	  norm_values ~ concs,
 	  data = df_,
 	  logDose = NULL,
 	  fct = drc::LL.3u(upper = x_0, names = fit_param),
@@ -255,7 +257,7 @@ logisticFit <-
 
       } else {
 	output_model_new <- try(drc::drm(
-	  norm_values ~ conc,
+	  norm_values ~ concs,
 	  data = df_,
 	  logDose = NULL,
 	  fct = drc::LL.4(names = fit_param),
@@ -282,11 +284,11 @@ logisticFit <-
     }
 
     out$x_mean <- mean(stats::predict(output_model_new, 
-        data.frame(concs = seq(min(df_$concs), max(df_$concs), (max(df_$concs) - min(df_$concs)/100)))), 
+        data.frame(concs = seq(log10(min(df_$concs)), log10(max(df_$concs)), (log10(max(df_$concs)) - log10(min(df_$concs)))/100))), 
         na.rm = TRUE)
     out$x_AOC <- 1 - out$x_mean
     out$x_AOC_range <- 1 - mean(stats::predict(output_model_new, 
-      data.frame(concs = seq(range_conc[1], range_conc[2], ((range_conc[2] - range_conc[1])/100))), 
+      data.frame(concs = seq(log10(range_conc[1]), log10(range_conc[2]), ((log10(range_conc[2]) - log10(range_conc[1]))/100))), 
       na.rm = TRUE))
 
     # F-test for the significance of the sigmoidal fit.
