@@ -1,10 +1,8 @@
 # gDRutils
-A package with helper functions for dealing with drug reponse data
+A package with utility functions for dealing with munging and analyzing drug reponse data.
 
 # General info
-This package can be considered as the main place for all the generic functions related to 
- - drug dose-response fitting
- - plotting
- - analyses 
- 
- It's used by the gDR family of package. It can be also used as a standalone package.
+Its main responsibilities are:
+- to provide getting/setting functionality for identifiers for downstream processing and analysis
+- to provide convenience functions for switching between long and wide table formats
+** Note that this could become obsolete as the gDR suite migrates to the BumpyMatrix.
