@@ -1,5 +1,10 @@
 #library(testthat); library(gDRutils)
 source("setUp.R")
+.round_params <- function(df) {
+  df[] <- lapply(df, round, 4)
+  df
+}
+
 
 test_that("fit_curves fails with expected errors", {
   expect_error(fit_curves(list()))
@@ -7,22 +12,18 @@ test_that("fit_curves fails with expected errors", {
   # Log10 concentrations.
   df_resp2 <- df_resp
   df_resp2$Concentration <- df_resp2$Concentration * -1
-  expect_error(fit_curves(df_resp2))
+  expect_error(fit_curves(df_resp2), regexp = "function accepts only unlogged concentrations")
 })
 
 
 test_that("warnings are thrown for duplicated concentrations", {
   df_resp3 <- df_resp
   df_resp3$Concentration[2:3] <- df_resp3$Concentration[1]
-  expect_warning(fit_curves(df_resp3))
+  expect_warning(fit_curves(df_resp3), regexp = "duplicate concentrations were found")
 })
 
 
-test_that("Appropriate fit type is assigned for various use cases", {
-  .round_params <- function(df) {
-    df[] <- lapply(df, round, 4)
-    df
-  }
+test_that("appropriate fit type is assigned for various use cases", {
 
   exp <- rbind(params, params_GR)
   rownames(exp) <- c("RV", "GR")
@@ -44,16 +45,19 @@ test_that("Appropriate fit type is assigned for various use cases", {
 
   # Test for constant fit. 
   df_resp4 <- df_resp
-  df_resp4$RelativeViability <- 0.5
+  df_resp4$RelativeViability <- df_resp4$GRvalue <- 0.5
 
-  expect_warning(df_result <- fit_curves(df_resp4))
-  obs_fit <- unique(df_result["RV", "fit_type"])
+  expect_warning(df_result <- fit_curves(df_resp4), regexp = "overriding original x_0 argument") # Override. 
+  obs_fit <- unique(df_result[ , "fit_type"])
   expect_equal(obs_fit, "DRCConstantFitResult")
   expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])), 
     rep(unique(df_resp4$RelativeViability), 5))
   expect_equal(dim(df_result), c(2, 14))
 
-  # TODO: Force argument overrides as expected.
+  # Test for all values above 0.5.
+  # Test for all values below 0.5.
+  # Test for a pushed constant fit. 
+  # Test that force argument overrides as expected.
 
   # Test for too few points.
   df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 4)
@@ -61,8 +65,9 @@ test_that("Appropriate fit type is assigned for various use cases", {
   expect_equal(obs_fit, "DRCTooFewPointsToFit")
   expect_equal(dim(df_result), c(2, 14))
 
-  # TODO: Test for invalid fit.
-#  df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1)
+  # TODO: Test for invalid fit. Maybe try a bunch of noise. 
+#  expect_warning(df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1), regexp = "fitting failed with error")
+#  
 #  obs_fit <- unique(df_result[, "fit_type"])
 #  expect_equal(obs_fit, "DRCInvalidFitResult")
 #  expect_equal(dim(df_result), c(2, 14))
