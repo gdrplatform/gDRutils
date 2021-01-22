@@ -25,9 +25,12 @@ RVGRfits <- function(df_,
 #' Defaults to \code{1}.
 #' @param n_point_cutoff integer of how many points should be considered the minimum required to try to fit a curve.
 #' Defaults to \code{4}.
-#' @param range_conc numeric vector of length 2 indicating the lower and upper concentration ranges. See details.
+#' @param range_conc numeric vector of length 2 indicating the lower and upper concentration ranges.
+#' Defaults to \code{c(5e-3, 5)}. See details.
 #' @param force_fit boolean indicating whether or not to force a constant fit.
+#' Defaults to \code{FALSE}.
 #' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
+#' Defaults to \code{0.05}.
 #'
 #' @return data.frame of RV and GR fit parameters.
 #'
@@ -35,8 +38,10 @@ RVGRfits <- function(df_,
 #' The \code{df_} expects the following columns:
 #'  \itemize{
 #'   \item{Concentration} unlogged concentration values
-#'   \item{RelativeViability} normalized values
-#'   \item{std_RelativeViability} standardized normalized values
+#'   \item{RelativeViability} normalized relative viability values
+#'   \item{std_RelativeViability} standard relative viability values
+#'   \item{GRvalue} normalized GR values
+#'   \item{std_GRvalue} standard GR values
 #'  }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
@@ -54,6 +59,10 @@ fit_curves <- function(df_,
                        pcutoff = 0.05) {
 
   checkmate::assert_class(df_, "data.frame")
+  req_fields <- c("Concentration", "RelativeViability", "std_RelativeViability", "GRvalue", "std_GRvalue")
+  if (!all(req_fields %in% colnames(df_))) {
+    stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ",")))
+  }
 
   med_conc <- stats::median(df_$Concentration)
   min_conc <- min(df_$Concentration)
@@ -288,11 +297,11 @@ logisticFit <-
     }
 
     out$x_mean <- mean(stats::predict(output_model_new, 
-      data.frame(concs = seq(log10(min(df_$concs)), log10(max(df_$concs)), (log10(max(df_$concs)) - log10(min(df_$concs)))/100))), 
+      data.frame(concs = 10 ^ (seq(log10(min(df_$concs)), log10(max(df_$concs)), (log10(max(df_$concs)) - log10(min(df_$concs)))/100)))), 
       na.rm = TRUE)
     out$x_AOC <- 1 - out$x_mean
     out$x_AOC_range <- 1 - mean(stats::predict(output_model_new, 
-      data.frame(concs = seq(log10(range_conc[1]), log10(range_conc[2]), ((log10(range_conc[2]) - log10(range_conc[1]))/100))), 
+      data.frame(concs = 10 ^ (seq(log10(range_conc[1]), log10(range_conc[2]), ((log10(range_conc[2]) - log10(range_conc[1]))/100)))), 
       na.rm = TRUE))
 
     # F-test for the significance of the sigmoidal fit.
@@ -319,7 +328,7 @@ logisticFit <-
       return(out)
     }
 
-    # Add xc50 = +/-Inf for any curves that do not reach RelativeViability = 0.5
+    # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5
     if (is.na(out$xc50)) {
       out$xc50 <- .estimate_xc50(out$x_inf)
     }
