@@ -328,7 +328,7 @@ logisticFit <-
       return(out)
     }
 
-    # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5
+    # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
     if (is.na(out$xc50)) {
       out$xc50 <- .estimate_xc50(out$x_inf)
     }
