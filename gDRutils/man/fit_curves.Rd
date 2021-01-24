@@ -32,7 +32,7 @@ Defaults to \code{c(5e-3, 5)}. See details.}
 \item{force_fit}{boolean indicating whether or not to force a constant fit.
 Defaults to \code{FALSE}.}
 
-\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.
+\item{pcutoff}{numeric of pvalue significance threshold above or equal to which to use a constant fit.
 Defaults to \code{0.05}.}
 }
 \value{

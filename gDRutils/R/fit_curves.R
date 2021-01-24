@@ -29,7 +29,7 @@ RVGRfits <- function(df_,
 #' Defaults to \code{c(5e-3, 5)}. See details.
 #' @param force_fit boolean indicating whether or not to force a constant fit.
 #' Defaults to \code{FALSE}.
-#' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
+#' @param pcutoff numeric of pvalue significance threshold above or equal to which to use a constant fit.
 #' Defaults to \code{0.05}.
 #'
 #' @return data.frame of RV and GR fit parameters.
@@ -114,7 +114,7 @@ fit_curves <- function(df_,
 #' @param lower numeric vector of lower limits for all parameters in a 4-param model.
 #' @param range_conc range of concentration for calculating AOC_range.
 #' @param force_fit boolean indicating whether or not to force a parameter-based fit.
-#' @param pcutoff numeric of pvalue significance threshold above which to use a constant fit.
+#' @param pcutoff numeric of pvalue significance threshold above or equal to which to use a constant fit.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
 #'

@@ -37,7 +37,7 @@ mean parameters in the model. Overrules any self starter function.}
 
 \item{force_fit}{boolean indicating whether or not to force a parameter-based fit.}
 
-\item{pcutoff}{numeric of pvalue significance threshold above which to use a constant fit.}
+\item{pcutoff}{numeric of pvalue significance threshold above or equal to which to use a constant fit.}
 
 \item{cap}{numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).}
 
