@@ -87,8 +87,8 @@ test_that("appropriate fit type is assigned for various use cases", {
   # Test for all values above 0.5.
   ## Note that this corresponds to partial growth inhibition. 
   df_result6 <- fit_curves(df_resp_above)
-  expect_equal(df_result6[, c("x_inf")], c(0.55, 0.55))
-  expect_equal(df_result6[, c("xc50")], c(Inf, Inf))
+  expect_equal(df_result6[, c("x_inf")], c(0.5, 0.5), tolerance = 1e-5)
+  expect_true(all(df_result6[, c("xc50")] > 500))
   obs_fit <- unique(df_result6[, "fit_type"])
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
 
@@ -102,19 +102,17 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_result7 <- fit_curves(df_resp7, force = FALSE)
   expect_equal(unique(df_result7[, "fit_type"]), "DRCConstantFitResult")
   expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))), 
-    0.6433745, tolerance = 1e-5)
+    0.70781, tolerance = 1e-5)
 
   # Test that force argument overrides as expected.
   df_result8 <- fit_curves(df_resp7, force = TRUE)
   expect_equal(unique(df_result8[, "fit_type"]), "DRC3pHillFitModelFixS0")
-  expect_true(all(df_result8$r2 > 0.05))
 
   # Test that pcutoff argument works as expected. 
-  df_result9 <- fit_curves(df_resp7, force = FALSE, pcutoff = 0.82)
+  df_result9 <- fit_curves(df_resp7, force = FALSE, pcutoff = 1)
   expect_equal(df_result9[, "fit_type"], c("DRC3pHillFitModelFixS0", "DRCConstantFitResult"))
-
-  df_result10 <- fit_curves(df_resp7, force = FALSE, pcutoff = 0.81)
-  expect_equal(unique(df_result10[, "fit_type"]), "DRCConstantFitResult")
+  df_result10 <- fit_curves(df_resp7, force = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
+  expect_equal(unique(df_result10[, "fit_type"]), "DRC3pHillFitModelFixS0")
 
   # Test for GR values from 0-1.
   ## Note that this correspond to a fully cytostatic response (no growth).
