@@ -1,4 +1,8 @@
-# Change to v.0.0.18
+# Changes to v.0.0.19
+- refactor RVGRfits and rename to fit_curves
+- make logisticFit function independent of curve_type
+
+# Changes to v.0.0.18
 - move df_to_assay.R from gDRcore to gDRutils
 - move df_to_bm_assay.R from gDRcore to gDRutils
 - update identifiers_list.R

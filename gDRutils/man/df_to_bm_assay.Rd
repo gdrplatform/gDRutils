@@ -29,4 +29,3 @@ The 'assay' is simply a BumpyMatrix object with rownames being the treatment ids
 colnames being the ids of the cell lines and values with
 dose-response data for given cell lines under given conditions.
 }
-

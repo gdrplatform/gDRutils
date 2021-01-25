@@ -125,7 +125,7 @@
     get_identifier("drugname"),
     "Concentration",
     paste0(c(paste0(get_identifier("drugname"), "_"), "Concentration_"), 
-      sort(c(2:10, 2:10)))
+      rep(2:10, each = 2))
   )
 
   HEADERS_LIST[["ordered_2"]] <- c(
@@ -138,8 +138,7 @@
     get_identifier("drug"),
     paste0(get_identifier("drug"), "_", 2:10),
     HEADERS_LIST[["manifest"]],
-    "WellRow",
-    "WellColumn"
+    get_identifier("well_position")
   )
 
   HEADERS_LIST

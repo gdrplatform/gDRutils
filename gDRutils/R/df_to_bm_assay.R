@@ -24,7 +24,7 @@ df_to_bm_assay <-
     data_type <- match.arg(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     ####
-    data <- as(data, "DataFrame")
+    data <- methods::as(data, "DataFrame")
     allMetadata <- gDR::getMetaData(data, discard_keys = discard_keys)
 
     seColData <- allMetadata$colData
