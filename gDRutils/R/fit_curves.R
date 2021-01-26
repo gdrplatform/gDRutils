@@ -58,7 +58,7 @@ fit_curves <- function(df_,
 		       force_fit = FALSE, 
                        pcutoff = 0.05) {
 
-  stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DFrame")))
+  stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
   req_fields <- c("Concentration", "RelativeViability", "std_RelativeViability", "GRvalue", "std_GRvalue")
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ",")))
