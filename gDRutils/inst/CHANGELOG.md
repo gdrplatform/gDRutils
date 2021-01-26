@@ -1,5 +1,8 @@
-# Changes to v.0.0.20
+# Changes to v.0.0.21
 - allow for DFrame as input
+
+# Changes to v.0.0.20
+- 's/BumpyMatrix::splitToBumpyMatrix/BumpyMatrix::splitAsBumpyMatrix/'
 
 # Changes to v.0.0.19
 - refactor RVGRfits and rename to fit_curves
