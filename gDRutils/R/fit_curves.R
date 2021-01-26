@@ -8,7 +8,7 @@ RVGRfits <- function(df_,
 		      range_conc = c(5e-3, 5),
 		      force = FALSE, 
                       pcutoff = 0.05) {
-  .Deprecated("fit_curves", package="gDRutils")
+  .Deprecated("fit_curves", package = "gDRutils")
   fit_curves(df_ = df_, e_0 = e_0, GR_0 = GR_0, n_point_cutoff = n_point_cutoff, 
     range_conc = range_conc, force_fit = force, pcutoff = pcutoff)
 }
@@ -58,7 +58,7 @@ fit_curves <- function(df_,
 		       force_fit = FALSE, 
                        pcutoff = 0.05) {
 
-  checkmate::assert_class(df_, "data.frame")
+  stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
   req_fields <- c("Concentration", "RelativeViability", "std_RelativeViability", "GRvalue", "std_GRvalue")
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ",")))

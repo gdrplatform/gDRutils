@@ -1,3 +1,6 @@
+# Changes to v.0.0.21
+- allow for DFrame as input
+
 # Changes to v.0.0.20
 - 's/BumpyMatrix::splitToBumpyMatrix/BumpyMatrix::splitAsBumpyMatrix/'
 
