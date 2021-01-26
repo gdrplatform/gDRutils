@@ -1,3 +1,6 @@
+# Changes to v.0.0.20
+- 's/BumpyMatrix::splitToBumpyMatrix/BumpyMatrix::splitAsBumpyMatrix/'
+
 # Changes to v.0.0.19
 - refactor RVGRfits and rename to fit_curves
 - make logisticFit function independent of curve_type
