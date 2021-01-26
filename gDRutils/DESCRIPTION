@@ -14,7 +14,7 @@ Description: This package contains utility functions used throughout the gDR pac
 License: file GNE_LICENSE
 LazyLoad: yes
 Imports:
-    BumpyMatrix,
+    BumpyMatrix (>= 0.99.6),
     checkmate,
     data.table,
     drc,
