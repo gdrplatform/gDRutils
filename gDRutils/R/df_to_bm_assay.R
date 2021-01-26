@@ -51,7 +51,7 @@ df_to_bm_assay <-
     # use 'drop = FALSE' to avoid dropping a dimension if there is a single data column only
     # TODO: consier using 'splitToBumpyMatrix' in a sparse mode (GDR-596)
     bm <-
-      BumpyMatrix::splitToBumpyMatrix(data_assigned[, allMetadata$dataCols, drop = FALSE],
+      BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$dataCols, drop = FALSE],
                                       row = data_assigned$name_.x,
                                       column = data_assigned$name_.y)
 

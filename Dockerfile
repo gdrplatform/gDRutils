@@ -47,25 +47,25 @@ RUN sudo apt-get update && sudo apt-get install -y \
 COPY rplatform/ssh_keys/id_rsa /home/rstudio/.ssh/id_rsa
 COPY rplatform/ssh_keys/id_rsa.pub /home/rstudio/.ssh/id_rsa.pub
 
+#================= Add Roche certs
+RUN sudo wget -O /usr/local/share/ca-certificates/Roche_G3_Root_CA.crt  http://certinfo.roche.com/rootcerts/Roche%20G3%20Root%20CA.crt 
+RUN sudo update-ca-certificates 
+
+#================= Remove openssl settings (two short keys)
+#TODO: contact auth team regarding this issue
+RUN sudo grep -v "^CipherString = DEFAULT@SECLEVEL=2" /etc/ssl/openssl.cnf > /tmp/openssl.fixed.cnf
+RUN sudo mv /tmp/openssl.fixed.cnf /etc/ssl/openssl.cnf 
+
 ## Define your system dependencies in this Dockerfile
 
 COPY rplatform/DESCRIPTION_dependencies.yaml /mnt/vol/rplatform/DESCRIPTION_dependencies.yaml
 COPY rplatform/install_dependencies.R /mnt/vol/rplatform/install_dependencies.R
 RUN R -f /mnt/vol/rplatform/install_dependencies.R
 
-
-## Uncomment following if installing package(s) from Bitbucket. It requires adding rsa keys to repo if it's not public
-#COPY rplatform/ssh_keys/id_rsa /home/rstudio/.ssh/id_rsa
-#COPY rplatform/ssh_keys/id_rsa.pub /home/rstudio/.ssh/id_rsa.pub
-#RUN sudo chown rstudio:rstudio -R /home/rstudio/.ssh && \
-#    sudo chmod 400 /home/rstudio/.ssh/id_rsa && \
-#    eval `ssh-agent -s` && ssh-add /home/rstudio/.ssh/id_rsa
-
-## Uncomment following to install package(s) from source and replace
-## `/path/to/package_source_dir` with path to R package directory in your git repository
-## `/mnt/vol/package_source_dir` with path to R package directory in docker container (must correspond with
-## the one from `install_from_source.R` if using it)
-#COPY /path/to/package_source_dir /mnt/vol/package_source_dir
+#================= install packages from specific sources
+COPY rplatform/git_dependencies.yml /mnt/vol/rplatform/git_dependencies.yml
+COPY rplatform/install_from_source.R /mnt/vol/rplatform/install_from_source.R
+RUN R -f /mnt/vol/rplatform/install_from_source.R
 
 RUN sudo rm -rf /mnt/vol/*
 
