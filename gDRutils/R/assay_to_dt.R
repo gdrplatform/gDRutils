@@ -10,74 +10,80 @@
 #' @return data.table with dose-response data
 #'
 #' @export
+#' TODO: we should rename the function
+#' - with the verb and more precise
+#' - maybe 'convert_assay_to_dt' ?
+#' - alternative naming conventions:
+#' assay_to_dt => convert_se_to_dt and convert_assay_data_to_dt => convert_assay_to_dt
 assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   # check arguments
   checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assertTRUE(checkmate::test_count(assay_name) || checkmate::test_string(assay_name))
+  checkmate::assertTRUE(checkmate::test_count(assay_name) ||
+                          checkmate::test_string(assay_name))
   checkmate::assert_flag(merge_metrics)
-
+  
   # define data.table with data from rowData/colData
-  ids <- expand.grid(rownames(SummarizedExperiment::rowData(se)), rownames(SummarizedExperiment::colData(se)))
+  ids <-
+    expand.grid(
+      rownames(SummarizedExperiment::rowData(se)),
+      rownames(SummarizedExperiment::colData(se))
+    )
   colnames(ids) <- c("rId", "cId")
   ids[] <- lapply(ids, as.character)
-
+  
   rData <- SummarizedExperiment::rowData(se)
   rData$rId <- rownames(rData)
-
+  
   cData <- SummarizedExperiment::colData(se)
   cData$cId <- rownames(cData)
-
-  annotTbl <- merge(ids, rData, by = "rId", all.x = TRUE)
-  annotTbl <- merge(annotTbl, cData, by = "cId", all.x = TRUE)
   
-  #merge assay data with data from colData/rowData
-  SE_assay <- SummarizedExperiment::assay(se, assay_name)
-  asL <- lapply(seq_len(nrow(cData)), function(x) {
-    myL <- SE_assay[, x]
-    # if only one row (nrow==1), the name of the row is not kept which results in a bug
-    names(myL) <- rownames(SE_assay) # this line is not affecting results if now>1
-    
-    # in some datasets there might be no data for given drug/cell_line combination
-    # under such circumstances DataFrame will be empty
-    # and should be filtered out
-    # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-    myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-    
-    myV <- vapply(myL, nrow, integer(1))
-    rCol <- rep(names(myV), as.numeric(myV))
-    # there might be DataFrames with different number of columns
-    # let's fill with NAs where necessary
-    if (length(unique(sapply(myL, ncol))) > 1) {
-      df <- do.call(plyr::rbind.fill, lapply(myL, data.table::as.data.table))
-    } else {
-      df <- data.table::rbindlist(lapply(myL, as.data.frame), fill = TRUE)
-    }
-    if(nrow(df)==0) return()
-    df$rId <- rCol
-    df$cId <- rownames(cData)[x]
-    full.df <- merge(df, annotTbl, by = c("rId", "cId"), all.x = TRUE)
-  })
-  asDf <- data.table::rbindlist(asL)
-  if (assay_name == "Metrics") {
-    asDf <- asDf[, dr_metric := rep_len(c("RV", "GR"), .N)]
+  annotTbl <-
+    merge(merge(ids, rData, by = "rId", all.x = TRUE),
+          cData,
+          by = "cId",
+          all.x = TRUE)
+  
+  # use method to convert assay data to data_table
+  as_dt <-
+    convert_assay_data_to_dt(SummarizedExperiment::assay(se, assay_name))
+  
+ 
+  as_dt <- if (assay_name == "Metrics") {
+    as_dt <-
+      data.table::data.table(merge(
+        as_dt,
+        annotTbl,
+        by = c("rId", "cId"),
+        all.x = TRUE
+      ))
+    as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
     if (merge_metrics) {
-      
       colnames_RV <- gDRutils::get_header("RV_metrics")
-      diff_RV_columns <- setdiff(names(colnames_RV), colnames(asDf))
+      diff_RV_columns <-
+        setdiff(names(colnames_RV), colnames(as_dt))
       if (length(diff_RV_columns) > 0) {
-        warning(paste("missing column(s) in SE:", paste(diff_RV_columns, collapse = ", ")))
-        colnames_RV <- colnames_RV[!names(colnames_RV) %in% diff_RV_columns]
+        warning(paste(
+          "missing column(s) in SE:",
+          paste(diff_RV_columns, collapse = ", ")
+        ))
+        colnames_RV <-
+          colnames_RV[!names(colnames_RV) %in% diff_RV_columns]
       }
       colnames_GR <- gDRutils::get_header("GR_metrics")
-      diff_GR_columns <- setdiff(names(colnames_GR), colnames(asDf))
+      diff_GR_columns <-
+        setdiff(names(colnames_GR), colnames(as_dt))
       if (length(diff_GR_columns) > 0) {
-        warning(paste("missing column(s) in SE:", paste(diff_GR_columns, collapse = ", ")))
-        colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
+        warning(paste(
+          "missing column(s) in SE:",
+          paste(diff_GR_columns, collapse = ", ")
+        ))
+        colnames_GR <-
+          colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
       }
       
       vars <- c("rId", "cId", names(colnames_RV))
-      Df_RV <- asDf[dr_metric == "RV", ..vars]
-      Df_GR <- asDf[dr_metric == "GR", -"dr_metric"]
+      Df_RV <- as_dt[dr_metric == "RV", ..vars]
+      Df_GR <- as_dt[dr_metric == "GR", -"dr_metric"]
       
       data.table::setnames(Df_RV,
                            old = names(colnames_RV),
@@ -85,8 +91,86 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       data.table::setnames(Df_GR,
                            old = names(colnames_GR),
                            new = unname(colnames_GR))
-      asDf <- merge(Df_RV, Df_GR, by = c("rId", "cId"), all = TRUE)
+      as_dt <- merge(Df_RV,
+                     Df_GR,
+                     by = c("rId", "cId"),
+                     all = TRUE)
     }
+    as_dt
+  } else {
+    as_dt <-
+      data.table::data.table(merge(
+        as_dt,
+        annotTbl,
+        by = c("rId", "cId"),
+        all.x = TRUE
+      ))
   }
-  asDf
+  as_dt
+}
+
+#' Convert assay data into data.table
+#' @export
+#' @param object An object comprising assay in SummarizedExperiment
+#' @return data.table with assay data
+convert_assay_data_to_dt <- function(object) {
+  UseMethod("convert_assay_data_to_dt")
+}
+
+#' @export
+#' @rdname convert_assay_data_to_dt
+convert_assay_data_to_dt.default <- function(object) {
+  stop(
+    paste(
+      "Unable to find an inherited method for function 'convert_assay_data_to_dt' for signature",
+      shQuote(class(object))
+    )
+  )
+}
+
+#' @export
+convert_assay_data_to_dt.BumpyMatrix <-
+  function(object) {
+      BumpyMatrix::unsplitAsDataFrame(object,
+                                      row.field = "rId",
+                                      column.field = "cId")
+  }
+
+#' @export
+convert_assay_data_to_dt.matrix <- function(object) {
+  
+  # we expect matrix object to be the list of DFrame(s)
+  checkmate::assertTRUE(inherits(object[1, 1][[1]], "DFrame"))
+  
+  asL <-
+    lapply(seq_len(ncol(object)), function(x) {
+      myL <- object[, x]
+      # if only one row (nrow==1), the name of the row is not kept which results in a bug
+      names(myL) = rownames(object) # this line is not affecting results if now>1
+      
+      # in some datasets there might be no data for given drug/cell_line combination
+      # under such circumstances DataFrame will be empty
+      # and should be filtered out
+      # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
+      myL <- myL[vapply(myL, nrow, integer(1)) > 0]
+      
+      myV <- vapply(myL, nrow, integer(1))
+      rCol <- rep(names(myV), as.numeric(myV))
+      # there might be DataFrames with different number of columns
+      # let's fill with NAs where necessary
+      if (length(unique(sapply(myL, ncol))) > 1) {
+        df <-
+          do.call(plyr::rbind.fill,
+                  lapply(myL, data.table::as.data.table))
+      } else {
+        df <-
+          data.table::rbindlist(lapply(myL, as.data.frame), fill = TRUE)
+      }
+      if (nrow(df) == 0)
+        return()
+      df$rId <- rCol
+      df$cId <- colnames(object)[x]
+      df
+    })
+  as_df <- data.table::rbindlist(asL)
 }
