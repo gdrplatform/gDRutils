@@ -85,7 +85,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       
       vars <- c("rId", "cId", names(colnames_RV))
       Df_RV <- as_dt[dr_metric == "RV", ..vars]
-      Df_GR <- as_dt[dr_metric == "GR", -"dr_metric"]
+      Df_GR <- as_dt[dr_metric == "GR",-"dr_metric"]
       
       data.table::setnames(Df_RV,
                            old = names(colnames_RV),
@@ -93,22 +93,21 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       data.table::setnames(Df_GR,
                            old = names(colnames_GR),
                            new = unname(colnames_GR))
-      as_dt <- merge(Df_RV,
-                     Df_GR,
-                     by = c("rId", "cId"),
-                     all = TRUE)
+      merge(Df_RV,
+            Df_GR,
+            by = c("rId", "cId"),
+            all = TRUE)
+    } else {
+      as_dt
     }
-    as_dt
   } else {
-    as_dt <-
-      data.table::data.table(merge(
-        as_dt,
-        annotTbl,
-        by = c("rId", "cId"),
-        all.x = TRUE
-      ))
+    data.table::data.table(merge(
+      as_dt,
+      annotTbl,
+      by = c("rId", "cId"),
+      all.x = TRUE
+    ))
   }
-  as_dt
 }
 
 #' Convert assay data into data.table
