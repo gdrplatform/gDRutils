@@ -1,3 +1,11 @@
+# Changes to v.0.0.22
+- move assay_to_dt from gDR to gDRutils
+- refactor assay_to_dt to support two assay types
+  * list of DFrame(s)
+  * BumpyMatrix objects
+- move .get_treated_conditions and .get_untreated_conditions from gDR to
+    gDRutils 
+
 # Changes to v.0.0.21
 - allow for DFrame as input
 
