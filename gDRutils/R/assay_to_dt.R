@@ -142,7 +142,7 @@ convert_assay_data_to_dt.matrix <- function(object) {
     lapply(seq_len(ncol(object)), function(x) {
       myL <- object[, x]
       # if only one row (nrow==1), the name of the row is not kept which results in a bug
-      names(myL) = rownames(object) # this line is not affecting results if now>1
+      names(myL) <- rownames(object) # this line is not affecting results if now>1
       
       # in some datasets there might be no data for given drug/cell_line combination
       # under such circumstances DataFrame will be empty
