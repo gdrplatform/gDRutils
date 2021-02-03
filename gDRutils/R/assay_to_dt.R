@@ -1,3 +1,5 @@
+#### AUXILIARY FUNCTIONS ####
+
 #' Transform a SummarizedExperiment assay to a long data.table
 #'
 #' Transform a SummarizedExperiment assay to a long data.table with a single entry for each row and column combination.
@@ -58,7 +60,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       ))
     as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
     if (merge_metrics) {
-      colnames_RV <- gDRutils::get_header("RV_metrics")
+      colnames_RV <- get_header("RV_metrics")
       diff_RV_columns <-
         setdiff(names(colnames_RV), colnames(as_dt))
       if (length(diff_RV_columns) > 0) {
@@ -69,7 +71,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
         colnames_RV <-
           colnames_RV[!names(colnames_RV) %in% diff_RV_columns]
       }
-      colnames_GR <- gDRutils::get_header("GR_metrics")
+      colnames_GR <- get_header("GR_metrics")
       diff_GR_columns <-
         setdiff(names(colnames_GR), colnames(as_dt))
       if (length(diff_GR_columns) > 0) {
@@ -174,3 +176,39 @@ convert_assay_data_to_dt.matrix <- function(object) {
     })
   as_df <- data.table::rbindlist(asL)
 }
+
+#' .get_untreated_conditions
+#'
+#' Get untreated conditions
+#'
+#' @param drug_data data.frame or DataFrame with treatment information
+#'
+#' @return character vector with untreated conditions
+#'
+.get_untreated_conditions <-
+  function(drug_data) {
+    # Assertions:
+    stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
+    .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse="|")
+    drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
+    drug_data[grepl(.untreatedDrugNameRegex, drugnames), "name_"]
+  }
+
+#' .get_treated_conditions
+#'
+#' Get treated conditions
+#'
+#' @param drug_data data.frame or DataFrame with treatment information
+#'
+#' @return character vector with treated conditions
+#'
+.get_treated_conditions <-
+  function(drug_data) {
+    # Assertions:
+    stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
+    .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse="|")
+    drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
+    drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
+  }
