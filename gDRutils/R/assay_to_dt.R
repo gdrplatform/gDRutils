@@ -25,19 +25,18 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   checkmate::assert_flag(merge_metrics)
   
   # define data.table with data from rowData/colData
-  ids <-
-    expand.grid(
-      rownames(SummarizedExperiment::rowData(se)),
-      rownames(SummarizedExperiment::colData(se))
-    )
-  colnames(ids) <- c("rId", "cId")
-  ids[] <- lapply(ids, as.character)
-  
   rData <- SummarizedExperiment::rowData(se)
   rData$rId <- rownames(rData)
   
   cData <- SummarizedExperiment::colData(se)
   cData$cId <- rownames(cData)
+  
+  ids <-
+    expand.grid(rData$rId,
+                cData$cId)
+  colnames(ids) <- c("rId", "cId")
+  ids[] <- lapply(ids, as.character)
+  
   
   annotTbl <-
     merge(merge(ids, rData, by = "rId", all.x = TRUE),
