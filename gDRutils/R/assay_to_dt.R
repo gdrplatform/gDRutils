@@ -12,11 +12,11 @@
 #' @return data.table with dose-response data
 #'
 #' @export
-#' TODO: we should rename the function
-#' - with the verb and more precise
-#' - maybe 'convert_assay_to_dt' ?
-#' - alternative naming conventions:
-#' assay_to_dt => convert_se_to_dt and convert_assay_data_to_dt => convert_assay_to_dt
+# TODO: we should rename the function
+# - with the verb and more precise
+# - maybe 'convert_assay_to_dt' ?
+# - alternative naming conventions:
+# assay_to_dt => convert_se_to_dt and convert_assay_data_to_dt => convert_assay_to_dt
 assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   # check arguments
   checkmate::assert_class(se, "SummarizedExperiment")
@@ -112,14 +112,12 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
 }
 
 #' Convert assay data into data.table
-#' @export
 #' @param object An object comprising assay in SummarizedExperiment
 #' @return data.table with assay data
 convert_assay_data_to_dt <- function(object) {
   UseMethod("convert_assay_data_to_dt")
 }
 
-#' @export
 #' @rdname convert_assay_data_to_dt
 convert_assay_data_to_dt.default <- function(object) {
   stop(
@@ -130,7 +128,6 @@ convert_assay_data_to_dt.default <- function(object) {
   )
 }
 
-#' @export
 convert_assay_data_to_dt.BumpyMatrix <-
   function(object) {
       BumpyMatrix::unsplitAsDataFrame(object,
@@ -138,7 +135,6 @@ convert_assay_data_to_dt.BumpyMatrix <-
                                       column.field = "cId")
   }
 
-#' @export
 convert_assay_data_to_dt.matrix <- function(object) {
   
   # we expect matrix object to be the list of DFrame(s)
