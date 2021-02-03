@@ -67,7 +67,7 @@ fit_curves <- function(df_,
   med_conc <- stats::median(df_$Concentration)
   min_conc <- min(df_$Concentration)
 
-  df_RV <- gDRutils::logisticFit(
+  df_RV <- logisticFit(
     df_$Concentration,
     df_$RelativeViability,
     df_$std_RelativeViability,
@@ -80,7 +80,7 @@ fit_curves <- function(df_,
     n_point_cutoff = n_point_cutoff
   )
 
-  df_GR <- gDRutils::logisticFit(
+  df_GR <- logisticFit(
     df_$Concentration,
     df_$GRvalue,
     df_$std_GRvalue,
@@ -169,7 +169,7 @@ logisticFit <-
       stop("unequal vector lengths for 'conc' and 'norm_values'")
     }
 
-    resp_metric_cols <- c(gDRutils::get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
     out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
     names(out) <- resp_metric_cols
 
