@@ -2,15 +2,22 @@
 #' @export
 #'
 RVGRfits <- function(df_,
-		      e_0 = 1,
-		      GR_0 = 1,
-		      n_point_cutoff = 4,
-		      range_conc = c(5e-3, 5),
-		      force = FALSE, 
-                      pcutoff = 0.05) {
+                     e_0 = 1,
+                     GR_0 = 1,
+                     n_point_cutoff = 4,
+                     range_conc = c(5e-3, 5),
+                     force = FALSE,
+                     pcutoff = 0.05) {
   .Deprecated("fit_curves", package = "gDRutils")
-  fit_curves(df_ = df_, e_0 = e_0, GR_0 = GR_0, n_point_cutoff = n_point_cutoff, 
-    range_conc = range_conc, force_fit = force, pcutoff = pcutoff)
+  fit_curves(
+    df_ = df_,
+    e_0 = e_0,
+    GR_0 = GR_0,
+    n_point_cutoff = n_point_cutoff,
+    range_conc = range_conc,
+    force_fit = force,
+    pcutoff = pcutoff
+  )
 }
 
 
@@ -51,13 +58,13 @@ RVGRfits <- function(df_,
 #' @export
 #'
 fit_curves <- function(df_,
-		       e_0 = 1,
-		       GR_0 = 1,
-		       n_point_cutoff = 4,
-		       range_conc = c(5e-3, 5),
-		       force_fit = FALSE, 
+                       e_0 = 1,
+                       GR_0 = 1,
+                       n_point_cutoff = 4,
+                       range_conc = c(5e-3, 5),
+                       force_fit = FALSE,
                        pcutoff = 0.05) {
-
+  
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
   req_fields <- c("Concentration", "RelativeViability", "std_RelativeViability", "GRvalue", "std_GRvalue")
   if (!all(req_fields %in% colnames(df_))) {
@@ -122,19 +129,24 @@ fit_curves <- function(df_,
 #'
 #' @details
 #' Implementation of the genedata approach for curve fit: 
-#' https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity
+#' https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity #nolint
 #'
 #' The output parameter names correspond to the following definitions:
 #' \describe{
 #'  \item{x_mean}{The mean of a given dose-response metric}
 #'  \item{x_AOC_range}{The range of the area over the curve}
-#'  \item{x_AOC}{The area over the GR curve or, respectively, under the relative cell count curve, averaged over the range of concentration values}
-#'  \item{xc50}{The concentration at which the effect reaches a value of 0.5 based on interpolation of the fitted curve}
+#'  \item{x_AOC}{The area over the GR curve or, respectively, under the relative 
+#'  cell count curve, averaged over the range of concentration values}
+#'  \item{xc50}{The concentration at which the effect reaches a value of 0.5 based 
+#'  on interpolation of the fitted curve}
 #'  \item{x_max}{The maximum effect of the drug}
 #'  \item{c50}{The drug concentration at half-maximal effect}
-#'  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response data as concentration goes to infinity}
-#'  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 for the primary drug}
-#'  \item{h}{The hill coefficient of the fitted curve, which reflects how steep the dose-response curve is}
+#'  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response 
+#'  data as concentration goes to infinity}
+#'  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 
+#'  for the primary drug}
+#'  \item{h}{The hill coefficient of the fitted curve, which reflects how steep 
+#'  the dose-response curve is}
 #'  \item{r2}{The goodness of the fit}
 #'  \item{x_sd_avg}{The standard deviation of GR/IC}
 #'  \item{fit_type}{This will be given by one of the following:
@@ -192,12 +204,18 @@ logisticFit <-
     freq <- table(df_$concs)
     xAvg <- df_
     if (any(dups <- freq != 1L)) {
-      warning(sprintf("duplicate concentrations were found: '%s', averaging values across a single concentration", 
-        paste0(names(freq)[dups], collapse = ", ")))
+      warning(
+        sprintf(
+          "duplicate concentrations were found: '%s', averaging values across a single concentration",
+          paste0(names(freq)[dups], collapse = ", ")
+        )
+      )
       xAvg <- stats::aggregate(
-	list(norm_values = norm_values),
-	by = list(conc = df_$concs),
-	FUN = function(x) {mean(x, na.rm = TRUE)}
+        list(norm_values = norm_values),
+        by = list(conc = df_$concs),
+        FUN = function(x) {
+          mean(x, na.rm = TRUE)
+        }
       )
     }
 
@@ -214,7 +232,7 @@ logisticFit <-
 
     # Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
     .set_constant_fit_params <- function(out) {
-      out$fit_type <- 'DRCConstantFitResult'
+      out$fit_type <- "DRCConstantFitResult"
       out$c50 <- 0
       out$h <- 0.0001
       out$xc50 <- .estimate_xc50(mean_norm_value)
@@ -236,7 +254,7 @@ logisticFit <-
     }
 
     if (sum(non_na_avg_norm) < n_point_cutoff) {
-      out$fit_type <- 'DRCTooFewPointsToFit'
+      out$fit_type <- "DRCTooFewPointsToFit"
       out$xc50 <- .estimate_xc50(norm_values)
       return(out)
     }
@@ -248,70 +266,80 @@ logisticFit <-
     ## Perform a 3-param or 4-param fit. 
     ## Fit type is determined based on number of free variables available.
     tryCatch({
-      if (!is.na(x_0)) { # For co-treatments.
-	# Override existing params for removal of x_0 parameter. 
-	fit_param <- fit_param[-3]
-	priors <- priors[-3]
-	lower <- lower[-3]
-
-	output_model_new <- drc::drm(
-	  norm_values ~ concs,
-	  data = df_,
-	  logDose = NULL,
-	  fct = drc::LL.3u(upper = x_0, names = fit_param),
-	  start = priors,
-	  lowerl = lower,
-	  upperl = c(5, min(x_0 + cap, 1), max(concs) * 10),
-	  control = controls,
-	  na.action = na.omit
-	)
-	out$fit_type <- 'DRC3pHillFitModelFixS0'
-	out$x_0 <- x_0
-
+      if (!is.na(x_0)) {
+        # For co-treatments.
+        # Override existing params for removal of x_0 parameter.
+        fit_param <- fit_param[-3]
+        priors <- priors[-3]
+        lower <- lower[-3]
+        
+        output_model_new <- drc::drm(
+          norm_values ~ concs,
+          data = df_,
+          logDose = NULL,
+          fct = drc::LL.3u(upper = x_0, names = fit_param),
+          start = priors,
+          lowerl = lower,
+          upperl = c(5, min(x_0 + cap, 1), max(concs) * 10),
+          control = controls,
+          na.action = na.omit
+        )
+        out$fit_type <- "DRC3pHillFitModelFixS0"
+        out$x_0 <- x_0
+        
       } else {
-	output_model_new <- drc::drm(
-	  norm_values ~ concs,
-	  data = df_,
-	  logDose = NULL,
-	  fct = drc::LL.4(names = fit_param),
-	  start = priors,
-	  lowerl = lower,  
-	  upperl = c(5, 1, 1 + cap, max(concs) * 10), 
-	  control = controls,
-	  na.action = na.omit
-	)
-	out$fit_type <- 'DRC4pHillFitModel'
+        
+        output_model_new <- drc::drm(
+          norm_values ~ concs,
+          data = df_,
+          logDose = NULL,
+          fct = drc::LL.4(names = fit_param),
+          start = priors,
+          lowerl = lower,
+          upperl = c(5, 1, 1 + cap, max(concs) * 10),
+          control = controls,
+          na.action = na.omit
+        )
+        out$fit_type <- "DRC4pHillFitModel"
       }
     }, error = function(e) {
       out$r2 <- 0
-      out$fit_type <- 'DRCInvalidFitResult'
+      out$fit_type <- "DRCInvalidFitResult"
       out$xc50 <- .estimate_xc50(df_$norm_values)
       warning(sprintf("fitting failed with error: '%s'", e))
       return(out)
     })
 
     # Successful fit.
-    for (p in fit_param) { 
+    for (p in fit_param) {
       ## drm will output model with the ":(Intercept)" term concatenated at end. 
       out[[p]] <- stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
     }
 
-    out$x_mean <- mean(stats::predict(output_model_new, 
-      data.frame(concs = 10 ^ (seq(log10(min(df_$concs)), log10(max(df_$concs)), (log10(max(df_$concs)) - log10(min(df_$concs)))/100)))), 
-      na.rm = TRUE)
+    
+    lg_min_con <- log10(min(df_$concs))
+    lg_max_con <- log10(max(df_$concs))
+    out$x_mean <- 
+      mean(stats::predict(output_model_new, 
+                          data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / 100)))), 
+           na.rm = TRUE)
+    
     out$x_AOC <- 1 - out$x_mean
-    out$x_AOC_range <- 1 - mean(stats::predict(output_model_new, 
-      data.frame(concs = 10 ^ (seq(log10(range_conc[1]), log10(range_conc[2]), ((log10(range_conc[2]) - log10(range_conc[1]))/100)))), 
-      na.rm = TRUE))
+    lg_range1 <- log10(range_conc[1])
+    lg_range2 <- log10(range_conc[2])
+    out$x_AOC_range <- 
+      1 - mean(stats::predict(output_model_new,
+                              data.frame(concs = 10 ^ (seq(lg_range1, lg_range2, ((lg_range2 - lg_range1) / 100)))), 
+                              na.rm = TRUE))
 
     # F-test for the significance of the sigmoidal fit.
     RSS2 <- sum(stats::residuals(output_model_new) ^ 2, na.rm = TRUE)
-    RSS1 <- sum((df_$norm_values - mean(df_$norm_values,
-				      na.rm = TRUE)) ^ 2, na.rm = TRUE)
-
+    RSS1 <-
+      sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
+    
     out$r2 <- 1 - RSS2 / RSS1
 
-    nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x_0 == NA) {4}
+    nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x_0 = NA) {4}
     df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
     df2 <- (length(stats::na.omit(df_$norm_values)) - nparam + 1)
 
@@ -344,18 +372,18 @@ logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
 
 
 logistic_metrics <- function(c, x_metrics) {
-  metrics <- c('x_inf', 'x_0', 'h', 'c50')
+  metrics <- c("x_inf", "x_0", "h", "c50")
   if (all(metrics %in% names(x_metrics))) {
     DRC_metrics <- as.vector(x_metrics[metrics])
   } else {
-    gr_metric_cols <- get_header('GR_metrics')
-    rv_metric_cols <- get_header('RV_metrics')
+    gr_metric_cols <- get_header("GR_metrics")
+    rv_metric_cols <- get_header("RV_metrics")
     if (all(gr_metric_cols %in% names(x_metrics))) {
       metric_cols <- gr_metric_cols
     } else if (all(rv_metric_cols %in% names(x_metrics))) {
       metric_cols <- rv_metric_cols
     } else {
-      stop('wrong input parameters')
+      stop("wrong input parameters")
     }
     DRC_metrics <- as.vector(x_metrics[metric_cols[metrics]])
     names(DRC_metrics) <- metrics

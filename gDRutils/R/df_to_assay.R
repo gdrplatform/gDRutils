@@ -69,18 +69,18 @@ df_to_assay <-
     dimnames(full.set) <- list(seRowData$name_, seColData$name_)
 
     #nolint start
-    #add NAs for treatments not present in the given assay
-    # ---------------
-    # removed as it should be added when combining different assays
-    #
-    # tNotFound <- setdiff(adrug, rownames(full.set))
-    # mNotFound <-
-    #   matrix(nrow = length(tNotFound), ncol = ncol(full.set))
-    # dimnames(mNotFound) <- list(tNotFound, colnames(full.set))
-    #
-    # final.set <- rbind(mNotFound, full.set)
-    #
-    # ---------------
+      #add NAs for treatments not present in the given assay
+      # ---------------
+      # removed as it should be added when combining different assays
+      #
+      # tNotFound <- setdiff(adrug, rownames(full.set))
+      # mNotFound <-
+      #   matrix(nrow = length(tNotFound), ncol = ncol(full.set))
+      # dimnames(mNotFound) <- list(tNotFound, colnames(full.set))
+      #
+      # final.set <- rbind(mNotFound, full.set)
+      #
+      # ---------------
     #nolint end
     final.set <- full.set
 
