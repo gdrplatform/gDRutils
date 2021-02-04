@@ -1,3 +1,6 @@
+# Changes to v.0.0.23
+- added linter
+
 # Changes to v.0.0.22
 - move assay_to_dt from gDR to gDRutils
 - refactor assay_to_dt to support two assay types
