@@ -1,15 +1,26 @@
 # Set up synthetic data for testing.
 
 .create_data <- function(conc, params, params_GR) {
-  data.frame(Concentration = conc, 
-             std_RelativeViability = 0.1,
-	     std_GRvalue = 0.1,
-	     RelativeViability =
-	       logistic_4parameters(conc, params$x_inf, params$x_0, 
-                 params$c50, params$h),
-	     GRvalue = 
-	       logistic_4parameters(conc, params_GR$x_inf, 
-                 params_GR$x_0, params_GR$c50, params_GR$h)
+  data.frame(
+    Concentration = conc,
+    std_RelativeViability = 0.1,
+    std_GRvalue = 0.1,
+    RelativeViability =
+      logistic_4parameters(
+        conc, 
+        params$x_inf, 
+        params$x_0,
+        params$c50, 
+        params$h
+      ),
+    GRvalue =
+      logistic_4parameters(
+        conc,
+        params_GR$x_inf,
+        params_GR$x_0,
+        params_GR$c50,
+        params_GR$h
+      )
   )
 }
 

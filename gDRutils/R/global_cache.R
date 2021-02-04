@@ -1,7 +1,7 @@
 ## This global cache maintains a cache of identifiers, 
 ## headers, and their respective values. 
 
-global_cache <- new.env(parent=emptyenv())
+global_cache <- new.env(parent = emptyenv())
 global_cache$identifiers_list <- list() 
 global_cache$headers_list <- list()
 
@@ -24,7 +24,7 @@ global_cache$headers_list <- list()
     return(global_cache$identifiers_list[[k]])
   } else {
     missing_ids <- setdiff(valid_ids, names(global_cache$identifiers_list))	
-    if (length(missing_ids) != 0L) {	
+    if (length(missing_ids) != 0L) {
       sapply(missing_ids, get_identifier) 	
     }
 

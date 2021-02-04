@@ -1,4 +1,3 @@
-#library(testthat); library(gDRutils)
 
 test_that("get_identifier and set_identifier work", {
   reset_identifiers()

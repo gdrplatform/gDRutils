@@ -44,7 +44,7 @@ df_to_bm_assay <-
       )
     complete <- merge(merge(complete, seRowData, by = "row_id"),
                       seColData, by = "col_id")
-    complete <- complete[ order(complete$col_id, complete$row_id), ]
+    complete <- complete[order(complete$col_id, complete$row_id), ]
     complete$factor_id <- 1:nrow(complete)
     data_assigned <-
       merge(data, complete, by = c(cond_entries, cl_entries))
@@ -58,10 +58,10 @@ df_to_bm_assay <-
     if (data_type == "untreated") {
       untreatedConds <-
         .get_untreated_conditions(seRowData)
-      return(bm[rownames(bm) %in% untreatedConds,])
+      return(bm[rownames(bm) %in% untreatedConds, ])
     } else if (data_type == "treated") {
       treatedConds <- .get_treated_conditions(seRowData)
-      return(bm[rownames(bm) %in% treatedConds,])
+      return(bm[rownames(bm) %in% treatedConds, ])
     } else if (data_type == "all") {
       return(bm)
     } else {

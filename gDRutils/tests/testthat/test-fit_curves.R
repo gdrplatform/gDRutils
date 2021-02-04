@@ -1,4 +1,3 @@
-#library(testthat); library(gDRutils)
 source("setUp.R")
 .round_params <- function(df) {
   df[] <- lapply(df, round, 4)
@@ -61,7 +60,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_resp4$RelativeViability <- df_resp4$GRvalue <- 0.5
 
   expect_warning(df_result <- fit_curves(df_resp4), regexp = "overriding original x_0 argument") # Override. 
-  obs_fit <- unique(df_result[ , "fit_type"])
+  obs_fit <- unique(df_result[, "fit_type"])
   expect_equal(obs_fit, "DRCConstantFitResult")
   expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])), 
     rep(unique(df_resp4$RelativeViability), 5))
@@ -77,8 +76,8 @@ test_that("appropriate fit type is assigned for various use cases", {
   max_gr <- max(df_resp$GRvalue)
   min_gr <- min(df_resp$GRvalue)
 
-  df_resp5$RelativeViability <- (df_resp$RelativeViability / (max_rv - min_rv)) * ((max_rv - min_rv)/2)
-  df_resp5$GRvalue <- (df_resp$GRvalue / (max_gr - min_gr)) * ((max_gr - min_gr)/2)
+  df_resp5$RelativeViability <- (df_resp$RelativeViability / (max_rv - min_rv)) * ((max_rv - min_rv) / 2)
+  df_resp5$GRvalue <- (df_resp$GRvalue / (max_gr - min_gr)) * ((max_gr - min_gr) / 2)
   df_result5 <- fit_curves(df_resp5)
   expect_equal(df_result5[, c("x_inf")], c(0, -1))
   obs_fit <- unique(df_result5[, "fit_type"])
@@ -128,10 +127,12 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(obs_fit, "DRCTooFewPointsToFit")
   expect_equal(dim(df_result), exp_dims)
 
-  # TODO: Test for invalid fit. Maybe try a bunch of noise. 
-#  expect_warning(df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1), regexp = "fitting failed with error")
-#  
-#  obs_fit <- unique(df_result[, "fit_type"])
-#  expect_equal(obs_fit, "DRCInvalidFitResult")
-#  expect_equal(dim(df_result), exp_dims)
+  #nolint start
+    # TODO: Test for invalid fit. Maybe try a bunch of noise. 
+    #  expect_warning(df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1), regexp = "fitting failed with error")
+    #  
+    #  obs_fit <- unique(df_result[, "fit_type"])
+    #  expect_equal(obs_fit, "DRCInvalidFitResult")
+    #  expect_equal(dim(df_result), exp_dims)
+  #nolint end
 })
