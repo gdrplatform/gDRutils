@@ -4,3 +4,6 @@ pkgs:
     url: https://github.roche.com/gdrplatform/BumpyMatrix.git
     ref: DEVEL_3_12
     subdir: ~
+  lintr:
+    ver: '>=1.0.0'
+    url: https://github.com/jimhester/lintr.git

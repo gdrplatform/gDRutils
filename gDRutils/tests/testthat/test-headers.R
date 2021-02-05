@@ -1,5 +1,3 @@
-#library(testthat); library(gDRutils)
-
 test_that("get_header works", {
   reset_identifiers()
   reset_headers()

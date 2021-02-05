@@ -19,7 +19,7 @@ IDENTIFIERS_LIST <- list(
   untreated_tag = c("untreated", "vehicle"),
   # flag to identify control treatments
 
-  masked_tag = 'masked',
+  masked_tag = "masked",
   # flag for masked wells
 
   WellPosition = c("WellRow", "WellColumn"), 

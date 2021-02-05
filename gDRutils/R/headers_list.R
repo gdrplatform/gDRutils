@@ -15,7 +15,7 @@
       "BackgroundValue",
       "UntrtReadout",
       "Day0Readout",
-      get_identifier('masked_tag')
+      get_identifier("masked_tag")
     ),
 
     normalized_results = c(

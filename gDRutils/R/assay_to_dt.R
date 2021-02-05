@@ -84,7 +84,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       
       vars <- c("rId", "cId", names(colnames_RV))
       Df_RV <- as_dt[dr_metric == "RV", ..vars]
-      Df_GR <- as_dt[dr_metric == "GR",-"dr_metric"]
+      Df_GR <- as_dt[dr_metric == "GR", - "dr_metric"]
       
       data.table::setnames(Df_RV,
                            old = names(colnames_RV),
@@ -184,7 +184,7 @@ convert_assay_data_to_dt.matrix <- function(object) {
     # Assertions:
     stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
     .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
-    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse="|")
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
     drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
     drug_data[grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }
@@ -202,7 +202,7 @@ convert_assay_data_to_dt.matrix <- function(object) {
     # Assertions:
     stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
     .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
-    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse="|")
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
     drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
     drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }

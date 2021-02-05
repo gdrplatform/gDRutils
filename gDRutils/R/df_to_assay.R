@@ -19,7 +19,12 @@ df_to_assay <-
            data_type = c("all", "treated", "untreated"),
            discard_keys = NULL) {
     # Assertions:
-    stopifnot(any(inherits(data, "data.frame"), inherits(data, "tbl_df"), checkmate::test_character(data), inherits(data, "DataFrame")))
+    stopifnot(any(
+      inherits(data, "data.frame"),
+      inherits(data, "tbl_df"),
+      checkmate::test_character(data),
+      inherits(data, "DataFrame")
+    ))
     checkmate::assert_character(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     ####
@@ -45,7 +50,7 @@ df_to_assay <-
       )
     complete <- S4Vectors::merge(S4Vectors::merge(complete, seRowData, by = "row_id"),
                       seColData, by = "col_id")
-    complete <- complete[ order(complete$col_id, complete$row_id), ]
+    complete <- complete[order(complete$col_id, complete$row_id), ]
     complete$factor_id <- seq_len(nrow(complete))
     
     data_assigned <-
@@ -58,25 +63,25 @@ df_to_assay <-
     stopifnot(nrow(data) == sum(sapply(by_factor, nrow)))
     stopifnot(length(by_factor) == nrow(complete))
 
-    # full.set <- vector("list", nrow(complete))
-    # full.set[as.integer(names(by_factor))] <- by_factor
     full.set <- by_factor
 
     dim(full.set) <- c(nrow(seRowData), nrow(seColData))
     dimnames(full.set) <- list(seRowData$name_, seColData$name_)
 
-    #add NAs for treatments not present in the given assay
-    # ---------------
-    # removed as it should be added when combining different assays
-    #
-    # tNotFound <- setdiff(adrug, rownames(full.set))
-    # mNotFound <-
-    #   matrix(nrow = length(tNotFound), ncol = ncol(full.set))
-    # dimnames(mNotFound) <- list(tNotFound, colnames(full.set))
-    #
-    # final.set <- rbind(mNotFound, full.set)
-    #
-    # ---------------
+    #nolint start
+      #add NAs for treatments not present in the given assay
+      # ---------------
+      # removed as it should be added when combining different assays
+      #
+      # tNotFound <- setdiff(adrug, rownames(full.set))
+      # mNotFound <-
+      #   matrix(nrow = length(tNotFound), ncol = ncol(full.set))
+      # dimnames(mNotFound) <- list(tNotFound, colnames(full.set))
+      #
+      # final.set <- rbind(mNotFound, full.set)
+      #
+      # ---------------
+    #nolint end
     final.set <- full.set
 
     if (data_type == "untreated") {
