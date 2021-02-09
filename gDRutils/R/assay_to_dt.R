@@ -48,6 +48,10 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
   as_dt <-
     convert_assay_data_to_dt(SummarizedExperiment::assay(se, assay_name))
   
+  # empty case
+  if (nrow(as_dt) == 0) {
+    return(as_dt)
+  }
  
   as_dt <- if ((assay_name == "Metrics") || 
       (is.numeric(assay_name) && names(assays(se))[assay_name] == "Metrics")) {
@@ -208,7 +212,8 @@ convert_assay_data_to_dt.BumpyMatrix <-
 convert_assay_data_to_dt.matrix <- function(object) {
   
   # we expect matrix object to be the list of DFrame(s)
-  checkmate::assertTRUE(inherits(object[1, 1][[1]], "DFrame"))
+  # --> this fails for empty fields
+  # checkmate::assertTRUE(inherits(object[1, 1][[1]], "DFrame"))
   
   asL <-
     lapply(seq_len(ncol(object)), function(x) {
