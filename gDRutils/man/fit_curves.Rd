@@ -42,11 +42,6 @@ Defaults to \code{0.1}.}
 
 \item{curve_type}{character vector of types of curves to fit.
 Defaults to \code{c("GR", "RV")}.}
-
-\item{priors}{numeric vector containing starting values for all
-mean parameters in the model. Overrules any self starter function.}
-
-\item{lower}{numeric vector of lower limits for all parameters in a 4-param model.}
 }
 \value{
 data.frame of fit parameters as specified by the \code{curve_type}.

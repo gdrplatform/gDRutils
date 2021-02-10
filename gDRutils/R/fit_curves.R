@@ -40,9 +40,6 @@ RVGRfits <- function(df_,
 #' Defaults to \code{0.05}.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' Defaults to \code{0.1}.
-#' @param priors numeric vector containing starting values for all
-#' mean parameters in the model. Overrules any self starter function.
-#' @param lower numeric vector of lower limits for all parameters in a 4-param model.
 #' @param curve_type character vector of types of curves to fit.
 #' Defaults to \code{c("GR", "RV")}.
 #'
