@@ -8,6 +8,8 @@
 #' @param assay_name String of name of the assay or index of the assay in the \code{se}.
 #' @param merge_metrics Logical indicating whether the metrics should be merged.
 #' Defaults to \code{FALSE}.
+#' @param include_controls Logical indicating whether the controls should be included.
+#' Defaults to \code{FALSE}.
 #'
 #' @return data.table with dose-response data
 #'
@@ -23,6 +25,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
   checkmate::assertTRUE(checkmate::test_count(assay_name) ||
                           checkmate::test_string(assay_name))
   checkmate::assert_flag(merge_metrics)
+  checkmate::assert_flag(include_controls)
   
   # define data.table with data from rowData/colData
   rData <- SummarizedExperiment::rowData(se)
@@ -105,7 +108,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
       as_dt
     }
   } else {
-    as_dt = data.table::data.table(as.data.frame(merge(
+    as_dt <- data.table::data.table(as.data.frame(merge(
       as_dt,
       annotTbl,
       by = c("rId", "cId"),
