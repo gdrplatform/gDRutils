@@ -13,6 +13,9 @@ assay_to_dt(se, assay_name, merge_metrics = FALSE, include_controls = FALSE)
 
 \item{merge_metrics}{Logical indicating whether the metrics should be merged.
 Defaults to \code{FALSE}.}
+
+\item{include_controls}{Logical indicating whether the controls should be included.
+Defaults to \code{FALSE}.}
 }
 \value{
 data.table with dose-response data
