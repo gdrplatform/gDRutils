@@ -21,6 +21,7 @@ test_that("warnings are thrown for duplicated concentrations", {
   expect_warning(fit_curves(df_resp3), regexp = "duplicate concentrations were found")
 })
 
+
 test_that("NA values are handled correctly", {
   df_resp_NA <- df_resp
   df_resp_NA[c(1, 4), c("RelativeViability", "GRvalue")] <- NA
