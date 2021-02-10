@@ -98,19 +98,19 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_resp7$RelativeViability <- pmin(df_resp7$RelativeViability + noise, emax)
   df_resp7$GRvalue <- pmin(df_resp7$GRvalue + noise, emax)
 
-  df_result7 <- fit_curves(df_resp7, force = FALSE)
+  df_result7 <- fit_curves(df_resp7, force_fit = FALSE)
   expect_equal(unique(df_result7[, "fit_type"]), "DRCConstantFitResult")
   expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))), 
     0.70781, tolerance = 1e-5)
 
   # Test that force argument overrides as expected.
-  df_result8 <- fit_curves(df_resp7, force = TRUE)
+  df_result8 <- fit_curves(df_resp7, force_fit = TRUE)
   expect_equal(unique(df_result8[, "fit_type"]), "DRC3pHillFitModelFixS0")
 
   # Test that pcutoff argument works as expected. 
-  df_result9 <- fit_curves(df_resp7, force = FALSE, pcutoff = 1)
+  df_result9 <- fit_curves(df_resp7, force_fit = FALSE, pcutoff = 1)
   expect_equal(df_result9[, "fit_type"], c("DRC3pHillFitModelFixS0", "DRCConstantFitResult"))
-  df_result10 <- fit_curves(df_resp7, force = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
+  df_result10 <- fit_curves(df_resp7, force_fit = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
   expect_equal(unique(df_result10[, "fit_type"]), "DRC3pHillFitModelFixS0")
 
   # Test for GR values from 0-1.

@@ -40,8 +40,6 @@ RVGRfits <- function(df_,
 #' Defaults to \code{0.05}.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' Defaults to \code{0.1}.
-#' @param curve_type limit the fitting to either RV or GR
-#' Defaults to \code{NULL}.
 #'
 #' @return data.frame of RV and GR fit parameters.
 #'
@@ -49,8 +47,8 @@ RVGRfits <- function(df_,
 #' The \code{df_} expects the following columns:
 #'  \itemize{
 #'   \item{Concentration} unlogged concentration values
-#'   \item{RelativeViability} normalized relative viability values (unless \code{curve_type == GR})
-#'   \item{GRvalue} normalized GR values (unless \code{curve_type == RV})
+#'   \item{RelativeViability} normalized relative viability values
+#'   \item{GRvalue} normalized GR values
 #'  }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
@@ -58,6 +56,7 @@ RVGRfits <- function(df_,
 #' different concentration ranges. 
 #'
 #' @export
+#' @rdname fit_curves
 #'
 fit_curves <- function(df_,
                        e_0 = 1,
@@ -66,72 +65,87 @@ fit_curves <- function(df_,
                        range_conc = c(5e-3, 5),
                        force_fit = FALSE,
                        pcutoff = 0.05,
-                       cap = 0.1,
-                       curve_type = NULL) {
+                       cap = 0.1) {
   
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
-  req_fields <- "Concentration"
-  if (is.null(curve_type) || curve_type == 'RV') {
-    req_fields <- c(req_fields, "RelativeViability")
-  }
-  if (is.null(curve_type) || curve_type == 'GR') {
-    req_fields <- c(req_fields, "GRvalue")
-  }
+  req_fields <- c("Concentration", "RelativeViability", "GRvalue")
+
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ",")))
   }
+
   opt_fields <- c("std_GRvalue", "std_RelativeViability")
   for (opt_f in setdiff(opt_fields, colnames(df_))) {
-    df_[,opt_f] = NA
+    df_[, opt_f] <- NA
   }
 
-  med_conc <- stats::median(df_$Concentration)
-  min_conc <- min(df_$Concentration)
+  df_RV <- fit_RV_curve(df_$Concentration, df_$RelativeViability, df_$std_RelativeViability, 
+    e_0 = e_0, range_conc = range_conc, force_fit = force_fit, pcutoff = pcutoff, cap = cap, 
+    n_point_cutoff = n_point_cutoff)
+  df_GR <- fit_GR_curve(df_$Concentration, df_$GRvalue, df_$std_GRvalue, GR_0 = GR_0, 
+    range_conc = range_conc, force_fit = force_fit, pcutoff = pcutoff, cap = cap, 
+    n_point_cutoff = n_point_cutoff)
 
-  if (is.null(curve_type) || curve_type == 'RV') {
-    df_RV <- logisticFit(
-      df_$Concentration,
-      df_$RelativeViability,
-      df_$std_RelativeViability,
-      x_0 = e_0,
-      priors = c(2, 0.4, 1, med_conc),
-      lower = c(0.1, 0, 0, min_conc / 10),
-      range_conc = range_conc,
-      force_fit = force_fit,
-      pcutoff = pcutoff, 
-      cap = cap,
-      n_point_cutoff = n_point_cutoff
-    )
+  df_metrics <- rbind(df_RV, df_GR)
+  rownames(df_metrics) <- c("RV", "GR")
+
+  return(df_metrics)
+}
+
+
+#' @export
+#' @rdname fit_curves
+#'
+fit_GR_curve <- function(concs,
+			 norm_values,
+			 std_norm_values = NA,
+			 GR_0 = 1,
+			 priors = NULL,
+			 lower = NULL,
+			 range_conc = c(5e-3, 5),
+			 force_fit = FALSE,
+			 pcutoff = 0.05,
+			 cap = 0.1,
+			 n_point_cutoff = 4) {
+
+  if (is.null(priors)) {
+    priors <- c(2, 0.1, 1, stats::median(concs))
   }
 
-  if (is.null(curve_type) || curve_type == 'GR') {
-    df_GR <- logisticFit(
-      df_$Concentration,
-      df_$GRvalue,
-      df_$std_GRvalue,
-      x_0 = GR_0,
-      priors = c(2, 0.1, 1, med_conc),
-      lower = c(0.1, -1, -1, min_conc / 10),
-      range_conc = range_conc,
-      force_fit = force_fit,
-      pcutoff = pcutoff, 
-      cap = cap,
-      n_point_cutoff = n_point_cutoff
-    )
+  if (is.null(lower)) {
+    lower <- c(0.1, -1, -1, min(concs) / 10)
   }
 
-  if (is.null(curve_type)) {
-    df_metrics <- rbind(df_RV, df_GR)
-    rownames(df_metrics) <- c("RV", "GR")
-    return(df_metrics)
-  } else if (curve_type == 'GR') {
-    rownames(df_GR) = 'GR'
-    return(df_GR)
-  } else if (curve_type == 'RV') {
-    rownames(df_RV) = 'RV'
-    return(df_RV)
+  logisticFit(concs, norm_values, std_norm_values, GR_0, priors, lower, range_conc, force_fit, 
+    pcutoff, cap, n_point_cutoff)
+}
+
+
+#' @export
+#' @rdname fit_curves
+#'
+fit_RV_curve <- function(concs,
+			 norm_values,
+			 std_norm_values = NA,
+			 e_0 = 1,
+			 priors = NULL,
+			 lower = NULL,
+			 range_conc = c(5e-3, 5),
+			 force_fit = FALSE,
+			 pcutoff = 0.05,
+			 cap = 0.1,
+			 n_point_cutoff = 4) {
+
+  if (is.null(priors)) {
+    priors <- c(2, 0.4, 1, stats::median(concs))
   }
-  
+
+  if (is.null(lower)) {
+    lower <- c(0.1, 0, 0, min(concs) / 10)
+  }
+
+  logisticFit(concs, norm_values, std_norm_values, e_0, priors, lower, range_conc, force_fit, 
+    pcutoff, cap, n_point_cutoff)
 }
 
 
@@ -152,7 +166,6 @@ fit_curves <- function(df_,
 #' @param pcutoff numeric of pvalue significance threshold above or equal to which to use a constant fit.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
-#' @param curve_type limit the fitting to either RV or GR; Defaults to \code{NULL}.
 #'
 #' @return data.frame with metrics and fit parameters.
 #'
@@ -204,8 +217,7 @@ logisticFit <-
            force_fit = FALSE,
            pcutoff = 0.05,
            cap = 0.1,
-           n_point_cutoff = 4,
-           curve_type = NULL) {
+           n_point_cutoff = 4) {
 
     if (length(concs) != length(norm_values)) {
       stop("unequal vector lengths for 'conc' and 'norm_values'")
@@ -214,26 +226,6 @@ logisticFit <-
     # Check that values have not been logged yet. 
     if (any(concs < 0)) {
       stop("function accepts only unlogged concentrations, negative concentrations are detected")
-    }
-
-    # assigned priors and lower values based on curve type if not done yet
-    if (is.null(priors)) {
-      if (curve_type == 'GR') {
-        priors = c(2, 0.1, 1, median(concs))
-      } else {
-        # if guessing, prior is the same as RV
-        priors = c(2, 0.4, 1, median(concs))        
-      }
-    }
-    if (is.null(lower)) {
-      if (curve_type == 'RV') {
-        lower = c(0.1, 0, 0, min(concs) / 10)
-      } else if (curve_type == 'GR') {
-        lower = c(0.1, -1, -1, min(concs) / 10)
-      } else {
-        # not ok to guess lower bound
-        stop('lower bound is not defined and curve type is unknown')
-      }
     }
 
     resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
