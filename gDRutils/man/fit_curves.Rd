@@ -2,6 +2,8 @@
 % Please edit documentation in R/fit_curves.R
 \name{fit_curves}
 \alias{fit_curves}
+\alias{fit_GR_curve}
+\alias{fit_RV_curve}
 \title{Fit curves}
 \usage{
 fit_curves(
@@ -11,7 +13,36 @@ fit_curves(
   n_point_cutoff = 4,
   range_conc = c(0.005, 5),
   force_fit = FALSE,
-  pcutoff = 0.05
+  pcutoff = 0.05,
+  cap = 0.1
+)
+
+fit_GR_curve(
+  concs,
+  norm_values,
+  std_norm_values = NA,
+  GR_0 = 1,
+  priors = NULL,
+  lower = NULL,
+  range_conc = c(0.005, 5),
+  force_fit = FALSE,
+  pcutoff = 0.05,
+  cap = 0.1,
+  n_point_cutoff = 4
+)
+
+fit_RV_curve(
+  concs,
+  norm_values,
+  std_norm_values = NA,
+  e_0 = 1,
+  priors = NULL,
+  lower = NULL,
+  range_conc = c(0.005, 5),
+  force_fit = FALSE,
+  pcutoff = 0.05,
+  cap = 0.1,
+  n_point_cutoff = 4
 )
 }
 \arguments{
@@ -34,6 +65,9 @@ Defaults to \code{FALSE}.}
 
 \item{pcutoff}{numeric of pvalue significance threshold above or equal to which to use a constant fit.
 Defaults to \code{0.05}.}
+
+\item{cap}{numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
+Defaults to \code{0.1}.}
 }
 \value{
 data.frame of RV and GR fit parameters.
@@ -46,9 +80,7 @@ The \code{df_} expects the following columns:
  \itemize{
   \item{Concentration} unlogged concentration values
   \item{RelativeViability} normalized relative viability values
-  \item{std_RelativeViability} standard relative viability values
   \item{GRvalue} normalized GR values
-  \item{std_GRvalue} standard GR values
  }
 
 The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.

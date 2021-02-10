@@ -4,7 +4,7 @@
 \alias{assay_to_dt}
 \title{Transform a SummarizedExperiment assay to a long data.table}
 \usage{
-assay_to_dt(se, assay_name, merge_metrics = FALSE)
+assay_to_dt(se, assay_name, merge_metrics = FALSE, include_controls = FALSE)
 }
 \arguments{
 \item{se}{\linkS4class{SummarizedExperiment} object with dose-response data.}
