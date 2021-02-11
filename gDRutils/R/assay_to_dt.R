@@ -59,7 +59,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
   as_dt <- if ((assay_name == "Metrics") || 
       (is.numeric(assay_name) && names(assays(se))[assay_name] == "Metrics")) {
     as_dt <-
-      data.table::data.table(merge(
+      data.table::as.data.table(merge(
         as_dt,
         annotTbl,
         by = c("rId", "cId"),
@@ -197,7 +197,7 @@ convert_assay_data_to_dt.matrix <- function(object) {
                   lapply(myL, data.table::as.data.table))
       } else {
         df <-
-          data.table::rbindlist(lapply(myL, as.data.frame), fill = TRUE)
+          data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
       }
       if (nrow(df) == 0)
         return()
@@ -240,6 +240,6 @@ convert_assay_data_to_dt.matrix <- function(object) {
     stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
     .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
     .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
-    drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
+    drugnames <- tolower(data.table::as.data.table(drug_data)[, get_identifier("drugname")])
     drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }
