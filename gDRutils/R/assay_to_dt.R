@@ -149,42 +149,6 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
     }
     
     as_dt
-    # code being copied from other branch
-    # SE_assay = SummarizedExperiment::assay(se, ifelse(assay_name == "Normalized" ||
-    #       (is.numeric(assay_name) && names(assays(se))[assay_name] %in% "Normalized"), 'Controls', 'Avg_Controls'))
-    # asL <- lapply(1:nrow(SummarizedExperiment::colData(se)), function(x) {
-    #   myL <- SE_assay[, x]
-    #   # if only one row (nrow==1), the name of the row is not kept which results in a bug
-    #   names(myL) = rownames(SE_assay) # this line is not affecting results if now>1
-
-    #   # in some datasets there might be no data for given drug/cell_line combination
-    #   # under such circumstances DataFrame will be empty
-    #   # and should be filtered out
-    #   # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-    #   myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-
-    #   # in some datasets, there may be no data left (when the input is a subset of the SE)
-    #   if (length(myL) == 0) return(NULL)
-
-    #   myV <- vapply(myL, nrow, integer(1))
-    #   rCol <- rep(names(myV), as.numeric(myV))
-    #   # there might be DataFrames with different number of columns
-    #   # let's fill with NAs where necessary
-    #   if (length(unique(sapply(myL, ncol))) > 1) {
-    #     df <- do.call(plyr::rbind.fill, lapply(myL, data.frame))
-    #   } else {
-    #     df <- data.frame(do.call(rbind, myL))
-    #   }
-    #   if(nrow(df)==0) return()
-    #   df$rId <- rCol
-    #   df$cId <- rownames(SummarizedExperiment::colData(se))[x]
-    #   full.df <- dplyr::left_join(df, annotTbl, by = c("rId", "cId"))
-    #   full.df$Gnumber = gDRutils::get_identifier('untreated_tag')[2]
-    #   full.df$DrugName = gDRutils::get_identifier('untreated_tag')[2]
-    #   full.df$Concentration = 0
-    #   return(full.df)
-    # })
-
   }
 }
 
