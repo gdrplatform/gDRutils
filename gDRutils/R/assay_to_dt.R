@@ -115,7 +115,8 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
       all.x = TRUE
     )))
         # not why need as.data.frame() but it bugs otherwise
-        #   All elements in argument 'x' to 'setDT' must be of same length, but the profile of input lengths (length:frequency) is: [18:1, 0:17]
+        #   All elements in argument 'x' to 'setDT' must be of same length,
+    # but the profile of input lengths (length:frequency) is: [18:1, 0:17]
         #   The first entry with fewer than 18 entries is 2
 
     if (include_controls) {
@@ -123,7 +124,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
       as_dt_ctrl <-
         convert_assay_data_to_dt(SummarizedExperiment::assay(se, ifelse(assay_name == "Normalized" ||
           (is.numeric(assay_name) && names(assays(se))[assay_name] %in% "Normalized"),
-            'Controls', 'Avg_Controls')))
+            "Controls", "Avg_Controls")))
       as_dt_ctrl <- merge(#data.table::data.table(
         as_dt_ctrl,
         annotTbl,
@@ -132,59 +133,24 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
       )#)
       as_dt_ctrl <- data.table::data.table(as.data.frame(as_dt_ctrl)) 
         # not why need as.data.frame() but it bugs otherwise
-        #   All elements in argument 'x' to 'setDT' must be of same length, but the profile of input lengths (length:frequency) is: [18:1, 0:17]
+        #   All elements in argument 'x' to 'setDT' must be of same length,
+      # but the profile of input lengths (length:frequency) is: [18:1, 0:17]
         #   The first entry with fewer than 18 entries is 2
 
-      as_dt_ctrl$Gnumber <- gDRutils::get_identifier('untreated_tag')[2]
-      as_dt_ctrl$DrugName <- gDRutils::get_identifier('untreated_tag')[2]
+      as_dt_ctrl$Gnumber <- gDRutils::get_identifier("untreated_tag")[2]
+      as_dt_ctrl$DrugName <- gDRutils::get_identifier("untreated_tag")[2]
       as_dt_ctrl$Concentration <- 0
       as_dt_ctrl$std_GRvalue <- NA
       as_dt_ctrl$std_RelativeViability <- NA
 
       data.table::setnames(as_dt_ctrl,
-                           old = c('RefRelativeViability', 'RefGRvalue', "RefReadout"),
-                           new = c('RelativeViability', 'GRvalue', "CorrectedReadout"))
-      as_dt_ctrl[, c("UntrtReadout", "DivisionTime", "Day0Readout" ) := NULL]
+                           old = c("RefRelativeViability", "RefGRvalue", "RefReadout"),
+                           new = c("RelativeViability", "GRvalue", "CorrectedReadout"))
+      as_dt_ctrl[, c("UntrtReadout", "DivisionTime", "Day0Readout") := NULL]
       as_dt <- rbind(as_dt, as_dt_ctrl)
     }
     
     as_dt
-    # code being copied from other branch
-    # SE_assay = SummarizedExperiment::assay(se, ifelse(assay_name == "Normalized" ||
-    #       (is.numeric(assay_name) && names(assays(se))[assay_name] %in% "Normalized"), 'Controls', 'Avg_Controls'))
-    # asL <- lapply(1:nrow(SummarizedExperiment::colData(se)), function(x) {
-    #   myL <- SE_assay[, x]
-    #   # if only one row (nrow==1), the name of the row is not kept which results in a bug
-    #   names(myL) = rownames(SE_assay) # this line is not affecting results if now>1
-
-    #   # in some datasets there might be no data for given drug/cell_line combination
-    #   # under such circumstances DataFrame will be empty
-    #   # and should be filtered out
-    #   # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-    #   myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-
-    #   # in some datasets, there may be no data left (when the input is a subset of the SE)
-    #   if (length(myL) == 0) return(NULL)
-
-    #   myV <- vapply(myL, nrow, integer(1))
-    #   rCol <- rep(names(myV), as.numeric(myV))
-    #   # there might be DataFrames with different number of columns
-    #   # let's fill with NAs where necessary
-    #   if (length(unique(sapply(myL, ncol))) > 1) {
-    #     df <- do.call(plyr::rbind.fill, lapply(myL, data.frame))
-    #   } else {
-    #     df <- data.frame(do.call(rbind, myL))
-    #   }
-    #   if(nrow(df)==0) return()
-    #   df$rId <- rCol
-    #   df$cId <- rownames(SummarizedExperiment::colData(se))[x]
-    #   full.df <- dplyr::left_join(df, annotTbl, by = c("rId", "cId"))
-    #   full.df$Gnumber = gDRutils::get_identifier('untreated_tag')[2]
-    #   full.df$DrugName = gDRutils::get_identifier('untreated_tag')[2]
-    #   full.df$Concentration = 0
-    #   return(full.df)
-    # })
-
   }
 }
 
