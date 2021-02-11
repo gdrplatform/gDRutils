@@ -108,34 +108,25 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
       as_dt
     }
   } else {
-    as_dt <- data.table::data.table(as.data.frame(merge(
+    as_dt <- data.table::as.data.table(merge(
       as_dt,
       annotTbl,
       by = c("rId", "cId"),
       all.x = TRUE
-    )))
-        # not why need as.data.frame() but it bugs otherwise
-        #   All elements in argument 'x' to 'setDT' must be of same length,
-    # but the profile of input lengths (length:frequency) is: [18:1, 0:17]
-        #   The first entry with fewer than 18 entries is 2
-
+    ))
     if (include_controls) {
 
       as_dt_ctrl <-
         convert_assay_data_to_dt(SummarizedExperiment::assay(se, ifelse(assay_name == "Normalized" ||
           (is.numeric(assay_name) && names(assays(se))[assay_name] %in% "Normalized"),
             "Controls", "Avg_Controls")))
-      as_dt_ctrl <- merge(#data.table::data.table(
+      as_dt_ctrl <- merge(
         as_dt_ctrl,
         annotTbl,
         by = c("rId", "cId"),
         all.x = TRUE
-      )#)
-      as_dt_ctrl <- data.table::data.table(as.data.frame(as_dt_ctrl)) 
-        # not why need as.data.frame() but it bugs otherwise
-        #   All elements in argument 'x' to 'setDT' must be of same length,
-      # but the profile of input lengths (length:frequency) is: [18:1, 0:17]
-        #   The first entry with fewer than 18 entries is 2
+      )
+      as_dt_ctrl <- data.table::as.data.table(as_dt_ctrl)
 
       as_dt_ctrl$Gnumber <- gDRutils::get_identifier("untreated_tag")[2]
       as_dt_ctrl$DrugName <- gDRutils::get_identifier("untreated_tag")[2]
@@ -147,7 +138,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
                            old = c("RefRelativeViability", "RefGRvalue", "RefReadout"),
                            new = c("RelativeViability", "GRvalue", "CorrectedReadout"))
       as_dt_ctrl[, c("UntrtReadout", "DivisionTime", "Day0Readout") := NULL]
-      as_dt <- rbind(as_dt, as_dt_ctrl)
+      as_dt <- rbind(as_dt, as_dt_ctrl, fill = TRUE)
     }
     
     as_dt
