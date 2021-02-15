@@ -173,7 +173,6 @@ convert_assay_data_to_dt.matrix <- function(object) {
   
   # we expect matrix object to be the list of DFrame(s)
   # --> this fails for empty fields
-  # checkmate::assertTRUE(inherits(object[1, 1][[1]], "DFrame"))
   
   asL <-
     lapply(seq_len(ncol(object)), function(x) {
