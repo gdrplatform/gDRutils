@@ -11,18 +11,18 @@ test_that("fit_curves fails with expected errors", {
   # Log10 concentrations.
   df_resp2 <- df_resp
   df_resp2$Concentration <- df_resp2$Concentration * -1
-  expect_error(fit_curves(df_resp2), reg= "function accepts only unlogged concentrations")
+  expect_error(fit_curves(df_resp2), reg = "function accepts only unlogged concentrations")
 
   # Invalid curve_type.
-  expect_error(fit_curves(df_resp, curve_type = "BOGUS"), reg= "unknown curve type")
-  expect_error(fit_curves(df_resp, curve_type = c("GR", "BOGUS")), reg= "unknown curve type")
+  expect_error(fit_curves(df_resp, curve_type = "BOGUS"), reg = "unknown curve type")
+  expect_error(fit_curves(df_resp, curve_type = c("GR", "BOGUS")), reg = "unknown curve type")
 })
 
 
 test_that("warnings are thrown for duplicated concentrations", {
   df_resp3 <- df_resp
   df_resp3$Concentration[2:3] <- df_resp3$Concentration[1]
-  expect_warning(fit_curves(df_resp3), reg= "duplicate concentrations were found")
+  expect_warning(fit_curves(df_resp3), reg = "duplicate concentrations were found")
 })
 
 
@@ -60,7 +60,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_resp4 <- df_resp
   df_resp4$RelativeViability <- df_resp4$GRvalue <- 0.5
 
-  expect_warning(df_result <- fit_curves(df_resp4), reg= "overriding original x_0 argument") # Override. 
+  expect_warning(df_result <- fit_curves(df_resp4), reg = "overriding original x_0 argument") # Override. 
   obs_fit <- unique(df_result[, "fit_type"])
   expect_equal(obs_fit, "DRCConstantFitResult")
   expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])), 
@@ -130,7 +130,7 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   #nolint start
     # TODO: Test for invalid fit. Maybe try a bunch of noise. 
-    #  expect_warning(df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1), reg= "fitting failed with error")
+    #  expect_warning(df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1), reg = "fitting failed with error")
     #  
     #  obs_fit <- unique(df_result[, "fit_type"])
     #  expect_equal(obs_fit, "DRCInvalidFitResult")
