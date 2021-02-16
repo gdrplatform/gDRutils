@@ -57,7 +57,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
   }
  
   as_dt <- if ((assay_name == "Metrics") || 
-      (is.numeric(assay_name) && names(assays(se))[assay_name] == "Metrics")) {
+      (is.numeric(assay_name) && names(SummarizedExperiment::assays(se))[assay_name] == "Metrics")) {
     as_dt <-
       data.table::as.data.table(merge(
         as_dt,
@@ -118,7 +118,7 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
 
       as_dt_ctrl <-
         convert_assay_data_to_dt(SummarizedExperiment::assay(se, ifelse(assay_name == "Normalized" ||
-          (is.numeric(assay_name) && names(assays(se))[assay_name] %in% "Normalized"),
+          (is.numeric(assay_name) && names(SummarizedExperiment::assays(se))[assay_name] %in% "Normalized"),
             "Controls", "Avg_Controls")))
       as_dt_ctrl <- merge(
         as_dt_ctrl,
