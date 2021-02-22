@@ -239,6 +239,6 @@ convert_assay_data_to_dt.matrix <- function(object) {
     stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
     .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
     .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
-    drugnames <- tolower(data.table::as.data.table(drug_data)[, get_identifier("drugname")])
+    drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
     drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }
