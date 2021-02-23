@@ -1,3 +1,7 @@
+# Changes to v.0.0.24
+- modify fit_curves to take in flexible curve_type(s)
+- clean-up assay_to_dt
+
 # Changes to v.0.0.23
 - added linter
 

@@ -38,17 +38,19 @@ RVGRfits <- function(df_,
 #' Defaults to \code{FALSE}.
 #' @param pcutoff numeric of pvalue significance threshold above or equal to which to use a constant fit.
 #' Defaults to \code{0.05}.
+#' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
+#' Defaults to \code{0.1}.
+#' @param curve_type character vector of types of curves to fit.
+#' Defaults to \code{c("GR", "RV")}.
 #'
-#' @return data.frame of RV and GR fit parameters.
+#' @return data.frame of fit parameters as specified by the \code{curve_type}.
 #'
 #' @details
 #' The \code{df_} expects the following columns:
 #'  \itemize{
 #'   \item{Concentration} unlogged concentration values
-#'   \item{RelativeViability} normalized relative viability values
-#'   \item{std_RelativeViability} standard relative viability values
-#'   \item{GRvalue} normalized GR values
-#'   \item{std_GRvalue} standard GR values
+#'   \item{RelativeViability} normalized relative viability values (if \code{curve_type} includes \code{"RV"})
+#'   \item{GRvalue} normalized GR values (if \code{curve_type} includes \code{"GR"})
 #'  }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
@@ -63,47 +65,77 @@ fit_curves <- function(df_,
                        n_point_cutoff = 4,
                        range_conc = c(5e-3, 5),
                        force_fit = FALSE,
-                       pcutoff = 0.05) {
+                       pcutoff = 0.05,
+                       cap = 0.1, 
+                       curve_type = c("GR", "RV")) {
   
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
-  req_fields <- c("Concentration", "RelativeViability", "std_RelativeViability", "GRvalue", "std_GRvalue")
+  if (any(bad_curve_type <- ! curve_type %in% c("GR", "RV"))) {
+    stop(sprintf("unknown curve type: '%s'", 
+      paste0(curve_type[bad_curve_type], collapse = ", ")))
+  } 
+
+  req_fields <- c("Concentration")
+  opt_fields <- NULL
+
+  if ("GR" %in% curve_type) {
+    req_fields <- c(req_fields, "GRvalue")
+    opt_fields <- c(opt_fields, "std_GRvalue")
+  }
+
+  if ("RV" %in% curve_type) {
+    req_fields <- c(req_fields, "RelativeViability")
+    opt_fields <- c(opt_fields, "std_RelativeViability")
+  }
+
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ",")))
   }
 
-  med_conc <- stats::median(df_$Concentration)
-  min_conc <- min(df_$Concentration)
+  for (opt_f in setdiff(opt_fields, colnames(df_))) {
+    df_[, opt_f] <- NA
+  }
 
-  df_RV <- logisticFit(
-    df_$Concentration,
-    df_$RelativeViability,
-    df_$std_RelativeViability,
-    x_0 = e_0,
-    priors = c(2, 0.4, 1, med_conc),
-    lower = c(0.1, 0, 0, min_conc / 10),
-    range_conc = range_conc,
-    force_fit = force_fit,
-    pcutoff = pcutoff, 
-    n_point_cutoff = n_point_cutoff
-  )
+  df_metrics <- NULL
+  med_concs <- stats::median(df_$Concentration)
+  min_concs <- min(df_$Concentration)
 
-  df_GR <- logisticFit(
-    df_$Concentration,
-    df_$GRvalue,
-    df_$std_GRvalue,
-    x_0 = GR_0,
-    priors = c(2, 0.1, 1, med_conc),
-    lower = c(0.1, -1, -1, min_conc / 10),
-    range_conc = range_conc,
-    force_fit = force_fit,
-    pcutoff = pcutoff, 
-    n_point_cutoff = n_point_cutoff
-  )
+  if ("RV" %in% curve_type) {
+    df_metrics <- logisticFit(
+      df_$Concentration, 
+      df_$RelativeViability, 
+      df_$std_RelativeViability, 
+      priors = c(2, 0.4, 1, med_concs),
+      lower = c(0.1, 0, 0, min_concs / 10),
+      x_0 = e_0, 
+      range_conc = range_conc, 
+      force_fit = force_fit, 
+      pcutoff = pcutoff, 
+      cap = cap, 
+      n_point_cutoff = n_point_cutoff
+    )
+    rownames(df_metrics) <- "RV"
+  }
 
-  df_metrics <- rbind(df_RV, df_GR)
-  rownames(df_metrics) <- c("RV", "GR")
+  if ("GR" %in% curve_type) {
+    df_gr <- logisticFit(
+      df_$Concentration, 
+      df_$GRvalue, 
+      df_$std_GRvalue, 
+      priors = c(2, 0.1, 1, med_concs),
+      lower = c(0.1, -1, -1, min_concs / 10),
+      x_0 = GR_0, 
+      range_conc = range_conc, 
+      force_fit = force_fit, 
+      pcutoff = pcutoff, 
+      cap = cap, 
+      n_point_cutoff = n_point_cutoff
+    )
+    rownames(df_gr) <- "GR"
+    df_metrics <- rbind(df_metrics, df_gr)
+  }
 
-  return(df_metrics)
+  df_metrics
 }
 
 
@@ -167,7 +199,7 @@ fit_curves <- function(df_,
 logisticFit <-
   function(concs,
            norm_values,
-           std_norm_values,
+           std_norm_values = NA,
            x_0 = 1,
            priors = NULL,
            lower = NULL,
@@ -181,14 +213,14 @@ logisticFit <-
       stop("unequal vector lengths for 'conc' and 'norm_values'")
     }
 
-    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
-    out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
-    names(out) <- resp_metric_cols
-
     # Check that values have not been logged yet. 
     if (any(concs < 0)) {
       stop("function accepts only unlogged concentrations, negative concentrations are detected")
     }
+
+    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+    out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
+    names(out) <- resp_metric_cols
 
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))

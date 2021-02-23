@@ -28,6 +28,10 @@ params <- data.frame(h = 2, x_inf = 0.1, x_0 = 1, c50 = 0.5)
 params_GR <- params
 params_GR$x_inf <- -0.4
 
+expected <- rbind(params, params_GR)
+rownames(expected) <- c("RV", "GR")
+expected_dims <- c(2, 14)
+
 conc <- 10 ^ (seq(-3, 1, 0.5))
 
 # Normal curve.

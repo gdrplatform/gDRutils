@@ -8,6 +8,8 @@
 #' @param assay_name String of name of the assay or index of the assay in the \code{se}.
 #' @param merge_metrics Logical indicating whether the metrics should be merged.
 #' Defaults to \code{FALSE}.
+#' @param include_controls Logical indicating whether the controls should be included.
+#' Defaults to \code{FALSE}.
 #'
 #' @return data.table with dose-response data
 #'
@@ -17,12 +19,13 @@
 # - maybe 'convert_assay_to_dt' ?
 # - alternative naming conventions:
 # assay_to_dt => convert_se_to_dt and convert_assay_data_to_dt => convert_assay_to_dt
-assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
+assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls = FALSE) {
   # check arguments
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assertTRUE(checkmate::test_count(assay_name) ||
                           checkmate::test_string(assay_name))
   checkmate::assert_flag(merge_metrics)
+  checkmate::assert_flag(include_controls)
   
   # define data.table with data from rowData/colData
   rData <- SummarizedExperiment::rowData(se)
@@ -48,10 +51,15 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
   as_dt <-
     convert_assay_data_to_dt(SummarizedExperiment::assay(se, assay_name))
   
+  # empty case
+  if (nrow(as_dt) == 0) {
+    return(as_dt)
+  }
  
-  as_dt <- if (assay_name == "Metrics") {
+  as_dt <- if ((assay_name == "Metrics") || 
+      (is.numeric(assay_name) && names(SummarizedExperiment::assays(se))[assay_name] == "Metrics")) {
     as_dt <-
-      data.table::data.table(merge(
+      data.table::as.data.table(merge(
         as_dt,
         annotTbl,
         by = c("rId", "cId"),
@@ -100,12 +108,40 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE) {
       as_dt
     }
   } else {
-    data.table::data.table(merge(
+    as_dt <- data.table::as.data.table(merge(
       as_dt,
       annotTbl,
       by = c("rId", "cId"),
       all.x = TRUE
     ))
+    if (include_controls) {
+
+      as_dt_ctrl <-
+        convert_assay_data_to_dt(SummarizedExperiment::assay(se, ifelse(assay_name == "Normalized" ||
+          (is.numeric(assay_name) && names(SummarizedExperiment::assays(se))[assay_name] %in% "Normalized"),
+            "Controls", "Avg_Controls")))
+      as_dt_ctrl <- merge(
+        as_dt_ctrl,
+        annotTbl,
+        by = c("rId", "cId"),
+        all.x = TRUE
+      )
+      as_dt_ctrl <- data.table::as.data.table(as_dt_ctrl)
+
+      as_dt_ctrl$Gnumber <- gDRutils::get_identifier("untreated_tag")[2]
+      as_dt_ctrl$DrugName <- gDRutils::get_identifier("untreated_tag")[2]
+      as_dt_ctrl$Concentration <- 0
+      as_dt_ctrl$std_GRvalue <- NA
+      as_dt_ctrl$std_RelativeViability <- NA
+
+      data.table::setnames(as_dt_ctrl,
+                           old = c("RefRelativeViability", "RefGRvalue", "RefReadout"),
+                           new = c("RelativeViability", "GRvalue", "CorrectedReadout"))
+      as_dt_ctrl[, c("UntrtReadout", "DivisionTime", "Day0Readout") := NULL]
+      as_dt <- rbind(as_dt, as_dt_ctrl, fill = TRUE)
+    }
+    
+    as_dt
   }
 }
 
@@ -135,8 +171,8 @@ convert_assay_data_to_dt.BumpyMatrix <-
 
 convert_assay_data_to_dt.matrix <- function(object) {
   
-  # we expect matrix object to be the list of DFrame(s)
-  checkmate::assertTRUE(inherits(object[1, 1][[1]], "DFrame"))
+  # we expect matrix object to be the list of DFrame(s) or NULL(s)
+  checkmate::assertTRUE(all(lapply(object, class) %in% c("DFrame", "NULL")))
   
   asL <-
     lapply(seq_len(ncol(object)), function(x) {
@@ -160,7 +196,7 @@ convert_assay_data_to_dt.matrix <- function(object) {
                   lapply(myL, data.table::as.data.table))
       } else {
         df <-
-          data.table::rbindlist(lapply(myL, as.data.frame), fill = TRUE)
+          data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
       }
       if (nrow(df) == 0)
         return()
