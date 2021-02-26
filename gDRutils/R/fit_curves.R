@@ -259,8 +259,13 @@ logisticFit <-
     ## 'x_max' can be considered either the lowest readout (max efficacy) 
     ## or the efficacy at the max concentration. We take the min 
     ## of the two highest concentrations as a compromise.
-    l <- nrow(xAvg) # NAs have been removed. 
-    out$x_max <- min(xAvg$norm_values[c(l, l - 1)], na.rm = TRUE)
+    l <- nrow(xAvg)
+    if (all(is.na(xAvg$norm_values))) {
+      out$x_max = NA
+    } else {
+      # takes the highest two measured values (Remove NAs)
+      out$x_max <- min(xAvg$norm_values[!is.na(xAvg$norm_values)][c(l, l - 1)], na.rm = TRUE)
+    }
 
     # Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
     .set_constant_fit_params <- function(out) {
@@ -433,7 +438,9 @@ logistic_metrics <- function(c, x_metrics) {
 # Estimate values for undefined IC/GR50 values. 
 #' @keywords internal
 .estimate_xc50 <- function(param) {
-  if (all(param > 0.5, na.rm = TRUE)) {
+  if (all(is.na(param))) {
+      NA
+  } else if (all(param > 0.5, na.rm = TRUE)) {
     Inf
   } else if (all(param < 0.5, na.rm = TRUE)) {
     -Inf
