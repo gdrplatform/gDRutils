@@ -172,7 +172,7 @@ convert_assay_data_to_dt.BumpyMatrix <-
 convert_assay_data_to_dt.matrix <- function(object) {
   
   # we expect matrix object to be the list of DFrame(s) or NULL(s)
-  checkmate::assertTRUE(all(lapply(object, class) %in% c("DFrame", "data.frame", NULL)))
+  checkmate::assertTRUE(all(lapply(object, class) %in% c("DFrame", "data.frame", "NULL")))
   
   asL <-
     lapply(seq_len(ncol(object)), function(x) {
