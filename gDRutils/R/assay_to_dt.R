@@ -169,6 +169,13 @@ convert_assay_data_to_dt.BumpyMatrix <-
                                       column.field = "cId")
   }
 
+convert_assay_data_to_dt.BumpyDataFrameMatrix <-
+  function(object) {
+      BumpyMatrix::unsplitAsDataFrame(object,
+                                      row.field = "rId",
+                                      column.field = "cId")
+  }
+
 convert_assay_data_to_dt.matrix <- function(object) {
   
   # we expect matrix object to be the list of DFrame(s) or NULL(s)
