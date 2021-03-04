@@ -1,4 +1,4 @@
-# Changes to v.0.0.25
+# Changes to v.0.0.26
 - fix bug with wrong class for S3 methods in convert_assay_data_to_dt
 - update the documentation
 
