@@ -1,3 +1,6 @@
+# Changes to v.0.0.27
+- update .estimate_xc50 and add tests
+
 # Changes to v.0.0.26
 - fix bug with wrong class for S3 methods in convert_assay_data_to_dt
 - update the documentation
