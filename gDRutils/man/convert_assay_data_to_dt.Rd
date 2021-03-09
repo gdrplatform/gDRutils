@@ -2,12 +2,9 @@
 % Please edit documentation in R/assay_to_dt.R
 \name{convert_assay_data_to_dt}
 \alias{convert_assay_data_to_dt}
-\alias{convert_assay_data_to_dt.default}
 \title{Convert assay data into data.table}
 \usage{
 convert_assay_data_to_dt(object)
-
-\method{convert_assay_data_to_dt}{default}(object)
 }
 \arguments{
 \item{object}{An object comprising assay in SummarizedExperiment}
