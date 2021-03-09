@@ -261,7 +261,7 @@ logisticFit <-
     ## of the two highest concentrations as a compromise.
     l <- nrow(xAvg)
     if (all(is.na(xAvg$norm_values))) {
-      out$x_max = NA
+      out$x_max <- NA
     } else {
       # takes the highest two measured values (Remove NAs)
       out$x_max <- min(xAvg$norm_values[!is.na(xAvg$norm_values)][c(l, l - 1)], na.rm = TRUE)
@@ -439,10 +439,10 @@ logistic_metrics <- function(c, x_metrics) {
 #' @keywords internal
 .estimate_xc50 <- function(param) {
   if (all(is.na(param))) {
-      NA
+    NA
   } else if (all(param > 0.5, na.rm = TRUE)) {
     Inf
-  } else if (all(param < 0.5, na.rm = TRUE)) {
+  } else if (all(param <= 0.5, na.rm = TRUE)) {
     -Inf
   } else {
     NA

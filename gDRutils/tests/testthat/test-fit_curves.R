@@ -34,6 +34,11 @@ test_that("NA values are handled correctly", {
   df_resp_NA2 <- df_resp_NA
   df_resp_NA2[6, "RelativeViability"] <- NA
   expect_error(fit_curves(df_resp_NA2), NA)
+
+  df_resp_NA3 <- df_resp_NA
+  df_resp_NA3[, "RelativeViability"] <- NA
+  df_result_NA <- fit_curves(df_resp_NA3)
+  expect_true(is.na(df_result_NA["RV", "xc50"]))
 })
 
 
@@ -147,4 +152,12 @@ test_that("curve_type can be specified", {
   RV_df_result <- fit_curves(df_resp, curve_type = "RV")
   expect_equal(rownames(RV_df_result), "RV")
   expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV", ], tolerance = 1e-5)
+})
+
+
+test_that(".estimate_xc50 works as expected", {
+  expect_equal(gDRutils:::.estimate_xc50(c(NA, NA, NA, NA)), NA)
+  expect_equal(gDRutils:::.estimate_xc50(c(0.6, 0.7, 0.8, 0.9)), Inf)
+  expect_equal(gDRutils:::.estimate_xc50(c(0.1, 0.2, 0.3, 0.4)), -Inf)
+  expect_equal(gDRutils:::.estimate_xc50(c(0.1, 0.2, 0.6, 0.7)), NA)
 })
