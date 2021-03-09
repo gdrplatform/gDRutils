@@ -2,16 +2,16 @@
 % Please edit documentation in R/assay_to_dt.R
 \name{convert_assay_data_to_dt.matrix}
 \alias{convert_assay_data_to_dt.matrix}
-\title{Convert assay data into data.table}
+\title{Convert matrix assay data into data.table}
 \usage{
 \method{convert_assay_data_to_dt}{matrix}(object)
 }
 \arguments{
-\item{object}{}
+\item{object}{matrix object}
 }
 \value{
-
+data.table with assay data
 }
 \description{
-Convert assay data into data.table
+Convert matrix assay data into data.table
 }

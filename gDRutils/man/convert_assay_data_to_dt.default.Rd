@@ -2,16 +2,16 @@
 % Please edit documentation in R/assay_to_dt.R
 \name{convert_assay_data_to_dt.default}
 \alias{convert_assay_data_to_dt.default}
-\title{Convert assay data into data.table}
+\title{Convert assay data into data.table (default)}
 \usage{
 \method{convert_assay_data_to_dt}{default}(object)
 }
 \arguments{
-\item{object}{}
+\item{object}{BumpyDataFrameMatrix or matrix object}
 }
 \value{
-
+data.table with assay data
 }
 \description{
-Convert assay data into data.table
+Convert assay data into data.table (default)
 }
