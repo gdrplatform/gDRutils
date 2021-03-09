@@ -145,14 +145,24 @@ assay_to_dt <- function(se, assay_name, merge_metrics = FALSE, include_controls 
   }
 }
 
+
 #' Convert assay data into data.table
+#'
 #' @param object An object comprising assay in SummarizedExperiment
+#'
 #' @return data.table with assay data
+#' @export
+#'
 convert_assay_data_to_dt <- function(object) {
   UseMethod("convert_assay_data_to_dt")
 }
 
-#' @rdname convert_assay_data_to_dt
+
+#' Convert assay data into data.table (default)
+#' @param object BumpyDataFrameMatrix or matrix object
+#' @return data.table with assay data
+#' @export
+#'
 convert_assay_data_to_dt.default <- function(object) {
   stop(
     paste(
@@ -162,13 +172,22 @@ convert_assay_data_to_dt.default <- function(object) {
   )
 }
 
-convert_assay_data_to_dt.BumpyMatrix <-
+#' Convert BumpyDataFrameMatrix assay data into data.table
+#' @param object BumpyDataFrameMatrix object
+#' @return data.table with assay data
+#' @export
+#'
+convert_assay_data_to_dt.BumpyDataFrameMatrix <-
   function(object) {
-      BumpyMatrix::unsplitAsDataFrame(object,
-                                      row.field = "rId",
-                                      column.field = "cId")
+    BumpyMatrix::unsplitAsDataFrame(object,
+                                    row.field = "rId",
+                                    column.field = "cId")
   }
-
+#' Convert matrix assay data into data.table
+#' @param object matrix object
+#' @return data.table with assay data
+#' @export
+#'
 convert_assay_data_to_dt.matrix <- function(object) {
   
   # we expect matrix object to be the list of DFrame(s) or NULL(s)
