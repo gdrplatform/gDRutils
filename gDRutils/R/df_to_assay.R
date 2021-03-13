@@ -28,7 +28,7 @@ df_to_assay <-
     checkmate::assert_character(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     ####
-    data <- methods::as(data, "DataFrame")
+    data <- S4Vectors::DataFrame(data)
     
     allMetadata <- gDR::getMetaData(data, discard_keys = discard_keys)
 
