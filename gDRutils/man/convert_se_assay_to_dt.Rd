@@ -2,25 +2,26 @@
 % Please edit documentation in R/assay_to_dt.R
 \name{convert_se_assay_to_dt}
 \alias{convert_se_assay_to_dt}
-\title{Transform a SummarizedExperiment assay to a long data.table}
+\title{Convert a SummarizedExperiment assay to a long data.table}
 \usage{
 convert_se_assay_to_dt(se, assay_name, include_metadata = TRUE)
 }
 \arguments{
-\item{se}{A \linkS4class{SummarizedExperiment} object with dose-response data in its assays.}
+\item{se}{A \linkS4class{SummarizedExperiment} object holding raw and processed dose-response data in its assays.}
 
 \item{assay_name}{String of name of the assay to transform within the \code{se}.}
 
 \item{include_metadata}{Boolean indicating whether or not to include \code{rowData(se)}
-and \code{colData(se)} in the response.
+and \code{colData(se)} in the returned data.table.
 Defaults to \code{TRUE}.}
 }
 \value{
-data.table of all data specified by \code{assay_name}.
+data.table representation of the data in \code{assay_name}.
 }
 \description{
-Transform a SummarizedExperiment assay to a concatenated data.table.
+Convert an assay within a \linkS4class{SummarizedExperiment} object to a long data.table.
 }
 \details{
-This is a base function that can be repurposed for more complex logic.
+NOTE: to extract information about 'Control' data, simply call the 
+function with the name of the assay holding data on controls.
 }
