@@ -1,16 +1,17 @@
-#' Transform a SummarizedExperiment assay to a long data.table
+#' Convert a SummarizedExperiment assay to a long data.table
 #'
-#' Transform a SummarizedExperiment assay to a concatenated data.table.
+#' Convert an assay within a \linkS4class{SummarizedExperiment} object to a long data.table.
 #'
-#' @param se A \linkS4class{SummarizedExperiment} object with dose-response data in its assays.
+#' @param se A \linkS4class{SummarizedExperiment} object holding raw and processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
-#' and \code{colData(se)} in the response.
+#' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
 #'
-#' @return data.table of all data specified by \code{assay_name}.
+#' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @details This is a base function that can be repurposed for more complex logic. 
+#' @details NOTE: to extract information about 'Control' data, simply call the 
+#' function with the name of the assay holding data on controls. 
 #'
 #' @export
 #'
@@ -53,6 +54,67 @@ convert_se_assay_to_dt <- function(se,
 
   data.table::as.data.table(dt)
 } 
+
+
+#' Convert assay data into data.table
+#'
+#' @param object An object comprising assay in SummarizedExperiment
+#'
+#' @return data.table with assay data
+#'
+.convert_se_assay_to_dt <- function(se, assay_name) {
+  object <- SummarizedExperiment::assays(se)[[assay_name]]
+  if (is(object, "BumpyDataFrameMatrix")) {
+    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
+
+  } else if (is(object, "matrix")) {
+    first <- object[1, 1]
+    if (is.numeric(first)) {
+      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
+    } else if (is(first, "DFrame")) {
+
+      # TODO: Deprecate me. 
+      .Deprecated("Support for nested DataFrames not of class `BumpyDataFrameMatrix` will be deprecated")
+      asL <-
+	lapply(seq_len(ncol(object)), function(x) {
+	  myL <- object[, x, drop = FALSE]
+	  
+	  # in some datasets there might be no data for given drug/cell_line combination
+	  # under such circumstances DataFrame will be empty
+	  # and should be filtered out
+	  # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
+	  myL <- myL[vapply(myL, nrow, integer(1)) > 0]
+	  
+	  myV <- vapply(myL, nrow, integer(1))
+	  rCol <- rep(names(myV), as.numeric(myV))
+	  # there might be DataFrames with different number of columns
+	  # let's fill with NAs where necessary
+	  if (length(unique(sapply(myL, ncol))) > 1) {
+	    df <-
+	      do.call(plyr::rbind.fill,
+		      lapply(myL, data.table::as.data.table))
+	  } else {
+	    df <-
+	      data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
+	  }
+	  if (nrow(df) == 0)
+	    return()
+	  df$rId <- rCol
+	  df$cId <- colnames(object)[x]
+	  df
+	})
+      as_df <- data.table::rbindlist(asL)
+
+    } else {
+      stop(
+	paste(
+	  "Unable to find an inherited method for function 'convert_assay_data_to_dt' for signature",
+	  shQuote(class(object))
+	)
+      )
+    }
+  }
+}
 
 
 # TODO: Deprecate me. 
@@ -130,64 +192,5 @@ assay_to_dt <- function(se,
 		     all = TRUE)
     }
   as_dt
-  }
-}
-
-
-#' Convert assay data into data.table
-#'
-#' @param object An object comprising assay in SummarizedExperiment
-#'
-#' @return data.table with assay data
-#'
-.convert_se_assay_to_dt <- function(se, assay_name) {
-  object <- SummarizedExperiment::assays(se)[[assay_name]]
-  if (is(object, "BumpyDataFrameMatrix")) {
-    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
-  } else if (is(object, "matrix")) {
-    first <- object[1, 1]
-    if (is.numeric(first)) {
-      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
-    } else if (is(first, "DFrame")) {
-      # TODO: Deprecate me. 
-      .Deprecated("Support for nested DataFrames not of class `BumpyDataFrameMatrix` will be deprecated")
-      asL <-
-	lapply(seq_len(ncol(object)), function(x) {
-	  myL <- object[, x, drop = FALSE]
-	  
-	  # in some datasets there might be no data for given drug/cell_line combination
-	  # under such circumstances DataFrame will be empty
-	  # and should be filtered out
-	  # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-	  myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-	  
-	  myV <- vapply(myL, nrow, integer(1))
-	  rCol <- rep(names(myV), as.numeric(myV))
-	  # there might be DataFrames with different number of columns
-	  # let's fill with NAs where necessary
-	  if (length(unique(sapply(myL, ncol))) > 1) {
-	    df <-
-	      do.call(plyr::rbind.fill,
-		      lapply(myL, data.table::as.data.table))
-	  } else {
-	    df <-
-	      data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
-	  }
-	  if (nrow(df) == 0)
-	    return()
-	  df$rId <- rCol
-	  df$cId <- colnames(object)[x]
-	  df
-	})
-      as_df <- data.table::rbindlist(asL)
-
-    } else {
-      stop(
-	paste(
-	  "Unable to find an inherited method for function 'convert_assay_data_to_dt' for signature",
-	  shQuote(class(object))
-	)
-      )
-    }
   }
 }
