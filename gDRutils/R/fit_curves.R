@@ -319,7 +319,7 @@ logisticFit <-
           lowerl = lower,
           upperl = c(5, min(x_0 + cap, 1), max(concs) * 10),
           control = controls,
-          na.action = na.omit
+          na.action = stats::na.omit
         )
         out$fit_type <- "DRC3pHillFitModelFixS0"
         out$x_0 <- x_0
@@ -335,7 +335,7 @@ logisticFit <-
           lowerl = lower,
           upperl = c(5, 1, 1 + cap, max(concs) * 10),
           control = controls,
-          na.action = na.omit
+          na.action = stats::na.omit
         )
         out$fit_type <- "DRC4pHillFitModel"
       }
