@@ -2,7 +2,7 @@
 #'
 #' Convert an assay within a \linkS4class{SummarizedExperiment} object to a long data.table.
 #'
-#' @param se A \linkS4class{SummarizedExperiment} object holding raw and processed dose-response data in its assays.
+#' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
@@ -26,7 +26,7 @@ convert_se_assay_to_dt <- function(se,
 
   if (!assay_name %in% SummarizedExperiment::assayNames(se)) {
     stop(sprintf("'%s' is not on of the available assays: '%s'", 
-      assay_name, paste0(SummarizedExperiment::assayNames(se))))
+      assay_name, paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
   }
  
   dt <- .convert_se_assay_to_dt(se, assay_name)
@@ -76,7 +76,7 @@ convert_se_assay_to_dt <- function(se,
     } else if (is(first, "DFrame")) {
 
       # TODO: Deprecate me. 
-      .Deprecated("Support for nested DataFrames not of class `BumpyDataFrameMatrix` will be deprecated")
+      .Deprecated("Support for nested DataFrames not of class `BumpyDataFrameMatrix` will be deprecated in the next release cycle")
       asL <-
 	lapply(seq_len(ncol(object)), function(x) {
 	  myL <- object[, x, drop = FALSE]
@@ -148,7 +148,7 @@ assay_to_dt <- function(se,
   as_dt <- convert_se_assay_to_dt(se, assay_name, include_metadata = include_metadata) 
   if (assay_name == "Metrics") {
     ## TODO: Put in issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
-    ## Then can remove this hard coding and assumptions. 
+    ## Then can remove all hard-coded logic below regarding metrics. 
     as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
     if (merge_metrics) {
       colnames_RV <- get_header("RV_metrics")
