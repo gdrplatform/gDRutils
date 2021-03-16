@@ -64,6 +64,8 @@ convert_se_assay_to_dt <- function(se,
 #'
 .convert_se_assay_to_dt <- function(se, assay_name) {
   object <- SummarizedExperiment::assays(se)[[assay_name]]
+  checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
+
   if (is(object, "BumpyDataFrameMatrix")) {
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
 
@@ -104,14 +106,6 @@ convert_se_assay_to_dt <- function(se,
 	  df
 	})
       as_df <- data.table::rbindlist(asL)
-
-    } else {
-      stop(
-	paste(
-	  "Unable to find an inherited method for function 'convert_assay_data_to_dt' for signature",
-	  shQuote(class(object))
-	)
-      )
     }
   }
 }
