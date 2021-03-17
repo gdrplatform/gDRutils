@@ -1,4 +1,5 @@
-library(testthat); library(gDRutils);
+library(testthat)
+library(gDRutils)
 
 test_that("convert_se_assay_to_dt works as expected", {
   m <- 20
