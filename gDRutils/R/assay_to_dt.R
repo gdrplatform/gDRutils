@@ -73,10 +73,10 @@ convert_se_assay_to_dt <- function(se,
     first <- object[1, 1][[1]]
     if (is.numeric(first)) {
       as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
-    } else if (is(first, "DFrame")) {
+    } else if (is(first, "DFrame") || is(first, "data.frame")) {
 
       # TODO: Deprecate me. 
-      .Deprecated("Support for nested DataFrames not of class `BumpyDataFrameMatrix` will be deprecated in the next release cycle")
+      .Deprecated(msg = "support for nested DataFrames of class `matrix` will be deprecated in the next release cycle. See `BumpyDataFrameMatrix` instead")
       asL <-
 	lapply(seq_len(ncol(object)), function(x) {
 	  myL <- object[, x, drop = FALSE]

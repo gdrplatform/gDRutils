@@ -89,7 +89,7 @@ fit_curves <- function(df_,
   }
 
   if (!all(req_fields %in% colnames(df_))) {
-    stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ",")))
+    stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
 
   for (opt_f in setdiff(opt_fields, colnames(df_))) {
