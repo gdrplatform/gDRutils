@@ -15,9 +15,9 @@
 #'
 #' @export
 #'
-convert_se_assay_to_dt <- function(se, 
-				   assay_name, 
-				   include_metadata = TRUE) {
+convert_se_assay_to_dt <- function(se,
+                                   assay_name, 
+                                   include_metadata = TRUE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
@@ -35,7 +35,7 @@ convert_se_assay_to_dt <- function(se,
     return(dt) # TODO: Should this return something else? 
   }
 
-  if (include_metadata) { 
+  if (include_metadata) {
     rData <- SummarizedExperiment::rowData(se)
     rData$rId <- rownames(rData)
     
@@ -76,36 +76,38 @@ convert_se_assay_to_dt <- function(se,
     } else if (is(first, "DFrame") || is(first, "data.frame")) {
 
       # TODO: Deprecate me. 
-      .Deprecated(msg = "support for nested DataFrames of class `matrix` will be deprecated in the next release cycle. See `BumpyDataFrameMatrix` instead")
+      .Deprecated(msg = paste("support for nested DataFrames of class `matrix`",
+                              "will be deprecated in the next release cycle.",
+                              "See `BumpyDataFrameMatrix` instead"))
       asL <-
-	lapply(seq_len(ncol(object)), function(x) {
-	  myL <- object[, x, drop = FALSE]
+        lapply(seq_len(ncol(object)), function(x) {
+          myL <- object[, x, drop = FALSE]
           names(myL) <- rownames(object)
-	  
-	  # in some datasets there might be no data for given drug/cell_line combination
-	  # under such circumstances DataFrame will be empty
-	  # and should be filtered out
-	  # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-	  myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-	  
-	  myV <- vapply(myL, nrow, integer(1))
-	  rCol <- rep(names(myV), as.numeric(myV))
-	  # there might be DataFrames with different number of columns
-	  # let's fill with NAs where necessary
-	  if (length(unique(sapply(myL, ncol))) > 1) {
-	    df <-
-	      do.call(plyr::rbind.fill,
-		      lapply(myL, data.table::as.data.table))
-	  } else {
-	    df <-
-	      data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
-	  }
-	  if (nrow(df) == 0)
-	    return()
-	  df$rId <- rCol
-	  df$cId <- colnames(object)[x]
-	  df
-	})
+
+      # in some datasets there might be no data for given drug/cell_line combination
+      # under such circumstances DataFrame will be empty
+      # and should be filtered out
+      # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
+          myL <- myL[vapply(myL, nrow, integer(1)) > 0]
+
+          myV <- vapply(myL, nrow, integer(1))
+          rCol <- rep(names(myV), as.numeric(myV))
+      # there might be DataFrames with different number of columns
+      # let's fill with NAs where necessary
+      if (length(unique(sapply(myL, ncol))) > 1) {
+        df <-
+          do.call(plyr::rbind.fill,
+            lapply(myL, data.table::as.data.table))
+      } else {
+        df <-
+          data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
+      }
+      if (nrow(df) == 0)
+        return()
+      df$rId <- rCol
+      df$cId <- colnames(object)[x]
+      df
+    })
       as_df <- data.table::rbindlist(asL)
     }
   as_df
@@ -156,36 +158,36 @@ assay_to_dt <- function(se,
       colnames_RV <- get_header("RV_metrics")
       diff_RV_columns <- setdiff(names(colnames_RV), colnames(as_dt))
       if (length(diff_RV_columns) > 0) {
-        warning(paste(
-          "missing column(s) in SE:",
-          paste(diff_RV_columns, collapse = ", ")
-        ))
-        colnames_RV <- colnames_RV[!names(colnames_RV) %in% diff_RV_columns]
+    warning(paste(
+      "missing column(s) in SE:",
+      paste(diff_RV_columns, collapse = ", ")
+    ))
+    colnames_RV <- colnames_RV[!names(colnames_RV) %in% diff_RV_columns]
       }
       colnames_GR <- get_header("GR_metrics")
       diff_GR_columns <- setdiff(names(colnames_GR), colnames(as_dt))
       if (length(diff_GR_columns) > 0) {
-        warning(paste(
-          "missing column(s) in SE:",
-          paste(diff_GR_columns, collapse = ", ")
-        ))
-        colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
+    warning(paste(
+      "missing column(s) in SE:",
+      paste(diff_GR_columns, collapse = ", ")
+    ))
+    colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
       }
-      
+
       vars <- c("rId", "cId", names(colnames_RV))
       Df_RV <- as_dt[dr_metric == "RV", ..vars]
       Df_GR <- as_dt[dr_metric == "GR", - "dr_metric"]
-      
+
       data.table::setnames(Df_RV,
-                           old = names(colnames_RV),
-                           new = unname(colnames_RV))
+               old = names(colnames_RV),
+               new = unname(colnames_RV))
       data.table::setnames(Df_GR,
-                           old = names(colnames_GR),
-                           new = unname(colnames_GR))
+               old = names(colnames_GR),
+               new = unname(colnames_GR))
       as_dt <- merge(Df_RV,
-		     Df_GR,
-		     by = c("rId", "cId"),
-		     all = TRUE)
+                     Df_GR,
+                     by = c("rId", "cId"),
+                     all = TRUE)
     }
   }
   return(as_dt)
