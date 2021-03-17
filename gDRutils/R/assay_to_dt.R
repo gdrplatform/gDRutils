@@ -70,7 +70,7 @@ convert_se_assay_to_dt <- function(se,
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
 
   } else if (is(object, "matrix")) {
-    first <- object[1, 1]
+    first <- object[1, 1][[1]]
     if (is.numeric(first)) {
       as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
     } else if (is(first, "DFrame")) {
@@ -80,6 +80,7 @@ convert_se_assay_to_dt <- function(se,
       asL <-
 	lapply(seq_len(ncol(object)), function(x) {
 	  myL <- object[, x, drop = FALSE]
+          names(myL) <- rownames(object)
 	  
 	  # in some datasets there might be no data for given drug/cell_line combination
 	  # under such circumstances DataFrame will be empty
@@ -107,6 +108,7 @@ convert_se_assay_to_dt <- function(se,
 	})
       as_df <- data.table::rbindlist(asL)
     }
+  as_df
   }
 }
 
@@ -185,6 +187,6 @@ assay_to_dt <- function(se,
 		     by = c("rId", "cId"),
 		     all = TRUE)
     }
-  as_dt
   }
+  return(as_dt)
 }

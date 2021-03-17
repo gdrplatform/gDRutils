@@ -22,7 +22,7 @@ test_that("convert_se_assay_to_dt works as expected", {
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
 
-  # BumpyDataFrameMatrix
+  # BumpyDataFrameMatrix.
   df <- S4Vectors::DataFrame(r = rep(rnames, n), c = rep(cnames, m), values = runif(m * n))
   norm <- BumpyMatrix::splitAsBumpyMatrix(df, row = df$r, column = df$c)
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(norm = norm),
@@ -37,4 +37,20 @@ test_that("convert_se_assay_to_dt works as expected", {
   merged <- merge(df, S4Vectors::DataFrame(dt[, c("rnames", "cnames", "values")]))
   expect_equal(merged$r, merged$rnames)
   expect_equal(merged$c, merged$cnames)
+})
+
+
+test_that("assay_to_dt works as expected", {
+  # DataFrameMatrix.
+  SE <- readRDS(system.file(package = "gDRutils", "testdata", "exemplarySE.rds"))
+  normalized <- assay_to_dt(SE, "Normalized")
+  data.table::setcolorder(normalized, sort(names(normalized)))
+  data.table::setorder(normalized)
+  normalizedRef <- 
+    data.table::as.data.table(
+      readRDS(system.file(package = "gDRutils", "testdata", "normalizedExemplary.rds"))
+    )
+  data.table::setcolorder(normalizedRef, sort(names(normalizedRef)))
+  data.table::setorder(normalizedRef)
+  testthat::expect_equal(normalized, normalizedRef)
 })
