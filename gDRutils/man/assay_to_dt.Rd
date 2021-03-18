@@ -4,7 +4,7 @@
 \alias{assay_to_dt}
 \title{Transform a SummarizedExperiment assay to a long data.table}
 \usage{
-assay_to_dt(se, assay_name, merge_metrics = FALSE, include_controls = FALSE)
+assay_to_dt(se, assay_name, merge_metrics = FALSE, include_metadata = TRUE)
 }
 \arguments{
 \item{se}{\linkS4class{SummarizedExperiment} object with dose-response data.}
@@ -14,8 +14,8 @@ assay_to_dt(se, assay_name, merge_metrics = FALSE, include_controls = FALSE)
 \item{merge_metrics}{Logical indicating whether the metrics should be merged.
 Defaults to \code{FALSE}.}
 
-\item{include_controls}{Logical indicating whether the controls should be included.
-Defaults to \code{FALSE}.}
+\item{include_metadata}{Boolean indicating whether to include the metadata on the SummarizedExperiment.
+Defaults to \code{TRUE}.}
 }
 \value{
 data.table with dose-response data

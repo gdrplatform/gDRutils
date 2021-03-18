@@ -1,3 +1,8 @@
+# Changes to v.0.0.28
+- minor refactor to assay_to_dt
+- deprecated support for assay_to_dt(include_controls = TRUE) argument
+(not backwards compatible)
+
 # Changes to v.0.0.27
 - update .estimate_xc50 and add tests
 
