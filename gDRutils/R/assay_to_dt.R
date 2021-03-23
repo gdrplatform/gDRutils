@@ -154,39 +154,38 @@ assay_to_dt <- function(se,
     ## TODO: Put in issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
     ## Then can remove all hard-coded logic below regarding metrics. 
     as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
+
+    ## NOTE: assay_to_dt function is deprecated for convert_se_assay_to_dt function,
+    ## which noteable does NOT support the merge_metrics argument.
     if (merge_metrics) {
-      colnames_RV <- get_header("RV_metrics")
-      diff_RV_columns <- setdiff(names(colnames_RV), colnames(as_dt))
-      if (length(diff_RV_columns) > 0) {
-    warning(paste(
-      "missing column(s) in SE:",
-      paste(diff_RV_columns, collapse = ", ")
-    ))
-    colnames_RV <- colnames_RV[!names(colnames_RV) %in% diff_RV_columns]
-      }
-      colnames_GR <- get_header("GR_metrics")
-      diff_GR_columns <- setdiff(names(colnames_GR), colnames(as_dt))
-      if (length(diff_GR_columns) > 0) {
-    warning(paste(
-      "missing column(s) in SE:",
-      paste(diff_GR_columns, collapse = ", ")
-    ))
-    colnames_GR <- colnames_GR[!names(colnames_GR) %in% diff_GR_columns]
+      metric_headers <- get_header("response_metrics")
+      if (!all(metric_headers %in% colnames(as_dt))) {
+        stop(sprintf("missing expected metric headers: '%s'", 
+          paste0(setdiff(metric_headers, colnames(as_dt)), collapse = ", ")))
       }
 
-      vars <- c("rId", "cId", names(colnames_RV))
-      Df_RV <- as_dt[dr_metric == "RV", ..vars]
-      Df_GR <- as_dt[dr_metric == "GR", - "dr_metric"]
+      id_headers <- c("rId", "cId")
+      headers <- c(id_headers, metric_headers)
 
+      metric_headers <- colnames(as_dt)[colnames(as_dt) %in% metric_headers]
+
+      Df_RV <- as_dt[dr_metric == "RV", ..headers]
+      rv_map <- get_header("RV_metrics")
+
+      Df_GR <- as_dt[dr_metric == "GR", ]
+      gr_map <- get_header("GR_metrics")
+      
       data.table::setnames(Df_RV,
-               old = names(colnames_RV),
-               new = unname(colnames_RV))
+               old = metric_headers,
+               new = unname(rv_map[metric_headers]))
+
       data.table::setnames(Df_GR,
-               old = names(colnames_GR),
-               new = unname(colnames_GR))
+               old = metric_headers,
+               new = unname(gr_map[metric_headers]))
+
       as_dt <- merge(Df_RV,
                      Df_GR,
-                     by = c("rId", "cId"),
+                     by = id_headers,
                      all = TRUE)
     }
   }
