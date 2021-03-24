@@ -155,7 +155,7 @@ assay_to_dt <- function(se,
     as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
 
     ## NOTE: assay_to_dt function is deprecated for convert_se_assay_to_dt function,
-    ## which noteable does NOT support the merge_metrics argument.
+    ## which noteably does NOT support the merge_metrics argument.
     if (merge_metrics) {
       metric_headers <- get_header("response_metrics")
       if (!all(metric_headers %in% colnames(as_dt))) {
@@ -171,7 +171,7 @@ assay_to_dt <- function(se,
       Df_RV <- as_dt[dr_metric == "RV", ..headers]
       rv_map <- get_header("RV_metrics")
 
-      Df_GR <- as_dt[dr_metric == "GR", ]
+      Df_GR <- as_dt[dr_metric == "GR", - "dr_metric"]
       gr_map <- get_header("GR_metrics")
       
       data.table::setnames(Df_RV,
