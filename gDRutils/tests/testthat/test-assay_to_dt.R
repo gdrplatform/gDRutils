@@ -41,6 +41,42 @@ test_that("convert_se_assay_to_dt works as expected", {
 })
 
 
+test_that("merge_metrics argument of assay_to_dt works as expected", {
+  headers <- get_header("response_metrics")
+  m <- 20
+  n <- length(headers)
+  metrics <- as.data.frame(matrix(runif(m * 2 * n), nrow = m * 2, ncol = n))
+  colnames(metrics) <- headers
+  metrics$dr_metric <- rep(c("RV", "GR"), m)
+  rId <- as.factor(rep(rep(seq(4), each = 2), 5))
+  cId <- as.factor(rep(rep(seq(5), each = 2), 4))
+  mat <- BumpyMatrix::splitAsBumpyMatrix(metrics, row = rId, column = cId)
+  se <- SummarizedExperiment::SummarizedExperiment(assays = list(Metrics = mat),
+                                                   rowData = S4Vectors::DataFrame(rownames(mat)),
+                                                   colData = S4Vectors::DataFrame(colnames(mat)))
+
+  obs <- assay_to_dt(se, "Metrics", merge_metrics = TRUE)
+
+  expect_equal(nrow(obs), m)
+  expect_true(all(c(unname(get_header("RV_metrics"), unname(get_header("GR_metrics")))) %in% colnames(obs)))
+
+  # Insert random column. 
+  metrics2 <- metrics
+  extra_col <- "SERENA_WILLIAMS"
+  extra_val <- rep_len(LETTERS, nrow(metrics2))
+  metrics2[[extra_col]] <- extra_val
+  mat2 <- BumpyMatrix::splitAsBumpyMatrix(metrics2, row = rId, column = cId)
+  se2 <- SummarizedExperiment::SummarizedExperiment(assays = list(Metrics = mat2),
+                                                    rowData = S4Vectors::DataFrame(rownames(mat2)),
+                                                    colData = S4Vectors::DataFrame(colnames(mat2)))
+
+  obs2 <- assay_to_dt(se2, "Metrics", merge_metrics = TRUE)
+  expect_true(extra_col %in% colnames(obs2))
+  expect_equal(metrics2[[extra_col]], extra_val)
+  expect_true(all(c(unname(get_header("RV_metrics"), unname(get_header("GR_metrics")))) %in% colnames(obs2)))
+})
+
+
 test_that("assay_to_dt works as expected", {
   # DataFrameMatrix.
   SE <- readRDS(system.file(package = "gDRutils", "testdata", "exemplarySE.rds"))
