@@ -57,10 +57,9 @@ convert_se_assay_to_dt <- function(se,
 
 
 #' Convert assay data into data.table
-#'
-#' @param object An object comprising assay in SummarizedExperiment
-#'
 #' @return data.table with assay data
+#' @keywords internal
+#' @noRd
 #'
 .convert_se_assay_to_dt <- function(se, assay_name) {
   object <- SummarizedExperiment::assays(se)[[assay_name]]

@@ -7,7 +7,7 @@
 convert_se_assay_to_dt(se, assay_name, include_metadata = TRUE)
 }
 \arguments{
-\item{se}{A \linkS4class{SummarizedExperiment} object holding raw and processed dose-response data in its assays.}
+\item{se}{A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.}
 
 \item{assay_name}{String of name of the assay to transform within the \code{se}.}
 
