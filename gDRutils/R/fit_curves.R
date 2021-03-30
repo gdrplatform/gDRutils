@@ -404,6 +404,12 @@ logisticFit <-
 
 #' @export
 logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
+  checkmate::assert_numeric(c)
+  checkmate::assert_numeric(Vinf)
+  checkmate::assert_numeric(V0)
+  checkmate::assert_numeric(EC50)
+  checkmate::assert_numeric(h)
+
   Vinf + (V0 - Vinf) / (1 + (c / EC50) ^ h)
 }
 
