@@ -1,4 +1,5 @@
-library(testthat); library(gDR)
+#library(testthat)
+#library(gDR)
 
 test_that("get_SE_experiment_metadata and set_SE_experiment_metadata work as expected", {
   exp_md <- list("Super" = "Star", "Serena" = "Williams")
