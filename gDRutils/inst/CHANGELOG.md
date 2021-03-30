@@ -1,3 +1,6 @@
+# Changes to v.0.0.30
+- add numeric type assertions and tests for logistic_4parameters
+
 # Changes to v.0.0.29
 - remove positional naming dependence on assay_to_dt for (merge_metrics = TRUE) argument
 
