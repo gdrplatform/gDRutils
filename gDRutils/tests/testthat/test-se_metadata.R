@@ -1,14 +1,18 @@
 library(testthat); library(gDR)
 
-test_that("get_SE_experiment_metadata works as expected", {
+test_that("get_SE_experiment_metadata and set_SE_experiment_metadata work as expected", {
   exp_md <- list("Super" = "Star", "Serena" = "Williams")
-  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(experiment_metadata = exp_md))
+  se <- SummarizedExperiment::SummarizedExperiment()
+
+  oexp_md <- get_SE_experiment_metadata(se)
+  expect_equal(oexp_md, NULL)
+  se <- set_SE_experiment_metadata(se, exp_md)
   oexp_md <- get_SE_experiment_metadata(se)
   expect_equal(oexp_md, exp_md)
 })
 
 
-test_that("get_SE_keys and set_SE_keys works as expected", {
+test_that("get_SE_keys and set_SE_keys work as expected", {
   keys <- list(Keys = list(Day0 = "TEST", Other = "STUFF"))
   se <- SummarizedExperiment::SummarizedExperiment(metadata = keys)
   nkeys <- get_SE_keys(se)

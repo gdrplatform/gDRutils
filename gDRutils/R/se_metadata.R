@@ -15,6 +15,22 @@ set_SE_keys <- function(se, value) {
 }
 
 
+#' Set experiment-level metadata for a SummarizedExperiment object.
+#'
+#' Set experiment-level metadata in the metadata slot of a \linkS4class{SummarizedExperiment} object.
+#'
+#' @param se a \linkS4class{SummarizedExperiment} object for which to add experiment-level metadata.
+#' @param value named list of metadata for the \code{se} object. 
+#'
+#' @return \linkS4class{se} with added metadata.
+#'
+#' @export
+#'
+set_SE_experiment_metadata <- function(se, value) {
+  .set_SE_metadata(se, name = "experiment_metadata", value)
+}
+
+
 #' Get metadata for experiment metadata in SummarizedExperiment object.
 #'
 #' Get metadata for experiment metadata in SummarizedExperiment object metadata.
