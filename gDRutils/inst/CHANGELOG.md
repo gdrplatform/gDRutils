@@ -1,3 +1,6 @@
+# Changes to v.0.0.30
+- add support for getting and setting metadata on the SummarizedExperiment object
+
 # Changes to v.0.0.29
 - remove positional naming dependence on assay_to_dt for (merge_metrics = TRUE) argument
 
