@@ -12,6 +12,7 @@
 #'
 #' @details NOTE: to extract information about 'Control' data, simply call the 
 #' function with the name of the assay holding data on controls. 
+#' To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}
 #'
 #' @export
 #'
@@ -52,6 +53,72 @@ convert_se_assay_to_dt <- function(se,
     dt <- merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
   } 
 
+  data.table::as.data.table(dt)
+} 
+
+
+#' Convert the reference values from a SummarizedExperiment assay to a long data.table
+#'
+#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table. Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
+#'
+#' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
+#'
+#' @return data.table representation of the reference data.
+#'
+#' @details NOTE: to extract information about 'Control' data, simply call the 
+#' function with the name of the assay holding data on controls. 
+#'
+#' @export
+#'
+convert_se_ref_assay_to_dt <- function(se) {
+
+  # Assertions.
+  checkmate::assert_class(se, "SummarizedExperiment")
+
+  if (!'RefRelativeViability' %in% SummarizedExperiment::assayNames(se)) {
+    stop(sprintf("'RefRelativeViability' is not on of the available assays: '%s'", 
+      paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
+  }
+ 
+  dt <- .convert_se_assay_to_dt(se, 'RefRelativeViability')
+  # convert columns to match 'Averaged' format
+  colnames(dt)[colnames(dt) == 'RefRelativeViability'] <- 'RelativeViability'
+  dt$std_RelativeViability <- NA
+
+  if ('RefGRvalue' %in% SummarizedExperiment::assayNames(se)) {
+    dt_GR <- .convert_se_assay_to_dt(se, 'RefGRvalue')
+    # convert columns to match 'Averaged' format
+    colnames(dt_GR)[colnames(dt_GR) == 'RefGRvalue'] <- 'GRvalue'
+    dt <- merge(dt, dt_GR, all = TRUE)
+    dt$std_GRvalue <- NA
+  }
+
+  if (nrow(dt) == 0L) {
+    return(dt) # TODO: Should this return something else? 
+  }
+
+  rData <- SummarizedExperiment::rowData(se)
+  rData$rId <- rownames(rData)
+    
+  cData <- SummarizedExperiment::colData(se)
+  cData$cId <- rownames(cData)
+    
+  ids <- expand.grid(rData$rId, cData$cId)
+  colnames(ids) <- c("rId", "cId")
+  ids[] <- lapply(ids, as.character)
+    
+  annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
+  annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
+
+  dt <- merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
+
+  # Change values to properly label the data as untreated for the primary drug
+  dt$Concentration <- 0
+  dt[,gDRutils::get_identifier('drug')] <- get_identifier("untreated_tag")[1]
+  dt[,gDRutils::get_identifier('drugname')] <- get_identifier("untreated_tag")[1]
+  dt[,gDRutils::get_identifier('drug_moa')] <- get_identifier("untreated_tag")[1]
+  
+  
   data.table::as.data.table(dt)
 } 
 
