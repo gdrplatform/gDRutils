@@ -85,7 +85,7 @@ convert_se_ref_assay_to_dt <- function(se) {
   colnames(dt)[colnames(dt) == "RefRelativeViability"] <- "RelativeViability"
   dt$std_RelativeViability <- NA
 
-  if ('RefGRvalue' %in% SummarizedExperiment::assayNames(se)) {
+  if ("RefGRvalue" %in% SummarizedExperiment::assayNames(se)) {
     dt_GR <- .convert_se_assay_to_dt(se, "RefGRvalue")
     # convert columns to match 'Averaged' format
     colnames(dt_GR)[colnames(dt_GR) == "RefGRvalue"] <- "GRvalue"
@@ -114,9 +114,9 @@ convert_se_ref_assay_to_dt <- function(se) {
 
   # Change values to properly label the data as untreated for the primary drug
   dt$Concentration <- 0
-  dt[,gDRutils::get_identifier("drug")] <- get_identifier("untreated_tag")[1]
-  dt[,gDRutils::get_identifier("drugname")] <- get_identifier("untreated_tag")[1]
-  dt[,gDRutils::get_identifier("drug_moa")] <- get_identifier("untreated_tag")[1]
+  dt[, gDRutils::get_identifier("drug")] <- get_identifier("untreated_tag")[1]
+  dt[, gDRutils::get_identifier("drugname")] <- get_identifier("untreated_tag")[1]
+  dt[, gDRutils::get_identifier("drug_moa")] <- get_identifier("untreated_tag")[1]
   
   
   data.table::as.data.table(dt)
