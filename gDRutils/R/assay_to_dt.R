@@ -59,7 +59,8 @@ convert_se_assay_to_dt <- function(se,
 
 #' Convert the reference values from a SummarizedExperiment assay to a long data.table
 #'
-#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table. Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
+#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
+#' Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #'
