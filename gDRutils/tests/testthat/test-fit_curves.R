@@ -61,14 +61,14 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(obs_fit, "DRC4pHillFitModel")
   expect_equal(dim(df_result), expected_dims)
 
-  # Test for constant fit. 
+  # Test for constant fit.
   df_resp4 <- df_resp
   df_resp4$RelativeViability <- df_resp4$GRvalue <- 0.5
 
-  expect_warning(df_result <- fit_curves(df_resp4), reg = "overriding original x_0 argument") # Override. 
+  expect_warning(df_result <- fit_curves(df_resp4), reg = "overriding original x_0 argument") # Override.
   obs_fit <- unique(df_result[, "fit_type"])
   expect_equal(obs_fit, "DRCConstantFitResult")
-  expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])), 
+  expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])),
     rep(unique(df_resp4$RelativeViability), 5))
   expect_equal(dim(df_result), expected_dims)
 
@@ -90,14 +90,14 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
 
   # Test for all values above 0.5.
-  ## Note that this corresponds to partial growth inhibition. 
+  ## Note that this corresponds to partial growth inhibition.
   df_result6 <- fit_curves(df_resp_above)
   expect_equal(df_result6[, c("x_inf")], c(0.5, 0.5), tolerance = 1e-5)
   expect_true(all(df_result6[, c("xc50")] > 500))
   obs_fit <- unique(df_result6[, "fit_type"])
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
 
-  # Test for a pushed constant fit by adding noise. 
+  # Test for a pushed constant fit by adding noise.
   df_resp7 <- df_resp_above
   noise <- sample(seq(-1, 1, 0.1), nrow(df_resp7))
   emax <- 0.8
@@ -106,14 +106,14 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   df_result7 <- fit_curves(df_resp7, force_fit = FALSE)
   expect_equal(unique(df_result7[, "fit_type"]), "DRCConstantFitResult")
-  expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))), 
+  expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))),
     0.70781, tolerance = 1e-5)
 
   # Test that force argument overrides as expected.
   df_result8 <- fit_curves(df_resp7, force_fit = TRUE)
   expect_equal(unique(df_result8[, "fit_type"]), "DRC3pHillFitModelFixS0")
 
-  # Test that pcutoff argument works as expected. 
+  # Test that pcutoff argument works as expected.
   df_result9 <- fit_curves(df_resp7, force_fit = FALSE, pcutoff = 1)
   expect_equal(df_result9[, "fit_type"], c("DRC3pHillFitModelFixS0", "DRCConstantFitResult"))
   df_result10 <- fit_curves(df_resp7, force_fit = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
@@ -134,9 +134,9 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(dim(df_result), expected_dims)
 
   #nolint start
-    # TODO: Test for invalid fit. Maybe try a bunch of noise. 
+    # TODO: Test for invalid fit. Maybe try a bunch of noise.
     #  expect_warning(df_result <- fit_curves(df_resp[3:5, ], n_point_cutoff = 1), reg = "fitting failed with error")
-    #  
+    #
     #  obs_fit <- unique(df_result[, "fit_type"])
     #  expect_equal(obs_fit, "DRCInvalidFitResult")
     #  expect_equal(dim(df_result), expected_dims)
@@ -160,4 +160,43 @@ test_that(".estimate_xc50 works as expected", {
   expect_equal(gDRutils:::.estimate_xc50(c(0.6, 0.7, 0.8, 0.9)), Inf)
   expect_equal(gDRutils:::.estimate_xc50(c(0.1, 0.2, 0.3, 0.4)), -Inf)
   expect_equal(gDRutils:::.estimate_xc50(c(0.1, 0.2, 0.6, 0.7)), NA)
+})
+
+
+test_that("logistic_4parameters works as expected", {
+    c <- 1
+    Vinf <- 0.1
+    V0 <- 1
+    h <- 2
+    EC50 <- 0.5
+
+    # Non-numeric values cause an error.
+    expect_error(logistic_4parameters(
+        c = "non-numeric_entry",
+        Vinf = Vinf,
+        V0 = V0,
+        EC50 = EC50,
+        h = h
+    ))
+
+    # Normal fit.
+    v <- logistic_4parameters(
+        c = c,
+        Vinf = Vinf,
+        V0 = V0,
+        EC50 = EC50,
+        h = h
+    )
+    expect_equal(v, 0.28)
+
+    # Flat fit.
+    EC50 <- 0
+    v <- logistic_4parameters(
+        c = c,
+        Vinf = Vinf,
+        V0 = V0,
+        EC50 = EC50,
+        h = h
+    )
+    expect_equal(v, Vinf)
 })
