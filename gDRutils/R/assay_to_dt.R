@@ -21,7 +21,7 @@
 #'
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
-                                   metric_type = c("both", "RV", "GR", "unmerged"), 
+                                   metric_type = c("unmerged", "RV", "GR", "both"), 
                                    include_metadata = TRUE) {
 
   # Assertions.
