@@ -4,69 +4,124 @@
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
+#' @param metric_type String of name of the metrics to extract (i.e. \code{RV}, \code{GR}, or \code{both}).
+#' Valid only for \code{assay_name = 'Metrics'}. \code{unmerged} will return one row for RV
+#' and one for GR metrics for each condition.
+#' Defaults to \code{both}.
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @details NOTE: to extract information about 'Control' data, simply call the 
-#' function with the name of the assay holding data on controls. 
+#' @details NOTE: to extract information about 'Control' data, simply call the
+#' function with the name of the assay holding data on controls.
 #' To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}
 #'
 #' @export
 #'
 convert_se_assay_to_dt <- function(se,
-                                   assay_name, 
+                                   assay_name,
+                                   metric_type = c("unmerged", "RV", "GR", "both"),
                                    include_metadata = TRUE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::test_string(assay_name)
   checkmate::assert_flag(include_metadata)
+  checkmate::assert_character(metric_type)
+  metric_type <- match.arg(metric_type)
 
   if (!assay_name %in% SummarizedExperiment::assayNames(se)) {
-    stop(sprintf("'%s' is not on of the available assays: '%s'", 
+    stop(sprintf("'%s' is not on of the available assays: '%s'",
       assay_name, paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
   }
- 
+
   dt <- .convert_se_assay_to_dt(se, assay_name)
+  ## TODO: Put an issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
+  ## Then can remove all hard-coded logic below regarding metrics and avoid confusion.
 
   if (nrow(dt) == 0L) {
-    return(dt) # TODO: Should this return something else? 
+    return(dt) # TODO: Should this return something else?
+  }
+
+  if (assay_name == "Metrics") {
+    ## TODO: Put an issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
+    ## Then can remove all hard-coded logic below regarding metrics and avoid confusion.
+    dt$dr_metric <- rep_len(c("RV", "GR"), nrow(dt))
+
+    if (metric_type != "unmerged") {
+
+      metric_headers <- get_header("response_metrics")
+      if (!all(metric_headers %in% colnames(dt))) {
+          stop(sprintf("missing expected metric headers: '%s'",
+          paste0(setdiff(metric_headers, colnames(dt)), collapse = ", ")))
+      }
+
+      id_headers <- c("rId", "cId")
+      headers <- c(id_headers, metric_headers)
+
+      metric_headers <- colnames(dt)[colnames(dt) %in% metric_headers]
+
+      dt_RV <- dt[dt$dr_metric == "RV", ..headers]
+      rv_map <- get_header("RV_metrics")
+
+      dt_GR <- dt[dt$dr_metric == "GR", - "dr_metric"]
+      gr_map <- get_header("GR_metrics")
+
+      data.table::setnames(dt_RV,
+              old = metric_headers,
+              new = unname(rv_map[metric_headers]))
+
+      data.table::setnames(dt_GR,
+              old = metric_headers,
+              new = unname(gr_map[metric_headers]))
+
+      if (metric_type == "RV") {
+          dt <- dt_RV
+      } else if (metric_type == "GR") {
+          dt <- dt_GR
+      } else {
+          dt <- merge(dt_RV,
+                      dt_GR,
+                      by = id_headers,
+                      all = TRUE)
+      }
+    }
   }
 
   if (include_metadata) {
     rData <- SummarizedExperiment::rowData(se)
     rData$rId <- rownames(rData)
-    
+
     cData <- SummarizedExperiment::colData(se)
     cData$cId <- rownames(cData)
-    
+
     ids <- expand.grid(rData$rId, cData$cId)
     colnames(ids) <- c("rId", "cId")
     ids[] <- lapply(ids, as.character)
-    
+
     annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
     annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
 
     dt <- merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
-  } 
+  }
 
   data.table::as.data.table(dt)
-} 
+}
 
 
 #' Convert the reference values from a SummarizedExperiment assay to a long data.table
 #'
-#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table. Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
+#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table. 
+#' Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #'
 #' @return data.table representation of the reference data.
 #'
-#' @details NOTE: to extract information about 'Control' data, simply call the 
-#' function with the name of the assay holding data on controls. 
+#' @details NOTE: to extract information about 'Control' data, simply call the
+#' function with the name of the assay holding data on controls.
 #'
 #' @export
 #'
@@ -75,38 +130,38 @@ convert_se_ref_assay_to_dt <- function(se) {
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
 
-  if (!'RefRelativeViability' %in% SummarizedExperiment::assayNames(se)) {
-    stop(sprintf("'RefRelativeViability' is not on of the available assays: '%s'", 
+  if (!"RefRelativeViability" %in% SummarizedExperiment::assayNames(se)) {
+    stop(sprintf("'RefRelativeViability' is not on of the available assays: '%s'",
       paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
   }
- 
-  dt <- .convert_se_assay_to_dt(se, 'RefRelativeViability')
-  # convert columns to match 'Averaged' format
-  colnames(dt)[colnames(dt) == 'RefRelativeViability'] <- 'RelativeViability'
+
+  dt <- .convert_se_assay_to_dt(se, "RefRelativeViability")
+  # convert columns to match "Averaged" format
+  colnames(dt)[colnames(dt) == "RefRelativeViability"] <- "RelativeViability"
   dt$std_RelativeViability <- NA
 
-  if ('RefGRvalue' %in% SummarizedExperiment::assayNames(se)) {
-    dt_GR <- .convert_se_assay_to_dt(se, 'RefGRvalue')
-    # convert columns to match 'Averaged' format
-    colnames(dt_GR)[colnames(dt_GR) == 'RefGRvalue'] <- 'GRvalue'
+  if ("RefGRvalue" %in% SummarizedExperiment::assayNames(se)) {
+    dt_GR <- .convert_se_assay_to_dt(se, "RefGRvalue")
+    # convert columns to match "Averaged" format
+    colnames(dt_GR)[colnames(dt_GR) == "RefGRvalue"] <- "GRvalue"
     dt <- merge(dt, dt_GR, all = TRUE)
     dt$std_GRvalue <- NA
   }
 
   if (nrow(dt) == 0L) {
-    return(dt) # TODO: Should this return something else? 
+    return(dt) # TODO: Should this return something else?
   }
 
   rData <- SummarizedExperiment::rowData(se)
   rData$rId <- rownames(rData)
-    
+
   cData <- SummarizedExperiment::colData(se)
   cData$cId <- rownames(cData)
-    
+
   ids <- expand.grid(rData$rId, cData$cId)
   colnames(ids) <- c("rId", "cId")
   ids[] <- lapply(ids, as.character)
-    
+
   annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
   annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
 
@@ -114,13 +169,13 @@ convert_se_ref_assay_to_dt <- function(se) {
 
   # Change values to properly label the data as untreated for the primary drug
   dt$Concentration <- 0
-  dt[,gDRutils::get_identifier('drug')] <- get_identifier("untreated_tag")[1]
-  dt[,gDRutils::get_identifier('drugname')] <- get_identifier("untreated_tag")[1]
-  dt[,gDRutils::get_identifier('drug_moa')] <- get_identifier("untreated_tag")[1]
-  
-  
+  dt[, gDRutils::get_identifier("drug")] <- get_identifier("untreated_tag")[1]
+  dt[, gDRutils::get_identifier("drugname")] <- get_identifier("untreated_tag")[1]
+  dt[, gDRutils::get_identifier("drug_moa")] <- get_identifier("untreated_tag")[1]
+
+
   data.table::as.data.table(dt)
-} 
+}
 
 
 #' Convert assay data into data.table
@@ -141,7 +196,7 @@ convert_se_ref_assay_to_dt <- function(se) {
       as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
     } else if (is(first, "DFrame") || is(first, "data.frame")) {
 
-      # TODO: Deprecate me. 
+      # TODO: Deprecate me.
       .Deprecated(msg = paste("support for nested DataFrames of class `matrix`",
                               "will be deprecated in the next release cycle.",
                               "See `BumpyDataFrameMatrix` instead"))
@@ -178,10 +233,12 @@ convert_se_ref_assay_to_dt <- function(se) {
     }
   as_df
   }
+
+  data.table::as.data.table(as_df)
 }
 
 
-# TODO: Deprecate me. 
+# TODO: Deprecate me.
 #' Transform a SummarizedExperiment assay to a long data.table
 #'
 #' Transform a SummarizedExperiment assay to a long data.table with a single entry for each row and column combination.
@@ -197,9 +254,9 @@ convert_se_ref_assay_to_dt <- function(se) {
 #'
 #' @export
 #'
-assay_to_dt <- function(se, 
-                        assay_name, 
-                        merge_metrics = FALSE, 
+assay_to_dt <- function(se,
+                        assay_name,
+                        merge_metrics = FALSE,
                         include_metadata = TRUE) {
 
   # Assertions.
@@ -208,25 +265,25 @@ assay_to_dt <- function(se,
                           checkmate::test_string(assay_name))
   checkmate::assert_flag(merge_metrics)
 
-  .Deprecated(new = convert_se_assay_to_dt, 
+  .Deprecated(new = convert_se_assay_to_dt,
     msg = "support for 'assay_to_dt' will be dropped next release cycle. See 'convert_se_assay_to_dt' instead")
-  
+
   if (is.integer(assay_name)) {
     assay_name <- SummarizedExperiment::assayNames(se)[assay_name]
   }
 
-  as_dt <- convert_se_assay_to_dt(se, assay_name, include_metadata = include_metadata) 
+  as_dt <- convert_se_assay_to_dt(se, assay_name, include_metadata = include_metadata)
   if (assay_name == "Metrics") {
     ## TODO: Put in issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
-    ## Then can remove all hard-coded logic below regarding metrics. 
-    as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
+    ## Then can remove all hard-coded logic below regarding metrics.
+    as_dt$dr_metric <- rep_len(c("RV", "GR"), nrow(as_dt))
 
     ## NOTE: assay_to_dt function is deprecated for convert_se_assay_to_dt function,
     ## which noteably does NOT support the merge_metrics argument.
     if (merge_metrics) {
       metric_headers <- get_header("response_metrics")
       if (!all(metric_headers %in% colnames(as_dt))) {
-        stop(sprintf("missing expected metric headers: '%s'", 
+        stop(sprintf("missing expected metric headers: '%s'",
           paste0(setdiff(metric_headers, colnames(as_dt)), collapse = ", ")))
       }
 
@@ -240,7 +297,7 @@ assay_to_dt <- function(se,
 
       Df_GR <- as_dt[dr_metric == "GR", - "dr_metric"]
       gr_map <- get_header("GR_metrics")
-      
+
       data.table::setnames(Df_RV,
                old = metric_headers,
                new = unname(rv_map[metric_headers]))

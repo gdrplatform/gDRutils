@@ -1,3 +1,7 @@
+# Changes to v.0.0.32
+- add more options for returned data (with 'Metrics' assay) in the case of 'convert_se_assay_to_dt'
+- add 'convert_se_ref_assay_to_dt' function
+
 # Changes to v.0.0.31
 - add support for getting and setting metadata on the SummarizedExperiment object
 
