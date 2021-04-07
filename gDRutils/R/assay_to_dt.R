@@ -48,7 +48,7 @@ convert_se_assay_to_dt <- function(se,
   if (assay_name == "Metrics") {
     ## TODO: Put an issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
     ## Then can remove all hard-coded logic below regarding metrics and avoid confusion.
-    dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(dt))
+    dt$dr_metric <- rep_len(c("RV", "GR"), nrow(dt))
 
     if (metric_type != "unmerged") {
 
@@ -276,7 +276,7 @@ assay_to_dt <- function(se,
   if (assay_name == "Metrics") {
     ## TODO: Put in issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
     ## Then can remove all hard-coded logic below regarding metrics.
-    as_dt$dr_metric <-  rep_len(c("RV", "GR"), nrow(as_dt))
+    as_dt$dr_metric <- rep_len(c("RV", "GR"), nrow(as_dt))
 
     ## NOTE: assay_to_dt function is deprecated for convert_se_assay_to_dt function,
     ## which noteably does NOT support the merge_metrics argument.
