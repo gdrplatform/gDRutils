@@ -13,7 +13,7 @@ convert_se_ref_assay_to_dt(se)
 data.table representation of the reference data.
 }
 \description{
-Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table. 
+Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
 Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
 }
 \details{

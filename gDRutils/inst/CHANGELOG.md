@@ -1,3 +1,6 @@
+# Changes to v.0.0.33
+- standardize metric header names
+
 # Changes to v.0.0.32
 - add more options for returned data (with 'Metrics' assay) in the case of 'convert_se_assay_to_dt'
 - add 'convert_se_ref_assay_to_dt' function
@@ -6,6 +9,7 @@
 - add support for getting and setting metadata on the SummarizedExperiment object
 
 # Changes to v.0.0.30
+- add support for getting and setting metadata on the SummarizedExperiment object
 - add numeric type assertions and tests for logistic_4parameters
 
 # Changes to v.0.0.29

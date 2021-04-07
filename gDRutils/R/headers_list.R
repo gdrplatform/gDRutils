@@ -59,11 +59,11 @@
     "RV_mean",
     "RV_AOC",
     "RV_AOC_range",
-    "ic50",
-    "e_max",
-    "ec50",
-    "e_inf",
-    "e_0",
+    "IC50",
+    "E_max",
+    "EC50",
+    "E_inf",
+    "E_0",
     "h_RV",
     "RV_r2",
     "RV_sd_avg",
@@ -73,7 +73,7 @@
   HEADERS_LIST[["RV_metrics"]] <- rv_metrics
 
   gr_metrics <- c(
-    "mean_GR",
+    "GR_mean",
     "GR_AOC",
     "GR_AOC_range",
     "GR50",
@@ -84,7 +84,7 @@
     "h_GR",
     "GR_r2",
     "GR_sd_avg",
-    "flat_fit_GR"
+    "fit_type_GR"
   )
   names(gr_metrics) <- HEADERS_LIST[["response_metrics"]]
   HEADERS_LIST[["GR_metrics"]] <- gr_metrics

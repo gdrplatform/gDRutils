@@ -113,7 +113,7 @@ convert_se_assay_to_dt <- function(se,
 
 #' Convert the reference values from a SummarizedExperiment assay to a long data.table
 #'
-#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table. 
+#' Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
 #' Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
@@ -131,10 +131,10 @@ convert_se_ref_assay_to_dt <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
 
   if (!"RefRelativeViability" %in% SummarizedExperiment::assayNames(se)) {
-    stop(sprintf("'RefRelativeViability' is not on of the available assays: '%s'",
+    stop(sprintf("'RefRelativeViability' is not on of the available assays: '%s'", 
       paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
   }
-
+ 
   dt <- .convert_se_assay_to_dt(se, "RefRelativeViability")
   # convert columns to match "Averaged" format
   colnames(dt)[colnames(dt) == "RefRelativeViability"] <- "RelativeViability"
@@ -142,7 +142,7 @@ convert_se_ref_assay_to_dt <- function(se) {
 
   if ("RefGRvalue" %in% SummarizedExperiment::assayNames(se)) {
     dt_GR <- .convert_se_assay_to_dt(se, "RefGRvalue")
-    # convert columns to match "Averaged" format
+    # convert columns to match 'Averaged' format
     colnames(dt_GR)[colnames(dt_GR) == "RefGRvalue"] <- "GRvalue"
     dt <- merge(dt, dt_GR, all = TRUE)
     dt$std_GRvalue <- NA
@@ -172,8 +172,6 @@ convert_se_ref_assay_to_dt <- function(se) {
   dt[, gDRutils::get_identifier("drug")] <- get_identifier("untreated_tag")[1]
   dt[, gDRutils::get_identifier("drugname")] <- get_identifier("untreated_tag")[1]
   dt[, gDRutils::get_identifier("drug_moa")] <- get_identifier("untreated_tag")[1]
-
-
   data.table::as.data.table(dt)
 }
 
