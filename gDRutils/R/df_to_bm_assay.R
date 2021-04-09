@@ -48,12 +48,15 @@ df_to_bm_assay <-
     complete$factor_id <- seq_len(nrow(complete))
     data_assigned <-
       merge(data, complete, by = c(cond_entries, cl_entries))
+    data_assigned <-  data_assigned[order(data_assigned$col_id, data_assigned$row_id), ]
+
     # use 'drop = FALSE' to avoid dropping a dimension if there is a single data column only
     # TODO: consier using 'splitToBumpyMatrix' in a sparse mode (GDR-596)
     bm <-
       BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$dataCols, drop = FALSE],
                                       row = data_assigned$name_.x,
                                       column = data_assigned$name_.y)
+    bm <- bm[unique(data_assigned$name_.x), unique(data_assigned$name_.y)]
 
     if (data_type == "untreated") {
       untreatedConds <-
