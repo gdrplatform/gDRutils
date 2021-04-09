@@ -1,3 +1,6 @@
+# Changes to v.0.0.34
+- add support for getting and setting fit parameter metadata
+
 # Changes to v.0.0.33
 - standardize metric header names
 
