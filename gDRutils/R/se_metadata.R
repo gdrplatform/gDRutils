@@ -1,3 +1,19 @@
+#' Set metadata for parameters used in fitting in SummarizedExperiment object.
+#'
+#' Set metadata for the fitting parameters that define the Metrics assay in SummarizedExperiment object metadata.
+#'
+#' @param se a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.
+#' @param value named list of metadata for fit parameters. 
+#'
+#' @return \linkS4class{se} with added metadata.
+#'
+#' @export
+#'
+set_SE_fit_parameters <- function(se, value) {
+  .set_SE_metadata(se, name = "fit_parameters", value)
+}
+
+
 #' Set metadata for keys in SummarizedExperiment object.
 #'
 #' Set metadata for keys in SummarizedExperiment object metadata.
@@ -28,6 +44,21 @@ set_SE_keys <- function(se, value) {
 #'
 set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
+}
+
+
+#' Get metadata for fit parameters metadata in SummarizedExperiment object.
+#'
+#' Get metadata for fit parameters used to construct the Metrics assay in a SummarizedExperiment object.
+#'
+#' @param se a \linkS4class{SummarizedExperiment} object for which to get fit parameters.
+#'
+#' @return named list of fitting parameters.
+#'
+#' @export
+#'
+get_SE_fit_parameters <- function(se) {
+  .get_SE_metadata(se, name = "fit_parameters")
 }
 
 
