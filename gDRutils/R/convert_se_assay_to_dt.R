@@ -4,10 +4,6 @@
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
-#' @param metric_type String of name of the metrics to extract (i.e. \code{RV}, \code{GR}, or \code{both}).
-#' Valid only for \code{assay_name = 'Metrics'}. \code{unmerged} will return one row for RV
-#' and one for GR metrics for each condition.
-#' Defaults to \code{both}.
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
@@ -21,16 +17,13 @@
 #' @export
 #'
 convert_se_assay_to_dt <- function(se,
-                                   assay_name,
-                                   metric_type = c("unmerged", "RV", "GR", "both"),
+                                   assay_name, 
                                    include_metadata = TRUE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::test_string(assay_name)
   checkmate::assert_flag(include_metadata)
-  checkmate::assert_character(metric_type)
-  metric_type <- match.arg(metric_type)
 
   if (!assay_name %in% SummarizedExperiment::assayNames(se)) {
     stop(sprintf("'%s' is not on of the available assays: '%s'",
@@ -38,56 +31,9 @@ convert_se_assay_to_dt <- function(se,
   }
 
   dt <- .convert_se_assay_to_dt(se, assay_name)
-  ## TODO: Put an issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
-  ## Then can remove all hard-coded logic below regarding metrics and avoid confusion.
 
   if (nrow(dt) == 0L) {
     return(dt) # TODO: Should this return something else?
-  }
-
-  if (assay_name == "Metrics") {
-    ## TODO: Put an issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
-    ## Then can remove all hard-coded logic below regarding metrics and avoid confusion.
-    dt$dr_metric <- rep_len(c("RV", "GR"), nrow(dt))
-
-    if (metric_type != "unmerged") {
-
-      metric_headers <- get_header("response_metrics")
-      if (!all(metric_headers %in% colnames(dt))) {
-          stop(sprintf("missing expected metric headers: '%s'",
-          paste0(setdiff(metric_headers, colnames(dt)), collapse = ", ")))
-      }
-
-      id_headers <- c("rId", "cId")
-      headers <- c(id_headers, metric_headers)
-
-      metric_headers <- colnames(dt)[colnames(dt) %in% metric_headers]
-
-      dt_RV <- dt[dt$dr_metric == "RV", ..headers]
-      rv_map <- get_header("RV_metrics")
-
-      dt_GR <- dt[dt$dr_metric == "GR", - "dr_metric"]
-      gr_map <- get_header("GR_metrics")
-
-      data.table::setnames(dt_RV,
-              old = metric_headers,
-              new = unname(rv_map[metric_headers]))
-
-      data.table::setnames(dt_GR,
-              old = metric_headers,
-              new = unname(gr_map[metric_headers]))
-
-      if (metric_type == "RV") {
-          dt <- dt_RV
-      } else if (metric_type == "GR") {
-          dt <- dt_GR
-      } else {
-          dt <- merge(dt_RV,
-                      dt_GR,
-                      by = id_headers,
-                      all = TRUE)
-      }
-    }
   }
 
   if (include_metadata) {
@@ -231,8 +177,6 @@ convert_se_ref_assay_to_dt <- function(se) {
     }
   as_df
   }
-
-  data.table::as.data.table(as_df)
 }
 
 
