@@ -24,7 +24,7 @@ df_to_bm_assay <-
     data_type <- match.arg(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     
-    .Deprecated(new = convert_se_assay_to_dt,
+    .Deprecated(new = splitAsBumpyMatrix,
     msg = "support for 'df_to_bm_assay' will be dropped next release cycle. See 'splitAsBumpyMatrix' instead")
     
     data <- methods::as(data, "DataFrame")
