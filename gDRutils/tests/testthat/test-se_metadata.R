@@ -40,3 +40,12 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
   se <- set_SE_fit_parameters(se, params)
   expect_equal(get_SE_fit_parameters(se), params)
 })
+
+
+test_that("get_SE_identifiers works as expected", {
+  exp <- list("drug" = "drug", "celllinename" = "CellLineName")
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
+
+  obs <- get_SE_identifiers(se)
+  expect_equal(obs, exp)
+})

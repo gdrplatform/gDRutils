@@ -12,7 +12,7 @@ set_SE_fit_parameters(se, value)
 \item{value}{named list of metadata for fit parameters.}
 }
 \value{
-\linkS4class{se} with added metadata.
+\code{se} with added metadata.
 }
 \description{
 Set metadata for the fitting parameters that define the Metrics assay in SummarizedExperiment object metadata.
