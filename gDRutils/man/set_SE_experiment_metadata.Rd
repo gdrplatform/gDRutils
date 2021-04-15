@@ -12,7 +12,7 @@ set_SE_experiment_metadata(se, value)
 \item{value}{named list of metadata for the \code{se} object.}
 }
 \value{
-\linkS4class{se} with added metadata.
+\code{se} with added metadata.
 }
 \description{
 Set experiment-level metadata in the metadata slot of a \linkS4class{SummarizedExperiment} object.

@@ -40,3 +40,23 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
   se <- set_SE_fit_parameters(se, params)
   expect_equal(get_SE_fit_parameters(se), params)
 })
+
+
+test_that("get_SE_identifiers works as expected", {
+  exp <- list("drug" = "drug", "celllinename" = "CellLineName")
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
+
+  obs <- get_SE_identifiers(se)
+  expect_equal(obs, exp)
+
+  obs <- get_SE_identifiers(se, "celllinename")
+  expect_equal(obs, exp[["celllinename"]])
+
+  # Identifier does not exist on the SummarizedExperiment. 
+  # Used mainly for backwards compatibility purposes.
+  obs <- get_SE_identifiers(se, "masked_tag")
+  expect_equal(obs, "masked")
+
+  # Invalid identifier.
+  expect_error(get_SE_identifiers(se, "INVALID"))
+})
