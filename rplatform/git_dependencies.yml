@@ -1,6 +1,6 @@
 pkgs:
   BumpyMatrix:
-    ver: ">=0.99.6"
+    ver: '>=0.99.7'
     url: https://github.roche.com/gdrplatform/BumpyMatrix.git
     ref: DEVEL_3_12
     subdir: ~
