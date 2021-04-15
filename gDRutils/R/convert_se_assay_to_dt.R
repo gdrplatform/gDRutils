@@ -66,7 +66,7 @@ convert_se_assay_to_dt <- function(se,
 #'
 #' @return data.table representation of the reference data.
 #'
-#' @details This is a convenience function to massage the reference data into the same format as the code{"Averaged"}
+#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
 #' assay data.
 #'
 #' @export
@@ -74,7 +74,7 @@ convert_se_assay_to_dt <- function(se,
 convert_se_ref_assay_to_dt <- function(se,
                                        ref_relative_viability_assay = "RefRelativeViability",
                                        ref_gr_value_assay = "RefGRvalue") {
-  rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata=TRUE)
+  rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
   colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
   rv$std_RelativeViability <- NA
 
