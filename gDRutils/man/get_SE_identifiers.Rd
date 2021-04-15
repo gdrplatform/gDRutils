@@ -4,10 +4,13 @@
 \alias{get_SE_identifiers}
 \title{Get metadata for the raw data identifier mappings used to create a SummarizedExperiment object.}
 \usage{
-get_SE_identifiers(se)
+get_SE_identifiers(se, id_type = NULL)
 }
 \arguments{
 \item{se}{a \linkS4class{SummarizedExperiment} object for which to get identifiers.}
+
+\item{id_type}{string of identifier type to retrieve.
+Defaults to \code{NULL}.}
 }
 \value{
 named list of identifiers used during \code{create_SE} operations.
