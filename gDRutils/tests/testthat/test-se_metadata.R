@@ -48,4 +48,15 @@ test_that("get_SE_identifiers works as expected", {
 
   obs <- get_SE_identifiers(se)
   expect_equal(obs, exp)
+
+  obs <- get_SE_identifiers(se, "celllinename")
+  expect_equal(obs, exp[["celllinename"]])
+
+  # Identifier does not exist on the SummarizedExperiment. 
+  # Used mainly for backwards compatibility purposes.
+  obs <- get_SE_identifiers(se, "masked_tag")
+  expect_equal(obs, "masked")
+
+  # Invalid identifier.
+  expect_error(get_SE_identifiers(se, "INVALID"))
 })
