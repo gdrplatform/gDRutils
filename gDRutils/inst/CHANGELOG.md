@@ -1,3 +1,6 @@
+# Changes to v.0.0.36
+- sort BumpyMatrix created from dt
+
 # Changes to v.0.0.35
 - revert metric arguments in 'convert_se_assay_to_dt'
 
