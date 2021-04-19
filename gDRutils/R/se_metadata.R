@@ -5,7 +5,7 @@
 #' @param se a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.
 #' @param value named list of metadata for fit parameters. 
 #'
-#' @return \linkS4class{se} with added metadata.
+#' @return \code{se} with added metadata.
 #'
 #' @export
 #'
@@ -22,7 +22,7 @@ set_SE_fit_parameters <- function(se, value) {
 #' @param value named list of metadata for keys. 
 #' Names of list should represent key types and list values should contain key type values.
 #'
-#' @return \linkS4class{se} with added metadata.
+#' @return \code{se} with added metadata.
 #'
 #' @export
 #'
@@ -38,12 +38,35 @@ set_SE_keys <- function(se, value) {
 #' @param se a \linkS4class{SummarizedExperiment} object for which to add experiment-level metadata.
 #' @param value named list of metadata for the \code{se} object. 
 #'
-#' @return \linkS4class{se} with added metadata.
+#' @return \code{se} with added metadata.
 #'
 #' @export
 #'
 set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
+}
+
+
+#' Get metadata for the raw data identifier mappings used to create a SummarizedExperiment object.
+#'
+#' Get metadata for the identifiers used to construct the metadata and assay data of a SummarizedExperiment.
+#'
+#' @param se a \linkS4class{SummarizedExperiment} object for which to get identifiers.
+#' @param id_type string of identifier type to retrieve.
+#' Defaults to \code{NULL}.
+#'
+#' @return named list of identifiers used during \code{create_SE} operations.
+#'
+#' @export
+#'
+get_SE_identifiers <- function(se, id_type = NULL) {
+  ## `strict = FALSE` is present for backwards compatibility.
+  ## If the identifier does not exist on the se object, we fetch it from the environment.
+  value <- .get_SE_metadata(se, name = "identifiers", subname = id_type, strict = FALSE)
+  if (is.null(value)) {
+    value <- get_identifier(id_type)
+  }
+  value
 }
 
 
@@ -97,10 +120,10 @@ get_SE_keys <- function(se, key_type = NULL) {
 
 #' The primary purpose of this function is to allow other functions to create exposed getter functions.
 #' @noRd
-.get_SE_metadata <- function(se, name, subname = NULL) {
+.get_SE_metadata <- function(se, name, subname = NULL, strict = TRUE) {
   v <- S4Vectors::metadata(se)[[name]]
   if (!is.null(subname)) {
-    if (!subname %in% names(v)) {
+    if (!subname %in% names(v) && strict) {
       stop(sprintf("'%s' is not one of valid subname(s): '%s'", subname, paste0(names(v), collapse = ", ")))
     }
     v <- v[[subname]]

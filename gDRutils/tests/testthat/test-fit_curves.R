@@ -1,4 +1,3 @@
-source("setUp.R")
 .round_params <- function(df) {
   df[] <- lapply(df, round, 4)
   df

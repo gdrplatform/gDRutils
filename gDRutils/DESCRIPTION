@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 0.0.35
-Date: 2021-04-09
+Version: 0.0.36
+Date: 2021-04-19
 Authors@R: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -14,11 +14,12 @@ Description: This package contains utility functions used throughout the gDR pac
 License: file GNE_LICENSE
 LazyLoad: yes
 Imports:
-    BumpyMatrix (>= 0.99.6),
+    BumpyMatrix (>= 0.99.7),
     checkmate,
     data.table,
     drc,
     magrittr,
+    methods,
     reshape2,
     stats,
     S4Vectors,

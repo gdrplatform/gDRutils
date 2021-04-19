@@ -1,26 +1,3 @@
-# TODO: Delete me once no longer in use. 
-#' @export
-#'
-RVGRfits <- function(df_,
-                     e_0 = 1,
-                     GR_0 = 1,
-                     n_point_cutoff = 4,
-                     range_conc = c(5e-3, 5),
-                     force = FALSE,
-                     pcutoff = 0.05) {
-  .Deprecated("fit_curves", package = "gDRutils")
-  fit_curves(
-    df_ = df_,
-    e_0 = e_0,
-    GR_0 = GR_0,
-    n_point_cutoff = n_point_cutoff,
-    range_conc = range_conc,
-    force_fit = force,
-    pcutoff = pcutoff
-  )
-}
-
-
 #' Fit curves
 #'
 #' Fit GR and RV curves from a data.frame.
