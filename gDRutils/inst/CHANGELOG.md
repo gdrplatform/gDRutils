@@ -1,3 +1,6 @@
+# Changes to v.0.0.37
+- add support for getting and setting processing info metadata
+
 # Changes to v.0.0.36
 - sort BumpyMatrix created from dt
 
