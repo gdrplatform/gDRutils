@@ -13,6 +13,23 @@ set_SE_fit_parameters <- function(se, value) {
   .set_SE_metadata(se, name = "fit_parameters", value)
 }
 
+#' Set metadata for the processing info in SummarizedExperiment object.
+#'
+#' Set metadata for the processing info that defines 
+#' the date_processed and packages versions in SummarizedExperiment object metadata.
+#'
+#' @param se a \linkS4class{SummarizedExperiment} object for which 
+#' to add processing info metadata.
+#' @param value named list of metadata for processing info. 
+#'
+#' @return \code{se} with added metadata.
+#'
+#' @export
+#'
+set_SE_processing_info <- function(se, value) {
+  .set_SE_metadata(se, name = "processing_info", value)
+}
+
 
 #' Set metadata for keys in SummarizedExperiment object.
 #'
@@ -82,6 +99,21 @@ get_SE_identifiers <- function(se, id_type = NULL) {
 #'
 get_SE_fit_parameters <- function(se) {
   .get_SE_metadata(se, name = "fit_parameters")
+}
+
+#' Set metadata for the processing info in SummarizedExperiment object.
+#'
+#' Set metadata for the processing info that defines 
+#' the date_processed and packages versions in SummarizedExperiment object metadata.
+#' 
+#' @param se a \linkS4class{SummarizedExperiment} object for which to get processing info.
+#'
+#' @return named list of processing info.
+#'
+#' @export
+#'
+get_SE_processing_info <- function(se) {
+  .get_SE_metadata(se, name = "processing_info")
 }
 
 
