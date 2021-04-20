@@ -61,14 +61,14 @@ test_that("get_SE_identifiers works as expected", {
   expect_error(get_SE_identifiers(se, "INVALID"))
 })
 
-test_that("get_SE_processing_info and set_SE_processing_info work as expected", {
+test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {
   params <- list(date_processed = Sys.Date(),
                  session_info = sessionInfo())
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
-  processing_info <- get_SE_processing_info(se)
+  processing_metadata <- get_SE_processing_metadata(se)
   
-  expect_equal(processing_info, NULL)
+  expect_equal(processing_metadata, NULL)
   
-  se <- set_SE_processing_info(se, params)
-  expect_equal(get_SE_processing_info(se), params)
+  se <- set_SE_processing_metadata(se, params)
+  expect_equal(get_SE_processing_metadata(se), params)
 })
