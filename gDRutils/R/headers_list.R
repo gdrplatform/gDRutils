@@ -44,7 +44,9 @@
       "h",
       "r2",
       "x_sd_avg",
-      "fit_type"
+      "fit_type",
+      "metric_type",
+      "fit_source"
     ),
 
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
@@ -55,46 +57,49 @@
     )
   )
 
-  rv_metrics <- c(
-    "RV_mean",
-    "RV_AOC",
-    "RV_AOC_range",
-    "IC50",
-    "E_max",
-    "EC50",
-    "E_inf",
-    "E_0",
-    "h_RV",
-    "RV_r2",
-    "RV_sd_avg",
-    "fit_type_RV"
+  metrics_names <- rbind(
+      RV = c(
+        "RV_mean",
+        "RV_AOC",
+        "RV_AOC_range",
+        "IC50",
+        "E_max",
+        "EC50",
+        "E_inf",
+        "E_0",
+        "h_RV",
+        "RV_r2",
+        "RV_sd_avg",
+        "fit_type_RV",
+        "metric_type",
+        "fit_source"
+      ),
+      GR = c(
+        "GR_mean",
+        "GR_AOC",
+        "GR_AOC_range",
+        "GR50",
+        "GR_max",
+        "GEC50",
+        "GR_inf",
+        "GR_0",
+        "h_GR",
+        "GR_r2",
+        "GR_sd_avg",
+        "fit_type_GR",
+        "metric_type",
+        "fit_source"
+      )
   )
-  names(rv_metrics) <- HEADERS_LIST[["response_metrics"]]
-  HEADERS_LIST[["RV_metrics"]] <- rv_metrics
+  colnames(metrics_names) <- HEADERS_LIST[["response_metrics"]]
+  HEADERS_LIST[["metrics_names"]] <- metrics_names
 
-  gr_metrics <- c(
-    "GR_mean",
-    "GR_AOC",
-    "GR_AOC_range",
-    "GR50",
-    "GR_max",
-    "GEC50",
-    "GR_inf",
-    "GR_0",
-    "h_GR",
-    "GR_r2",
-    "GR_sd_avg",
-    "fit_type_GR"
-  )
-  names(gr_metrics) <- HEADERS_LIST[["response_metrics"]]
-  HEADERS_LIST[["GR_metrics"]] <- gr_metrics
 
   HEADERS_LIST[["metrics_results"]] <- c(
     "maxlog10Concentration",
     "N_conc",
     HEADERS_LIST[["response_metrics"]],
-    HEADERS_LIST[["RV_metrics"]],
-    HEADERS_LIST[["GR_metrics"]]
+    as.character(HEADERS_LIST[["metrics_names"]])
   )
 
   HEADERS_LIST[["controlled"]] <- c(
