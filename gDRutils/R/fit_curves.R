@@ -91,7 +91,7 @@ fit_curves <- function(df_,
       cap = cap, 
       n_point_cutoff = n_point_cutoff
     )
-    rownames(df_metrics) <- "RV"
+    df_metrics$metric_type <- "RV"
   }
 
   if ("GR" %in% curve_type) {
@@ -108,9 +108,12 @@ fit_curves <- function(df_,
       cap = cap, 
       n_point_cutoff = n_point_cutoff
     )
-    rownames(df_gr) <- "GR"
+    df_gr$metric_type <- "GR"
     df_metrics <- rbind(df_metrics, df_gr)
   }
+  
+  df_metrics$fit_source <- 'gDR'
+  rownames(df_metrics) = paste0(df_gr$metric_type, '_', df_metrics$fit_source)
 
   df_metrics
 }
