@@ -63,7 +63,7 @@ test_that("get_SE_identifiers works as expected", {
 
 test_that("get_SE_processing_info and set_SE_processing_info work as expected", {
   params <- list(date_processed = Sys.Date(),
-                 sessioin_info = sessionInfo())
+                 session_info = sessionInfo())
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
   processing_info <- get_SE_processing_info(se)
   
