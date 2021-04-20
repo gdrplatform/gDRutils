@@ -26,6 +26,6 @@ Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExp
 Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
 }
 \details{
-This is a convenience function to massage the reference data into the same format as the code{"Averaged"}
+This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
 assay data.
 }
