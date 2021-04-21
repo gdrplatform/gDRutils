@@ -94,6 +94,8 @@
   colnames(metrics_names) <- HEADERS_LIST[["response_metrics"]]
   HEADERS_LIST[["metrics_names"]] <- metrics_names
 
+  HEADERS_LIST[["metrics_types"]] <- rownames(HEADERS_LIST[["metrics_names"]])
+
 
   HEADERS_LIST[["metrics_results"]] <- c(
     "maxlog10Concentration",
