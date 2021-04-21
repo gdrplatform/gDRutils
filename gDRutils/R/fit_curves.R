@@ -114,7 +114,7 @@ fit_curves <- function(df_,
   
   df_metrics$fit_source <- 'gDR'
 
-  rownames(df_metrics) = paste0(df_gr$metric_type, '_', df_metrics$fit_source)
+  rownames(df_metrics) = paste0(df_metrics$metric_type, '_', df_metrics$fit_source)
 
   df_metrics
 }
