@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-is_valid_se_assay_name <- function(se, name) {
+validate_se_assay_name <- function(se, name) {
   if (!name %in% SummarizedExperiment::assayNames(se)) {
     stop(sprintf("'%s' is not on of the available assays: '%s'",
       name, paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
