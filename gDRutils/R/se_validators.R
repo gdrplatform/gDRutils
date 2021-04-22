@@ -18,3 +18,36 @@ is_valid_se_assay_name <- function(se, name) {
   invisible(NULL)
 }
 
+
+
+#' Validate SummarizedExperiment object
+#' 
+#'
+#' @param SE SummarizedExperiment object 
+#' produced by the gDR pipeline
+#'
+#' @return
+#' @export
+#'
+#' @examples
+validate_SE <- function(SE) {
+  checkmate::assert(
+    checkmate::check_class(SE, "SummarizedExperiment"),
+    checkmate::check_set_equal(SummarizedExperiment::assayNames(SE), c("RawTreated", "Controls", 
+                                                                       "Normalized", "RefGRvalue", 
+                                                                       "RefRelativeViability", "DivisionTime", 
+                                                                       "Averaged", "Metrics")),
+    checkmate::check_set_equal(names(S4Vectors::metadata(SE)),
+                               c("experiment_metadata", "df_",
+                                 "Keys", "df_raw_data",
+                                 "fit_parameters", "drug_combinations")),
+    checkmate::assert("Metrics assay must have only 2 entries",
+                      all(unlist(lapply(BumpyMatrix::undim(SummarizedExperiment::assay(
+                        SE, "Metrics")),
+                        function(x) nrow(x) == 2)))),
+    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
+                           must.include = c("metric_type", "fit_source")),
+    combine = "and"
+  )
+}
+
