@@ -1,3 +1,6 @@
+# Changes to v.0.0.38
+- switch from `processing_metadata` to `.internal`
+
 # Changes to v.0.0.37
 - add support for getting and setting processing info metadata
 

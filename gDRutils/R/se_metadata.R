@@ -27,7 +27,7 @@ set_SE_fit_parameters <- function(se, value) {
 #' @export
 #'
 set_SE_processing_metadata <- function(se, value) {
-  .set_SE_metadata(se, name = "processing_metadata", value)
+  .set_SE_metadata(se, name = ".internal", value)
 }
 
 
@@ -113,7 +113,7 @@ get_SE_fit_parameters <- function(se) {
 #' @export
 #'
 get_SE_processing_metadata <- function(se) {
-  .get_SE_metadata(se, name = "processing_metadata")
+  .get_SE_metadata(se, name = ".internal")
 }
 
 
