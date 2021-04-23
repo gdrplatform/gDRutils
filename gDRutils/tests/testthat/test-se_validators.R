@@ -7,7 +7,7 @@ test_that("is_valid_se_assay_name works as expected", {
 test_that("validate_SE works as expected", {
   se1 <- SummarizedExperiment::SummarizedExperiment(assays = list("orange" = matrix(1, 1, 1)))
   expect_error(validate_SE(se1))
-  x <- NumericList(split(runif(1000), factor(sample(50, 1000, replace = TRUE), 1:50))) 
+  x <- IRanges::NumericList(split(runif(1000), factor(sample(50, 1000, replace = TRUE), 1:50))) 
   se2 <- SummarizedExperiment::SummarizedExperiment(assays = 
                                                       list("RawTreated" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
                                                            "Controls" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
