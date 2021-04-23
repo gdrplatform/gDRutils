@@ -50,8 +50,9 @@ validate_SE <- function(SE) {
       SE, "Normalized"))
   colIdx <- seq_len(ncol(SE))
   colData <- as.data.frame(colData(SE))
-  colNames <- paste0(apply(colData, 1, function(x) {paste(x, collapse = "_")}),
-                     "_", colIdx)
+  colNames <- paste0(apply(colData, 1, function(x) {
+    paste(x, collapse = "_")
+    }),"_", colIdx)
   
   rowIdx <- seq_len(nrow(SE))
   rowData <- as.data.frame(rowData(SE))
