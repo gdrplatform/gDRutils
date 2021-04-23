@@ -41,13 +41,17 @@ validate_SE <- function(SE) {
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
                                  "fit_parameters", "drug_combinations")),
-    checkmate::assert("Metrics assay must have only 2 entries",
-                      all(unlist(lapply(BumpyMatrix::undim(SummarizedExperiment::assay(
-                        SE, "Metrics")),
-                        function(x) nrow(x) == 2)))),
-    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
-                           must.include = c("metric_type", "fit_source")),
     combine = "and"
   )
+  unsplittedBM <- BumpyMatrix::unsplitAsDataFrame(
+    SummarizedExperiment::assay(
+      SE, "Metrics"))
+  checkmate::assert(
+    checkmate::assert("Metrics assay must have only 2 entries",
+                      all(table(unsplittedBM$row, unsplittedBM$column) == 2)),
+    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
+                           must.include = c("metric_type", "fit_source")),
+    
+    combine = "and")
 }
 
