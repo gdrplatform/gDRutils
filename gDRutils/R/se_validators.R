@@ -40,7 +40,7 @@ validate_SE <- function(SE) {
     checkmate::check_set_equal(names(S4Vectors::metadata(SE)),
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
-                                 "fit_parameters", "drug_combinations")),
+                                 "fit_parameters", "drug_combinations", ".internals")),
     checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
     
