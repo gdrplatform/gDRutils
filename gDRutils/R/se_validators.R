@@ -41,17 +41,27 @@ validate_SE <- function(SE) {
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
                                  "fit_parameters", "drug_combinations")),
-    combine = "and"
-  )
+    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
+                           must.include = c("normalization_type", "fit_source")),
+    
+    combine = "and")
   unsplittedBM <- BumpyMatrix::unsplitAsDataFrame(
     SummarizedExperiment::assay(
-      SE, "Metrics"))
+      SE, "Normalized"))
+  colIdx <- seq_len(ncol(SE))
+  colData <- as.data.frame(colData(SE))
+  colNames <- paste0(apply(colData, 1, function(x) {paste(x, collapse = "_")}),
+                     "_", colIdx)
+  
+  rowIdx <- seq_len(nrow(SE))
+  rowData <- as.data.frame(rowData(SE))
+  rowNames <- lapply(rowData, function(x) x)
+  rowNames <- do.call(paste, c(rowNames, sep = "_"))
   checkmate::assert(
-    checkmate::assert("Metrics assay must have only 2 entries",
-                      all(table(unsplittedBM$row, unsplittedBM$column) == 2)),
-    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
-                           must.include = c("metric_type", "fit_source")),
-    
+    checkmate::check_set_equal(colNames, unsplittedBM$column),
+    checkmate::check_set_equal(rowNames, gsub("(.*)(_[0-9]+)", "\\1", unsplittedBM$row)),
+    checkmate::check_character(rowData$Gnumber, any.missing = FALSE, unique = TRUE),
+    checkmate::check_character(colData$clid, any.missing = FALSE, unique = TRUE),
     combine = "and")
 }
 
