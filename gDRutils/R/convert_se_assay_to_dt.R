@@ -34,7 +34,7 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_flag(include_metadata)
   checkmate::assert_character(sel_metric_type)	
   
-  is_valid_se_assay_name(se, assay_name)
+  validate_se_assay_name(se, assay_name)
 
   dt <- .convert_se_assay_to_dt(se, assay_name)
 
