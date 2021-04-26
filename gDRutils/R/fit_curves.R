@@ -17,17 +17,17 @@
 #' Defaults to \code{0.05}.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' Defaults to \code{0.1}.
-#' @param curve_type character vector of types of curves to fit.
+#' @param normalization_type character vector of types of curves to fit.
 #' Defaults to \code{c("GR", "RV")}.
 #'
-#' @return data.frame of fit parameters as specified by the \code{curve_type}.
+#' @return data.frame of fit parameters as specified by the \code{normalization_type}.
 #'
 #' @details
 #' The \code{df_} expects the following columns:
 #'  \itemize{
 #'   \item{Concentration} unlogged concentration values
-#'   \item{RelativeViability} normalized relative viability values (if \code{curve_type} includes \code{"RV"})
-#'   \item{GRvalue} normalized GR values (if \code{curve_type} includes \code{"GR"})
+#'   \item{RelativeViability} normalized relative viability values (if \code{normalization_type} includes \code{"RV"})
+#'   \item{GRvalue} normalized GR values (if \code{normalization_type} includes \code{"GR"})
 #'  }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
@@ -44,23 +44,23 @@ fit_curves <- function(df_,
                        force_fit = FALSE,
                        pcutoff = 0.05,
                        cap = 0.1, 
-                       curve_type = c("GR", "RV")) {
+                       normalization_type = c("GR", "RV")) {
   
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
-  if (any(bad_curve_type <- ! curve_type %in% c("GR", "RV"))) {
+  if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'", 
-      paste0(curve_type[bad_curve_type], collapse = ", ")))
+      paste0(normalization_type[bad_normalization_type], collapse = ", ")))
   } 
 
   req_fields <- c("Concentration")
   opt_fields <- NULL
 
-  if ("GR" %in% curve_type) {
+  if ("GR" %in% normalization_type) {
     req_fields <- c(req_fields, "GRvalue")
     opt_fields <- c(opt_fields, "std_GRvalue")
   }
 
-  if ("RV" %in% curve_type) {
+  if ("RV" %in% normalization_type) {
     req_fields <- c(req_fields, "RelativeViability")
     opt_fields <- c(opt_fields, "std_RelativeViability")
   }
@@ -77,7 +77,7 @@ fit_curves <- function(df_,
   med_concs <- stats::median(df_$Concentration)
   min_concs <- min(df_$Concentration)
 
-  if ("RV" %in% curve_type) {
+  if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
       df_$Concentration, 
       df_$RelativeViability, 
@@ -91,10 +91,10 @@ fit_curves <- function(df_,
       cap = cap, 
       n_point_cutoff = n_point_cutoff
     )
-    df_metrics$metric_type <- "RV"
+    df_metrics$normalization_type <- "RV"
   }
 
-  if ("GR" %in% curve_type) {
+  if ("GR" %in% normalization_type) {
     df_gr <- logisticFit(
       df_$Concentration, 
       df_$GRvalue, 
@@ -108,13 +108,18 @@ fit_curves <- function(df_,
       cap = cap, 
       n_point_cutoff = n_point_cutoff
     )
-    df_gr$metric_type <- "GR"
+    df_gr$normalization_type <- "GR"
     df_metrics <- rbind(df_metrics, df_gr)
   }
   
-  df_metrics$fit_source <- 'gDR'
+  df_metrics$fit_source <- "gDR"
 
-  rownames(df_metrics) = paste0(df_metrics$metric_type, '_', df_metrics$fit_source)
+  is_unique_normalization_type_and_fit_source <- 
+    nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
+  if (!is_unique_normalization_type_and_fit_source) {
+    stop("'normalization_type' and 'fit_source' columns do not create unqiue combinations") 
+  }
+  rownames(df_metrics) <- paste0(df_metrics$normalization_type, '_', df_metrics$fit_source)
 
   df_metrics
 }
