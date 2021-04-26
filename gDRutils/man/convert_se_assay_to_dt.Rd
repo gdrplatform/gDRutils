@@ -4,12 +4,26 @@
 \alias{convert_se_assay_to_dt}
 \title{Convert a SummarizedExperiment assay to a long data.table}
 \usage{
-convert_se_assay_to_dt(se, assay_name, include_metadata = TRUE)
+convert_se_assay_to_dt(
+  se,
+  assay_name,
+  sel_metric_type = "stacked",
+  sel_fit_source = "all",
+  include_metadata = TRUE
+)
 }
 \arguments{
 \item{se}{A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.}
 
 \item{assay_name}{String of name of the assay to transform within the \code{se}.}
+
+\item{sel_metric_type}{String of name of the metrics to extract (i.e. \code{RV}, \code{GR}, or \code{flat} or other).
+Valid only for \code{assay_name = 'Metrics'}. \code{stacked} will return as in the assay 'Metrics':
+one row for each metrics/fit source for each condition.    
+Defaults to \code{stacked}.}
+
+\item{sel_fit_source}{String of name of the fit sources to select (i.e. \code{all}, \code{gDR}, or other).
+Valid only for \code{assay_name = 'Metrics'}. Defaults to \code{all} which will not exclude any data}
 
 \item{include_metadata}{Boolean indicating whether or not to include \code{rowData(se)}
 and \code{colData(se)} in the returned data.table.
