@@ -185,7 +185,7 @@ convert_se_ref_assay_to_dt <- function(se,
                  paste0(setdiff(metric_headers, colnames(dt)), collapse = ", ")))
   }	
   
-  metric_types <- unique(dt$metric_type)
+  metric_types <- unique(dt$normalization_type)
   if (!all(sel_metric_type %in% c('flat', metric_types))) {	
     stop(sprintf("metric_type can either be: 'stacked', 'flat', or in the list ('%s')",	
                  paste0(metric_types, collapse = "', '")))
@@ -198,7 +198,7 @@ convert_se_ref_assay_to_dt <- function(se,
     dt = dt[dt$fit_source %in% sel_fit_source, ]
   }
   # concatenate source name with metric type (gDR
-  dt$metric_types_source <- paste0(dt$metric_type, dt_$fit_source)
+  dt$metric_types_source <- paste0(dt$normalization_type, dt_$fit_source)
   
   id_headers <- c("rId", "cId")	
   headers <- setdiff(c(id_headers, metric_headers), c('normalization_type', 'fit_source'))
