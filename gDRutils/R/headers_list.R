@@ -45,7 +45,7 @@
       "r2",
       "x_sd_avg",
       "fit_type",
-      "metric_type",
+      "normalization_type",
       "fit_source"
     ),
 
@@ -71,7 +71,7 @@
         "RV_r2",
         "RV_sd_avg",
         "fit_type_RV",
-        "metric_type",
+        "normalization_type",
         "fit_source"
       ),
       GR = c(
@@ -87,7 +87,7 @@
         "GR_r2",
         "GR_sd_avg",
         "fit_type_GR",
-        "metric_type",
+        "normalization_type",
         "fit_source"
       )
   )

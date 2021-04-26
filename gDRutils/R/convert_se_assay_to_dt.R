@@ -43,60 +43,7 @@ convert_se_assay_to_dt <- function(se,
   }
 
   if (assay_name == "Metrics" && sel_metric_type != "stacked") {	
-      
-    metric_headers <- get_header("response_metrics")
-
-    if (!all(metric_headers %in% colnames(dt))) {	
-        stop(sprintf("missing expected metric headers: '%s'",	
-        paste0(setdiff(metric_headers, colnames(dt)), collapse = ", ")))
-    }	
-
-    metric_types = unique(dt$metric_type)
-    if (!all(sel_metric_type %in% c('flat', metric_types))) {	
-        stop(sprintf("metric_type can either be: 'stacked', 'flat', or in the list ('%s')",	
-        paste0(metric_types, collapse = "', '")))
-    }	
-    if (sel_metric_type == 'flat') {
-      sel_metric_type = metric_types
-    }
-
-    if (sel_fit_source != 'all') {
-      dt = dt[dt$fit_source %in% sel_fit_source, ]
-    }
-    # concatenate source name with metric type (gDR
-    dt$metric_types_source = paste0(dt$metric_type, dt_$fit_source)
-    
-    id_headers <- c("rId", "cId")	
-    headers <- setdiff(c(id_headers, metric_headers), c('metric_type', 'fit_source'))
-
-    metric_headers <- setdiff(colnames(dt)[colnames(dt) %in% metric_headers], c('metric_type', 'fit_source'))
-
-    # extracting each metric_type/fit_source combo and renaming columns accordingly
-    dt_metrics = lapply(unique(dt$metric_types_source), 
-      function(x) {
-        dt_ <- dt[dt$metric_types_source == x, ]
-        metric_type = unique(dt_$metric_type)
-        fit_source = unique(dt_$fit_source)
-        metric_map <- sapply(get_header("metrics_names")[metric_type,], 
-                        function(x) paste0(x, gsub('_gDR', '', paste0('_', fit_source)))) # ignore gDR as suffix otherwise add fit_source
-
-        dt_ <- dt_[, ..headers]
-        data.table::setnames(dt_,
-              old = metric_headers,
-              new = unname(metric_map[metric_headers]))
-        return(dt_)
-      }
-    )
-    # merge the different metric_type/fit_source combo dts into a flat table
-    dt = dt_metrics[[1]]
-    if (length(dt_metrics) > 1) {
-      for (i in 2:length(dt_metrics)) {
-        dt <- merge(dt,	
-                    dt_metrics[[i]],	
-                    by = id_headers,	
-                    all = TRUE)	
-      }
-    }
+    .convert_metrics_unstacked(dt, sel_fit_source, sel_metric_type)
   }
 
   if (include_metadata) {
@@ -220,4 +167,69 @@ convert_se_ref_assay_to_dt <- function(se,
     as_df
   }
   data.table::as.data.table(as_df)
+}
+
+#' Convert metrics to unstacked dt
+#'
+#' @return data.table with assay data
+#' @keywords internal
+#' @noRd
+.convert_metrics_unstacked <- function(dt,
+                                      sel_fit_source,
+                                      sel_metric_type) {
+
+  metric_headers <- get_header("response_metrics")
+  
+  if (!all(metric_headers %in% colnames(dt))) {	
+    stop(sprintf("missing expected metric headers: '%s'",	
+                 paste0(setdiff(metric_headers, colnames(dt)), collapse = ", ")))
+  }	
+  
+  metric_types <- unique(dt$metric_type)
+  if (!all(sel_metric_type %in% c('flat', metric_types))) {	
+    stop(sprintf("metric_type can either be: 'stacked', 'flat', or in the list ('%s')",	
+                 paste0(metric_types, collapse = "', '")))
+  }	
+  if (sel_metric_type == 'flat') {
+    sel_metric_type <- metric_types
+  }
+  
+  if (sel_fit_source != 'all') {
+    dt = dt[dt$fit_source %in% sel_fit_source, ]
+  }
+  # concatenate source name with metric type (gDR
+  dt$metric_types_source <- paste0(dt$metric_type, dt_$fit_source)
+  
+  id_headers <- c("rId", "cId")	
+  headers <- setdiff(c(id_headers, metric_headers), c('normalization_type', 'fit_source'))
+  
+  metric_headers <- setdiff(colnames(dt)[colnames(dt) %in% metric_headers], c('normalization_type', 'fit_source'))
+  
+  # extracting each metric_type/fit_source combo and renaming columns accordingly
+  dt_metrics <- lapply(unique(dt$metric_types_source), 
+                       function(x) {
+                         dt_ <- dt[dt$metric_types_source == x, ]
+                         normalization_type <- unique(dt_$normalization_type)
+                         fit_source <- unique(dt_$fit_source)
+                         metric_map <- sapply(get_header("metrics_names")[normalization_type,], 
+                                              function(x) paste0(x, gsub('_gDR', '', paste0('_', fit_source)))) # ignore gDR as suffix otherwise add fit_source
+                         
+                         dt_ <- dt_[, ..headers]
+                         data.table::setnames(dt_,
+                                              old = metric_headers,
+                                              new = unname(metric_map[metric_headers]))
+                         return(dt_)
+                       }
+  )
+  # merge the different metric_type/fit_source combo dts into a flat table
+  dt <- dt_metrics[[1]]
+  if (length(dt_metrics) > 1) {
+    for (i in 2:length(dt_metrics)) {
+      dt <- merge(dt,	
+                  dt_metrics[[i]],	
+                  by = id_headers,	
+                  all = TRUE)	
+    }
+  }
+  dt
 }
