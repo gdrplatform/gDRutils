@@ -45,8 +45,6 @@
       "r2",
       "x_sd_avg",
       "fit_type",
-      "normalization_type",
-      "fit_source"
     ),
 
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
@@ -71,8 +69,6 @@
         "RV_r2",
         "RV_sd_avg",
         "fit_type_RV",
-        "normalization_type",
-        "fit_source"
       ),
       GR = c(
         "GR_mean",
@@ -87,8 +83,6 @@
         "GR_r2",
         "GR_sd_avg",
         "fit_type_GR",
-        "normalization_type",
-        "fit_source"
       )
   )
   colnames(metrics_names) <- HEADERS_LIST[["response_metrics"]]

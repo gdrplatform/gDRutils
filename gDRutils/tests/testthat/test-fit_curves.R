@@ -12,9 +12,9 @@ test_that("fit_curves fails with expected errors", {
   df_resp2$Concentration <- df_resp2$Concentration * -1
   expect_error(fit_curves(df_resp2), reg = "function accepts only unlogged concentrations")
 
-  # Invalid curve_type.
-  expect_error(fit_curves(df_resp, curve_type = "BOGUS"), reg = "unknown curve type")
-  expect_error(fit_curves(df_resp, curve_type = c("GR", "BOGUS")), reg = "unknown curve type")
+  # Invalid normalization_type.
+  expect_error(fit_curves(df_resp, normalization_type = "BOGUS"), reg = "unknown curve type")
+  expect_error(fit_curves(df_resp, normalization_type = c("GR", "BOGUS")), reg = "unknown curve type")
 })
 
 
@@ -143,12 +143,12 @@ test_that("appropriate fit type is assigned for various use cases", {
 })
 
 
-test_that("curve_type can be specified", {
-  GR_df_result <- fit_curves(df_resp, curve_type = "GR")
+test_that("normalization_type can be specified", {
+  GR_df_result <- fit_curves(df_resp, normalization_type = "GR")
   expect_equal(rownames(GR_df_result), "GR")
   expect_equal(.round_params(GR_df_result[, names(params)]), expected["GR", ], tolerance = 1e-5)
 
-  RV_df_result <- fit_curves(df_resp, curve_type = "RV")
+  RV_df_result <- fit_curves(df_resp, normalization_type = "RV")
   expect_equal(rownames(RV_df_result), "RV")
   expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV", ], tolerance = 1e-5)
 })
