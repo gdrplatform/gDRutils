@@ -162,7 +162,7 @@ convert_se_ref_assay_to_dt <- function(se,
 #' @export
 #'
 flatten_stacked_dt <- function(dt, columns, flatten, sep = "_") {
-  if (!all(columns %in% colnames(dt))) {	
+  if (!all(columns %in% colnames(dt))) {
     stop(sprintf("missing expected uniquifying columns: '%s'",
       paste0(setdiff(colnames(dt), columns), collapse = ", ")))
   }	
