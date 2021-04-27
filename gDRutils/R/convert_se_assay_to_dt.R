@@ -55,6 +55,39 @@ convert_se_assay_to_dt <- function(se,
 }
 
 
+#' Convert assay data into data.table.
+#' @return data.table of assay data.
+#' @keywords internal
+#' @noRd
+#'
+.convert_se_assay_to_dt <- function(se, assay_name) {
+  object <- SummarizedExperiment::assays(se)[[assay_name]]
+  checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
+
+  if (methods::is(object, "BumpyDataFrameMatrix")) {
+    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
+    # Retain nested rownames.
+    as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+
+  } else if (methods::is(object, "matrix")) {
+    first <- object[1, 1][[1]]
+    if (is.numeric(first)) {
+      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
+    } else {
+      stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
+    }
+    as_df
+  } else {
+    stop(sprintf("assay of class '%s' is not supported", class(object)))
+  }
+  data.table::as.data.table(as_df)
+}
+
+
+########################
+# Convenience functions
+########################
+
 #' Convert the reference values from a SummarizedExperiment assay to a long data.table
 #'
 #' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
@@ -96,115 +129,41 @@ convert_se_ref_assay_to_dt <- function(se,
 }
 
 
-#' Convert assay data into data.table
-#' @return data.table with assay data
-#' @keywords internal
-#' @noRd
-#'
-.convert_se_assay_to_dt <- function(se, assay_name) {
-  object <- SummarizedExperiment::assays(se)[[assay_name]]
-  checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
-
-  if (methods::is(object, "BumpyDataFrameMatrix")) {
-    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
-    # Retain nested rownames.
-    as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
-
-  } else if (methods::is(object, "matrix")) {
-    first <- object[1, 1][[1]]
-    if (is.numeric(first)) {
-      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
-    } else if (methods::is(first, "DFrame") || methods::is(first, "data.frame")) {
-
-      # TODO: Deprecate me.
-      .Deprecated(msg = paste("support for nested DataFrames of class `matrix`",
-                              "will be deprecated in the next release cycle.",
-                              "See `BumpyDataFrameMatrix` instead"))
-      asL <-
-        lapply(seq_len(ncol(object)), function(x) {
-          myL <- object[, x, drop = FALSE]
-          names(myL) <- rownames(object)
-
-          # in some datasets there might be no data for given drug/cell_line combination
-          # under such circumstances DataFrame will be empty
-          # and should be filtered out
-          # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-          myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-
-          myV <- vapply(myL, nrow, integer(1))
-          rCol <- rep(names(myV), as.numeric(myV))
-
-          # there might be DataFrames with different number of columns
-          # let's fill with NAs where necessary
-          if (length(unique(sapply(myL, ncol))) > 1) {
-            df <-
-              do.call(plyr::rbind.fill,
-                lapply(myL, data.table::as.data.table))
-          } else {
-            df <-
-              data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
-          }
-          if (nrow(df) == 0)
-            return()
-          df$rId <- rCol
-          df$cId <- colnames(object)[x]
-          df
-        })
-      as_df <- data.table::rbindlist(asL)
-    }
-    as_df
-  }
-  data.table::as.data.table(as_df)
-}
-
-
 #' Flatten a data.table
 #'
+#' Flatten a stacked data.table.
+#'
+#' @param columns character vector of column names representing uniquifying groups in expansion.
+#' @param flatten character vector of column names to flatten.
+#' @param sep 
+#' Defaults to \code{"_"}.
 #' @return data.table with assay data
-#' @keywords internal
-#' @noRd
-flatten_stacked <- function(dt) {
-
-  metric_headers <- get_header("response_metrics")
-  
-  if (!all(metric_headers %in% colnames(dt))) {	
-    stop(sprintf("missing expected metric headers: '%s'",	
-                 paste0(setdiff(metric_headers, colnames(dt)), collapse = ", ")))
+#' @details flattened columns will be named according to the columns.
+#' This is useful in trying to get a flattened version of the \code{"Metrics"} assay.
+#' @export
+#'
+flatten_stacked <- function(dt, columns, flatten, sep = "_") {
+  if (!all(columns %in% colnames(dt))) {	
+    stop(sprintf("missing expected uniquifying columns: '%s'",
+      paste0(setdiff(colnames(dt), columns), collapse = ", ")))
   }	
   
-  metric_types <- unique(dt$normalization_type)
-  dt$metric_types_source <- paste0(dt$normalization_type, dt_$fit_source)
-  
-  id_headers <- c("rId", "cId")	
-  headers <- setdiff(c(id_headers, metric_headers), c('normalization_type', 'fit_source'))
-  
-  metric_headers <- setdiff(colnames(dt)[colnames(dt) %in% metric_headers], c('normalization_type', 'fit_source'))
-  
-  # extracting each metric_type/fit_source combo and renaming columns accordingly
-  dt_metrics <- lapply(unique(dt$metric_types_source), 
-                       function(x) {
-                         dt_ <- dt[dt$metric_types_source == x, ]
-                         normalization_type <- unique(dt_$normalization_type)
-                         fit_source <- unique(dt_$fit_source)
-                         metric_map <- sapply(get_header("metrics_names")[normalization_type,], 
-                                              function(x) paste0(x, gsub('_gDR', '', paste0('_', fit_source)))) # ignore gDR as suffix otherwise add fit_source
-                         
-                         dt_ <- dt_[, ..headers]
-                         data.table::setnames(dt_,
-                                              old = metric_headers,
-                                              new = unname(metric_map[metric_headers]))
-                         return(dt_)
-                       }
-  )
-  # merge the different metric_type/fit_source combo dts into a flat table
-  dt <- dt_metrics[[1]]
-  if (length(dt_metrics) > 1) {
-    for (i in 2:length(dt_metrics)) {
-      dt <- merge(dt,	
-                  dt_metrics[[i]],	
-                  by = id_headers,	
-                  all = TRUE)	
-    }
+  idx <- which(columns %in% colnames(dt))
+  uniquifying <- dt[, idx, drop = FALSE]
+  uniquifying <- unique(uniquifying)
+
+  out <- split(dt[, -idx], dt[, idx, drop = FALSE], sep = sep)
+  missing <- setdiff(flatten, colnames(dt))
+  if (length(missing) != 0L) {
+    warning(sprintf("missing listed flatten columns: '%s'", paste0(missing, collapse = ", ")))
   }
-  dt
+
+  rename <- colnames(out[[1]]) %in% flatten 
+  for (grp in names(out)) {
+    group <- out[[grp]]
+    colnames(group)[rename] <- paste0(grp, sep, colnames(group)[rename])
+    out[[grp]] <- group
+  }
+
+  Reduce(merge, out)
 }

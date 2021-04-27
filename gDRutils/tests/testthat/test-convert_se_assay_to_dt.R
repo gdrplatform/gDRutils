@@ -50,6 +50,24 @@ test_that("convert_se_assay_to_dt works as expected", {
 })
 
 
+test_that("flatten_stacked_dt works as expected", {
+  n <- 4
+  m <- 5
+  grid <- expand.grid(normalization_type = c("GR", "RV"),
+    source = c("GDS", "GDR"))
+  repgrid <- do.call("rbind", rep(list(grid), m))
+  repgrid$wide <- seq(m * n)
+  repgrid$id <- rep(LETTERS[1:m], each = n)
+
+  columns <- colnames(grid)
+  flatten <- c("wide")
+  flatten_stacked_dt(repgrid, columns = columns, flatten = flatten)
+
+  expect_equal(dim(out), c(m, n * length(flatten) + columns))
+  expect_equal(colnames(out), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
+})
+
+
 test_that("merge_metrics argument of assay_to_dt works as expected", {
   headers <- get_header("response_metrics")
   m <- 20
