@@ -33,8 +33,7 @@ assay_to_dt <- function(se,
 
   as_dt <- convert_se_assay_to_dt(se, assay_name, include_metadata = include_metadata)
   if (assay_name == "Metrics") {
-    ## TODO: Put in issue to BumpyMatrix::unsplitAsBumpyMatrix to also return nested rownames.
-    ## Then can remove all hard-coded logic below regarding metrics.
+    # TODO: Just rename this columns from the rownames that are returned.
     as_dt$dr_metric <- rep_len(c("RV", "GR"), nrow(as_dt))
 
     ## NOTE: assay_to_dt function is deprecated for convert_se_assay_to_dt function,

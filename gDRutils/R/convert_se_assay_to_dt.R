@@ -131,18 +131,37 @@ convert_se_ref_assay_to_dt <- function(se,
 
 #' Flatten a data.table
 #'
-#' Flatten a stacked data.table.
+#' Flatten a stacked data.table into a wide format.
 #'
 #' @param columns character vector of column names representing uniquifying groups in expansion.
 #' @param flatten character vector of column names to flatten.
-#' @param sep 
+#' @param sep string representing separator between \code{flatten} columns, used in column renaming.
 #' Defaults to \code{"_"}.
-#' @return data.table with assay data
-#' @details flattened columns will be named according to the columns.
-#' This is useful in trying to get a flattened version of the \code{"Metrics"} assay.
+#'
+#' @return data.table of flattened data as defined by \code{flatten}.
+#'
+#' @details flattened columns will be named with original column names prefixed by \code{flatten} columns,
+#' concatenated together and separated by \code{sep}.
+#'
+#' A common use case for this function is when a flattened version of the \code{"Metrics"} assay is desired.
+#'
+#' @examples
+#'  n <- 4
+#'  m <- 5
+#'  grid <- expand.grid(normalization_type = c("GR", "RV"),
+#'    source = c("GDS", "GDR"))
+#'  repgrid <- do.call("rbind", rep(list(grid), m))
+#'  repgrid$wide <- seq(m * n)
+#'  repgrid$id <- rep(LETTERS[1:m], each = n)
+#'
+#'  columns <- colnames(grid)
+#'  flatten <- c("wide")
+#'
+#'  flatten_stacked_dt(repgrid, columns = columns, flatten = flatten)
+#'
 #' @export
 #'
-flatten_stacked <- function(dt, columns, flatten, sep = "_") {
+flatten_stacked_dt <- function(dt, columns, flatten, sep = "_") {
   if (!all(columns %in% colnames(dt))) {	
     stop(sprintf("missing expected uniquifying columns: '%s'",
       paste0(setdiff(colnames(dt), columns), collapse = ", ")))
