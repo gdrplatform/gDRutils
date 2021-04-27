@@ -82,7 +82,7 @@ convert_se_ref_assay_to_dt <- function(se,
   colnames(gr)[colnames(gr) == ref_gr_value_assay] <- "GRvalue"
   gr$std_GRvalue <- NA
 
-  dt <- merge(rv, gr, all = TRUE)
+  dt <- merge(rv, gr, all = TRUE, by = intersect(names(rv), names(gr)))
 
   # Fill primary drug with 'untreated_tag'.
   dt$Concentration <- 0
