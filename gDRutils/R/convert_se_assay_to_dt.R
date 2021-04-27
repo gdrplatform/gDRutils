@@ -4,12 +4,6 @@
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
-#' @param sel_metric_type String of name of the metrics to extract (i.e. \code{RV}, \code{GR}, or \code{flat} or other).	
-#' Valid only for \code{assay_name = 'Metrics'}. \code{stacked} will return as in the assay 'Metrics':
-#' one row for each metrics/fit source for each condition.	
-#' Defaults to \code{stacked}.
-#' @param sel_fit_source String of name of the fit sources to select (i.e. \code{all}, \code{gDR}, or other).	
-#' Valid only for \code{assay_name = 'Metrics'}. Defaults to \code{all} which will not exclude any data
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
@@ -24,8 +18,6 @@
 #'
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
-                                   sel_metric_type = "stacked",
-                                   sel_fit_source = "all",
                                    include_metadata = TRUE) {
 
   # Assertions.
@@ -40,10 +32,6 @@ convert_se_assay_to_dt <- function(se,
 
   if (nrow(dt) == 0L) {
     return(dt) # TODO: Should this return something else?
-  }
-
-  if (assay_name == "Metrics" && sel_metric_type != "stacked") {	
-    .convert_metrics_unstacked(dt, sel_fit_source, sel_metric_type)
   }
 
   if (include_metadata) {
@@ -169,14 +157,13 @@ convert_se_ref_assay_to_dt <- function(se,
   data.table::as.data.table(as_df)
 }
 
-#' Convert metrics to unstacked dt
+
+#' Flatten a data.table
 #'
 #' @return data.table with assay data
 #' @keywords internal
 #' @noRd
-.convert_metrics_unstacked <- function(dt,
-                                      sel_fit_source,
-                                      sel_metric_type) {
+flatten_stacked <- function(dt) {
 
   metric_headers <- get_header("response_metrics")
   
@@ -186,18 +173,6 @@ convert_se_ref_assay_to_dt <- function(se,
   }	
   
   metric_types <- unique(dt$normalization_type)
-  if (!all(sel_metric_type %in% c('flat', metric_types))) {	
-    stop(sprintf("metric_type can either be: 'stacked', 'flat', or in the list ('%s')",	
-                 paste0(metric_types, collapse = "', '")))
-  }	
-  if (sel_metric_type == 'flat') {
-    sel_metric_type <- metric_types
-  }
-  
-  if (sel_fit_source != 'all') {
-    dt = dt[dt$fit_source %in% sel_fit_source, ]
-  }
-  # concatenate source name with metric type (gDR
   dt$metric_types_source <- paste0(dt$normalization_type, dt_$fit_source)
   
   id_headers <- c("rId", "cId")	
