@@ -50,7 +50,7 @@ test_that("convert_se_assay_to_dt works as expected", {
 })
 
 
-test_that("flatten_stacked_dt works as expected", {
+test_that("flatten works as expected", {
   n <- 4
   m <- 5
   grid <- expand.grid(normalization_type = c("GR", "RV"),
@@ -59,11 +59,11 @@ test_that("flatten_stacked_dt works as expected", {
   repgrid$wide <- seq(m * n)
   repgrid$id <- rep(LETTERS[1:m], each = n)
 
-  columns <- colnames(grid)
-  flatten <- c("wide")
-  out <- flatten_stacked_dt(repgrid, columns = columns, flatten = flatten)
+  groups <- colnames(grid)
+  wide_cols <- c("wide")
+  out <- flatten(repgrid, groups = groups, wide_cols = wide_cols)
 
-  expect_equal(dim(out), c(m, n * length(flatten) + length(setdiff(colnames(repgrid), c(columns, flatten)))))
+  expect_equal(dim(out), c(m, n * length(wide_cols) + length(setdiff(colnames(repgrid), c(groups, wide_cols)))))
   expect_equal(colnames(out), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
 })
 

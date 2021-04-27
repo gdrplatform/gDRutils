@@ -137,19 +137,19 @@ convert_se_ref_assay_to_dt <- function(se,
 }
 
 
-#' Flatten a data.table
+#' Flatten a table
 #'
-#' Flatten a stacked data.table into a wide format.
+#' Flatten a stacked table into a wide format.
 #'
-#' @param dt data.table to flatten.
-#' @param columns character vector of column names representing uniquifying groups in expansion.
-#' @param flatten character vector of column names to flatten.
-#' @param sep string representing separator between \code{flatten} columns, used in column renaming.
+#' @param tbl a table to flatten.
+#' @param groups character vector of column names representing uniquifying groups in expansion.
+#' @param wide_cols character vector of column names to flatten.
+#' @param sep string representing separator between \code{wide_cols} columns, used in column renaming.
 #' Defaults to \code{"_"}.
 #'
-#' @return data.table of flattened data as defined by \code{flatten}.
+#' @return table of flattened data as defined by \code{wide_cols}.
 #'
-#' @details flattened columns will be named with original column names prefixed by \code{flatten} columns,
+#' @details flattened columns will be named with original column names prefixed by \code{wide_cols} columns,
 #' concatenated together and separated by \code{sep}.
 #'
 #' A common use case for this function is when a flattened version of the \code{"Metrics"} assay is desired.
@@ -163,37 +163,35 @@ convert_se_ref_assay_to_dt <- function(se,
 #'  repgrid$wide <- seq(m * n)
 #'  repgrid$id <- rep(LETTERS[1:m], each = n)
 #'
-#'  columns <- colnames(grid)
-#'  flatten <- c("wide")
+#'  groups <- colnames(grid)
+#'  wide_cols <- c("wide")
 #'
-#'  flatten_stacked_dt(repgrid, columns = columns, flatten = flatten)
+#'  flatten(repgrid, groups = groups, wide_cols = wide_cols)
 #'
 #' @export
 #'
-flatten_stacked_dt <- function(dt, columns, flatten, sep = "_") {
+flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
-
-  checkmate::assert_class(dt, "data.table")
-  checkmate::assert_character(columns)
-  checkmate::assert_character(flatten)
+  checkmate::assert_character(groups)
+  checkmate::assert_character(wide_cols)
   checkmate::assert_string(sep)
 
-  if (!all(columns %in% colnames(dt))) {
-    stop(sprintf("missing expected uniquifying columns: '%s'",
-      paste0(setdiff(colnames(dt), columns), collapse = ", ")))
+  if (!all(groups %in% colnames(tbl))) {
+    stop(sprintf("missing expected uniquifying groups: '%s'",
+      paste0(setdiff(colnames(tbl), groups), collapse = ", ")))
   }	
   
-  idx <- which(columns %in% colnames(dt))
-  uniquifying <- dt[, idx, drop = FALSE]
+  idx <- which(groups %in% colnames(tbl))
+  uniquifying <- tbl[, idx, drop = FALSE]
   uniquifying <- unique(uniquifying)
 
-  out <- split(dt[, -idx], dt[, idx, drop = FALSE], sep = sep)
-  missing <- setdiff(flatten, colnames(dt))
+  out <- split(tbl[, -idx], tbl[, idx, drop = FALSE], sep = sep)
+  missing <- setdiff(wide_cols, colnames(tbl))
   if (length(missing) != 0L) {
-    warning(sprintf("missing listed flatten columns: '%s'", paste0(missing, collapse = ", ")))
+    warning(sprintf("missing listed wide_cols columns: '%s'", paste0(missing, collapse = ", ")))
   }
 
-  rename <- colnames(out[[1]]) %in% flatten 
+  rename <- colnames(out[[1]]) %in% wide_cols 
   for (grp in names(out)) {
     group <- out[[grp]]
     colnames(group)[rename] <- paste0(grp, sep, colnames(group)[rename])
