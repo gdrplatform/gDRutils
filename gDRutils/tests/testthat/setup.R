@@ -29,8 +29,8 @@ params_GR <- params
 params_GR$x_inf <- -0.4
 
 expected <- rbind(params, params_GR)
-rownames(expected) <- c("RV", "GR")
-expected_dims <- c(2, 14)
+rownames(expected) <- c("RV_gDR", "GR_gDR")
+expected_dims <- c(2, 16)
 
 conc <- 10 ^ (seq(-3, 1, 0.5))
 
