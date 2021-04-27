@@ -22,7 +22,7 @@ convert_se_assay_to_dt <- function(se,
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::test_string(assay_name)
+  checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
   
   validate_se_assay_name(se, assay_name)
@@ -60,6 +60,10 @@ convert_se_assay_to_dt <- function(se,
 #' @noRd
 #'
 .convert_se_assay_to_dt <- function(se, assay_name) {
+ 
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(assay_name)
+  
   object <- SummarizedExperiment::assays(se)[[assay_name]]
   checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
 
@@ -107,6 +111,11 @@ convert_se_assay_to_dt <- function(se,
 convert_se_ref_assay_to_dt <- function(se,
                                        ref_relative_viability_assay = "RefRelativeViability",
                                        ref_gr_value_assay = "RefGRvalue") {
+
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(ref_relative_viability_assay)
+  checkmate::assert_string(ref_gr_value_assay)
+
   rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
   colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
   rv$std_RelativeViability <- NA
@@ -162,6 +171,13 @@ convert_se_ref_assay_to_dt <- function(se,
 #' @export
 #'
 flatten_stacked_dt <- function(dt, columns, flatten, sep = "_") {
+
+
+  checkmate::assert_class(dt, "data.table")
+  checkmate::assert_character(columns)
+  checkmate::assert_character(flatten)
+  checkmate::assert_string(sep)
+
   if (!all(columns %in% colnames(dt))) {
     stop(sprintf("missing expected uniquifying columns: '%s'",
       paste0(setdiff(colnames(dt), columns), collapse = ", ")))
