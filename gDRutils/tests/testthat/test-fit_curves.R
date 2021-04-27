@@ -145,12 +145,12 @@ test_that("appropriate fit type is assigned for various use cases", {
 
 test_that("normalization_type can be specified", {
   GR_df_result <- fit_curves(df_resp, normalization_type = "GR")
-  expect_equal(rownames(GR_df_result), "GR")
-  expect_equal(.round_params(GR_df_result[, names(params)]), expected["GR", ], tolerance = 1e-5)
+  expect_equal(rownames(GR_df_result), "GR_gDR")
+  expect_equal(.round_params(GR_df_result[, names(params)]), expected["GR_gDR", ], tolerance = 1e-5)
 
   RV_df_result <- fit_curves(df_resp, normalization_type = "RV")
-  expect_equal(rownames(RV_df_result), "RV")
-  expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV", ], tolerance = 1e-5)
+  expect_equal(rownames(RV_df_result), "RV_gDR")
+  expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV_gDR", ], tolerance = 1e-5)
 })
 
 

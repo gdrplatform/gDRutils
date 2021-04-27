@@ -132,6 +132,7 @@ convert_se_ref_assay_to_dt <- function(se,
 #'
 #' Flatten a stacked data.table into a wide format.
 #'
+#' @param dt data.table to flatten.
 #' @param columns character vector of column names representing uniquifying groups in expansion.
 #' @param flatten character vector of column names to flatten.
 #' @param sep string representing separator between \code{flatten} columns, used in column renaming.

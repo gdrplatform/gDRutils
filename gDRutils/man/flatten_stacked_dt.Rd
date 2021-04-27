@@ -7,6 +7,8 @@
 flatten_stacked_dt(dt, columns, flatten, sep = "_")
 }
 \arguments{
+\item{dt}{data.table to flatten.}
+
 \item{columns}{character vector of column names representing uniquifying groups in expansion.}
 
 \item{flatten}{character vector of column names to flatten.}

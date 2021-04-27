@@ -61,9 +61,9 @@ test_that("flatten_stacked_dt works as expected", {
 
   columns <- colnames(grid)
   flatten <- c("wide")
-  flatten_stacked_dt(repgrid, columns = columns, flatten = flatten)
+  out <- flatten_stacked_dt(repgrid, columns = columns, flatten = flatten)
 
-  expect_equal(dim(out), c(m, n * length(flatten) + columns))
+  expect_equal(dim(out), c(m, n * length(flatten) + length(setdiff(colnames(repgrid), c(columns, flatten)))))
   expect_equal(colnames(out), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
 })
 
@@ -85,7 +85,7 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   obs <- assay_to_dt(se, "Metrics", merge_metrics = TRUE)
 
   expect_equal(nrow(obs), m)
-  expect_true(all(c(unname(get_header("RV_metrics"), unname(get_header("GR_metrics")))) %in% colnames(obs)))
+  expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs)))
 
   # Insert random column. 
   metrics2 <- metrics
@@ -100,21 +100,5 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   obs2 <- assay_to_dt(se2, "Metrics", merge_metrics = TRUE)
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
-  expect_true(all(c(unname(get_header("RV_metrics"), unname(get_header("GR_metrics")))) %in% colnames(obs2)))
-})
-
-
-test_that("assay_to_dt works as expected", {
-  # DataFrameMatrix.
-  SE <- readRDS(system.file(package = "gDRutils", "testdata", "exemplarySE.rds"))
-  normalized <- assay_to_dt(SE, "Normalized")
-  data.table::setcolorder(normalized, sort(names(normalized)))
-  data.table::setorder(normalized)
-  normalizedRef <- 
-    data.table::as.data.table(
-      readRDS(system.file(package = "gDRutils", "testdata", "normalizedExemplary.rds"))
-    )
-  data.table::setcolorder(normalizedRef, sort(names(normalizedRef)))
-  data.table::setorder(normalizedRef)
-  testthat::expect_equal(normalized, normalizedRef)
+  expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs2)))
 })
