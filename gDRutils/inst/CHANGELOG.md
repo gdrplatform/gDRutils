@@ -1,3 +1,6 @@
+# Changes to v.0.0.38
+- add support for flattening data.tables
+
 # Changes to v.0.0.37
 - add support for getting and setting processing info metadata
 
