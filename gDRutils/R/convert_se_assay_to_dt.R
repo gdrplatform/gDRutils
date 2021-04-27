@@ -24,7 +24,6 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::test_string(assay_name)
   checkmate::assert_flag(include_metadata)
-  checkmate::assert_character(sel_metric_type)	
   
   validate_se_assay_name(se, assay_name)
 
