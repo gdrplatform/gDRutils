@@ -30,7 +30,7 @@ validate_se_assay_name <- function(se, name) {
 #' @export
 #'
 #' @examples
-validate_se <- function(se) {
+validate_SE <- function(se) {
   checkmate::assert(
     checkmate::check_class(se, "SummarizedExperiment"),
     checkmate::check_set_equal(SummarizedExperiment::assayNames(se), c("RawTreated", "Controls", 
