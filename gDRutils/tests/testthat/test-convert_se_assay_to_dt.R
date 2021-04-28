@@ -50,6 +50,24 @@ test_that("convert_se_assay_to_dt works as expected", {
 })
 
 
+test_that("flatten works as expected", {
+  n <- 4
+  m <- 5
+  grid <- expand.grid(normalization_type = c("GR", "RV"),
+    source = c("GDS", "GDR"))
+  repgrid <- do.call("rbind", rep(list(grid), m))
+  repgrid$wide <- seq(m * n)
+  repgrid$id <- rep(LETTERS[1:m], each = n)
+
+  groups <- colnames(grid)
+  wide_cols <- c("wide")
+  out <- flatten(repgrid, groups = groups, wide_cols = wide_cols)
+
+  expect_equal(dim(out), c(m, n * length(wide_cols) + length(setdiff(colnames(repgrid), c(groups, wide_cols)))))
+  expect_equal(colnames(out), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
+})
+
+
 test_that("merge_metrics argument of assay_to_dt works as expected", {
   headers <- get_header("response_metrics")
   m <- 20
@@ -67,7 +85,7 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   obs <- assay_to_dt(se, "Metrics", merge_metrics = TRUE)
 
   expect_equal(nrow(obs), m)
-  expect_true(all(c(unname(get_header("RV_metrics"), unname(get_header("GR_metrics")))) %in% colnames(obs)))
+  expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs)))
 
   # Insert random column. 
   metrics2 <- metrics
@@ -82,21 +100,5 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   obs2 <- assay_to_dt(se2, "Metrics", merge_metrics = TRUE)
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
-  expect_true(all(c(unname(get_header("RV_metrics"), unname(get_header("GR_metrics")))) %in% colnames(obs2)))
-})
-
-
-test_that("assay_to_dt works as expected", {
-  # DataFrameMatrix.
-  SE <- readRDS(system.file(package = "gDRutils", "testdata", "exemplarySE.rds"))
-  normalized <- assay_to_dt(SE, "Normalized")
-  data.table::setcolorder(normalized, sort(names(normalized)))
-  data.table::setorder(normalized)
-  normalizedRef <- 
-    data.table::as.data.table(
-      readRDS(system.file(package = "gDRutils", "testdata", "normalizedExemplary.rds"))
-    )
-  data.table::setcolorder(normalizedRef, sort(names(normalizedRef)))
-  data.table::setorder(normalizedRef)
-  testthat::expect_equal(normalized, normalizedRef)
+  expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs2)))
 })

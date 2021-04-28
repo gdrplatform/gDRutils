@@ -1,5 +1,8 @@
-# Changes to v.0.0.39
+# Changes to v.0.0.40
 - add SE validator function
+
+# Changes to v.0.0.39
+- add support for flattening data.tables
 
 # Changes to v.0.0.38
 - switch from `processing_metadata` to `.internal`
