@@ -17,15 +17,15 @@
 #' @export
 #'
 convert_se_assay_to_dt <- function(se,
-                                   assay_name, 
+                                   assay_name,
                                    include_metadata = TRUE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::test_string(assay_name)
+  checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
-
-  is_valid_se_assay_name(se, assay_name)
+  
+  validate_se_assay_name(se, assay_name)
 
   dt <- .convert_se_assay_to_dt(se, assay_name)
 
@@ -54,6 +54,43 @@ convert_se_assay_to_dt <- function(se,
 }
 
 
+#' Convert assay data into data.table.
+#' @return data.table of assay data.
+#' @keywords internal
+#' @noRd
+#'
+.convert_se_assay_to_dt <- function(se, assay_name) {
+ 
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(assay_name)
+  
+  object <- SummarizedExperiment::assays(se)[[assay_name]]
+  checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
+
+  if (methods::is(object, "BumpyDataFrameMatrix")) {
+    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
+    # Retain nested rownames.
+    as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+
+  } else if (methods::is(object, "matrix")) {
+    first <- object[1, 1][[1]]
+    if (is.numeric(first)) {
+      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
+    } else {
+      stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
+    }
+    as_df
+  } else {
+    stop(sprintf("assay of class '%s' is not supported", class(object)))
+  }
+  data.table::as.data.table(as_df)
+}
+
+
+########################
+# Convenience functions
+########################
+
 #' Convert the reference values from a SummarizedExperiment assay to a long data.table
 #'
 #' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
@@ -74,6 +111,11 @@ convert_se_assay_to_dt <- function(se,
 convert_se_ref_assay_to_dt <- function(se,
                                        ref_relative_viability_assay = "RefRelativeViability",
                                        ref_gr_value_assay = "RefGRvalue") {
+
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(ref_relative_viability_assay)
+  checkmate::assert_string(ref_gr_value_assay)
+
   rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
   colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
   rv$std_RelativeViability <- NA
@@ -95,63 +137,66 @@ convert_se_ref_assay_to_dt <- function(se,
 }
 
 
-#' Convert assay data into data.table
-#' @return data.table with assay data
-#' @keywords internal
-#' @noRd
+#' Flatten a table
 #'
-.convert_se_assay_to_dt <- function(se, assay_name) {
-  object <- SummarizedExperiment::assays(se)[[assay_name]]
-  checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
+#' Flatten a stacked table into a wide format.
+#'
+#' @param tbl a table to flatten.
+#' @param groups character vector of column names representing uniquifying groups in expansion.
+#' @param wide_cols character vector of column names to flatten.
+#' @param sep string representing separator between \code{wide_cols} columns, used in column renaming.
+#' Defaults to \code{"_"}.
+#'
+#' @return table of flattened data as defined by \code{wide_cols}.
+#'
+#' @details flattened columns will be named with original column names prefixed by \code{wide_cols} columns,
+#' concatenated together and separated by \code{sep}.
+#'
+#' A common use case for this function is when a flattened version of the \code{"Metrics"} assay is desired.
+#'
+#' @examples
+#'  n <- 4
+#'  m <- 5
+#'  grid <- expand.grid(normalization_type = c("GR", "RV"),
+#'    source = c("GDS", "GDR"))
+#'  repgrid <- do.call("rbind", rep(list(grid), m))
+#'  repgrid$wide <- seq(m * n)
+#'  repgrid$id <- rep(LETTERS[1:m], each = n)
+#'
+#'  groups <- colnames(grid)
+#'  wide_cols <- c("wide")
+#'
+#'  flatten(repgrid, groups = groups, wide_cols = wide_cols)
+#'
+#' @export
+#'
+flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
-  if (methods::is(object, "BumpyDataFrameMatrix")) {
-    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
-    # Retain nested rownames.
-    as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+  checkmate::assert_character(groups)
+  checkmate::assert_character(wide_cols)
+  checkmate::assert_string(sep)
 
-  } else if (methods::is(object, "matrix")) {
-    first <- object[1, 1][[1]]
-    if (is.numeric(first)) {
-      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
-    } else if (methods::is(first, "DFrame") || methods::is(first, "data.frame")) {
+  if (!all(groups %in% colnames(tbl))) {
+    stop(sprintf("missing expected uniquifying groups: '%s'",
+      paste0(setdiff(colnames(tbl), groups), collapse = ", ")))
+  }	
+  
+  idx <- which(groups %in% colnames(tbl))
+  uniquifying <- tbl[, idx, drop = FALSE]
+  uniquifying <- unique(uniquifying)
 
-      # TODO: Deprecate me.
-      .Deprecated(msg = paste("support for nested DataFrames of class `matrix`",
-                              "will be deprecated in the next release cycle.",
-                              "See `BumpyDataFrameMatrix` instead"))
-      asL <-
-        lapply(seq_len(ncol(object)), function(x) {
-          myL <- object[, x, drop = FALSE]
-          names(myL) <- rownames(object)
-
-          # in some datasets there might be no data for given drug/cell_line combination
-          # under such circumstances DataFrame will be empty
-          # and should be filtered out
-          # example: testdata 7 - SummarizedExperiment::assay(seL[[7]],"Normalized")[5:8,1]
-          myL <- myL[vapply(myL, nrow, integer(1)) > 0]
-
-          myV <- vapply(myL, nrow, integer(1))
-          rCol <- rep(names(myV), as.numeric(myV))
-
-          # there might be DataFrames with different number of columns
-          # let's fill with NAs where necessary
-          if (length(unique(sapply(myL, ncol))) > 1) {
-            df <-
-              do.call(plyr::rbind.fill,
-                lapply(myL, data.table::as.data.table))
-          } else {
-            df <-
-              data.table::rbindlist(lapply(myL, data.table::as.data.table), fill = TRUE)
-          }
-          if (nrow(df) == 0)
-            return()
-          df$rId <- rCol
-          df$cId <- colnames(object)[x]
-          df
-        })
-      as_df <- data.table::rbindlist(asL)
-    }
-    as_df
+  out <- split(tbl[, -idx], tbl[, idx, drop = FALSE], sep = sep)
+  missing <- setdiff(wide_cols, colnames(tbl))
+  if (length(missing) != 0L) {
+    warning(sprintf("missing listed wide_cols columns: '%s'", paste0(missing, collapse = ", ")))
   }
-  data.table::as.data.table(as_df)
+
+  rename <- colnames(out[[1]]) %in% wide_cols 
+  for (grp in names(out)) {
+    group <- out[[grp]]
+    colnames(group)[rename] <- paste0(grp, sep, colnames(group)[rename])
+    out[[grp]] <- group
+  }
+
+  Reduce(merge, out)
 }
