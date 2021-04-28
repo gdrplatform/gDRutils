@@ -38,7 +38,7 @@ test_that("convert_se_assay_to_dt works as expected", {
   expect_equal(merged$r, merged$rId)
   expect_equal(merged$c, merged$cId)
 
-  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = TRUE)
+  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = TRUE, retain_nested_rownames = TRUE)
 
   # Properly handles nested rownames.
   expect_equal(rownames(dt), as.character(nested_rnames))

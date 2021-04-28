@@ -7,6 +7,10 @@
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
+#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames nested within a \code{BumpyMatrix} assay.
+#' Defaults to \code{FALSE}.
+#' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
+#' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
@@ -18,7 +22,8 @@
 #'
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
-                                   include_metadata = TRUE) {
+                                   include_metadata = TRUE,
+                                   retain_nested_rownames = FALSE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
@@ -27,7 +32,7 @@ convert_se_assay_to_dt <- function(se,
   
   validate_se_assay_name(se, assay_name)
 
-  dt <- .convert_se_assay_to_dt(se, assay_name)
+  dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
 
   if (nrow(dt) == 0L) {
     return(dt) # TODO: Should this return something else?
@@ -59,7 +64,7 @@ convert_se_assay_to_dt <- function(se,
 #' @keywords internal
 #' @noRd
 #'
-.convert_se_assay_to_dt <- function(se, assay_name) {
+.convert_se_assay_to_dt <- function(se, assay_name, retain_nested_rownames) {
  
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
@@ -70,7 +75,9 @@ convert_se_assay_to_dt <- function(se,
   if (methods::is(object, "BumpyDataFrameMatrix")) {
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
     # Retain nested rownames.
-    as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+    if (retain_nested_rownames) {
+      as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+    }
 
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
@@ -178,7 +185,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
   if (!all(groups %in% colnames(tbl))) {
     stop(sprintf("missing expected uniquifying groups: '%s'",
-      paste0(setdiff(colnames(tbl), groups), collapse = ", ")))
+      paste0(setdiff(groups, colnames(tbl)), collapse = ", ")))
   }	
   
   idx <- which(colnames(tbl) %in% groups)
