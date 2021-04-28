@@ -181,11 +181,11 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
       paste0(setdiff(colnames(tbl), groups), collapse = ", ")))
   }	
   
-  idx <- which(groups %in% colnames(tbl))
-  uniquifying <- tbl[, idx, drop = FALSE]
+  idx <- which(colnames(tbl) %in% groups)
+  uniquifying <- subset(tbl, select = idx)
   uniquifying <- unique(uniquifying)
 
-  out <- split(tbl[, -idx], tbl[, idx, drop = FALSE], sep = sep)
+  out <- split(subset(tbl, select = -idx), subset(tbl, select = idx), sep = sep)
   missing <- setdiff(wide_cols, colnames(tbl))
   if (length(missing) != 0L) {
     warning(sprintf("missing listed wide_cols columns: '%s'", paste0(missing, collapse = ", ")))
@@ -198,5 +198,5 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
     out[[grp]] <- group
   }
 
-  Reduce(merge, out)
+  Reduce(function(x, y) merge(x, y, by = intersect(names(x), names(y))), out)
 }

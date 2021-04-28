@@ -61,10 +61,18 @@ test_that("flatten works as expected", {
 
   groups <- colnames(grid)
   wide_cols <- c("wide")
+
+  # data.frame
   out <- flatten(repgrid, groups = groups, wide_cols = wide_cols)
 
   expect_equal(dim(out), c(m, n * length(wide_cols) + length(setdiff(colnames(repgrid), c(groups, wide_cols)))))
   expect_equal(colnames(out), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
+
+  # data.table
+  repgrid2 <- data.table::as.data.table(repgrid)
+  out2 <- flatten(repgrid2, groups = groups, wide_cols = wide_cols)
+  expect_equal(dim(out2), c(m, n * length(wide_cols) + length(setdiff(colnames(repgrid2), c(groups, wide_cols)))))
+  expect_equal(colnames(out2), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
 })
 
 
