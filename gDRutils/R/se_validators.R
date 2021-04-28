@@ -40,29 +40,12 @@ validate_se <- function(se) {
     checkmate::check_set_equal(names(S4Vectors::metadata(se)),
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
-                                 "fit_parameters", "drug_combinations", ".internals")),
+                                 "fit_parameters", 
+                                 #"drug_combinations",
+                                 ".internals")),
     checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(se, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
-    
-    combine = "and")
-  unsplittedBM <- BumpyMatrix::unsplitAsDataFrame(
-    SummarizedExperiment::assay(
-      se, "Normalized"))
-  colIdx <- seq_len(ncol(se))
-  colData <- as.data.frame(colData(se))
-  colNames <- paste0(apply(colData, 1, function(x) {
-    paste(x, collapse = "_")
-    }),"_", colIdx)
-  
-  rowIdx <- seq_len(nrow(se))
-  rowData <- as.data.frame(rowData(se))
-  rowNames <- lapply(rowData, function(x) x)
-  rowNames <- do.call(paste, c(rowNames, sep = "_"))
-  checkmate::assert(
-    checkmate::check_set_equal(colNames, unsplittedBM$column),
-    checkmate::check_set_equal(rowNames, gsub("(.*)(_[0-9]+)", "\\1", unsplittedBM$row)),
-    checkmate::check_character(rowData$Gnumber, any.missing = FALse, unique = TRUE),
-    checkmate::check_character(colData$clid, any.missing = FALse, unique = TRUE),
+    checkmate::check_true(identical(dimnames(se), dimnames(SummarizedExperiment::assay(se, "Normalized")))),
     combine = "and")
 }
 

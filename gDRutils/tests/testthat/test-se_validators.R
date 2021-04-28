@@ -20,18 +20,13 @@ test_that("validate_se works as expected", {
                                                            "Metrics" = BumpyMatrix::BumpyMatrix(x, c(10, 5))))
   
   expect_error(validate_se(se2))
-  S4Vectors::metadata(se2) <- list("experiment_metadata",
-                       "df_",
-                       "Keys", "df_raw_data",
-                       "fit_parameters",
-                       "drug_combinations",
-                       ".internals")
-  S4Vectors::metadata(se2) <- c("experiment_metadata",
-                           "df_",
-                           "Keys", "df_raw_data",
-                           "fit_parameters",
-                           "drug_combinations",
-                           ".internals")
+  S4Vectors::metadata(se2) <- vector(mode = "list", length = 7)
+  names(S4Vectors::metadata(se2)) <- c("experiment_metadata",
+                                       "df_",
+                                       "Keys", "df_raw_data",
+                                       "fit_parameters",
+                                       "drug_combinations",
+                                       ".internals")
   expect_error(validate_se(se2))
   # TODO: add real se example
 })
