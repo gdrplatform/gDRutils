@@ -33,7 +33,7 @@ validate_se_assay_name <- function(se, name) {
 validate_SE <- function(se) {
   checkmate::assert(
     checkmate::check_class(se, "SummarizedExperiment"),
-    checkmate::check_set_equal(SummarizedExperiment::assayNames(se), c("RawTreated", "Controls", 
+    checkmate::check_subset(SummarizedExperiment::assayNames(se), c("RawTreated", "Controls", 
                                                                        "Normalized", "RefGRvalue", 
                                                                        "RefRelativeViability", "DivisionTime", 
                                                                        "Averaged", "Metrics")),
