@@ -4,9 +4,9 @@ test_that("is_valid_se_assay_name works as expected", {
   expect_true(is.null(is_valid_se_assay_name(se, "orange")))
 })
 
-test_that("validate_SE works as expected", {
+test_that("validate_se works as expected", {
   se1 <- SummarizedExperiment::SummarizedExperiment(assays = list("orange" = matrix(1, 1, 1)))
-  expect_error(validate_SE(se1))
+  expect_error(validate_se(se1))
   x <- IRanges::NumericList(split(runif(1000), factor(sample(50, 1000, replace = TRUE), 1:50))) 
   se2 <- SummarizedExperiment::SummarizedExperiment(assays = 
                                                       list("RawTreated" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
@@ -19,7 +19,7 @@ test_that("validate_SE works as expected", {
                                                            "Averaged" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
                                                            "Metrics" = BumpyMatrix::BumpyMatrix(x, c(10, 5))))
   
-  expect_error(validate_SE(se2))
+  expect_error(validate_se(se2))
   S4Vectors::metadata(se2) <- list("experiment_metadata",
                        "df_",
                        "Keys", "df_raw_data",
@@ -32,6 +32,6 @@ test_that("validate_SE works as expected", {
                            "fit_parameters",
                            "drug_combinations",
                            ".internals")
-  expect_error(validate_SE(se2))
-  # TODO: add real SE example
+  expect_error(validate_se(se2))
+  # TODO: add real se example
 })
