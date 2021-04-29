@@ -183,8 +183,9 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   checkmate::assert_character(wide_cols)
   checkmate::assert_string(sep)
   checkmate::assert_true(
-    checkmate::assertDataFrame(tbl) ||
-      checkmate::assertDataTable(tbl)
+    is(tbl, "data.table") ||
+      is(tbl, "data.frame") ||
+        is(tbl, "DFrame")
   )
 
   if (!all(groups %in% colnames(tbl))) {
