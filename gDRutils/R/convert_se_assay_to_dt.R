@@ -242,7 +242,7 @@ friendly_names <- function(name_list, gDRviz_format = F) {
   for (normalization_type in c("GR","RV")) {
     metrics_names = get_header("metrics_names")[normalization_type,]
     for (n in metrics_names) {
-      idx <- grepl(paste0('^', normalization_type, "_"), new_names) & 
+      idx <- grepl(paste0("^", normalization_type, "_"), new_names) & 
         grepl(paste0("_",names(metrics_names[metrics_names==n]), "$"), new_names)
       new_names[idx] <- gsub(paste0("_",names(metrics_names[metrics_names==n]), "$"), 
                               paste0("_",n), new_names[idx])
@@ -284,15 +284,15 @@ friendly_names <- function(name_list, gDRviz_format = F) {
               "GR value", 
               "Relative Viability", 
               "_Mean Viability")
-    names(display_names) <- c(get_identifier('cellline_name'), # CellLineName
-              get_identifier('cellline_tissue'), # Tissue
-              get_identifier('cellline_subtype'), # subtype
-              get_identifier('cellline_parental_identifier'), # parental_identifier
-              get_identifier('drugname'), # DrugName
-              get_identifier('drug_moa'), # drug_moa
+    names(display_names) <- c(get_identifier("cellline_name"), # CellLineName
+              get_identifier("cellline_tissue"), # Tissue
+              get_identifier("cellline_subtype"), # subtype
+              get_identifier("cellline_parental_identifier"), # parental_identifier
+              get_identifier("drugname"), # DrugName
+              get_identifier("drug_moa"), # drug_moa
               "N_conc", 
               "maxlog10Concentration",
-              get_header("metrics_names")['RV','x_0'], # E_0
+              get_header("metrics_names")["RV","x_0"], # E_0
               "AOC_range", 
               "ReferenceDivisionTime", 
               "DivisionTime",
