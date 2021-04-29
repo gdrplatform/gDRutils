@@ -223,17 +223,23 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #'
 #' @param x a list of names.
 #' @param human_readable boolean indicating whether or not to return column names in human readable format.
+#' Defaults to \code{FALSE}.
 #' @param normalization_type a character with a specified normalization type.
+#' Defaults to \code{c("GR", "RV")}.
+#'
 #' @return character vector of prettified names.
 #'
 #' @details Rename names that are metrics in a table.
 #'
 #' A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
-#' #TODO: Intended to be used both at CL and UI.
+#' Mode \code{"human_readable = TRUE"} is often used in the context of front-end applications,
+#' whereas \code{"human_readable" = FALSE} is often used in the context of the command line.
 #'
 #' @export
 #'
-prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type = c("GR", "RV")) {
+prettify_flat_metrics <- function(x, 
+                                  human_readable = FALSE, 
+                                  normalization_type = c("GR", "RV")) {
 
   new_names <- x
   metrics_idx <- c(rep(FALSE, length(x)))
@@ -248,7 +254,7 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
     norm_pattern <- paste0("^", norm, "_")
     
     for (name in metrics_names) {
-      name_pattern <- paste0("_", names(metrics_names[metrics_name == name]), "$")
+      name_pattern <- paste0("_", names(metrics_names[metrics_names == name]), "$")
 
       idx <- grepl(norm_pattern, new_names) & grepl(name_pattern, new_names)
       new_names[idx] <- gsub(name_pattern, paste0("_", name), new_names[idx])
@@ -265,9 +271,7 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
   new_names <- gsub(gDR_pattern, "", new_names)
 
   if (human_readable) {
-
-    # Handle GDS data headers.
-    # Move the GDS source info to the end and add '(GDS)'.
+    # Move the GDS source info to the end as '(GDS)'.
     GDS <- "\\(.*?\\)\\(_?GDS_\\)\\(.*?\\)"
     new_names <- gsub(GDS, "\\1 \\3 (\\2)", new_names)
 
@@ -304,7 +308,7 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
               "RelativeViability",
               "_mean")
 
-    # TODO: I think this can just be a full vector matching.
+    # TODO: Replace with full vector matching.
     for (i in names(display_names)) {
       new_names <- gsub(paste0("^", i), display_names[i], new_names)
     }
@@ -321,5 +325,5 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
     new_names[replace] <- gsub("_", " ", new_names[replace])
   }
 
-  return(new_names)
+  new_names
 }

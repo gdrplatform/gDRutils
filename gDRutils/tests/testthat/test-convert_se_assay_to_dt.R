@@ -117,3 +117,26 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   expect_equal(metrics2[[extra_col]], extra_val)
   expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs2)))
 })
+
+
+test_that("prettify_flat_metrics works as expected", {
+  x <- c("CellLineName", 
+         "GR_gDR_x_mean", "GR_gDR_x_AOC_range", "GR_gDR_xc50", 
+         "RV_GDS_x_mean", 
+         "Concentration_2", "Gnumber_2", "Drug_3")
+
+  obs <- prettify_flat_metrics(x, human_readable = FALSE)
+  exp <- c("CellLineName", 
+           "GR_mean", "GR_AOC_range", "GR50", 
+           "GDR_RV_mean", 
+           "Concentration_2", "Gnumber_2", "Drug_3")
+  expect_equal(obs, exp)
+
+  # Human readable names work.
+  obs <- prettify_flat_metrics(x, human_readable = TRUE)
+  exp <- c("Cell line", 
+           "GR mean", "GR AOC range", "GR50", 
+           "GDS RV mean", 
+           "Concentration 2", "Gnumber 2", "Drug 3")
+  expect_equal(obs, exp)
+})
