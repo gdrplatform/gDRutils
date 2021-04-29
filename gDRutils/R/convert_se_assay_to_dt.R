@@ -223,7 +223,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #'
 #' @param x a list of names.
 #' @param human_readable boolean indicating whether or not to return column names in human readable format.
-#'
+#' @param normalization_type a character with a specified normalization type.
 #' @return character vector of prettified names.
 #'
 #' @details Rename names that are metrics in a table.
@@ -236,7 +236,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type = c("GR", "RV")) {
 
   new_names <- x
-  metrics_idx <- c(rep(FALSE, length(x))
+  metrics_idx <- c(rep(FALSE, length(x)))
 
   # convert the metric names into common name for variable
   for (norm in normalization_type) {
