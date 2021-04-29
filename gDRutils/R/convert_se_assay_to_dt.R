@@ -217,37 +217,34 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 }
 
 
-
-#' Pretify metric names in flat 'Metrics' assay
+#' Prettify metric names in flat 'Metrics' assay
 #'
-#' Return pretified names for flat 'Metrics' assay
+#' Map existing column names of a flattened 'Metrics' assay to prettified names.
 #'
-#' @param name_list a list of names.
-#' @param human_readable either \code{"variable"} (default) or \code{"gDRviz"}.
+#' @param x a list of names.
+#' @param human_readable boolean indicating whether or not to return column names in human readable format.
 #'
-#' @return table of data with updated column names.
+#' @return character vector of prettified names.
 #'
-#' @details Rename names that are  metrics in a table.
+#' @details Rename names that are metrics in a table.
 #'
 #' A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
 #'
-#'
 #' @export
 #'
-prettify_flat_metrics <- function(name_list, human_readable = FALSE) {
+prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type = c("GR", "RV")) {
 
-  new_names <- name_list
-  metrics_idx <- array(FALSE, length(name_list))
+  new_names <- x
+  metrics_idx <- c(rep(FALSE, length(x))
   # convert the metric names into common name for variable
-  for (normalization_type in c("GR","RV")) {
-    metrics_names = get_header("metrics_names")[normalization_type,]
-    for (n in metrics_names) {
-      idx <- grepl(paste0("^", normalization_type, "_"), new_names) & 
-        grepl(paste0("_",names(metrics_names[metrics_names==n]), "$"), new_names)
-      new_names[idx] <- gsub(paste0("_",names(metrics_names[metrics_names==n]), "$"), 
-                              paste0("_",n), new_names[idx])
-      new_names[idx] <- gsub(paste0("^", normalization_type, "_"), 
-                              "", new_names[idx])
+  for (norm in normalization_type) {
+    metrics_names <- get_header("metrics_names")[norm, ]
+    norm_pattern <- paste0("^", norm, "_")
+    for (name in metrics_names) {
+      name_pattern <- paste0("_", names(metrics_names[metrics_name == name]), "$")
+      idx <- grepl(norm_pattern, new_names) & grepl(name_pattern, new_names)
+      new_names[idx] <- gsub(name_pattern, paste0("_", name), new_names[idx])
+      new_names[idx] <- gsub(norm_pattern, "", new_names[idx])
       metrics_idx[idx] <- TRUE
     }
   }
@@ -256,10 +253,7 @@ prettify_flat_metrics <- function(name_list, human_readable = FALSE) {
   # scratch gDR as this is the default name
   new_names <- gsub("^gDR_", "", new_names)
 
-  
-
-  # convert into user friendly string for visualization
-  if (gDRviz_format) {
+  if (human_readable) {
 
     source_type_prefix <- sapply(strsplit(new_names, "_"), function(x) x[[1]][1])
     for (i in which(non_gDR_metrics_idx)) {
@@ -269,6 +263,7 @@ prettify_flat_metrics <- function(name_list, human_readable = FALSE) {
     }
 
     # rename hard coded metrics and variables
+    ## TODO: This looks like it also belongs in the headers.
     display_names <- c("Cell line", 
               "Primary Tissue", 
               "Subtype",
@@ -304,7 +299,7 @@ prettify_flat_metrics <- function(name_list, human_readable = FALSE) {
     }
 
     # replace underscore by space for the remaining metrics
-    new_names[metrics_idx] = gsub("_", " ", new_names[metrics_idx])
+    new_names[metrics_idx] <- gsub("_", " ", new_names[metrics_idx])
 
     # replace underscore by space for the Drug/Concentration for co-treatment
     for (i in 2:20) {
