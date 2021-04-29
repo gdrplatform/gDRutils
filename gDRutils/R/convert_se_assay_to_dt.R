@@ -269,14 +269,36 @@ friendly_names <- function(name_list, gDRviz_format = F) {
     }
 
     # rename hard coded metrics and variables
-    display_names <- c("Cell Line", "Drug", "Primary Tissue", "Drug MOA", "Subtype",
-              "E0", "AOC within set range", "Nbre of tested conc.", "Highest log10(conc.)",
-              "Reference cell division time", "cell division time",
-              "GR value", "Relative Viability", "_Mean Viability")
-    names(display_names) <- c("CellLineName", "DrugName", "Tissue", "drug_moa", "subtype",
-              "E_0", "AOC_range", "N_conc", "maxlog10Concentration",
-              "ReferenceDivisionTime", "DivisionTime",
-              "GRvalue", "RelativeViability", "_mean")
+    display_names <- c("Cell line", 
+              "Primary Tissue", 
+              "Subtype",
+              "Parental cell line",
+              "Drug", 
+              "Drug MOA", 
+              "Nbre of tested conc.", 
+              "Highest log10(conc.)",
+              "E0", 
+              "AOC within set range", 
+              "Reference cell division time", 
+              "cell division time",
+              "GR value", 
+              "Relative Viability", 
+              "_Mean Viability")
+    names(display_names) <- c(get_identifier('cellline_name'), # CellLineName
+              get_identifier('cellline_tissue'), # Tissue
+              get_identifier('cellline_subtype'), # subtype
+              get_identifier('cellline_parental_identifier'), # parental_identifier
+              get_identifier('drugname'), # DrugName
+              get_identifier('drug_moa'), # drug_moa
+              "N_conc", 
+              "maxlog10Concentration",
+              get_header("metrics_names")['RV','x_0'], # E_0
+              "AOC_range", 
+              "ReferenceDivisionTime", 
+              "DivisionTime",
+              "GRvalue",
+              "RelativeViability",
+              "_mean")
     for (i in names(display_names)) {
       new_names <- gsub(paste0("^", i), display_names[i], new_names)
     }
@@ -288,7 +310,7 @@ friendly_names <- function(name_list, gDRviz_format = F) {
     for (i in 2:20) {
       idx <- grepl(paste0("^Concentration_", i, "$"), new_names)
       new_names[idx] <- gsub("_", " ", new_names[idx])
-      idx <- grepl(paste0("^Gnumber_", i, "$"), new_names)
+      idx <- grepl(paste0("^", get_identifier("drug"), "_", i, "$"), new_names)
       new_names[idx] <- gsub("_", " ", new_names[idx])
       idx <- grepl(paste0("^Drug_", i, "$"), new_names)
       new_names[idx] <- gsub("_", " ", new_names[idx])
