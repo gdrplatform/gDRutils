@@ -202,3 +202,76 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   filtered <- out[lapply(out, nrow) > 0L]
   Reduce(function(x, y) merge(x, y, by = intersect(names(x), names(y))), filtered)
 }
+
+
+
+#' Return friendly names for metrics
+#'
+#' Return friendly names for metrics.
+#'
+#' @param name_list a list of names.
+#' @param format either \code{"variable"} (default) or \code{"gDRviz"}.
+#'
+#' @return table of data with updated column names.
+#'
+#' @details Rename names that are  metrics in a table.
+#'
+#' A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
+#'
+#'
+#' @export
+#'
+friendly_names <- function(name_list, gDRviz_format = F) {
+
+  new_names <- name_list
+  metrics_idx <- array(F, length(name_list))
+  # convert the metric names into common name for variable
+  for (normalization_type in c('GR','RV')) {
+    metrics_names = get_header("metrics_names")[normalization_type,]
+    for (n in metrics_names) {
+      idx = grepl(paste0('^', normalization_type, '_'), new_names) & 
+        grepl(paste0('_',names(metrics_names[metrics_names==n]), '$'), new_names)
+      new_names[idx] = gsub(paste0('_',names(metrics_names[metrics_names==n]), '$'), 
+                              paste0('_',n), new_names[idx])
+      new_names[idx] = gsub(paste0('^', normalization_type, '_'), 
+                              '', new_names[idx])
+      metrics_idx[idx] = T
+    }
+  }
+  # keep track of the non-gDR metrics
+  non_gDR_metrics_idx = metrics_idx & !grepl('^gDR_', new_names)
+  # scratch gDR as this is the default name
+  new_names = gsub('^gDR_', '', new_names)
+
+  
+
+  # convert into user friendly string for visualization
+  if (gDRviz_format) {
+
+    source_type_prefix = sapply(strsplit(new_names, '_'), function(x) x[[1]][1])
+    for (i in which(non_gDR_metrics_idx)) {
+      # move the fit source at the end and add ( )
+      new_names[i] = paste0(gsub(paste0('^', source_type_prefix[i], '_'), '', new_names[i]),
+                      ' (', source_type_prefix[i], ')')
+    }
+
+    # rename hard coded metrics and variables
+    display_names <- c("Cell Line", "Drug", "Primary Tissue", "Drug MOA", "Subtype",
+              "E0", "AOC within set range", "Nbre of tested conc.", "Highest log10(conc.)",
+              "Reference cell division time", "cell division time",
+              "GR value", "Relative Viability", "_Mean Viability")
+    names(display_names) <- c("CellLineName", "DrugName", "Tissue", "drug_moa", "subtype",
+              "E_0", "AOC_range", "N_conc", "maxlog10Concentration",
+              "ReferenceDivisionTime", "DivisionTime",
+              "GRvalue", "RelativeViability", "_mean")
+    for (i in names(display_names)) {
+      new_names = gsub(paste0('^', i), display_names[i], new_names)
+    }
+
+    # replace underscore by space for the remaining metrics
+    new_names[metrics_idx] = gsub('_', ' ', new_names[metrics_idx])
+
+  }
+
+  return(new_names)
+}
