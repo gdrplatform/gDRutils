@@ -239,33 +239,33 @@ friendly_names <- function(name_list, gDRviz_format = F) {
   new_names <- name_list
   metrics_idx <- array(F, length(name_list))
   # convert the metric names into common name for variable
-  for (normalization_type in c('GR','RV')) {
+  for (normalization_type in c("GR","RV")) {
     metrics_names = get_header("metrics_names")[normalization_type,]
     for (n in metrics_names) {
-      idx = grepl(paste0('^', normalization_type, '_'), new_names) & 
-        grepl(paste0('_',names(metrics_names[metrics_names==n]), '$'), new_names)
-      new_names[idx] = gsub(paste0('_',names(metrics_names[metrics_names==n]), '$'), 
-                              paste0('_',n), new_names[idx])
-      new_names[idx] = gsub(paste0('^', normalization_type, '_'), 
-                              '', new_names[idx])
-      metrics_idx[idx] = T
+      idx <- grepl(paste0('^', normalization_type, "_"), new_names) & 
+        grepl(paste0("_",names(metrics_names[metrics_names==n]), "$"), new_names)
+      new_names[idx] <- gsub(paste0("_",names(metrics_names[metrics_names==n]), "$"), 
+                              paste0("_",n), new_names[idx])
+      new_names[idx] <- gsub(paste0("^", normalization_type, "_"), 
+                              "", new_names[idx])
+      metrics_idx[idx] <- T
     }
   }
   # keep track of the non-gDR metrics
-  non_gDR_metrics_idx = metrics_idx & !grepl('^gDR_', new_names)
+  non_gDR_metrics_idx <- metrics_idx & !grepl("^gDR_", new_names)
   # scratch gDR as this is the default name
-  new_names = gsub('^gDR_', '', new_names)
+  new_names <- gsub("^gDR_", "", new_names)
 
   
 
   # convert into user friendly string for visualization
   if (gDRviz_format) {
 
-    source_type_prefix = sapply(strsplit(new_names, '_'), function(x) x[[1]][1])
+    source_type_prefix <- sapply(strsplit(new_names, "_"), function(x) x[[1]][1])
     for (i in which(non_gDR_metrics_idx)) {
       # move the fit source at the end and add ( )
-      new_names[i] = paste0(gsub(paste0('^', source_type_prefix[i], '_'), '', new_names[i]),
-                      ' (', source_type_prefix[i], ')')
+      new_names[i] <- paste0(gsub(paste0("^", source_type_prefix[i], "_"), "", new_names[i]),
+                      " (", source_type_prefix[i], ")")
     }
 
     # rename hard coded metrics and variables
@@ -278,25 +278,21 @@ friendly_names <- function(name_list, gDRviz_format = F) {
               "ReferenceDivisionTime", "DivisionTime",
               "GRvalue", "RelativeViability", "_mean")
     for (i in names(display_names)) {
-      new_names = gsub(paste0('^', i), display_names[i], new_names)
+      new_names <- gsub(paste0("^", i), display_names[i], new_names)
     }
 
     # replace underscore by space for the remaining metrics
-    new_names[metrics_idx] = gsub('_', ' ', new_names[metrics_idx])
+    new_names[metrics_idx] = gsub("_", " ", new_names[metrics_idx])
 
     # replace underscore by space for the Drug/Concentration for co-treatment
     for (i in 2:20) {
-      idx = grepl(paste0('^Concentration_', i, '$'), new_names)
-      new_names[idx] = gsub('_', ' ', new_names[idx])
-      idx = grepl(paste0('^Gnumber_', i, '$'), new_names)
-      new_names[idx] = gsub('_', ' ', new_names[idx])
-      idx = grepl(paste0('^Drug_', i, '$'), new_names)
-      new_names[idx] = gsub('_', ' ', new_names[idx])
+      idx <- grepl(paste0("^Concentration_", i, "$"), new_names)
+      new_names[idx] <- gsub("_", " ", new_names[idx])
+      idx <- grepl(paste0("^Gnumber_", i, "$"), new_names)
+      new_names[idx] <- gsub("_", " ", new_names[idx])
+      idx <- grepl(paste0("^Drug_", i, "$"), new_names)
+      new_names[idx] <- gsub("_", " ", new_names[idx])
     }
-    
-
-
   }
-
   return(new_names)
 }
