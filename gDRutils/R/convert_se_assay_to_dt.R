@@ -236,7 +236,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type = c("GR", "RV")) {
 
   new_names <- x
-  metrics_idx <- c(rep(FALSE, length(x))
+  metrics_idx <- c(rep(FALSE, length(x)))
 
   # convert the metric names into common name for variable
   for (norm in normalization_type) {
@@ -246,8 +246,10 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
     }
 
     norm_pattern <- paste0("^", norm, "_")
+    
     for (name in metrics_names) {
       name_pattern <- paste0("_", names(metrics_names[metrics_name == name]), "$")
+
       idx <- grepl(norm_pattern, new_names) & grepl(name_pattern, new_names)
       new_names[idx] <- gsub(name_pattern, paste0("_", name), new_names[idx])
       new_names[idx] <- gsub(norm_pattern, "", new_names[idx])
@@ -315,8 +317,8 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
     conc_cotrt <- paste0("^Concentration_", pattern, "$")
     drug_cotrt <- paste0("^", get_identifier("drug"), "_", pattern, "$|^Drug_", pattern, "$")
 
-    idx <- grepl(paste0(conc_cotrt, "|", drug_cotrt), new_names)
-    new_names[idx] <- gsub("_", " ", new_names[idx])
+    replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), new_names)
+    new_names[replace] <- gsub("_", " ", new_names[replace])
   }
 
   return(new_names)
