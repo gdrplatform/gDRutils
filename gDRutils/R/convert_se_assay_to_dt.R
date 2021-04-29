@@ -300,7 +300,7 @@ prettify_flat_metrics <- function(x,
               get_identifier("drug_moa"), # drug_moa
               "N_conc", 
               "maxlog10Concentration",
-              get_header("metrics_names")["RV","x_0"], # E_0
+              get_header("metrics_names")["RV", "x_0"], # E_0
               "AOC_range", 
               "ReferenceDivisionTime", 
               "DivisionTime",
