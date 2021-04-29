@@ -271,6 +271,18 @@ friendly_names <- function(name_list, gDRviz_format = F) {
     # replace underscore by space for the remaining metrics
     new_names[metrics_idx] = gsub('_', ' ', new_names[metrics_idx])
 
+    # replace underscore by space for the Drug/Concentration for co-treatment
+    for (i in 2:20) {
+      idx = grepl(paste0('^Concentration_', i, '$'), new_names)
+      new_names[idx] = gsub('_', ' ', new_names[idx])
+      idx = grepl(paste0('^Gnumber_', i, '$'), new_names)
+      new_names[idx] = gsub('_', ' ', new_names[idx])
+      idx = grepl(paste0('^Drug_', i, '$'), new_names)
+      new_names[idx] = gsub('_', ' ', new_names[idx])
+    }
+    
+
+
   }
 
   return(new_names)
