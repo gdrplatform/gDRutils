@@ -20,7 +20,8 @@ convert_se_assay_to_dt(
 and \code{colData(se)} in the returned data.table.
 Defaults to \code{TRUE}.}
 
-\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames nested within a \code{BumpyMatrix} assay.
+\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames 
+nested within a \code{BumpyMatrix} assay.
 Defaults to \code{FALSE}.
 If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.}
