@@ -221,7 +221,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #'
 #' Map existing column names of a flattened 'Metrics' assay to prettified names.
 #'
-#' @param x a list of names.
+#' @param x character vector of names to prettify.
 #' @param human_readable boolean indicating whether or not to return column names in human readable format.
 #' Defaults to \code{FALSE}.
 #' @param normalization_type a character with a specified normalization type.
@@ -229,11 +229,10 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #'
 #' @return character vector of prettified names.
 #'
-#' @details Rename names that are metrics in a table.
-#'
-#' A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
-#' Mode \code{"human_readable = TRUE"} is often used in the context of front-end applications,
-#' whereas \code{"human_readable" = FALSE} is often used in the context of the command line.
+#' @details 
+#' A common use case for this function is to prettify column names from a flattened version of the \code{"Metrics"} assay.
+#' Mode \code{"human_readable = TRUE"} is often used for prettification in the context of front-end applications,
+#' whereas \code{"human_readable" = FALSE} is often used for prettification in the context of the command line.
 #'
 #' @export
 #'
@@ -244,7 +243,6 @@ prettify_flat_metrics <- function(x,
   new_names <- x
   metrics_idx <- c(rep(FALSE, length(x)))
 
-  # convert the metric names into common name for variable
   for (norm in normalization_type) {
     metrics_names <- get_header("metrics_names")[norm, ]
     if (length(metrics_names) == 0L) {
@@ -263,19 +261,15 @@ prettify_flat_metrics <- function(x,
     }
   }
 
-  # keep track of the non-gDR metrics
-  gDR_pattern <- "^gDR_"
-  non_gDR_metrics_idx <- metrics_idx & !grepl(gDR_pattern, new_names)
-
   # gDR is the default name.
+  gDR_pattern <- "gDR_"
   new_names <- gsub(gDR_pattern, "", new_names)
 
   if (human_readable) {
     # Move the GDS source info to the end as '(GDS)'.
-    GDS <- "\\(.*?\\)\\(_?GDS_\\)\\(.*?\\)"
+    GDS <- "\\(.*?\\)\\(GDS_\\)\\(.*?\\)"
     new_names <- gsub(GDS, "\\1 \\3 (\\2)", new_names)
 
-    # rename hard coded metrics and variables
     ## TODO: This looks like it also belongs in the headers.
     display_names <- c("Cell line", 
               "Primary Tissue", 
