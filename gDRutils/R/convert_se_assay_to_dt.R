@@ -182,6 +182,10 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   checkmate::assert_character(groups)
   checkmate::assert_character(wide_cols)
   checkmate::assert_string(sep)
+  checkmate::assert_true(
+    checkmate::assertDataFrame(tbl) ||
+      checkmate::assertDataTable(tbl)
+  )
 
   if (!all(groups %in% colnames(tbl))) {
     stop(sprintf("missing expected uniquifying groups: '%s'",
