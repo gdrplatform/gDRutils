@@ -229,6 +229,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #' @details Rename names that are metrics in a table.
 #'
 #' A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
+#' #TODO: Intended to be used both at CL and UI.
 #'
 #' @export
 #'
@@ -236,9 +237,14 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
 
   new_names <- x
   metrics_idx <- c(rep(FALSE, length(x))
+
   # convert the metric names into common name for variable
   for (norm in normalization_type) {
     metrics_names <- get_header("metrics_names")[norm, ]
+    if (length(metrics_names) == 0L) {
+      stop(sprintf("missing normalization type: '%s' from header: 'metrics_names'", norm))
+    }
+
     norm_pattern <- paste0("^", norm, "_")
     for (name in metrics_names) {
       name_pattern <- paste0("_", names(metrics_names[metrics_name == name]), "$")
@@ -248,19 +254,20 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
       metrics_idx[idx] <- TRUE
     }
   }
+
   # keep track of the non-gDR metrics
-  non_gDR_metrics_idx <- metrics_idx & !grepl("^gDR_", new_names)
-  # scratch gDR as this is the default name
-  new_names <- gsub("^gDR_", "", new_names)
+  gDR_pattern <- "^gDR_"
+  non_gDR_metrics_idx <- metrics_idx & !grepl(gDR_pattern, new_names)
+
+  # gDR is the default name.
+  new_names <- gsub(gDR_pattern, "", new_names)
 
   if (human_readable) {
 
-    source_type_prefix <- sapply(strsplit(new_names, "_"), function(x) x[[1]][1])
-    for (i in which(non_gDR_metrics_idx)) {
-      # move the fit source at the end and add ( )
-      new_names[i] <- paste0(gsub(paste0("^", source_type_prefix[i], "_"), "", new_names[i]),
-                      " (", source_type_prefix[i], ")")
-    }
+    # Handle GDS data headers.
+    # Move the GDS source info to the end and add '(GDS)'.
+    GDS <- "\\(.*?\\)\\(_?GDS_\\)\\(.*?\\)"
+    new_names <- gsub(GDS, "\\1 \\3 (\\2)", new_names)
 
     # rename hard coded metrics and variables
     ## TODO: This looks like it also belongs in the headers.
@@ -294,6 +301,8 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
               "GRvalue",
               "RelativeViability",
               "_mean")
+
+    # TODO: I think this can just be a full vector matching.
     for (i in names(display_names)) {
       new_names <- gsub(paste0("^", i), display_names[i], new_names)
     }
@@ -301,15 +310,14 @@ prettify_flat_metrics <- function(x, human_readable = FALSE, normalization_type 
     # replace underscore by space for the remaining metrics
     new_names[metrics_idx] <- gsub("_", " ", new_names[metrics_idx])
 
-    # replace underscore by space for the Drug/Concentration for co-treatment
-    for (i in 2:20) {
-      idx <- grepl(paste0("^Concentration_", i, "$"), new_names)
-      new_names[idx] <- gsub("_", " ", new_names[idx])
-      idx <- grepl(paste0("^", get_identifier("drug"), "_", i, "$"), new_names)
-      new_names[idx] <- gsub("_", " ", new_names[idx])
-      idx <- grepl(paste0("^Drug_", i, "$"), new_names)
-      new_names[idx] <- gsub("_", " ", new_names[idx])
-    }
+    # Replace underscore by space for the Drug/Concentration for co-treatment.
+    pattern <- "[0-9]+"
+    conc_cotrt <- paste0("^Concentration_", pattern, "$")
+    drug_cotrt <- paste0("^", get_identifier("drug"), "_", pattern, "$|^Drug_", pattern, "$")
+
+    idx <- grepl(paste0(conc_cotrt, "|", drug_cotrt), new_names)
+    new_names[idx] <- gsub("_", " ", new_names[idx])
   }
+
   return(new_names)
 }
