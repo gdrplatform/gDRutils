@@ -1,3 +1,6 @@
+# Changes to v.0.0.42
+- add `friendly_names` function
+
 # Changes to v.0.0.41
 - bugfix flattening data.tables
 
