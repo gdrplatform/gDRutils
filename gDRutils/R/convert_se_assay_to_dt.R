@@ -218,16 +218,16 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
 
 
-#' Pretify metric names in flat 'Metrics' assay
+#' Prettify metric names in flat 'Metrics' assay
 #'
 #' Return pretified names for flat 'Metrics' assay
 #'
 #' @param name_list a list of names.
-#' @param human_readable either \code{"variable"} (default) or \code{"gDRviz"}.
+#' @param human_readable either \code{"FLASE"} (default) or \code{"TRUE"}.
 #'
-#' @return table of data with updated column names.
+#' @return a list of names.
 #'
-#' @details Rename names that are  metrics in a table.
+#' @details Return a list of names with pretty names that can be used as colnames (\code{human_readable == FALSE}) or for display (\code{human_readable == TRUE}).
 #'
 #' A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
 #'
@@ -259,7 +259,7 @@ prettify_flat_metrics <- function(name_list, human_readable = FALSE) {
   
 
   # convert into user friendly string for visualization
-  if (gDRviz_format) {
+  if (human_readable) {
 
     source_type_prefix <- sapply(strsplit(new_names, "_"), function(x) x[[1]][1])
     for (i in which(non_gDR_metrics_idx)) {
