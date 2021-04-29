@@ -13,9 +13,11 @@ prettify_flat_metrics(
 \arguments{
 \item{x}{a list of names.}
 
-\item{human_readable}{boolean indicating whether or not to return column names in human readable format.}
+\item{human_readable}{boolean indicating whether or not to return column names in human readable format.
+Defaults to \code{FALSE}.}
 
-\item{normalization_type}{a character with a specified normalization type.}
+\item{normalization_type}{a character with a specified normalization type.
+Defaults to \code{c("GR", "RV")}.}
 }
 \value{
 character vector of prettified names.
@@ -27,5 +29,6 @@ Map existing column names of a flattened 'Metrics' assay to prettified names.
 Rename names that are metrics in a table.
 
 A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
-#TODO: Intended to be used both at CL and UI.
+Mode \code{"human_readable = TRUE"} is often used in the context of front-end applications,
+whereas \code{"human_readable" = FALSE} is often used in the context of the command line.
 }
