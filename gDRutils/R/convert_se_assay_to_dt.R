@@ -218,12 +218,12 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
 
 
-#' Return friendly names for metrics
+#' Pretify metric names in flat 'Metrics' assay
 #'
-#' Return friendly names for metrics.
+#' Return pretified names for flat 'Metrics' assay
 #'
 #' @param name_list a list of names.
-#' @param format either \code{"variable"} (default) or \code{"gDRviz"}.
+#' @param human_readable either \code{"variable"} (default) or \code{"gDRviz"}.
 #'
 #' @return table of data with updated column names.
 #'
@@ -234,10 +234,10 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #'
 #' @export
 #'
-friendly_names <- function(name_list, gDRviz_format = F) {
+prettify_flat_metrics <- function(name_list, human_readable = FALSE) {
 
   new_names <- name_list
-  metrics_idx <- array(F, length(name_list))
+  metrics_idx <- array(FALSE, length(name_list))
   # convert the metric names into common name for variable
   for (normalization_type in c("GR","RV")) {
     metrics_names = get_header("metrics_names")[normalization_type,]
@@ -248,7 +248,7 @@ friendly_names <- function(name_list, gDRviz_format = F) {
                               paste0("_",n), new_names[idx])
       new_names[idx] <- gsub(paste0("^", normalization_type, "_"), 
                               "", new_names[idx])
-      metrics_idx[idx] <- T
+      metrics_idx[idx] <- TRUE
     }
   }
   # keep track of the non-gDR metrics
