@@ -2,23 +2,30 @@
 % Please edit documentation in R/convert_se_assay_to_dt.R
 \name{prettify_flat_metrics}
 \alias{prettify_flat_metrics}
-\title{Pretify metric names in flat 'Metrics' assay}
+\title{Prettify metric names in flat 'Metrics' assay}
 \usage{
-prettify_flat_metrics(name_list, human_readable = FALSE)
+prettify_flat_metrics(
+  x,
+  human_readable = FALSE,
+  normalization_type = c("GR", "RV")
+)
 }
 \arguments{
-\item{name_list}{a list of names.}
+\item{x}{a list of names.}
 
-\item{human_readable}{either \code{"variable"} (default) or \code{"gDRviz"}.}
+\item{human_readable}{boolean indicating whether or not to return column names in human readable format.}
+
+\item{normalization_type}{a character with a specified normalization type.}
 }
 \value{
-table of data with updated column names.
+character vector of prettified names.
 }
 \description{
-Return pretified names for flat 'Metrics' assay
+Map existing column names of a flattened 'Metrics' assay to prettified names.
 }
 \details{
-Rename names that are  metrics in a table.
+Rename names that are metrics in a table.
 
 A common use case for this function is to convert column names from a flattened version of the \code{"Metrics"} assay.
+#TODO: Intended to be used both at CL and UI.
 }

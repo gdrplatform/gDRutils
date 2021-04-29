@@ -223,7 +223,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #'
 #' @param x a list of names.
 #' @param human_readable boolean indicating whether or not to return column names in human readable format.
-#'
+#' @param normalization_type a character with a specified normalization type.
 #' @return character vector of prettified names.
 #'
 #' @details Rename names that are metrics in a table.
