@@ -129,7 +129,7 @@ test_that("prettify_flat_metrics works as expected", {
   obs <- prettify_flat_metrics(x, human_readable = FALSE)
   exp <- c("CellLineName", 
            "GR_mean", "GR50", 
-           "GDR_RV_mean", 
+           "GDS_RV_mean", 
            "Concentration_2", "Gnumber_2", "Drug_3",
            "E_0", "GR_AOC_range")
   expect_equal(obs, exp)
@@ -138,7 +138,7 @@ test_that("prettify_flat_metrics works as expected", {
   obs <- prettify_flat_metrics(x, human_readable = TRUE)
   exp <- c("Cell line", 
            "GR mean", "GR50", 
-           "GDR RV mean", 
+           "RV mean (GDS)", 
            "Concentration 2", "Gnumber 2", "Drug 3",
            "E0", "GR AOC within set range")
   expect_equal(obs, exp)
