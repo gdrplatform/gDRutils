@@ -1,3 +1,6 @@
+# Changes to v.0.0.43
+- remove `Metrics_rownames` during flattening data.frame/data.table
+
 # Changes to v.0.0.42
 - add `prettify_flat_metrics` function
 
