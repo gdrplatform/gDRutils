@@ -231,9 +231,11 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 #' @return character vector of prettified names.
 #'
 #' @details 
-#' A common use case for this function is to prettify column names from a flattened version of the \code{"Metrics"} assay.
-#' Mode \code{"human_readable = TRUE"} is often used for prettification in the context of front-end applications,
-#' whereas \code{"human_readable" = FALSE} is often used for prettification in the context of the command line.
+#' A common use case for this function is to prettify column names from a flattened version of 
+#' the \code{"Metrics"} assay.
+#' Mode \code{"human_readable = TRUE"} is often used for prettification in the context
+#' of front-end applications, whereas \code{"human_readable" = FALSE} is often used for 
+#' prettification in the context of the command line.
 #'
 #' @export
 #'
