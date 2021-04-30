@@ -1,3 +1,6 @@
+# Changes to v.0.0.42
+- add `prettify_flat_metrics` function
+
 # Changes to v.0.0.41
 - bugfix flattening data.tables
 
