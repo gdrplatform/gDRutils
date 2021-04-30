@@ -273,7 +273,7 @@ prettify_flat_metrics <- function(x,
     GDS <- "\\(.*?\\)\\(GDS_\\)\\(.*?\\)"
     new_names <- gsub(GDS, "\\1 \\3 (\\2)", new_names)
 
-    ## TODO: This looks like it also belongs in the headers.
+    ## TODO: This belongs in the headers.
     display_names <- c("Cell line", 
               "Primary Tissue", 
               "Subtype",
@@ -305,9 +305,8 @@ prettify_flat_metrics <- function(x,
               "RelativeViability",
               "_mean")
 
-    # TODO: Replace with full vector matching.
     for (i in names(display_names)) {
-      new_names <- gsub(paste0("^", i), display_names[i], new_names)
+      new_names <- gsub(i, display_names[i], new_names)
     }
 
     # replace underscore by space for the remaining metrics
