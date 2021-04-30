@@ -160,7 +160,8 @@ convert_se_ref_assay_to_dt <- function(se,
 #' @details flattened columns will be named with original column names prefixed by \code{wide_cols} columns,
 #' concatenated together and separated by \code{sep}.
 #'
-#' A common use case for this function is when a flattened version of the \code{"Metrics"} assay is desired.
+#' A common use case for this function is 
+#' when a flattened version of the \code{"Metrics"} assay is desired.
 #'
 #' @examples
 #'  n <- 4
