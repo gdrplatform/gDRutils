@@ -136,7 +136,7 @@ test_that("prettify_flat_metrics works as expected", {
   obs <- prettify_flat_metrics(x, human_readable = TRUE)
   exp <- c("Cell line", 
            "GR mean", "GR AOC range", "GR50", 
-           "GDS RV mean", 
+           "GDR RV mean", 
            "Concentration 2", "Gnumber 2", "Drug 3")
   expect_equal(obs, exp)
 })
