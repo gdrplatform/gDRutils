@@ -270,8 +270,8 @@ prettify_flat_metrics <- function(x,
 
   if (human_readable) {
     # Move the GDS source info to the end as '(GDS)'.
-    GDS <- "\\(.*?\\)\\(GDS_\\)\\(.*?\\)"
-    new_names <- gsub(GDS, "\\1 \\3 (\\2)", new_names)
+    GDS <- "(.*?)(GDS)_(.*?)"
+    new_names <- gsub(GDS, "\\1 \\3 \\(\\2\\)", new_names)
 
     ## TODO: This belongs in the headers.
     display_names <- c("Cell line", 
