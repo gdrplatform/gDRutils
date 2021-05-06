@@ -4,7 +4,12 @@
 \alias{convert_se_assay_to_dt}
 \title{Convert a SummarizedExperiment assay to a long data.table}
 \usage{
-convert_se_assay_to_dt(se, assay_name, include_metadata = TRUE)
+convert_se_assay_to_dt(
+  se,
+  assay_name,
+  include_metadata = TRUE,
+  retain_nested_rownames = FALSE
+)
 }
 \arguments{
 \item{se}{A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.}
@@ -14,6 +19,12 @@ convert_se_assay_to_dt(se, assay_name, include_metadata = TRUE)
 \item{include_metadata}{Boolean indicating whether or not to include \code{rowData(se)}
 and \code{colData(se)} in the returned data.table.
 Defaults to \code{TRUE}.}
+
+\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames 
+nested within a \code{BumpyMatrix} assay.
+Defaults to \code{FALSE}.
+If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
+If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.

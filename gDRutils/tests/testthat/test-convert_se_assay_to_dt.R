@@ -38,7 +38,7 @@ test_that("convert_se_assay_to_dt works as expected", {
   expect_equal(merged$r, merged$rId)
   expect_equal(merged$c, merged$cId)
 
-  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = TRUE)
+  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = TRUE, retain_nested_rownames = TRUE)
 
   # Properly handles nested rownames.
   expect_equal(rownames(dt), as.character(nested_rnames))
@@ -58,13 +58,28 @@ test_that("flatten works as expected", {
   repgrid <- do.call("rbind", rep(list(grid), m))
   repgrid$wide <- seq(m * n)
   repgrid$id <- rep(LETTERS[1:m], each = n)
+  repgrid$id2 <- rep(paste0(LETTERS[1:m], "2"), each = n)
+  repgrid$constant <- "constant"
 
   groups <- colnames(grid)
   wide_cols <- c("wide")
-  out <- flatten(repgrid, groups = groups, wide_cols = wide_cols)
 
+  # data.frame
+  out <- flatten(repgrid, groups = groups, wide_cols = wide_cols)
   expect_equal(dim(out), c(m, n * length(wide_cols) + length(setdiff(colnames(repgrid), c(groups, wide_cols)))))
-  expect_equal(colnames(out), c("id", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
+  expect_equal(colnames(out), c("id", "id2", "constant", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
+
+  # data.table
+  repgrid2 <- data.table::as.data.table(repgrid)
+  out2 <- flatten(repgrid2, groups = groups, wide_cols = wide_cols)
+  expect_equal(dim(out2), c(m, n * length(wide_cols) + length(setdiff(colnames(repgrid2), c(groups, wide_cols)))))
+  expect_equal(colnames(out2), c("id", "id2", "constant", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
+
+  # Remove one fit_source x normalization_type combination.
+  repgrid3 <- repgrid[!(repgrid$normalization_type == "GR" & repgrid$source == "GDS"), ]
+  out3 <- flatten(repgrid3, groups = groups, wide_cols = wide_cols)
+  expect_equal(dim(out3), c(m, (n - 1) * length(wide_cols) + length(setdiff(colnames(repgrid3), c(groups, wide_cols)))))
+  expect_equal(colnames(out3), c("id", "id2", "constant", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
 })
 
 
@@ -101,4 +116,30 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
   expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs2)))
+})
+
+
+test_that("prettify_flat_metrics works as expected", {
+  x <- c("CellLineName", 
+         "GR_gDR_x_mean", "GR_gDR_xc50", 
+         "RV_GDS_x_mean", 
+         "Concentration_2", "Gnumber_2", "Drug_3",
+         "E_0", "GR_gDR_x_AOC_range")
+
+  obs <- prettify_flat_metrics(x, human_readable = FALSE)
+  exp <- c("CellLineName", 
+           "GR_mean", "GR50", 
+           "GDS_RV_mean", 
+           "Concentration_2", "Gnumber_2", "Drug_3",
+           "E_0", "GR_AOC_range")
+  expect_equal(obs, exp)
+
+  # Human readable names work.
+  obs <- prettify_flat_metrics(x, human_readable = TRUE)
+  exp <- c("Cell line", 
+           "GR Mean Viability", "GR50", 
+           "RV Mean Viability (GDS)",
+           "Concentration 2", "Gnumber 2", "Drug 3",
+           "E0", "GR AOC within set range")
+  expect_equal(obs, exp)
 })

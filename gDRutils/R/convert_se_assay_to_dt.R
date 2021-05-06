@@ -7,6 +7,11 @@
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
+#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
+#' nested within a \code{BumpyMatrix} assay.
+#' Defaults to \code{FALSE}.
+#' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
+#' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
@@ -18,7 +23,8 @@
 #'
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
-                                   include_metadata = TRUE) {
+                                   include_metadata = TRUE,
+                                   retain_nested_rownames = FALSE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
@@ -27,7 +33,7 @@ convert_se_assay_to_dt <- function(se,
   
   validate_se_assay_name(se, assay_name)
 
-  dt <- .convert_se_assay_to_dt(se, assay_name)
+  dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
 
   if (nrow(dt) == 0L) {
     return(dt) # TODO: Should this return something else?
@@ -59,7 +65,7 @@ convert_se_assay_to_dt <- function(se,
 #' @keywords internal
 #' @noRd
 #'
-.convert_se_assay_to_dt <- function(se, assay_name) {
+.convert_se_assay_to_dt <- function(se, assay_name, retain_nested_rownames) {
  
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
@@ -70,7 +76,9 @@ convert_se_assay_to_dt <- function(se,
   if (methods::is(object, "BumpyDataFrameMatrix")) {
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
     # Retain nested rownames.
-    as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+    if (retain_nested_rownames) {
+      as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+    }
 
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
@@ -124,7 +132,7 @@ convert_se_ref_assay_to_dt <- function(se,
   colnames(gr)[colnames(gr) == ref_gr_value_assay] <- "GRvalue"
   gr$std_GRvalue <- NA
 
-  dt <- merge(rv, gr, all = TRUE)
+  dt <- merge(rv, gr, all = TRUE, by = intersect(names(rv), names(gr)))
 
   # Fill primary drug with 'untreated_tag'.
   dt$Concentration <- 0
@@ -152,7 +160,8 @@ convert_se_ref_assay_to_dt <- function(se,
 #' @details flattened columns will be named with original column names prefixed by \code{wide_cols} columns,
 #' concatenated together and separated by \code{sep}.
 #'
-#' A common use case for this function is when a flattened version of the \code{"Metrics"} assay is desired.
+#' A common use case for this function is 
+#' when a flattened version of the \code{"Metrics"} assay is desired.
 #'
 #' @examples
 #'  n <- 4
@@ -175,17 +184,22 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   checkmate::assert_character(groups)
   checkmate::assert_character(wide_cols)
   checkmate::assert_string(sep)
+  checkmate::assert_true(
+    is(tbl, "data.table") ||
+      is(tbl, "data.frame") ||
+        is(tbl, "DFrame")
+  )
 
   if (!all(groups %in% colnames(tbl))) {
     stop(sprintf("missing expected uniquifying groups: '%s'",
-      paste0(setdiff(colnames(tbl), groups), collapse = ", ")))
+      paste0(setdiff(groups, colnames(tbl)), collapse = ", ")))
   }	
   
-  idx <- which(groups %in% colnames(tbl))
-  uniquifying <- tbl[, idx, drop = FALSE]
+  idx <- which(colnames(tbl) %in% groups)
+  uniquifying <- subset(tbl, select = idx)
   uniquifying <- unique(uniquifying)
 
-  out <- split(tbl[, -idx], tbl[, idx, drop = FALSE], sep = sep)
+  out <- split(subset(tbl, select = -idx), subset(tbl, select = idx), sep = sep)
   missing <- setdiff(wide_cols, colnames(tbl))
   if (length(missing) != 0L) {
     warning(sprintf("missing listed wide_cols columns: '%s'", paste0(missing, collapse = ", ")))
@@ -198,5 +212,115 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
     out[[grp]] <- group
   }
 
-  Reduce(merge, out)
+  ## Drop empty elements for successful merge.
+  filtered <- out[lapply(out, nrow) > 0L]
+  droppedCol <- lapply(filtered, function(x) { x[["Metrics_rownames"]] <- NULL; x })
+  Reduce(function(x, y) merge(x, y, by = intersect(names(x), names(y))), droppedCol)
+}
+
+
+#' Prettify metric names in flat 'Metrics' assay
+#'
+#' Map existing column names of a flattened 'Metrics' assay to prettified names.
+#'
+#' @param x character vector of names to prettify.
+#' @param human_readable boolean indicating whether or not to return column names in human readable format.
+#' Defaults to \code{FALSE}.
+#' @param normalization_type a character with a specified normalization type.
+#' Defaults to \code{c("GR", "RV")}.
+#'
+#' @return character vector of prettified names.
+#'
+#' @details 
+#' A common use case for this function is to prettify column names from a flattened version of 
+#' the \code{"Metrics"} assay.
+#' Mode \code{"human_readable = TRUE"} is often used for prettification in the context
+#' of front-end applications, whereas \code{"human_readable" = FALSE} is often used for 
+#' prettification in the context of the command line.
+#'
+#' @export
+#'
+prettify_flat_metrics <- function(x, 
+                                  human_readable = FALSE, 
+                                  normalization_type = c("GR", "RV")) {
+
+  new_names <- x
+  metrics_idx <- c(rep(FALSE, length(x)))
+
+  for (norm in normalization_type) {
+    metrics_names <- get_header("metrics_names")[norm, ]
+    if (length(metrics_names) == 0L) {
+      stop(sprintf("missing normalization type: '%s' from header: 'metrics_names'", norm))
+    }
+
+    norm_pattern <- paste0("^", norm, "_")
+    
+    for (name in metrics_names) {
+      name_pattern <- paste0("_", names(metrics_names[metrics_names == name]), "$")
+
+      idx <- grepl(norm_pattern, new_names) & grepl(name_pattern, new_names)
+      new_names[idx] <- gsub(name_pattern, paste0("_", name), new_names[idx])
+      new_names[idx] <- gsub(norm_pattern, "", new_names[idx])
+      metrics_idx[idx] <- TRUE
+    }
+  }
+
+  # gDR is the default name.
+  gDR_pattern <- "gDR_"
+  new_names <- gsub(gDR_pattern, "", new_names)
+
+  if (human_readable) {
+    # Move the GDS source info to the end as '(GDS)'.
+    GDS <- "(GDS)(.*?)_(.*)"
+    new_names <- gsub(GDS, "\\2\\3 (\\1)", new_names)
+
+    ## TODO: This belongs in the headers.
+    display_names <- c("Cell line", 
+              "Primary Tissue", 
+              "Subtype",
+              "Parental cell line",
+              "Drug", 
+              "Drug MOA", 
+              "Nbre of tested conc.", 
+              "Highest log10(conc.)",
+              "E0", 
+              "AOC within set range", 
+              "Reference cell division time", 
+              "cell division time",
+              "GR value", 
+              "Relative Viability", 
+              "_Mean Viability")
+    names(display_names) <- c(get_identifier("cellline_name"), # CellLineName
+              get_identifier("cellline_tissue"), # Tissue
+              get_identifier("cellline_subtype"), # subtype
+              get_identifier("cellline_parental_identifier"), # parental_identifier
+              get_identifier("drugname"), # DrugName
+              get_identifier("drug_moa"), # drug_moa
+              "N_conc", 
+              "maxlog10Concentration",
+              get_header("metrics_names")["RV", "x_0"], # E_0
+              "AOC_range", 
+              "ReferenceDivisionTime", 
+              "DivisionTime",
+              "GRvalue",
+              "RelativeViability",
+              "_mean")
+
+    for (i in names(display_names)) {
+      new_names <- gsub(i, display_names[i], new_names)
+    }
+
+    # replace underscore by space for the remaining metrics
+    new_names[metrics_idx] <- gsub("_", " ", new_names[metrics_idx])
+
+    # Replace underscore by space for the Drug/Concentration for co-treatment.
+    pattern <- "[0-9]+"
+    conc_cotrt <- paste0("^Concentration_", pattern, "$")
+    drug_cotrt <- paste0("^", get_identifier("drug"), "_", pattern, "$|^Drug_", pattern, "$")
+
+    replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), new_names)
+    new_names[replace] <- gsub("_", " ", new_names[replace])
+  }
+
+  new_names
 }

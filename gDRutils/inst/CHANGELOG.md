@@ -1,5 +1,18 @@
-# Changes to v.0.0.40
+# Changes to v.0.0.44
 - add SE validator function
+
+# Changes to v.0.0.43
+- remove `Metrics_rownames` during flattening data.frame/data.table
+
+# Changes to v.0.0.42
+- add `prettify_flat_metrics` function
+
+# Changes to v.0.0.41
+- bugfix flattening data.tables
+
+# Changes to v.0.0.40
+- bugfix data.table merge in `convert_se_assay_ref_to_dt`
+>>>>>>> master
 
 # Changes to v.0.0.39
 - add support for flattening data.tables
