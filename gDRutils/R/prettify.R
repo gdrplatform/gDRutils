@@ -25,21 +25,18 @@ prettify_flat_metrics <- function(x,
 
   new_names <- .convert_norm_specific_metrics(x, normalization_type = normalization_type)
 
-  # gDR is the default name.
-  new_names <- gsub("gDR", "", new_names)
-
   if (human_readable) {
     new_names <- .prettify_GDS_columns(new_names)
     new_names <- .prettify_metadata_columns(new_names)
     new_names <- .prettify_metric_columns(new_names)
-
-    # replace underscore by space for the remaining metrics
-    new_names[is_metric] <- gsub("_", " ", new_names[is_metric])
-
     new_names <- .prettify_cotreatment_columns(new_names)
-  }
+    new_names <- gsub("_", " ", new_names)
+  } 
 
-  new_names
+  # gDR is the default name.
+  new_names <- gsub("gDR", "", new_names)
+  new_names <- gsub("^_+", "", new_names)
+  trimws(new_names)
 }
 
 
@@ -56,8 +53,9 @@ prettify_flat_metrics <- function(x,
 
     is_norm <- grepl(norm, x)
     for (name in names(metrics_names)) {
-      replace <- is_norm & grepl(norm, x)
-      x[replace] <- gsub(name, metrics_names[name], x[replace])
+      replace <- is_norm & grepl(name, x)
+      x[replace] <- gsub(norm, "", x[replace])
+      x[replace] <- gsub(name, metrics_names[[name]], x[replace])
     }
   }
   x
@@ -91,7 +89,7 @@ prettify_flat_metrics <- function(x,
                           "AOC_range" = "AOC within set range",
                           "GRvalue" = "GR value",
                           "RelativeViability" = "Relative Viability",
-                          "MeanViability" = "Mean Viability")
+                          "mean" = "Mean Viability")
 
   for (i in names(metric_patterns)) {
     cols <- gsub(i, metric_patterns[i], cols)
@@ -103,28 +101,35 @@ prettify_flat_metrics <- function(x,
 
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
+  # Exact replacements.
   metadata <- c("Cell line", 
-            "Primary Tissue", 
-            "Subtype",
-            "Parental cell line",
-            "Reference cell division time", 
-            "cell division time",
-            "Drug", 
-            "Drug MOA",
-            "Nbre of tested conc.", 
-            "Highest log10(conc.)")
+    "Primary Tissue", 
+    "Subtype",
+    "Parental cell line",
+    "Reference cell division time", 
+    "cell division time",
+    "Nbre of tested conc.", 
+    "Highest log10(conc.)")
 
   # TODO: Eventually, these identifiers can come from the SE object itself.
   names(metadata) <- c(get_identifier("cellline_name"), # CellLineName
-            get_identifier("cellline_tissue"), # Tissue
-            get_identifier("cellline_subtype"), # subtype
-            get_identifier("cellline_parental_identifier"), # parental_identifier
-            "ReferenceDivisionTime", 
-            "DivisionTime",
-            get_identifier("drugname"), # DrugName
-            get_identifier("drug_moa"), # drug_moa
-            "N_conc", 
-            "maxlog10Concentration")
-  cols[cols %in% names(metadata)] <- metadata[cols[cols %in% names(metadata)]]
+    get_identifier("cellline_tissue"), # Tissue
+    get_identifier("cellline_subtype"), # subtype
+    get_identifier("cellline_parental_identifier"), # parental_identifier
+    "ReferenceDivisionTime", 
+    "DivisionTime",
+    "N_conc", 
+    "maxlog10Concentration")
+
+  cols[cols %in% names(metadata)] <- unname(metadata[cols[cols %in% names(metadata)]])
+
+  # Pattern replacements.
+  multiples <- c(get_identifier("drugname"), get_identifier("drug_moa"))
+  names(multiples) <- c("Drug", "Drug MOA")
+
+  for (i in seq_len(length(multiples))) {
+    cols <- gsub(multiples[[i]], names(multiples)[[i]], cols)
+  }
+                        
   cols
 }

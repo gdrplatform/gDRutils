@@ -8,7 +8,7 @@ test_that("prettify_flat_metrics works as expected", {
   )
 
   obs <- prettify_flat_metrics(x, human_readable = FALSE)
-  exp <- c("CellLineName", "Primary Tissue",
+  exp <- c("CellLineName", "Tissue",
            "Primary Tissue",
            "GR_mean", "GR50", 
            "GDS_RV_mean", 
