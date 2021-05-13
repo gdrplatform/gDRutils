@@ -54,8 +54,7 @@ prettify_flat_metrics <- function(x,
       stop(sprintf("missing normalization type: '%s' from header: 'metrics_names'", norm))
     }
 
-    norm_pattern <- paste0("^", norm, "_")
-    is_norm <- grepl(norm_pattern, x)
+    is_norm <- grepl(norm, x)
     for (name in names(metrics_names)) {
       replace <- is_norm & grepl(norm, x)
       x[replace] <- gsub(name, metrics_names[name], x[replace])
@@ -69,19 +68,20 @@ prettify_flat_metrics <- function(x,
 .prettify_GDS_columns <- function(cols) {
   # Move the GDS source info to the end as '(GDS)'.
   GDS <- "(GDS)(.*?)_(.*)"
-  cols <- gsub(GDS, "\\2\\3 (\\1)", cols)
+  gsub(GDS, "\\2\\3 (\\1)", cols)
 }
 
 
 #' @keywords internal
 .prettify_cotreatment_columns <- function(cols) {
-    # Replace underscore by space for the Drug/Concentration for co-treatment.
-    pattern <- "[0-9]+"
-    conc_cotrt <- paste0("^Concentration_", pattern, "$")
-    drug_cotrt <- paste0("^", get_identifier("drug"), "_", pattern, "$|^Drug_", pattern, "$")
+  # Replace underscore by space for the Drug/Concentration for co-treatment.
+  pattern <- "[0-9]+"
+  conc_cotrt <- paste0("^Concentration_", pattern, "$")
+  drug_cotrt <- paste0("^", get_identifier("drug"), "_", pattern, "$|^Drug_", pattern, "$")
 
-    replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
-    cols[replace] <- gsub("_", " ", cols[replace])
+  replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
+  cols[replace] <- gsub("_", " ", cols[replace])
+  cols
 }
 
 
@@ -92,7 +92,6 @@ prettify_flat_metrics <- function(x,
                           "GRvalue" = "GR value",
                           "RelativeViability" = "Relative Viability",
                           "MeanViability" = "Mean Viability")
-  # TODO: Need to account for the '_' in '_MeanViability'
 
   for (i in names(metric_patterns)) {
     cols <- gsub(i, metric_patterns[i], cols)
