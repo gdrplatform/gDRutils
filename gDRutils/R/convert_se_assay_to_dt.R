@@ -95,56 +95,6 @@ convert_se_assay_to_dt <- function(se,
 }
 
 
-########################
-# Convenience functions
-########################
-
-#' Convert the reference values from a SummarizedExperiment assay to a long data.table
-#'
-#' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
-#' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
-#'
-#' @param se A \linkS4class{SummarizedExperiment} object holding reference data in its assays.
-#' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 
-#' holding the reference relative viability data.
-#' @param ref_gr_value_assay String of the name of the assay in the \code{se} holding the reference GR value data.
-#'
-#' @return data.table representation of the reference data.
-#'
-#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
-#' assay data.
-#'
-#' @export
-#'
-convert_se_ref_assay_to_dt <- function(se,
-                                       ref_relative_viability_assay = "RefRelativeViability",
-                                       ref_gr_value_assay = "RefGRvalue") {
-
-  checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assert_string(ref_relative_viability_assay)
-  checkmate::assert_string(ref_gr_value_assay)
-
-  rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
-  colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
-  rv$std_RelativeViability <- NA
-
-  gr <- convert_se_assay_to_dt(se, ref_gr_value_assay)
-  colnames(gr)[colnames(gr) == ref_gr_value_assay] <- "GRvalue"
-  gr$std_GRvalue <- NA
-
-  dt <- merge(rv, gr, all = TRUE, by = intersect(names(rv), names(gr)))
-
-  # Fill primary drug with 'untreated_tag'.
-  dt$Concentration <- 0
-  untreated <- get_SE_identifiers(se, "untreated_tag")[1]
-  dt[, get_SE_identifiers(se, "drug")] <- untreated
-  dt[, get_SE_identifiers(se, "drugname")] <- untreated
-  dt[, get_SE_identifiers(se, "drug_moa")] <- untreated
-
-  data.table::as.data.table(dt)
-}
-
-
 #' Flatten a table
 #'
 #' Flatten a stacked table into a wide format.
@@ -219,108 +169,51 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 }
 
 
-#' Prettify metric names in flat 'Metrics' assay
+########################
+# Convenience functions
+########################
+
+#' Convert the reference values from a SummarizedExperiment assay to a long data.table
 #'
-#' Map existing column names of a flattened 'Metrics' assay to prettified names.
+#' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
+#' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
 #'
-#' @param x character vector of names to prettify.
-#' @param human_readable boolean indicating whether or not to return column names in human readable format.
-#' Defaults to \code{FALSE}.
-#' @param normalization_type a character with a specified normalization type.
-#' Defaults to \code{c("GR", "RV")}.
+#' @param se A \linkS4class{SummarizedExperiment} object holding reference data in its assays.
+#' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 
+#' holding the reference relative viability data.
+#' @param ref_gr_value_assay String of the name of the assay in the \code{se} holding the reference GR value data.
 #'
-#' @return character vector of prettified names.
+#' @return data.table representation of the reference data.
 #'
-#' @details 
-#' A common use case for this function is to prettify column names from a flattened version of 
-#' the \code{"Metrics"} assay.
-#' Mode \code{"human_readable = TRUE"} is often used for prettification in the context
-#' of front-end applications, whereas \code{"human_readable" = FALSE} is often used for 
-#' prettification in the context of the command line.
+#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
+#' assay data.
 #'
 #' @export
 #'
-prettify_flat_metrics <- function(x, 
-                                  human_readable = FALSE, 
-                                  normalization_type = c("GR", "RV")) {
+convert_se_ref_assay_to_dt <- function(se,
+                                       ref_relative_viability_assay = "RefRelativeViability",
+                                       ref_gr_value_assay = "RefGRvalue") {
 
-  new_names <- x
-  metrics_idx <- c(rep(FALSE, length(x)))
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(ref_relative_viability_assay)
+  checkmate::assert_string(ref_gr_value_assay)
 
-  for (norm in normalization_type) {
-    metrics_names <- get_header("metrics_names")[norm, ]
-    if (length(metrics_names) == 0L) {
-      stop(sprintf("missing normalization type: '%s' from header: 'metrics_names'", norm))
-    }
+  rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
+  colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
+  rv$std_RelativeViability <- NA
 
-    norm_pattern <- paste0("^", norm, "_")
-    
-    for (name in metrics_names) {
-      name_pattern <- paste0("_", names(metrics_names[metrics_names == name]), "$")
+  gr <- convert_se_assay_to_dt(se, ref_gr_value_assay)
+  colnames(gr)[colnames(gr) == ref_gr_value_assay] <- "GRvalue"
+  gr$std_GRvalue <- NA
 
-      idx <- grepl(norm_pattern, new_names) & grepl(name_pattern, new_names)
-      new_names[idx] <- gsub(name_pattern, paste0("_", name), new_names[idx])
-      new_names[idx] <- gsub(norm_pattern, "", new_names[idx])
-      metrics_idx[idx] <- TRUE
-    }
-  }
+  dt <- merge(rv, gr, all = TRUE, by = intersect(names(rv), names(gr)))
 
-  # gDR is the default name.
-  gDR_pattern <- "gDR_"
-  new_names <- gsub(gDR_pattern, "", new_names)
+  # Fill primary drug with 'untreated_tag'.
+  dt$Concentration <- 0
+  untreated <- get_SE_identifiers(se, "untreated_tag")[1]
+  dt[, get_SE_identifiers(se, "drug")] <- untreated
+  dt[, get_SE_identifiers(se, "drugname")] <- untreated
+  dt[, get_SE_identifiers(se, "drug_moa")] <- untreated
 
-  if (human_readable) {
-    # Move the GDS source info to the end as '(GDS)'.
-    GDS <- "(GDS)(.*?)_(.*)"
-    new_names <- gsub(GDS, "\\2\\3 (\\1)", new_names)
-
-    ## TODO: This belongs in the headers.
-    display_names <- c("Cell line", 
-              "Primary Tissue", 
-              "Subtype",
-              "Parental cell line",
-              "Drug", 
-              "Drug MOA", 
-              "Nbre of tested conc.", 
-              "Highest log10(conc.)",
-              "E0", 
-              "AOC within set range", 
-              "Reference cell division time", 
-              "cell division time",
-              "GR value", 
-              "Relative Viability", 
-              "_Mean Viability")
-    names(display_names) <- c(get_identifier("cellline_name"), # CellLineName
-              get_identifier("cellline_tissue"), # Tissue
-              get_identifier("cellline_subtype"), # subtype
-              get_identifier("cellline_parental_identifier"), # parental_identifier
-              get_identifier("drugname"), # DrugName
-              get_identifier("drug_moa"), # drug_moa
-              "N_conc", 
-              "maxlog10Concentration",
-              get_header("metrics_names")["RV", "x_0"], # E_0
-              "AOC_range", 
-              "ReferenceDivisionTime", 
-              "DivisionTime",
-              "GRvalue",
-              "RelativeViability",
-              "_mean")
-
-    for (i in names(display_names)) {
-      new_names <- gsub(i, display_names[i], new_names)
-    }
-
-    # replace underscore by space for the remaining metrics
-    new_names[metrics_idx] <- gsub("_", " ", new_names[metrics_idx])
-
-    # Replace underscore by space for the Drug/Concentration for co-treatment.
-    pattern <- "[0-9]+"
-    conc_cotrt <- paste0("^Concentration_", pattern, "$")
-    drug_cotrt <- paste0("^", get_identifier("drug"), "_", pattern, "$|^Drug_", pattern, "$")
-
-    replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), new_names)
-    new_names[replace] <- gsub("_", " ", new_names[replace])
-  }
-
-  new_names
+  data.table::as.data.table(dt)
 }
