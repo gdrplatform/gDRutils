@@ -46,6 +46,8 @@ validate_SE <- function(se) {
     checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(se, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
     checkmate::check_true(identical(dimnames(se), dimnames(SummarizedExperiment::assay(se, "Normalized")))),
+    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(se)), rowData(se)$Gnumber)),
+    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(SE)), colData(SE)$clid)),
     combine = "and")
 }
 

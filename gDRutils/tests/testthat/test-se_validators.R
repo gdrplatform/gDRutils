@@ -28,5 +28,5 @@ test_that("validate_se works as expected", {
                                        "drug_combinations",
                                        ".internals")
   expect_error(validate_SE(se2))
-  # TODO: add real se example
+  
 })
