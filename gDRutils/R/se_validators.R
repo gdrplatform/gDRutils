@@ -30,24 +30,30 @@ validate_se_assay_name <- function(se, name) {
 #' @export
 #'
 #' @examples
-validate_SE <- function(se) {
+validate_SE <- function(SE) {
   checkmate::assert(
-    checkmate::check_class(se, "SummarizedExperiment"),
-    checkmate::check_subset(SummarizedExperiment::assayNames(se), c("RawTreated", "Controls", 
+    checkmate::check_class(SE, "SummarizedExperiment"),
+    checkmate::check_subset(SummarizedExperiment::assayNames(SE), c("RawTreated", "Controls", 
                                                                        "Normalized", "RefGRvalue", 
                                                                        "RefRelativeViability", "DivisionTime", 
                                                                        "Averaged", "Metrics")),
-    checkmate::check_set_equal(names(S4Vectors::metadata(se)),
+    checkmate::check_set_equal(names(S4Vectors::metadata(SE)),
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
                                  "fit_parameters", 
                                  #"drug_combinations",
                                  ".internals")),
-    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(se, "Metrics")),
+    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
-    checkmate::check_true(identical(dimnames(se), dimnames(SummarizedExperiment::assay(se, "Normalized")))),
-    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(se)), rowData(se)$Gnumber)),
-    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(SE)), colData(SE)$clid)),
+    checkmate::check_true(identical(dimnames(SE), dimnames(SummarizedExperiment::assay(SE, "Normalized")))),
+    combine = "and")
+  coldata <- colData(SE)
+  rowdata <- rowData(SE)
+  checkmate::assert(
+    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(SE)), rowdata$Gnumber)),
+    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(SE)), coldata$clid)),
+    checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
+    checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
     combine = "and")
 }
 
