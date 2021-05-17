@@ -22,12 +22,18 @@ validate_se_assay_name <- function(se, name) {
 
 #' Validate SummarizedExperiment object
 #' 
+#' Function validates correctness of SE by checking multiple cases:
+#' - detection of duplicated rowData/colData,
+#' - incompatibility of rownames/colnames,
+#' - occurrence of necessary assays,
+#' - detection of mismatch of CLIDs inside colData and colnames (different order),
+#' - correctness of metadata names.
 #'
 #' @param se SummarizedExperiment object 
 #' produced by the gDR pipeline
 #'
 #' @return \code{NULL} invisibly if the assay name is valid.
-#' Throws an error if the assay is not valid.
+#' Throws an error if the SummarizedExperiment is not valid.
 #' @export
 #'
 validate_SE <- function(se) {
