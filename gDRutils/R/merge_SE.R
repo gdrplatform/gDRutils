@@ -27,18 +27,18 @@ merge_SE <- function(SElist,
                                           "fit_source",
                                           "Metrics_rownames"))
   SEdata <- if (is.null(additional_col_name)){
-    gDR::split_SE_components(averaged$DT)
+    ::split_SE_components(averaged$DT)
   } else {
     averaged$DT[[additional_col_name]] <- NULL
-    gDR::split_SE_components(averaged$DT)
+    ::split_SE_components(averaged$DT)
   }
   
   # For some cases normalized assay has more data than others and therefore
   # some metrics do not occur because of that. Let's filter out additional
   # normalized data in order to keep the same dimension of both assays
   if (any(dim(normalized$BM) != dim(metrics$BM))) {
-    normalizedSplit <- gDR::split_SE_components(normalized$DT)
-    metricsSplit <- gDR::split_SE_components(metrics$DT)
+    normalizedSplit <- ::split_SE_components(normalized$DT)
+    metricsSplit <- ::split_SE_components(metrics$DT)
     treatmentCols <- setdiff(c(colnames(metricsSplit$treatment_md),
                                colnames(normalizedSplit$treatment_md)),
                              c("rId", "cId"))
@@ -104,23 +104,23 @@ merge_assay <- function(SElist,
   
   checkmate::check_list(SElist, types = "SummarizedExperiment")
   checkmate::check_string(assay_name)
-  checkmate::check_true(all(unlist(lapply(assay_name), function(x) {
-    assay_name %in% SummarizedExperiment::assays(x)
-  })))
+  checkmate::check_true(all(unlist(lapply(SElist, function(x) {
+    assay_name %in% names(SummarizedExperiment::assays(x))
+  }))))
   checkmate::check_string(additional_col_name, null.ok = TRUE)
   checkmate::check_character(discard_keys, null.ok = TRUE)
   checkmate::assert_flag(returnDT)
   
   DT <- if (is.null(additional_col_name)) {
     data.table::rbindlist(lapply(names(SElist), function(x)
-      gDRutils::convert_se_assay_to_dt(SElist[[x]], assay_name)), fill = TRUE)
+      convert_se_assay_to_dt(SElist[[x]], assay_name)), fill = TRUE)
   } else {
     data.table::rbindlist(lapply(names(SElist), function(x)
-      gDRutils::convert_se_assay_to_dt(SElist[[x]], assay_name)[, eval(additional_col_name) := rep_len(x, .N)]), fill = TRUE)
+      convert_se_assay_to_dt(SElist[[x]], assay_name)[, eval(additional_col_name) := rep_len(x, .N)]), fill = TRUE)
   }
   DT$rId <- NULL
   DT$cId <- NULL
-  BM <- gDRutils::df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
+  BM <- df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
   if (returnDT) {
     list(DT = DT,
          BM = BM)
