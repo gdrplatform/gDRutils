@@ -7,8 +7,8 @@
 convert_se_assay_to_dt(
   se,
   assay_name,
-  metric_type = c("unmerged", "RV", "GR", "both"),
-  include_metadata = TRUE
+  include_metadata = TRUE,
+  retain_nested_rownames = FALSE
 )
 }
 \arguments{
@@ -16,14 +16,15 @@ convert_se_assay_to_dt(
 
 \item{assay_name}{String of name of the assay to transform within the \code{se}.}
 
-\item{metric_type}{String of name of the metrics to extract (i.e. \code{RV}, \code{GR}, or \code{both}).
-Valid only for \code{assay_name = 'Metrics'}. \code{unmerged} will return one row for RV
-and one for GR metrics for each condition.
-Defaults to \code{both}.}
-
 \item{include_metadata}{Boolean indicating whether or not to include \code{rowData(se)}
 and \code{colData(se)} in the returned data.table.
 Defaults to \code{TRUE}.}
+
+\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames 
+nested within a \code{BumpyMatrix} assay.
+Defaults to \code{FALSE}.
+If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
+If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.
@@ -34,5 +35,5 @@ Convert an assay within a \linkS4class{SummarizedExperiment} object to a long da
 \details{
 NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
-To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}
+To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
 }

@@ -1,68 +1,41 @@
 #' Merge multiple Summarized Experiments
 #'
-#' @param SE list of Summarized Experiments
+#' @param SElist named list of Summarized Experiments
+#' @param additional_col_name a string with the name of the column that will be
+#' added to assay data for the distinction of possible duplicated metrics
+#' that can arise from multiple projects
+#' @param discard_keys a character vector of string that will be discarded
+#' during creating BumpyMatrix object
 #'
 #' @return Summarized Experiment
 #' @export
 #'
-merge_SE <- function(SE) {
-  checkmate::assert_list(SE, types = "SummarizedExperiment", min.len = 1)
-  names(SE) <- 
-    vapply(SE, function(x) S4Vectors::metadata(x)$experiment_metadata$qcs_id, "QCS")
-  normalizedDT <- data.table::rbindlist(lapply(SE, gDRutils::assay_to_dt, "Normalized"), fill = TRUE)
-  normalizedDT$rId <- NULL
-  normalizedDT$cId <- NULL
-  normalizedBM <- gDRutils::df_to_bm_assay(normalizedDT)
+merge_SE <- function(SElist,
+                     additional_col_name = NULL,
+                     discard_keys = c("normalization_type",
+                                      "fit_source",
+                                      "Metrics_rownames")) {
   
-  averagedDT <- data.table::rbindlist(lapply(SE, gDRutils::assay_to_dt, "Averaged"), fill = TRUE)
-  averagedDT$rId <- NULL
-  averagedDT$cId <- NULL
-  averagedBM <- gDRutils::df_to_bm_assay(averagedDT)
+  checkmate::check_list(SElist, types = "SummarizedExperiment")
+  checkmate::check_string(additional_col_name, null.ok = TRUE)
+  checkmate::check_character(discard_keys, null.ok = TRUE)
   
-  metricsDT <- data.table::rbindlist(lapply(SE, function(x) gDRutils::assay_to_dt(x, "Metrics", merge_metrics = TRUE)), fill = TRUE)
-  metricsDT$rId <- NULL
-  metricsDT$cId <- NULL
+  normalized <- merge_assay(SElist = SElist, assay_name = "Normalized", additional_col_name = additional_col_name)
+  averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name)
+  metrics <- merge_assay(SElist = SElist, assay_name = "Metrics", additional_col_name = additional_col_name,
+                         discard_keys = c("normalization_type",
+                                          "fit_source",
+                                          "Metrics_rownames"))
+  SEdata <- if (is.null(additional_col_name)){
+    gDR::split_SE_components(averaged$DT)
+  } else {
+    averaged$DT[[additional_col_name]] <- NULL
+    gDR::split_SE_components(averaged$DT)
+  }
   
-  RVcols <- grep("RV|^EC50|IC50|^E_", colnames(metricsDT), value = TRUE)
-  GRcols <- grep("GR|GEC", colnames(metricsDT), value = TRUE)
-  commonCols <- setdiff(colnames(metricsDT), c(RVcols, GRcols))
-  metricsRV <- metricsDT[, RVcols, with = FALSE]
-  newCols <- c("x_mean",
-               "x_AOC",
-               "x_AOC_range",
-               "xc50",
-               "x_max",
-               "c50",
-               "x_inf",
-               "x_0",
-               "h",
-               "r2",
-               "x_sd_avg",
-               "fit_type")
-  colnames(metricsRV) <- newCols
-  metricsRV$dr_metric <- "RV"
-  
-  metricsGR <- metricsDT[, GRcols, with = FALSE]
-  colnames(metricsGR) <- newCols
-  metricsGR$dr_metric <- "GR"
-  
-  metricsRV <- cbind(metricsRV, metricsDT[, commonCols, with = FALSE])
-  metricsGR <- cbind(metricsGR, metricsDT[, commonCols, with = FALSE])
-  
-  mergedMetrics <- as.data.frame(mapply(function(x,y) rbind(x,y), metricsRV, metricsGR))
-  
-  numCols <- unname(gDRutils::get_header("metrics_results"))
-  numCols <- numCols[numCols != "fit_type"]
-  mergedMetrics[, which(colnames(mergedMetrics) %in% numCols)] <- 
-    as.data.frame(lapply(mergedMetrics[, which(names(mergedMetrics) %in% numCols)], as.numeric))
-  
-  metricsBM <- gDRutils::df_to_bm_assay(mergedMetrics, discard_keys = "dr_metric")
-  SEdata <- gDR::split_SE_components(metricsDT)
-  
-  
-  if (any(dim(normalizedBM) != dim(metricsBM))) {
-    normalizedSplit <- gDR::split_SE_components(normalizedDT)
-    metricsSplit <- gDR::split_SE_components(metricsDT)
+  if (any(dim(normalized$BM) != dim(metrics$BM))) {
+    normalizedSplit <- gDR::split_SE_components(normalized$DT)
+    metricsSplit <- gDR::split_SE_components(metrics$DT)
     treatmentCols <- setdiff(c(colnames(metricsSplit$treatment_md),
                                colnames(normalizedSplit$treatment_md)),
                              c("rId", "cId"))
@@ -71,20 +44,76 @@ merge_SE <- function(SE) {
                                colnames(normalizedSplit$condition_md)),
                              c("rId", "cId"))
     
-    normalizedBM <- normalizedBM[match(metricsSplit$treatment_md[, treatmentCols], 
-                                       normalizedSplit$treatment_md[, treatmentCols]),
-                                 match(metricsSplit$condition_md[, conditionCols],
-                                       normalizedSplit$condition_md[, conditionCols])]
+    normalized$BM <- normalized$BM[match(metricsSplit$treatment_md[, treatmentCols], 
+                                         normalizedSplit$treatment_md[, treatmentCols]),
+                                   match(metricsSplit$condition_md[, conditionCols],
+                                         normalizedSplit$condition_md[, conditionCols])]
     
   }
   
   SEdata$treatment_md$cId <- NULL
+  metadataNames <- unique(unlist(lapply(SElist, function(x) {
+    names(S4Vectors::metadata(x))
+  })))
+  metadataSE <- vector("list", length(metadataNames))
+  names(metadataSE) <- metadataNames
   
-  initialSE <- SummarizedExperiment::SummarizedExperiment(assays = list(Normalized = normalizedBM,
-                                                                        Averaged = averagedBM,
-                                                                        Metrics = metricsBM),
+  metadataSEAll <- lapply(names(metadataSE), function(x) {
+    mergedMetadata <- NULL
+    do.call(c, lapply(names(SElist), function(SE) {
+      metaObj <- list(S4Vectors::metadata(SElist[[SE]])[[x]])
+      names(metaObj) <- SE
+      metaObj
+    }))
+  })
+  names(metadataSEAll) <- metadataNames
+  initialSE <- SummarizedExperiment::SummarizedExperiment(assays = list(Normalized = normalized$BM,
+                                                                        Averaged = averaged$BM,
+                                                                        Metrics = metrics$BM),
                                                           colData = SEdata$condition_md,
-                                                          rowData = SEdata$treatment_md)
-  
+                                                          rowData = SEdata$treatment_md,
+                                                          metadata = metadataSE)
   initialSE
+}
+
+
+
+#' Merge assay data
+#'
+#' @param SElist named list of Summarized Experiments
+#' @param assay_name name of the assay that should be extracted and merged
+#' @param additional_col_name a string with the name of the column that will be
+#' added to assay data for the distinction of possible duplicated metrics
+#' that can arise from multiple projects
+#' @param discard_keys a character vector of string that will be discarded
+#' during creating BumpyMatrix object
+#' @param returnDT a logical indication whether a list of BM and DT should be returned
+#'
+#' @return BumpyMatrix or list with data.table + BumpyMatrix
+#' @export
+#'
+#' @examples
+merge_assay <- function(SElist,
+                        assay_name,
+                        discard_keys = NULL,
+                        additional_col_name = NULL,
+                        returnDT = TRUE) {
+  
+  
+  DT <- if (is.null(additional_col_name)) {
+    data.table::rbindlist(lapply(names(SElist), function(x)
+      gDRutils::convert_se_assay_to_dt(SElist[[x]], assay_name)), fill = TRUE)
+  } else {
+    data.table::rbindlist(lapply(names(SElist), function(x)
+      gDRutils::convert_se_assay_to_dt(SElist[[x]], assay_name)[, eval(additional_col_name) := rep_len(x, .N)]), fill = TRUE)
+  }
+  DT$rId <- NULL
+  DT$cId <- NULL
+  BM <- gDRutils::df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
+  if (returnDT) {
+    list(DT = DT,
+         BM = BM)
+  } else {
+    BM
+  }
 }

@@ -4,10 +4,21 @@
 \alias{merge_SE}
 \title{Merge multiple Summarized Experiments}
 \usage{
-merge_SE(SE)
+merge_SE(
+  SElist,
+  additional_col_name = NULL,
+  discard_keys = c("normalization_type", "fit_source", "Metrics_rownames")
+)
 }
 \arguments{
-\item{SE}{list of Summarized Experiments}
+\item{SElist}{named list of Summarized Experiments}
+
+\item{additional_col_name}{a string with the name of the column that will be
+added to assay data for the distinction of possible duplicated metrics
+that can arise from multiple projects}
+
+\item{discard_keys}{a character vector of string that will be discarded
+during creating BumpyMatrix object}
 }
 \value{
 Summarized Experiment

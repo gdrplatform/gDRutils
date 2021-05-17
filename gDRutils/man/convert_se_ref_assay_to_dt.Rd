@@ -4,19 +4,28 @@
 \alias{convert_se_ref_assay_to_dt}
 \title{Convert the reference values from a SummarizedExperiment assay to a long data.table}
 \usage{
-convert_se_ref_assay_to_dt(se)
+convert_se_ref_assay_to_dt(
+  se,
+  ref_relative_viability_assay = "RefRelativeViability",
+  ref_gr_value_assay = "RefGRvalue"
+)
 }
 \arguments{
-\item{se}{A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.}
+\item{se}{A \linkS4class{SummarizedExperiment} object holding reference data in its assays.}
+
+\item{ref_relative_viability_assay}{String of the name of the assay in the \code{se} 
+holding the reference relative viability data.}
+
+\item{ref_gr_value_assay}{String of the name of the assay in the \code{se} holding the reference GR value data.}
 }
 \value{
 data.table representation of the reference data.
 }
 \description{
-Convert the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
-Clean up the column names and add columns to match the format of the data.table from the 'Averaged' assay.
+Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
+Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
 }
 \details{
-NOTE: to extract information about 'Control' data, simply call the
-function with the name of the assay holding data on controls.
+This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
+assay data.
 }
