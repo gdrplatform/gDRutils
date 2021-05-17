@@ -1,4 +1,7 @@
 # Changes to v.0.0.44
+- add `merge_SE` function
+
+# Changes to v.0.0.44
 - refactor `prettify_flat_metrics` function
 
 # Changes to v.0.0.43
