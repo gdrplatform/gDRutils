@@ -54,23 +54,25 @@ getMetaData <- function(data, discard_keys = NULL) {
   nocell_metavars <- setdiff(metavars,
                              c(gDRutils::get_identifier("cellline"), gDRutils::get_header("add_clid")))
   singleton_cols <- vapply(nocell_metavars,
-			   function(x) {nrow(unique(conditions[, x, drop = FALSE])) == 1L},
-			   logical(1))
+                           function(x) {
+                             nrow(unique(conditions[, x, drop = FALSE])) == 1L
+                             },
+                           logical(1))
 
   # Remove drug metadata and duration.
   constant_metavars <- setdiff(nocell_metavars[singleton_cols],
-			       c(gDRutils::get_identifier("drug"),
-				 gDRutils::get_identifier("drugname"),
-				 gDRutils::get_identifier("duration")
-			        ))
+                               c(gDRutils::get_identifier("drug"),
+                                 gDRutils::get_identifier("drugname"),
+                                 gDRutils::get_identifier("duration")
+                                 ))
 
   unique_metavars <- c(intersect(c(gDRutils::get_identifier("cellline"),
-				   gDRutils::get_header("add_clid"),
-				   gDRutils::get_identifier("drug"),
-				   gDRutils::get_identifier("drugname"),
-				   gDRutils::get_identifier("duration")),
-				   metavars),
-                        nocell_metavars[!singleton_cols])
+                                   gDRutils::get_header("add_clid"),
+                                   gDRutils::get_identifier("drug"),
+                                   gDRutils::get_identifier("drugname"),
+                                   gDRutils::get_identifier("duration")),
+                                 metavars),
+                       nocell_metavars[!singleton_cols])
 
   cl_entries <- cell_id
   for (j in setdiff(unique_metavars, cell_id)) {
@@ -78,12 +80,12 @@ getMetaData <- function(data, discard_keys = NULL) {
         nrow(unique(conditions[, cell_id, drop = FALSE]))) {
       cl_entries <- c(cl_entries, j)
     }
-  }
+    }
 
-  pattern <- sprintf("^%s*|^%s*|^%s$", 
-    gDRutils::get_identifier("drug"), 
-    gDRutils::get_identifier("drugname"),
-    gDRutils::get_identifier("duration"))
+  pattern <- sprintf("^%s*|^%s*|^%s$",
+                     gDRutils::get_identifier("drug"),
+                     gDRutils::get_identifier("drugname"),
+                     gDRutils::get_identifier("duration"))
   cl_entries <- cl_entries[!grepl(pattern, cl_entries)]
 
   ## colData
