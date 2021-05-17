@@ -1,6 +1,9 @@
 # Changes to v.0.0.44
 - add SE validator function
 
+# Changes to v.0.0.44
+- refactor `prettify_flat_metrics` function
+
 # Changes to v.0.0.43
 - remove `Metrics_rownames` during flattening data.frame/data.table
 
