@@ -32,7 +32,7 @@ validate_se_assay_name <- function(se, name) {
 #' @param se SummarizedExperiment object 
 #' produced by the gDR pipeline
 #'
-#' @return \code{NULL} invisibly if the assay name is valid.
+#' @return \code{NULL} invisibly if the SummarizedExperiment is valid.
 #' Throws an error if the SummarizedExperiment is not valid.
 #' @export
 #'
