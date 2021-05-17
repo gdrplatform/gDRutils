@@ -33,6 +33,9 @@ merge_SE <- function(SElist,
     gDR::split_SE_components(averaged$DT)
   }
   
+  # For some cases normalized assay has more data than others and therefore
+  # some metrics do not occur because of that. Let's filter out additional
+  # normalized data in order to keep the same dimension of both assays
   if (any(dim(normalized$BM) != dim(metrics$BM))) {
     normalizedSplit <- gDR::split_SE_components(normalized$DT)
     metricsSplit <- gDR::split_SE_components(metrics$DT)
@@ -99,6 +102,14 @@ merge_assay <- function(SElist,
                         additional_col_name = NULL,
                         returnDT = TRUE) {
   
+  checkmate::check_list(SElist, types = "SummarizedExperiment")
+  checkmate::check_string(assay_name)
+  checkmate::check_true(all(unlist(lapply(assay_name), function(x) {
+    assay_name %in% SummarizedExperiment::assays(x)
+  })))
+  checkmate::check_string(additional_col_name, null.ok = TRUE)
+  checkmate::check_character(discard_keys, null.ok = TRUE)
+  checkmate::assert_flag(returnDT)
   
   DT <- if (is.null(additional_col_name)) {
     data.table::rbindlist(lapply(names(SElist), function(x)
