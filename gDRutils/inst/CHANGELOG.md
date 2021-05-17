@@ -15,7 +15,6 @@
 
 # Changes to v.0.0.40
 - bugfix data.table merge in `convert_se_assay_ref_to_dt`
->>>>>>> master
 
 # Changes to v.0.0.39
 - add support for flattening data.tables
