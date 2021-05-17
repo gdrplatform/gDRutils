@@ -26,7 +26,8 @@ validate_se_assay_name <- function(se, name) {
 #' @param se SummarizedExperiment object 
 #' produced by the gDR pipeline
 #'
-#' @return invisible(NULL)
+#' @return \code{NULL} invisibly if the assay name is valid.
+#' Throws an error if the assay is not valid.
 #' @export
 #'
 validate_SE <- function(se) {
@@ -56,5 +57,6 @@ validate_SE <- function(se) {
     checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
     checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
     combine = "and")
+  invisible(NULL)
 }
 
