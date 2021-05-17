@@ -4,7 +4,7 @@ test_that("validate_se_assay_name works as expected", {
   expect_true(is.null(validate_se_assay_name(se, "orange")))
 })
 
-test_that("validate_se works as expected", {
+test_that("validate_SE works as expected", {
   se1 <- SummarizedExperiment::SummarizedExperiment(assays = list("orange" = matrix(1, 1, 1)))
   expect_error(validate_SE(se1))
   x <- IRanges::NumericList(split(runif(1000), factor(sample(50, 1000, replace = TRUE), 1:50))) 
