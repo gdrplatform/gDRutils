@@ -1,4 +1,4 @@
-# Changes to v.0.0.44
+# Changes to v.0.0.45
 - add `merge_SE` function
 
 # Changes to v.0.0.44
