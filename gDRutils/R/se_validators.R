@@ -11,9 +11,9 @@
 #' @export
 #'
 validate_se_assay_name <- function(se, name) {
-  if (!name %in% SummarizedExperiment::assayNames(se)) {
+  if (!name %in% assayNames(se)) {
     stop(sprintf("'%s' is not on of the available assays: '%s'",
-      name, paste0(SummarizedExperiment::assayNames(se), collapse = ", ")))
+      name, paste0(assayNames(se), collapse = ", ")))
   }
   invisible(NULL)
 }
@@ -26,32 +26,33 @@ validate_se_assay_name <- function(se, name) {
 #' @param se SummarizedExperiment object 
 #' produced by the gDR pipeline
 #'
-#' @return
+#' @return invisible(NULL)
 #' @export
 #'
-#' @examples
-validate_SE <- function(SE) {
+validate_SE <- function(se) {
   checkmate::assert(
-    checkmate::check_class(SE, "SummarizedExperiment"),
-    checkmate::check_subset(SummarizedExperiment::assayNames(SE), c("RawTreated", "Controls", 
+    checkmate::check_class(se, "SummarizedExperiment"),
+    checkmate::check_subset(assayNames(se), c("RawTreated", "Controls", 
                                                                        "Normalized", "RefGRvalue", 
                                                                        "RefRelativeViability", "DivisionTime", 
                                                                        "Averaged", "Metrics")),
-    checkmate::check_set_equal(names(S4Vectors::metadata(SE)),
+    checkmate::check_set_equal(names(S4Vectors::metadata(se)),
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
                                  "fit_parameters", 
                                  #"drug_combinations",
                                  ".internals")),
-    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(SE, "Metrics")),
+    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(se, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
-    checkmate::check_true(identical(dimnames(SE), dimnames(SummarizedExperiment::assay(SE, "Normalized")))),
+    checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Normalized")))),
+    checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Averaged")))),
+    checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Metrics")))),
     combine = "and")
-  coldata <- colData(SE)
-  rowdata <- rowData(SE)
+  coldata <- colData(se)
+  rowdata <- rowData(se)
   checkmate::assert(
-    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(SE)), rowdata$Gnumber)),
-    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(SE)), coldata$clid)),
+    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(se)), rowdata$Gnumber)),
+    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(se)), coldata$clid)),
     checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
     checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
     combine = "and")
