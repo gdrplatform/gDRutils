@@ -43,7 +43,7 @@ validate_SE <- function(se) {
                                  "fit_parameters", 
                                  #"drug_combinations",
                                  ".internals")),
-    checkmate::check_names(names(gDRutils::convert_se_assay_to_dt(se, "Metrics")),
+    checkmate::check_names(names(convert_se_assay_to_dt(se, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
     checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Normalized")))),
     checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Averaged")))),
