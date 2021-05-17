@@ -27,7 +27,8 @@ Imports:
 Suggests:
     futile.logger,
     knitr,
-    testthat
+    testthat,
+    gDRtestData (>= 0.0.2)
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.1
