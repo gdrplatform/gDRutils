@@ -27,18 +27,18 @@ merge_SE <- function(SElist,
                                           "fit_source",
                                           "Metrics_rownames"))
   SEdata <- if (is.null(additional_col_name)){
-    ::split_SE_components(averaged$DT)
+    split_SE_components(averaged$DT)
   } else {
     averaged$DT[[additional_col_name]] <- NULL
-    ::split_SE_components(averaged$DT)
+    split_SE_components(averaged$DT)
   }
   
   # For some cases normalized assay has more data than others and therefore
   # some metrics do not occur because of that. Let's filter out additional
   # normalized data in order to keep the same dimension of both assays
   if (any(dim(normalized$BM) != dim(metrics$BM))) {
-    normalizedSplit <- ::split_SE_components(normalized$DT)
-    metricsSplit <- ::split_SE_components(metrics$DT)
+    normalizedSplit <- split_SE_components(normalized$DT)
+    metricsSplit <- split_SE_components(metrics$DT)
     treatmentCols <- setdiff(c(colnames(metricsSplit$treatment_md),
                                colnames(normalizedSplit$treatment_md)),
                              c("rId", "cId"))
