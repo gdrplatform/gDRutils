@@ -43,9 +43,9 @@ validate_SE <- function(se,
   checkmate::assert(
     checkmate::check_class(se, "SummarizedExperiment"),
     checkmate::check_subset(assayNames(se), c("RawTreated", "Controls", 
-                                                                       "Normalized", "RefGRvalue", 
-                                                                       "RefRelativeViability", "DivisionTime", 
-                                                                       "Averaged", "Metrics")),
+                                              "Normalized", "RefGRvalue", 
+                                              "RefRelativeViability", "DivisionTime", 
+                                              "Averaged", "Metrics")),
     checkmate::check_set_equal(names(S4Vectors::metadata(se)),
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
@@ -61,8 +61,8 @@ validate_SE <- function(se,
   coldata <- colData(se)
   rowdata <- rowData(se)
   checkmate::assert(
-    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(se)), rowdata$Gnumber)),
-    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(se)), coldata$clid)),
+    checkmate::check_true(all(gsub("_.*", "", rownames(se)) == rowdata$Gnumber)),
+    checkmate::check_true(all(gsub("_.*", "", colnames(se)) == coldata$clid)),
     checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
     checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
     combine = "and")
@@ -70,11 +70,12 @@ validate_SE <- function(se,
   if (expect_single_agent && length(vars_cotreatment) > 0) {
     if ("DrugName_2" %in% names(rowdata)) {
       checkmate::check_subset(rowdata[["DrugName_2"]], get_identifier("untreated_tag"))
-      }
+    }
     if ("Concentration_2" %in% names(rowdata)) {
       checkmate::check_subset(rowdata[["Concentration_2"]], 0)
     }
   }
   invisible(NULL)
 }
+
 
