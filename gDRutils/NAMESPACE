@@ -27,8 +27,13 @@ export(set_SE_fit_parameters)
 export(set_SE_keys)
 export(set_SE_processing_metadata)
 export(set_identifier)
+<<<<<<< HEAD
 export(split_SE_components)
+=======
+export(validate_SE)
+>>>>>>> master
 export(validate_se_assay_name)
+import(SummarizedExperiment)
 importFrom(magrittr,"%$%")
 importFrom(magrittr,"%<>%")
 importFrom(magrittr,"%>%")
