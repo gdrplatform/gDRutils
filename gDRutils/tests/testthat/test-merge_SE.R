@@ -1,5 +1,6 @@
 test_that("merge_assay works as expected", {
-  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"), "final", full.names = TRUE)[1:2], readRDS)
+  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
+                              "final", full.names = TRUE)[1:2], readRDS)
   names(listSE) <- c("combo1", "combo2")
   normalizedMerged <- merge_assay(listSE, "Normalized")
   checkmate::expect_list(normalizedMerged, names = c("DT", "BM"))
@@ -8,7 +9,8 @@ test_that("merge_assay works as expected", {
 })
 
 test_that("merge_SE works as expected", {
-  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"), "final", full.names = TRUE)[1:2], readRDS)
+  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
+                              "final", full.names = TRUE)[1:2], readRDS)
   names(listSE) <- c("combo1", "combo2")
   mergedSE <- merge_SE(listSE)
   S4Vectors::metadata(mergedSE)
