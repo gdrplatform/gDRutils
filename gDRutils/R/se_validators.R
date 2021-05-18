@@ -31,12 +31,15 @@ validate_se_assay_name <- function(se, name) {
 #'
 #' @param se SummarizedExperiment object 
 #' produced by the gDR pipeline
+#' @param expect_single_agent a logical indicating if the function
+#' should check whether the SummarizedExperiment is single-agent data
 #'
 #' @return \code{NULL} invisibly if the SummarizedExperiment is valid.
 #' Throws an error if the SummarizedExperiment is not valid.
 #' @export
 #'
-validate_SE <- function(se) {
+validate_SE <- function(se,
+                        expect_single_agent = FALSE) {
   checkmate::assert(
     checkmate::check_class(se, "SummarizedExperiment"),
     checkmate::check_subset(assayNames(se), c("RawTreated", "Controls", 
@@ -63,6 +66,15 @@ validate_SE <- function(se) {
     checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
     checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
     combine = "and")
+  vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
+  if (expect_single_agent && length(vars_cotreatment) > 0) {
+    if ("DrugName_2" %in% names(rowdata)) {
+      checkmate::check_subset(rowdata[["DrugName_2"]], get_identifier("untreated_tag"))
+      }
+    if ("Concentration_2" %in% names(rowdata)) {
+      checkmate::check_subset(rowdata[["Concentration_2"]], 0)
+    }
+  }
   invisible(NULL)
 }
 

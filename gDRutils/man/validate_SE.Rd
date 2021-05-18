@@ -4,14 +4,17 @@
 \alias{validate_SE}
 \title{Validate SummarizedExperiment object}
 \usage{
-validate_SE(se)
+validate_SE(se, expect_single_agent = FALSE)
 }
 \arguments{
 \item{se}{SummarizedExperiment object 
 produced by the gDR pipeline}
+
+\item{expect_single_agent}{a logical indicating if the function
+should check whether the SummarizedExperiment is single-agent data}
 }
 \value{
-\code{NULL} invisibly if the assay name is valid.
+\code{NULL} invisibly if the SummarizedExperiment is valid.
 Throws an error if the SummarizedExperiment is not valid.
 }
 \description{
