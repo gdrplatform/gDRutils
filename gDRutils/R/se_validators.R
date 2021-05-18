@@ -40,18 +40,19 @@ validate_se_assay_name <- function(se, name) {
 #'
 validate_SE <- function(se,
                         expect_single_agent = FALSE) {
+  # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert(
     checkmate::check_class(se, "SummarizedExperiment"),
     checkmate::check_subset(assayNames(se), c("RawTreated", "Controls", 
-                                                                       "Normalized", "RefGRvalue", 
-                                                                       "RefRelativeViability", "DivisionTime", 
-                                                                       "Averaged", "Metrics")),
+                                              "Normalized", "RefGRvalue", 
+                                              "RefRelativeViability", "DivisionTime", 
+                                              "Averaged", "Metrics")),
     checkmate::check_set_equal(names(S4Vectors::metadata(se)),
                                c("experiment_metadata", "df_",
                                  "Keys", "df_raw_data",
                                  "fit_parameters", 
                                  #"drug_combinations",
-                                 ".internals")),
+                                 ".internal")),
     checkmate::check_names(names(convert_se_assay_to_dt(se, "Metrics")),
                            must.include = c("normalization_type", "fit_source")),
     checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Normalized")))),
@@ -60,21 +61,26 @@ validate_SE <- function(se,
     combine = "and")
   coldata <- colData(se)
   rowdata <- rowData(se)
+  
+  # Validate the correctness of rowData and colData
   checkmate::assert(
-    checkmate::check_true(expect_equal(gsub("_.*", "", rownames(se)), rowdata$Gnumber)),
-    checkmate::check_true(expect_equal(gsub("_.*", "", colnames(se)), coldata$clid)),
+    checkmate::check_true(all(gsub("_.*", "", rownames(se)) == rowdata$Gnumber)),
+    checkmate::check_true(all(gsub("_.*", "", colnames(se)) == coldata$clid)),
     checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
     checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
     combine = "and")
   vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
+  
+  # Validate the correctness of single-agent data
   if (expect_single_agent && length(vars_cotreatment) > 0) {
     if ("DrugName_2" %in% names(rowdata)) {
       checkmate::check_subset(rowdata[["DrugName_2"]], get_identifier("untreated_tag"))
-      }
+    }
     if ("Concentration_2" %in% names(rowdata)) {
       checkmate::check_subset(rowdata[["Concentration_2"]], 0)
     }
   }
   invisible(NULL)
 }
+
 

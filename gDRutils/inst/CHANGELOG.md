@@ -1,5 +1,8 @@
-# Changes to v.0.0.46
+# Changes to v.0.0.47
 - add `merge_SE` function
+
+# Changes to v.0.0.46
+- fix typo in SE validator function
 
 # Changes to v.0.0.45
 - add SE validator function
