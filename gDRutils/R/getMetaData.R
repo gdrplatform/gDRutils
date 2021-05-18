@@ -100,7 +100,7 @@ getMetaData <- function(data, discard_keys = NULL) {
   cond_entries <- setdiff(unique_metavars, c(cl_entries, discard_keys))
   rowData <- unique(conditions[, cond_entries, drop = FALSE])
   rowData$row_id <- seq_len(nrow(rowData))
-	  
+  
   rowData$name_ <-
     apply(rowData, 1, function(x)
       paste(x, collapse = "_"))
