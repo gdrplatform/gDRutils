@@ -1,4 +1,7 @@
-# Changes to v.0.0.44
+# Changes to v.0.0.46
+- fix typo in SE validator function
+
+# Changes to v.0.0.45
 - add SE validator function
 
 # Changes to v.0.0.44
