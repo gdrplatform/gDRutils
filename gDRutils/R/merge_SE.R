@@ -16,7 +16,7 @@ merge_SE <- function(SElist,
                                       "fit_source",
                                       "Metrics_rownames")) {
   
-  assertthat::assert_list(SElist, types = "SummarizedExperiment")
+  checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   
