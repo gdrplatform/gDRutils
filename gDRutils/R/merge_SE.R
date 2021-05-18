@@ -16,9 +16,9 @@ merge_SE <- function(SElist,
                                       "fit_source",
                                       "Metrics_rownames")) {
   
-  checkmate::check_list(SElist, types = "SummarizedExperiment")
-  checkmate::check_string(additional_col_name, null.ok = TRUE)
-  checkmate::check_character(discard_keys, null.ok = TRUE)
+  assertthat::assert_list(SElist, types = "SummarizedExperiment")
+  checkmate::assert_string(additional_col_name, null.ok = TRUE)
+  checkmate::assert_character(discard_keys, null.ok = TRUE)
   
   normalized <- merge_assay(SElist = SElist, assay_name = "Normalized", additional_col_name = additional_col_name)
   averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name)
@@ -79,13 +79,13 @@ merge_assay <- function(SElist,
                         discard_keys = NULL,
                         additional_col_name = NULL) {
   
-  checkmate::check_list(SElist, types = "SummarizedExperiment")
-  checkmate::check_string(assay_name)
-  checkmate::check_true(all(unlist(lapply(SElist, function(x) {
+  checkmate::assert_list(SElist, types = "SummarizedExperiment")
+  checkmate::assert_string(assay_name)
+  checkmate::assert_true(all(unlist(lapply(SElist, function(x) {
     assay_name %in% names(SummarizedExperiment::assays(x))
   }))))
-  checkmate::check_string(additional_col_name, null.ok = TRUE)
-  checkmate::check_character(discard_keys, null.ok = TRUE)
+  checkmate::assert_string(additional_col_name, null.ok = TRUE)
+  checkmate::assert_character(discard_keys, null.ok = TRUE)
 
   DT <- if (is.null(additional_col_name)) {
     data.table::rbindlist(lapply(names(SElist), function(x)
