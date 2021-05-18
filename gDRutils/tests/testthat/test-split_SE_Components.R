@@ -1,6 +1,3 @@
-#library(testthat); library(gDR)
-#source("setup.R")
-
 test_that("split_SE_components splits the correct columns", {
   # Standard case.
   md <- split_SE_components(test_df)
