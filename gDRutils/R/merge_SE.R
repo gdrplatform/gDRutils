@@ -7,7 +7,7 @@
 #' @param discard_keys a character vector of string that will be discarded
 #' during creating BumpyMatrix object
 #'
-#' @return Summarized Experiment
+#' @return merged Summarized Experiment
 #' @export
 #'
 merge_SE <- function(SElist,
@@ -31,27 +31,6 @@ merge_SE <- function(SElist,
   } else {
     averaged$DT[[additional_col_name]] <- NULL
     split_SE_components(averaged$DT)
-  }
-  
-  # For some cases normalized assay has more data than others and therefore
-  # some metrics do not occur because of that. Let's filter out additional
-  # normalized data in order to keep the same dimension of both assays
-  if (any(dim(normalized$BM) != dim(metrics$BM))) {
-    normalizedSplit <- split_SE_components(normalized$DT)
-    metricsSplit <- split_SE_components(metrics$DT)
-    treatmentCols <- setdiff(c(colnames(metricsSplit$treatment_md),
-                               colnames(normalizedSplit$treatment_md)),
-                             c("rId", "cId"))
-    
-    conditionCols <- setdiff(c(colnames(metricsSplit$condition_md),
-                               colnames(normalizedSplit$condition_md)),
-                             c("rId", "cId"))
-    
-    normalized$BM <- normalized$BM[match(metricsSplit$treatment_md[, treatmentCols], 
-                                         normalizedSplit$treatment_md[, treatmentCols]),
-                                   match(metricsSplit$condition_md[, conditionCols],
-                                         normalizedSplit$condition_md[, conditionCols])]
-    
   }
   
   SEdata$treatment_md$cId <- NULL
@@ -90,7 +69,6 @@ merge_SE <- function(SElist,
 #' that can arise from multiple projects
 #' @param discard_keys a character vector of string that will be discarded
 #' during creating BumpyMatrix object
-#' @param returnDT a logical indication whether a list of BM and DT should be returned
 #'
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
 #' @export
@@ -99,8 +77,7 @@ merge_SE <- function(SElist,
 merge_assay <- function(SElist,
                         assay_name,
                         discard_keys = NULL,
-                        additional_col_name = NULL,
-                        returnDT = TRUE) {
+                        additional_col_name = NULL) {
   
   checkmate::check_list(SElist, types = "SummarizedExperiment")
   checkmate::check_string(assay_name)
@@ -109,8 +86,7 @@ merge_assay <- function(SElist,
   }))))
   checkmate::check_string(additional_col_name, null.ok = TRUE)
   checkmate::check_character(discard_keys, null.ok = TRUE)
-  checkmate::assert_flag(returnDT)
-  
+
   DT <- if (is.null(additional_col_name)) {
     data.table::rbindlist(lapply(names(SElist), function(x)
       convert_se_assay_to_dt(SElist[[x]], assay_name)), fill = TRUE)
@@ -121,10 +97,5 @@ merge_assay <- function(SElist,
   DT$rId <- NULL
   DT$cId <- NULL
   BM <- df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
-  if (returnDT) {
-    list(DT = DT,
-         BM = BM)
-  } else {
-    BM
-  }
+  list(DT = DT, BM = BM)
 }
