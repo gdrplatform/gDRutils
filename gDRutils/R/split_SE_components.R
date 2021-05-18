@@ -68,7 +68,9 @@ split_SE_components <- function(df_, nested_keys = NULL) {
 
   trt_cols <- setdiff(meta_cols, cell_cols)
   singletons <- vapply(trt_cols,
-    function(x) {nrow(unique(md[, x, drop = FALSE])) == 1L},
+    function(x) {
+      nrow(unique(md[, x, drop = FALSE])) == 1L
+      },
     logical(1))
 
   # Get experiment columns.
@@ -84,7 +86,9 @@ split_SE_components <- function(df_, nested_keys = NULL) {
   cl_entries <- cell_id
   for (j in setdiff(remaining, cell_id)) {
     cl_prop <- split(md[[j]], as.factor(md[, cell_id]))
-    cl_prop <- lapply(cl_prop, function(grp) {length(unique(grp)) == 1L})
+    cl_prop <- lapply(cl_prop, function(grp) {
+      length(unique(grp)) == 1L
+      })
     if (all(unlist(cl_prop))) {
       cl_entries <- c(cl_entries, j)
     }
@@ -92,14 +96,16 @@ split_SE_components <- function(df_, nested_keys = NULL) {
 
   if (!all(present <- cell_cols %in% cl_entries)) {
     warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
-      paste(cell_cols[!present], collapse=", "), cell_id))
+      paste(cell_cols[!present], collapse = ", "), cell_id))
   }
 
   ## Condition metadata.
   condition_md <- unique(md[, cl_entries, drop = FALSE])
   condition_md$col_id <- seq_len(nrow(condition_md))
-  rownames(condition_md) <- apply(condition_md, 1, function(x) {paste(x, collapse = "_")})
-  condition_md <- condition_md[! names(condition_md) %in% c('col_id')]
+  rownames(condition_md) <- apply(condition_md, 1, function(x) {
+    paste(x, collapse = "_")
+    })
+  condition_md <- condition_md[! names(condition_md) %in% c("col_id")]
 
   ## Treatment metadata.
   trt_cols <- setdiff(meta_cols, c(cl_entries, constant_cols))
@@ -108,8 +114,10 @@ split_SE_components <- function(df_, nested_keys = NULL) {
   trt_cols <- c(drug_trt_cols, setdiff(trt_cols, drug_trt_cols))
   treatment_md <- unique(md[, trt_cols, drop = FALSE])
   treatment_md$row_id <- seq_len(nrow(treatment_md))
-  rownames(treatment_md) <- apply(treatment_md, 1, function(x) {paste(x, collapse = "_")})
-  treatment_md <- treatment_md[! names(treatment_md) %in% c('row_id')]
+  rownames(treatment_md) <- apply(treatment_md, 1, function(x) {
+    paste(x, collapse = "_")
+    })
+  treatment_md <- treatment_md[! names(treatment_md) %in% c("row_id")]
 
   return(list(
     condition_md = condition_md,
