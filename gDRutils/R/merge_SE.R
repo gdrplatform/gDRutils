@@ -26,7 +26,7 @@ merge_SE <- function(SElist,
                          discard_keys = c("normalization_type",
                                           "fit_source",
                                           "Metrics_rownames"))
-  SEdata <- if (is.null(additional_col_name)){
+  SEdata <- if (is.null(additional_col_name)) {
     split_SE_components(averaged$DT)
   } else {
     averaged$DT[[additional_col_name]] <- NULL
