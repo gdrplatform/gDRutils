@@ -24,11 +24,11 @@ df_to_bm_assay <-
     data_type <- match.arg(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     
-    .Deprecated(new = splitAsBumpyMatrix,
+    .Deprecated(new = BumpyMatrix::splitAsBumpyMatrix,
     msg = "support for 'df_to_bm_assay' will be dropped next release cycle. See 'splitAsBumpyMatrix' instead")
     
     data <- methods::as(data, "DataFrame")
-    allMetadata <- gDR::getMetaData(data, discard_keys = discard_keys)
+    allMetadata <- getMetaData(data, discard_keys = discard_keys)
 
     seColData <- allMetadata$colData
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
