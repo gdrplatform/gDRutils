@@ -23,9 +23,7 @@ merge_SE <- function(SElist,
   normalized <- merge_assay(SElist = SElist, assay_name = "Normalized", additional_col_name = additional_col_name)
   averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name)
   metrics <- merge_assay(SElist = SElist, assay_name = "Metrics", additional_col_name = additional_col_name,
-                         discard_keys = c("normalization_type",
-                                          "fit_source",
-                                          "Metrics_rownames"))
+                         discard_keys = discard_keys)
   SEdata <- if (is.null(additional_col_name)) {
     split_SE_components(averaged$DT)
   } else {
@@ -69,9 +67,6 @@ merge_assay <- function(SElist,
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   lapply(SElist, function(x) validate_se_assay_name(x, assay_name))
-  checkmate::assert_true(all(unlist(lapply(SElist, function(x) {
-    assay_name %in% names(SummarizedExperiment::assays(x))
-  }))))
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
 
