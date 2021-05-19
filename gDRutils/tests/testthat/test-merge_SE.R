@@ -20,7 +20,7 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
   
   listSE2 <- listSE
   newMetaName <- "dummy_meta"
-  S4Vectors::metadata(listSE2$combo1)[[newMetaName]]<- list()
+  S4Vectors::metadata(listSE2$combo1)[[newMetaName]] <- list()
   metadata_fields2 <- identify_unique_se_metadata_fields(listSE2)
   expect_true(newMetaName %in% metadata_fields2)
   mergedMetadata2 <- merge_metadata(listSE2, metadata_fields2)
