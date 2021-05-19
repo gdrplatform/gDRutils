@@ -8,8 +8,7 @@ merge_assay(
   SElist,
   assay_name,
   discard_keys = NULL,
-  additional_col_name = NULL,
-  returnDT = TRUE
+  additional_col_name = "data_source"
 )
 }
 \arguments{
@@ -23,8 +22,6 @@ during creating BumpyMatrix object}
 \item{additional_col_name}{a string with the name of the column that will be
 added to assay data for the distinction of possible duplicated metrics
 that can arise from multiple projects}
-
-\item{returnDT}{a logical indication whether a list of BM and DT should be returned}
 }
 \value{
 BumpyMatrix or list with data.table + BumpyMatrix

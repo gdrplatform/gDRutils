@@ -6,7 +6,7 @@
 \usage{
 merge_SE(
   SElist,
-  additional_col_name = NULL,
+  additional_col_name = "data_source",
   discard_keys = c("normalization_type", "fit_source", "Metrics_rownames")
 )
 }
@@ -21,7 +21,7 @@ that can arise from multiple projects}
 during creating BumpyMatrix object}
 }
 \value{
-Summarized Experiment
+merged Summarized Experiment
 }
 \description{
 Merge multiple Summarized Experiments

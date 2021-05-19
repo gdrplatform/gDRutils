@@ -11,7 +11,7 @@
 #' @export
 #'
 merge_SE <- function(SElist,
-                     additional_col_name = NULL,
+                     additional_col_name = "data_source",
                      discard_keys = c("normalization_type",
                                       "fit_source",
                                       "Metrics_rownames")) {
@@ -77,7 +77,7 @@ merge_SE <- function(SElist,
 merge_assay <- function(SElist,
                         assay_name,
                         discard_keys = NULL,
-                        additional_col_name = NULL) {
+                        additional_col_name = "data_source") {
   
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(assay_name)
