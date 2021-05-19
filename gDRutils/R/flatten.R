@@ -2,7 +2,7 @@
 #'
 #' Flatten a stacked table into a wide format.
 #'
-#' @param tbl a table to flatten.
+#' @param tbl table to flatten.
 #' @param groups character vector of column names representing uniquifying groups in expansion.
 #' @param wide_cols character vector of column names to flatten.
 #' @param sep string representing separator between \code{wide_cols} columns, used in column renaming.

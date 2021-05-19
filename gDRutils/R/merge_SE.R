@@ -1,13 +1,13 @@
 #' Merge multiple Summarized Experiments
 #'
 #' @param SElist named list of Summarized Experiments
-#' @param additional_col_name a string with the name of the column that will be
+#' @param additional_col_name string with the name of the column that will be
 #' added to assay data for the distinction of possible duplicated metrics
 #' that can arise from multiple projects
-#' @param discard_keys a character vector of string that will be discarded
+#' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
 #'
-#' @return merged Summarized Experiment
+#' @return merged SummarizedExperiment object
 #' @export
 #'
 merge_SE <- function(SElist,
@@ -24,36 +24,34 @@ merge_SE <- function(SElist,
   averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name)
   metrics <- merge_assay(SElist = SElist, assay_name = "Metrics", additional_col_name = additional_col_name,
                          discard_keys = discard_keys)
-  SEdata <- if (is.null(additional_col_name)) {
-    split_SE_components(averaged$DT)
-  } else {
+
+  if (is.null(additional_col_name)) {
     averaged$DT[[additional_col_name]] <- NULL
-    split_SE_components(averaged$DT)
   }
+  data <- split_SE_components(averaged$DT)
   
-  SEdata$treatment_md$cId <- NULL
+  data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
-  metadataSE <- merge_metadata(SElist, metadataNames)
+  metadata <- merge_metadata(SElist, metadataNames)
   
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(Normalized = normalized$BM,
-                                                                        Averaged = averaged$BM,
-                                                                        Metrics = metrics$BM),
-                                                          colData = SEdata$condition_md,
-                                                          rowData = SEdata$treatment_md,
-                                                          metadata = metadataSE)
+                                                                 Averaged = averaged$BM,
+                                                                 Metrics = metrics$BM),
+                                                          colData = data$condition_md,
+                                                          rowData = data$treatment_md,
+                                                          metadata = metadata)
   se
 }
-
 
 
 #' Merge assay data
 #'
 #' @param SElist named list of Summarized Experiments
 #' @param assay_name name of the assay that should be extracted and merged
-#' @param additional_col_name a string with the name of the column that will be
+#' @param additional_col_name string of column name that will be
 #' added to assay data for the distinction of possible duplicated metrics
 #' that can arise from multiple projects
-#' @param discard_keys a character vector of string that will be discarded
+#' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
 #'
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
@@ -77,17 +75,19 @@ merge_assay <- function(SElist,
     data.table::rbindlist(lapply(names(SElist), function(x)
       convert_se_assay_to_dt(SElist[[x]], assay_name)[, eval(additional_col_name) := rep_len(x, .N)]), fill = TRUE)
   }
+
   DT$rId <- DT$cId <- NULL
   BM <- df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
+
   list(DT = DT, BM = BM)
 }
 
 
-#' Indetify unique se metadata fields from the list of SEs
+#' Identify unique se metadata fields from a list of SEs
 #'
 #' @param SElist named list of Summarized Experiments
 #'
-#' @return vector of unique names of metadata
+#' @return character vector of unique names of metadata
 #' @export
 #'
 identify_unique_se_metadata_fields <- function(SElist) {
@@ -97,6 +97,7 @@ identify_unique_se_metadata_fields <- function(SElist) {
     names(S4Vectors::metadata(x))
   })))
 }
+
 
 #' Merge metadata
 #'
@@ -112,13 +113,13 @@ merge_metadata <- function(SElist,
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_character(metadata_fields)
   
-  metadataSEAll <- lapply(metadata_fields, function(x) {
+  all_metadata <- lapply(metadata_fields, function(x) {
     do.call(c, lapply(names(SElist), function(SE) {
-      metaObj <- list(S4Vectors::metadata(SElist[[SE]])[[x]])
-      names(metaObj) <- SE
-      metaObj
+      meta <- list(S4Vectors::metadata(SElist[[SE]])[[x]])
+      names(meta) <- SE
+      meta
     }))
   })
-  names(metadataSEAll) <- metadata_fields
-  metadataSEAll
+  names(all_metadata) <- metadata_fields
+  all_metadata
 }
