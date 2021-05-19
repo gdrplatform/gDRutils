@@ -7,8 +7,8 @@
 merge_assay(
   SElist,
   assay_name,
-  discard_keys = NULL,
-  additional_col_name = "data_source"
+  additional_col_name = "data_source",
+  discard_keys = NULL
 )
 }
 \arguments{
@@ -16,12 +16,12 @@ merge_assay(
 
 \item{assay_name}{name of the assay that should be extracted and merged}
 
-\item{discard_keys}{a character vector of string that will be discarded
-during creating BumpyMatrix object}
-
 \item{additional_col_name}{a string with the name of the column that will be
 added to assay data for the distinction of possible duplicated metrics
 that can arise from multiple projects}
+
+\item{discard_keys}{a character vector of string that will be discarded
+during creating BumpyMatrix object}
 }
 \value{
 BumpyMatrix or list with data.table + BumpyMatrix
