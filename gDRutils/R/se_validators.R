@@ -41,44 +41,40 @@ validate_se_assay_name <- function(se, name) {
 validate_SE <- function(se,
                         expect_single_agent = FALSE) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
-  checkmate::assert(
-    checkmate::check_class(se, "SummarizedExperiment"),
-    checkmate::check_subset(assayNames(se), c("RawTreated", "Controls", 
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_subset(assayNames(se), c("RawTreated", "Controls", 
                                               "Normalized", "RefGRvalue", 
                                               "RefRelativeViability", "DivisionTime", 
-                                              "Averaged", "Metrics")),
-    checkmate::check_true(all(c("experiment_metadata", "df_",
+                                              "Averaged", "Metrics"))
+  checkmate::assert_true(all(c("experiment_metadata", "df_",
                                 "Keys", 
                                 #"df_raw_data",
                                 "fit_parameters", 
                                 #"drug_combinations",
                                 ".internal") %in%
-                                names(S4Vectors::metadata(se)))),
-    checkmate::check_names(names(convert_se_assay_to_dt(se, "Metrics")),
-                           must.include = c("normalization_type", "fit_source")),
-    checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Normalized")))),
-    checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Averaged")))),
-    checkmate::check_true(identical(dimnames(se), dimnames(assay(se, "Metrics")))),
-    combine = "and")
+                                names(S4Vectors::metadata(se))))
+  checkmate::assert_true(all(c("normalization_type", "fit_source") %in% 
+                             names(convert_se_assay_to_dt(se, "Metrics"))))
+  checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Normalized"))))
+  checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Averaged"))))
+  checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Metrics"))))
   coldata <- colData(se)
   rowdata <- rowData(se)
   
   # Validate the correctness of rowData and colData
-  checkmate::assert(
-    checkmate::check_true(all(gsub("_.*", "", rownames(se)) == rowdata$Gnumber)),
-    checkmate::check_true(all(gsub("_.*", "", colnames(se)) == coldata$clid)),
-    checkmate::check_true(nrow(coldata) == nrow(unique(coldata))),
-    checkmate::check_true(nrow(rowdata) == nrow(unique(rowdata))),
-    combine = "and")
-  vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
+  checkmate::assert_true(all(gsub("_.*", "", rownames(se)) == rowdata$Gnumber))
+  checkmate::assert_true(all(gsub("_.*", "", colnames(se)) == coldata$clid))
+  checkmate::assert_true(nrow(coldata) == nrow(unique(coldata)))
+  checkmate::assert_true(nrow(rowdata) == nrow(unique(rowdata)))
   
   # Validate the correctness of single-agent data
+  vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
   if (expect_single_agent && length(vars_cotreatment) > 0) {
     if ("DrugName_2" %in% names(rowdata)) {
-      checkmate::check_subset(rowdata[["DrugName_2"]], get_identifier("untreated_tag"))
+      checkmate::assert_subset(rowdata[["DrugName_2"]], get_identifier("untreated_tag"))
     }
     if ("Concentration_2" %in% names(rowdata)) {
-      checkmate::check_subset(rowdata[["Concentration_2"]], 0)
+      checkmate::assert_subset(rowdata[["Concentration_2"]], 0)
     }
   }
   invisible(NULL)

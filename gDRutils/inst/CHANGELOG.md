@@ -1,3 +1,6 @@
+# Changes to v.0.0.48
+- refactor validate_SE function
+
 # Changes to v.0.0.47
 - add `merge_SE` function
 
