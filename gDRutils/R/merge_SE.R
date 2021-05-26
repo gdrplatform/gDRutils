@@ -25,7 +25,7 @@ merge_SE <- function(SElist,
   metrics <- merge_assay(SElist = SElist, assay_name = "Metrics", additional_col_name = additional_col_name,
                          discard_keys = discard_keys)
 
-  if (is.null(additional_col_name)) {
+  if (!is.null(additional_col_name)) {
     averaged$DT[[additional_col_name]] <- NULL
   }
   data <- split_SE_components(averaged$DT)
