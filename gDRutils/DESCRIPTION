@@ -14,7 +14,7 @@ Description: This package contains utility functions used throughout the gDR pac
 License: file GNE_LICENSE
 LazyLoad: yes
 Imports:
-    BumpyMatrix (>= 0.99.7),
+    BumpyMatrix (== 0.99.7),
     checkmate,
     data.table,
     drc,
@@ -28,7 +28,7 @@ Suggests:
     futile.logger,
     knitr,
     testthat,
-    gDRtestData (>= 0.0.2)
+    gDRtestData (== 0.0.2)
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.1
