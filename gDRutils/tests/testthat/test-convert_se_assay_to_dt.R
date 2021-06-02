@@ -84,7 +84,7 @@ test_that("flatten works as expected", {
   repgrid_reduced <- repgrid[-c(1:2), ]
   out4 <- flatten(repgrid_reduced, groups = groups, wide_cols = wide_cols)
   expect_equal(dim(out4), c(length(unique(repgrid_reduced$id)), 
-                            (n) * length(wide_cols) + length(setdiff(colnames(repgrid_reduced), c(groups, wide_cols)))))
+                            n * length(wide_cols) + length(setdiff(colnames(repgrid_reduced), c(groups, wide_cols)))))
   
   expect_equal(colnames(out4), c("id", "id2", "constant", "GR_GDS_wide", "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
   
