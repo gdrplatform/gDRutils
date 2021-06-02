@@ -30,3 +30,14 @@ test_that("validate_SE works as expected", {
   expect_error(validate_SE(se2))
   
 })
+
+
+test_that("validate_SE works as expected on real data", {
+  seReal <- readRDS(system.file("testdata/finalSE_small.RDS", package = "gDRtestData"))
+  validate_SE(seReal)
+  # Add empty drug_moa in one record of rowData
+  rowdata <- SummarizedExperiment::rowData(seReal)
+  rowdata[2, "drug_moa"] <- ""
+  SummarizedExperiment::rowData(seReal) <- rowdata
+  expect_error(validate_SE(seReal))
+})
