@@ -39,5 +39,7 @@ test_that("validate_SE works as expected on real data", {
   rowdata <- SummarizedExperiment::rowData(seReal)
   rowdata[2, "drug_moa"] <- ""
   SummarizedExperiment::rowData(seReal) <- rowdata
-  expect_error(validate_SE(seReal))
+  expect_error(validate_SE(seReal),
+               regexp = "Assertion on \'any(na.omit(unlist(rowdata)) == \"\")\' failed: Must be FALSE.",
+               fixed = TRUE)
 })
