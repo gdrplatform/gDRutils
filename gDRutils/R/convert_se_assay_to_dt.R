@@ -164,7 +164,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
   ## Drop empty elements for successful merge.
   filtered <- out[lapply(out, nrow) > 0L]
-  Reduce(function(x, y) merge(x, y, by = intersect(names(x), names(y))), filtered)
+  Reduce(function(x, y) merge(x, y, all = TRUE, by = intersect(names(x), names(y))), filtered)
 }
 
 
