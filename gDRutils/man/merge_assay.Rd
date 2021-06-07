@@ -16,11 +16,11 @@ merge_assay(
 
 \item{assay_name}{name of the assay that should be extracted and merged}
 
-\item{additional_col_name}{a string with the name of the column that will be
+\item{additional_col_name}{string of column name that will be
 added to assay data for the distinction of possible duplicated metrics
 that can arise from multiple projects}
 
-\item{discard_keys}{a character vector of string that will be discarded
+\item{discard_keys}{character vector of string that will be discarded
 during creating BumpyMatrix object}
 }
 \value{

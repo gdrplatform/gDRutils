@@ -5,7 +5,7 @@
 #' @param x character vector of names to prettify.
 #' @param human_readable boolean indicating whether or not to return column names in human readable format.
 #' Defaults to \code{FALSE}.
-#' @param normalization_type a character with a specified normalization type.
+#' @param normalization_type character vector with a specified normalization type.
 #' Defaults to \code{c("GR", "RV")}.
 #'
 #' @return character vector of prettified names.
@@ -13,7 +13,7 @@
 #' @details 
 #' A common use case for this function is to prettify column names from a flattened version of 
 #' the \code{"Metrics"} assay.
-#' Mode \code{"human_readable = TRUE"} is often used for prettification in the context
+#' Mode \code{"human_readable" = TRUE} is often used for prettification in the context
 #' of front-end applications, whereas \code{"human_readable" = FALSE} is often used for 
 #' prettification in the context of the command line.
 #'
@@ -44,6 +44,7 @@ prettify_flat_metrics <- function(x,
 # Prettify helpers
 ####################
 
+#' @keywords internal
 .convert_norm_specific_metrics <- function(x, normalization_type) {
   for (norm in normalization_type) {
     metrics_names <- get_header("metrics_names")[norm, ]
@@ -54,8 +55,7 @@ prettify_flat_metrics <- function(x,
     is_norm <- grepl(norm, x)
     for (name in names(metrics_names)) {
       replace <- is_norm & grepl(name, x)
-      x[replace] <- gsub(norm, "", x[replace])
-      x[replace] <- gsub(name, metrics_names[[name]], x[replace])
+      x[replace] <- gsub(name, metrics_names[[name]], gsub(norm, "", x[replace]))
     }
   }
   x
