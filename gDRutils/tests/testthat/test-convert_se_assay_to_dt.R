@@ -84,5 +84,3 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   expect_equal(metrics2[[extra_col]], extra_val)
   expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs2)))
 })
-
-

@@ -1,3 +1,9 @@
+# Changes to v.1.0.0
+- release 1.0.0
+
+# Changes to v.0.0.49
+- fix bug with merging flatten assays
+
 # Changes to v.0.0.48
 - refactor validate_SE function
 
