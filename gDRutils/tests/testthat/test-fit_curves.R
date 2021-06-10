@@ -210,7 +210,7 @@ test_that(".setup_metric_output works as expected", {
 
 test_that(".calculate_x_max works as expected", {
   n <- 4
-  df <- data.frame(concs=c(0.01, 1, 0.03, 5), norm_values=seq(n)) 
+  df <- data.frame(concs = c(0.01, 1, 0.03, 5), norm_values = seq(n)) 
   expect_equal(gDRutils:::.calculate_x_max(df), 2)
 
   df$norm_values <- rep(NA, n)
