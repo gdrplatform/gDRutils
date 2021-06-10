@@ -200,11 +200,13 @@ test_that("logistic_4parameters works as expected", {
     expect_equal(v, Vinf)
 })
 
+
 test_that(".setup_metric_output works as expected", {
   obs <- gDRutils:::.setup_metric_output()
   expect_true(is.list(obs))
   expect_equal(length(obs), 14)
 })
+
 
 test_that(".calculate_x_max works as expected", {
   n <- 4
@@ -213,8 +215,4 @@ test_that(".calculate_x_max works as expected", {
 
   df$norm_values <- rep(NA, n)
   expect_equal(gDRutils:::.calculate_x_max(df), NA)
-})
-
-test_that("", {
-
 })
