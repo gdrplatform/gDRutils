@@ -229,7 +229,7 @@ logisticFit <-
     tryCatch({
       non_na_avg_norm <- !is.na(xAvg$norm_values)
       if (length(unique(xAvg$norm_values[non_na_avg_norm])) == 1L) {
-        fitting_error_handler("constant_fit")
+        fitting_error_handler("constant_fit", "only 1 normalized value detected, setting constant fit")
       }
       if (sum(non_na_avg_norm) < n_point_cutoff) {
         fitting_error_handler("too_few_fit")
@@ -255,7 +255,7 @@ logisticFit <-
 
       fit_model <- drc::drm(
         norm_values ~ concs,
-        data = df_,
+        data = df_, # TODO: Should this be xAvg?...
         logDose = NULL,
         fct = fct,
         start = priors,
@@ -265,11 +265,7 @@ logisticFit <-
         na.action = stats::na.omit
       )
 
-      # Successful fit.
-      for (p in fit_param) {
-        # drm will output model with the ":(Intercept)" term concatenated at end. 
-        out[[p]] <- stats::coef(fit_model)[paste0(p, ":(Intercept)")]
-      }
+      out <- .set_model_fit_params(out, fit_model, fit_param)
 
       out$x_mean <- .predict_mean_from_model(fit_model, min(df_$concs), max(df_$concs))
       out$x_AOC <- 1 - out$x_mean
@@ -286,7 +282,7 @@ logisticFit <-
       # Test the significance of the fit and replace with flat function if required.
       f_pval <- .calculate_f_pval(x_0, RSS1, RSS2)
       if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
-        fitting_error_handler("constant_fit")
+        fitting_error_handler("constant_fit", msg = "fit is not statistically significant, setting constant fit")
       }
 
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
@@ -353,6 +349,14 @@ logistic_metrics <- function(c, x_metrics) {
 # Helper functions
 ##################
 
+#' @keywords internal
+.setup_metric_output <- function() {
+    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+    out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
+    names(out) <- resp_metric_cols
+}
+
+
 # Estimate values for undefined IC/GR50 values. 
 #' @keywords internal
 .estimate_xc50 <- function(param) {
@@ -368,93 +372,20 @@ logistic_metrics <- function(c, x_metrics) {
 }
 
 
-
-#' @export
-.set_mean_params <- function(params, mean_norm_value) {
-  params$xc50 <- .estimate_xc50(mean_norm_value)
-
-  if (!is.na(x_0)) {
-    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
-  }
-  params$x_0 <- params$x_inf <- params$x_mean <- mean_norm_value
-  params$x_AOC_range <- params$x_AOC <- 1 - mean_norm_value
-  params
-}
-
-.set_too_few_fit_params <- function(out) {
-  out$fit_type <- "DRCTooFewPointsToFit"
-  out$xc50 <- .estimate_xc50(norm_values)
-  out
-}
-
-#' Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
-#' @export
-.set_constant_fit_params <- function(params, mean_norm_value) {
-  params$fit_type <- "DRCConstantFitResult"
-  params$c50 <- 0
-  params$h <- 0.0001
-
-  params <- .set_mean_params(params, mean_norm_value)
-  params
-}
-
-#' @export
-.set_invalid_fit_params <- function(params, norm_values) {
-  params$fit_type <- "DRCInvalidFitResult"
-  params$r2 <- 0
-  params$xc50 <- .estimate_xc50(norm_values)
-  params
-}
-
-
-.predict_mean_from_model <- function(model, min, max, intervals = 100) {
-  lg_min_con <- log10(min)
-  lg_max_con <- log10(max)
-  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
-  mean(stats::predict(model, inputs), na.rm = TRUE)
-} 
-
-.calculate_xc50 <- function(c50, x0, xInf, h) {
-  c50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1/h)
-}
-
-
-# 'x_max' can be considered either the lowest readout (max efficacy) 
-# or the efficacy at the max concentration. We take the min 
-# of the two highest concentrations as a compromise.
-.calculate_x_max <- function(xAvg) {
-  l <- nrow(xAvg)
-  if (all(is.na(xAvg$norm_values))) {
-    x_max <- NA
-  } else {
-    # takes the highest two measured values (Remove NAs)
-    x_max <- min(xAvg$norm_values[!is.na(xAvg$norm_values)][c(l, l - 1)], na.rm = TRUE)
-  }
-  x_max
-}
-
-.calculate_f_pval <- function(x0, RSS1, RSS2) {
-    nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x_0 = NA) {4}
-    df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
-    df2 <- (length(stats::na.omit(df_$norm_values)) - nparam + 1)
-
-    f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
-    f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
-}
-
+#' @keywords internal
 has_dups <- function(vec) {
   freq <- table(vec)
   if (any(dups <- freq != 1L)) {
-    warning(
-      sprintf(
-        "duplicate concentrations were found: '%s', averaging values across a single concentration",
-        paste0(names(freq)[dups], collapse = ", ")
-      )
-    )
+    warning(sprintf("duplicate concentrations were found: '%s', averaging values",
+      paste0(names(freq)[dups], collapse = ", ")))
   }
   dups
 }
 
+
+# TODO: Check that out is the right format (list and not df?)
+# Should the concs also be in the output?
+#' @keywords internal
 average_dups <- function(concs, norm_values) {
   out <- list(norm_values = norm_values)
   if (has_dups(concs)) {
@@ -468,17 +399,113 @@ average_dups <- function(concs, norm_values) {
   out
 }
 
+############
+# Setters
+############
 
-.setup_metric_output <- function() {
-    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
-    out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
-    names(out) <- resp_metric_cols
+#' @export
+.set_mean_params <- function(out, mean_norm_value) {
+  out$xc50 <- .estimate_xc50(mean_norm_value)
+
+  if (!is.na(x_0)) {
+    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
+  }
+  out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
+  out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
+  out
 }
+
+
+#' @keywords internal
+.set_model_fit_params <- function(out, model, fit_param) {
+  for (p in fit_param) {
+    # drm will output model with the ":(Intercept)" term concatenated at end. 
+    out[[p]] <- stats::coef(model)[paste0(p, ":(Intercept)")]
+  }
+  out
+}
+
+
+#' @keywords internal
+.set_too_few_fit_params <- function(out) {
+  out$fit_type <- "DRCTooFewPointsToFit"
+  out$xc50 <- .estimate_xc50(norm_values)
+  out
+}
+
+
+#' Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
+#' @export
+.set_constant_fit_params <- function(out, mean_norm_value) {
+  out$fit_type <- "DRCConstantFitResult"
+  out$c50 <- 0
+  out$h <- 0.0001
+
+  out <- .set_mean_params(out, mean_norm_value)
+  out
+}
+
+
+#' @export
+.set_invalid_fit_params <- function(params, norm_values) {
+  params$fit_type <- "DRCInvalidFitResult"
+  params$r2 <- 0
+  params$xc50 <- .estimate_xc50(norm_values)
+  params
+}
+
+#################
+# Calculations
+#################
+
+#' @keywords internal
+.predict_mean_from_model <- function(model, min, max, intervals = 100) {
+  lg_min_con <- log10(min)
+  lg_max_con <- log10(max)
+  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
+  mean(stats::predict(model, inputs), na.rm = TRUE)
+} 
+
+
+#' @keywords internal
+.calculate_xc50 <- function(c50, x0, xInf, h) {
+  c50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1/h)
+}
+
+
+# 'x_max' can be considered either the lowest readout (max efficacy) 
+# or the efficacy at the max concentration. We take the min 
+# of the two highest concentrations as a compromise.
+#' @keywords internal
+.calculate_x_max <- function(xAvg) {
+  l <- nrow(xAvg)
+  if (all(is.na(xAvg$norm_values))) {
+    x_max <- NA
+  } else {
+    # takes the highest two measured values (Remove NAs)
+    x_max <- min(xAvg$norm_values[!is.na(xAvg$norm_values)][c(l, l - 1)], na.rm = TRUE)
+  }
+  x_max
+}
+
+
+#' @keywords internal
+.calculate_f_pval <- function(x0, RSS1, RSS2) {
+  nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x_0 = NA) {4}
+  df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
+  df2 <- (length(stats::na.omit(df_$norm_values)) - nparam + 1)
+
+  f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
+  f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
+  f_pval
+}
+
 
 #################
 # Error handling
 #################
 
+#' @keywords internal
 fitting_error_handler <- function(subclass, message, call = sys.call(-1), ...) {
   c <- condition(c(subclass, "error"), message, call = call, ...)
   stop(c)
