@@ -211,28 +211,29 @@ logisticFit <-
 
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
-    df_ <- data.frame(concs = concs,
-                      norm_values = norm_values)
+    df_ <- data.frame(concs = concs, norm_values = norm_values)
 
-    xAvg <- average_dups(df_$concs, df_$norm_values)
+    if (has_dups(df_$concs)) {
+      df_ <- average_dups(df_)
+    }
 
-    mean_norm_value <- mean(xAvg$norm_values, na.rm = TRUE)
+    mean_norm_value <- mean(df_$norm_values, na.rm = TRUE)
     out$x_mean <- mean_norm_value
     out$x_AOC <- 1 - mean_norm_value
-    out$x_max <- .calculate_x_max(xAvg)
+    out$x_max <- .calculate_x_max(df_)
 
     ## Perform a 3-param or 4-param fit. 
     ## Fit type is determined based on number of free variables available.
     fit_param <- c("h", "x_inf", "x_0", "c50")
     controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
 
-    tryCatch({
-      non_na_avg_norm <- !is.na(xAvg$norm_values)
-      if (length(unique(xAvg$norm_values[non_na_avg_norm])) == 1L) {
-        fitting_error_handler("constant_fit", "only 1 normalized value detected, setting constant fit")
+    out <- tryCatch({
+      non_na_avg_norm <- !is.na(df_$norm_values)
+      if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
+        stop(fitting_handler("constant_fit", "only 1 normalized value detected, setting constant fit"))
       }
       if (sum(non_na_avg_norm) < n_point_cutoff) {
-        fitting_error_handler("too_few_fit")
+        stop(fitting_handler("too_few_fit", "not enough data to perform fitting"))
       }
 
       if (!is.na(x_0)) {
@@ -255,7 +256,7 @@ logisticFit <-
 
       fit_model <- drc::drm(
         norm_values ~ concs,
-        data = df_, # TODO: Should this be xAvg?...
+        data = df_,
         logDose = NULL,
         fct = fct,
         start = priors,
@@ -282,7 +283,7 @@ logisticFit <-
       # Test the significance of the fit and replace with flat function if required.
       f_pval <- .calculate_f_pval(x_0, RSS1, RSS2)
       if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
-        fitting_error_handler("constant_fit", msg = "fit is not statistically significant, setting constant fit")
+        stop(fitting_handler("constant_fit", msg = "fit is not statistically significant, setting constant fit"))
       }
 
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
@@ -290,23 +291,20 @@ logisticFit <-
         out$xc50 <- .estimate_xc50(out$x_inf)
       }
     }, too_few_fit = function(e) {
-      out <- .set_too_few_fit_params(out)
+      out <- .set_too_few_fit_params(out, df_$norm_values)
+      out
 
     }, constant_fit = function(e) {
-      out <- .set_constant_fit_params(out)
+      out <- .set_constant_fit_params(out, mean_norm_value)
 
     }, invalid_fit = function(e) {
-      out <- .set_invalid_fit_params(out, df_$norm_values)
       warning(sprintf("fitting failed with error: '%s'", e))
+      out <- .set_invalid_fit_params(out, df_$norm_values)
 
     }, error = function(e) {
-      warning(e)
-
-    }, finally = {
-      out
+      stop(e)
     })
-
-    out
+  data.frame(out)
   }
 
 
@@ -351,9 +349,10 @@ logistic_metrics <- function(c, x_metrics) {
 
 #' @keywords internal
 .setup_metric_output <- function() {
-    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
-    out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
-    names(out) <- resp_metric_cols
+  resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+  out <- as.list(rep(NA, length(resp_metric_cols)))
+  names(out) <- resp_metric_cols
+  out
 }
 
 
@@ -375,28 +374,20 @@ logistic_metrics <- function(c, x_metrics) {
 #' @keywords internal
 has_dups <- function(vec) {
   freq <- table(vec)
-  if (any(dups <- freq != 1L)) {
-    warning(sprintf("duplicate concentrations were found: '%s', averaging values",
-      paste0(names(freq)[dups], collapse = ", ")))
-  }
-  dups
+  any(freq != 1L)
 }
 
 
-# TODO: Check that out is the right format (list and not df?)
-# Should the concs also be in the output?
 #' @keywords internal
-average_dups <- function(concs, norm_values) {
-  out <- list(norm_values = norm_values)
-  if (has_dups(concs)) {
-    out <- stats::aggregate(out,
-      by = list(conc = concs),
-      FUN = function(x) {
-        mean(x, na.rm = TRUE)
-      }
-    )
-  }
-  out
+average_dups <- function(df) {
+  stopifnot("concs" %in% colnames(df))
+  warning("duplicates were found, averaging values")
+  stats::aggregate(df,
+    by = list(concs = concs),
+    FUN = function(x) {
+      mean(x, na.rm = TRUE)
+    }
+  )
 }
 
 ############
@@ -427,7 +418,7 @@ average_dups <- function(concs, norm_values) {
 
 
 #' @keywords internal
-.set_too_few_fit_params <- function(out) {
+.set_too_few_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCTooFewPointsToFit"
   out$xc50 <- .estimate_xc50(norm_values)
   out
@@ -447,11 +438,11 @@ average_dups <- function(concs, norm_values) {
 
 
 #' @export
-.set_invalid_fit_params <- function(params, norm_values) {
-  params$fit_type <- "DRCInvalidFitResult"
-  params$r2 <- 0
-  params$xc50 <- .estimate_xc50(norm_values)
-  params
+.set_invalid_fit_params <- function(out, norm_values) {
+  out$fit_type <- "DRCInvalidFitResult"
+  out$r2 <- 0
+  out$xc50 <- .estimate_xc50(norm_values)
+  out
 }
 
 #################
@@ -477,13 +468,19 @@ average_dups <- function(concs, norm_values) {
 # or the efficacy at the max concentration. We take the min 
 # of the two highest concentrations as a compromise.
 #' @keywords internal
-.calculate_x_max <- function(xAvg) {
-  l <- nrow(xAvg)
-  if (all(is.na(xAvg$norm_values))) {
+.calculate_x_max <- function(df) {
+  stopifnot(c("concs", "norm_values") %in% colnames(df))
+
+  # Ascending order for position norm_values subsetting.
+  df <- df[order(df$concs), ]
+  norm_values <- df$norm_values
+
+  if (all(is.na(norm_values))) {
     x_max <- NA
   } else {
-    # takes the highest two measured values (Remove NAs)
-    x_max <- min(xAvg$norm_values[!is.na(xAvg$norm_values)][c(l, l - 1)], na.rm = TRUE)
+    norm_values <- norm_values[!is.na(norm_values)]
+    n <- length(norm_values)
+    x_max <- min(norm_values[c((n - 1):n)])
   }
   x_max
 }
@@ -506,7 +503,9 @@ average_dups <- function(concs, norm_values) {
 #################
 
 #' @keywords internal
-fitting_error_handler <- function(subclass, message, call = sys.call(-1), ...) {
-  c <- condition(c(subclass, "error"), message, call = call, ...)
-  stop(c)
+fitting_handler <- function(subclass, message, call = sys.call(-1), ...) {
+  structure(
+    class = c(subclass, "error", "condition"),
+    list(message = message, call = call, ...)
+  )
 }

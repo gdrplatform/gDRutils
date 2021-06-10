@@ -4,7 +4,7 @@
 \alias{.set_constant_fit_params}
 \title{Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf}
 \usage{
-.set_constant_fit_params(params, mean_norm_value)
+.set_constant_fit_params(out, mean_norm_value)
 }
 \description{
 Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
