@@ -292,7 +292,6 @@ logisticFit <-
       }
     }, too_few_fit = function(e) {
       out <- .set_too_few_fit_params(out, df_$norm_values)
-      out
 
     }, constant_fit = function(e) {
       out <- .set_constant_fit_params(out, mean_norm_value)
@@ -460,7 +459,7 @@ average_dups <- function(df) {
 
 #' @keywords internal
 .calculate_xc50 <- function(c50, x0, xInf, h) {
-  c50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1/h)
+  c50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1 / h)
 }
 
 
