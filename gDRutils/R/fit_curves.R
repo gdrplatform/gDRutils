@@ -230,10 +230,10 @@ logisticFit <-
     out <- tryCatch({
       non_na_avg_norm <- !is.na(df_$norm_values)
       if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
-        stop(fitting_handler("constant_fit", "only 1 normalized value detected, setting constant fit"))
+        stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
       }
       if (sum(non_na_avg_norm) < n_point_cutoff) {
-        stop(fitting_handler("too_few_fit", "not enough data to perform fitting"))
+        stop(fitting_handler("too_few_fit", message = "not enough data to perform fitting"))
       }
 
       if (!is.na(x_0)) {
@@ -278,23 +278,28 @@ logisticFit <-
       RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
       
       out$r2 <- 1 - RSS2 / RSS1
-      out$xc50 <- .calculate_xc50(c50 = out$c50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
+      out$xc50 <- .calculate_xc50(c50 = out$c50, x0 = x_0, xInf = out$x_inf, h = out$h)
 
       # Test the significance of the fit and replace with flat function if required.
-      f_pval <- .calculate_f_pval(x_0, RSS1, RSS2)
+      nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
+      df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
+      df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
+
+      f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
       if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
-        stop(fitting_handler("constant_fit", msg = "fit is not statistically significant, setting constant fit"))
+        stop(fitting_handler("constant_fit", message = "fit is not statistically significant, setting constant fit"))
       }
 
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
       if (is.na(out$xc50)) {
         out$xc50 <- .estimate_xc50(out$x_inf)
       }
+      out
     }, too_few_fit = function(e) {
       out <- .set_too_few_fit_params(out, df_$norm_values)
 
     }, constant_fit = function(e) {
-      out <- .set_constant_fit_params(out, mean_norm_value)
+      out <- .set_constant_fit_params(out, x_0, mean_norm_value)
 
     }, invalid_fit = function(e) {
       warning(sprintf("fitting failed with error: '%s'", e))
@@ -382,7 +387,7 @@ average_dups <- function(df) {
   stopifnot("concs" %in% colnames(df))
   warning("duplicates were found, averaging values")
   stats::aggregate(df,
-    by = list(concs = concs),
+    by = list(concs = df$concs),
     FUN = function(x) {
       mean(x, na.rm = TRUE)
     }
@@ -397,9 +402,6 @@ average_dups <- function(df) {
 .set_mean_params <- function(out, mean_norm_value) {
   out$xc50 <- .estimate_xc50(mean_norm_value)
 
-  if (!is.na(x_0)) {
-    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
-  }
   out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
   out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
   out
@@ -410,7 +412,7 @@ average_dups <- function(df) {
 .set_model_fit_params <- function(out, model, fit_param) {
   for (p in fit_param) {
     # drm will output model with the ":(Intercept)" term concatenated at end. 
-    out[[p]] <- stats::coef(model)[paste0(p, ":(Intercept)")]
+    out[[p]] <- stats::coef(model)[[paste0(p, ":(Intercept)")]]
   }
   out
 }
@@ -426,11 +428,14 @@ average_dups <- function(df) {
 
 #' Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
 #' @export
-.set_constant_fit_params <- function(out, mean_norm_value) {
+.set_constant_fit_params <- function(out, x0, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
   out$c50 <- 0
   out$h <- 0.0001
 
+  if (!is.na(x0)) {
+    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x0, mean_norm_value))
+  }
   out <- .set_mean_params(out, mean_norm_value)
   out
 }
@@ -486,11 +491,7 @@ average_dups <- function(df) {
 
 
 #' @keywords internal
-.calculate_f_pval <- function(x0, RSS1, RSS2) {
-  nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x_0 = NA) {4}
-  df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
-  df2 <- (length(stats::na.omit(df_$norm_values)) - nparam + 1)
-
+.calculate_f_pval <- function(df1, df2, RSS1, RSS2) {
   f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
   f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
   f_pval

@@ -10,7 +10,7 @@ test_that("fit_curves fails with expected errors", {
   # Log10 concentrations.
   df_resp2 <- df_resp
   df_resp2$Concentration <- df_resp2$Concentration * -1
-  expect_error(fit_curves(df_resp2), reg = "function accepts only unlogged concentrations")
+  expect_error(fit_curves(df_resp2), reg = "logisticFit accepts only unlogged concentrations")
 
   # Invalid normalization_type.
   expect_error(fit_curves(df_resp, normalization_type = "BOGUS"), reg = "unknown curve type")
@@ -21,7 +21,7 @@ test_that("fit_curves fails with expected errors", {
 test_that("warnings are thrown for duplicated concentrations", {
   df_resp3 <- df_resp
   df_resp3$Concentration[2:3] <- df_resp3$Concentration[1]
-  expect_warning(fit_curves(df_resp3), reg = "duplicate concentrations were found")
+  expect_warning(fit_curves(df_resp3), reg = "duplicates were found")
 })
 
 
