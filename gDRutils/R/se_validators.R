@@ -68,8 +68,8 @@ validate_SE <- function(se,
   checkmate::assert_true(nrow(rowdata) == nrow(unique(rowdata)))
   
   # Validate non-empty values in rowData and colData
-  checkmate::assert_false(any(na.omit(unlist(coldata)) == ''))
-  checkmate::assert_false(any(na.omit(unlist(rowdata)) == ''))
+  checkmate::assert_false(any(na.omit(unlist(coldata)) == ""))
+  checkmate::assert_false(any(na.omit(unlist(rowdata)) == ""))
   
   # Validate the correctness of single-agent data
   vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
