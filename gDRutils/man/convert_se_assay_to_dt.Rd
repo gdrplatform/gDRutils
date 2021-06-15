@@ -37,3 +37,6 @@ NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
 To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
 }
+\seealso{
+flatten
+}

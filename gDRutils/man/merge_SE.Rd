@@ -13,15 +13,15 @@ merge_SE(
 \arguments{
 \item{SElist}{named list of Summarized Experiments}
 
-\item{additional_col_name}{a string with the name of the column that will be
+\item{additional_col_name}{string with the name of the column that will be
 added to assay data for the distinction of possible duplicated metrics
 that can arise from multiple projects}
 
-\item{discard_keys}{a character vector of string that will be discarded
+\item{discard_keys}{character vector of string that will be discarded
 during creating BumpyMatrix object}
 }
 \value{
-merged Summarized Experiment
+merged SummarizedExperiment object
 }
 \description{
 Merge multiple Summarized Experiments

@@ -2,7 +2,7 @@
 % Please edit documentation in R/merge_SE.R
 \name{identify_unique_se_metadata_fields}
 \alias{identify_unique_se_metadata_fields}
-\title{Indetify unique se metadata fields from the list of SEs}
+\title{Identify unique se metadata fields from a list of SEs}
 \usage{
 identify_unique_se_metadata_fields(SElist)
 }
@@ -10,8 +10,8 @@ identify_unique_se_metadata_fields(SElist)
 \item{SElist}{named list of Summarized Experiments}
 }
 \value{
-vector of unique names of metadata
+character vector of unique names of metadata
 }
 \description{
-Indetify unique se metadata fields from the list of SEs
+Identify unique se metadata fields from a list of SEs
 }
