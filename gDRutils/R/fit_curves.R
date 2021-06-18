@@ -214,7 +214,7 @@ logisticFit <-
     df_ <- data.frame(concs = concs, norm_values = norm_values)
 
     if (has_dups(df_$concs)) {
-      df_ <- average_dups(df_)
+      df_ <- average_dups(df_, "concs")
     }
 
     mean_norm_value <- mean(df_$norm_values, na.rm = TRUE)
@@ -383,11 +383,12 @@ has_dups <- function(vec) {
 
 
 #' @keywords internal
-average_dups <- function(df) {
-  stopifnot("concs" %in% colnames(df))
+#' @importFrom stats aggregate
+average_dups <- function(df, col) {
+  stopifnot(col %in% colnames(df))
   warning("duplicates were found, averaging values")
-  stats::aggregate(df,
-    by = list(concs = df$concs),
+  aggregate(df[colnames(df) != col],
+    by = list(concs = df[[col]]),
     FUN = function(x) {
       mean(x, na.rm = TRUE)
     }
@@ -398,8 +399,11 @@ average_dups <- function(df) {
 # Setters
 ############
 
+#' @importFrom checkmate assert_number
 #' @export
 .set_mean_params <- function(out, mean_norm_value) {
+  assert_number(mean_norm_value)
+
   out$xc50 <- .estimate_xc50(mean_norm_value)
 
   out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
