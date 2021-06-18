@@ -117,7 +117,7 @@ fit_curves <- function(df_,
   is_unique_normalization_type_and_fit_source <- 
     nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
-    stop("'normalization_type' and 'fit_source' columns do not create unqiue combinations") 
+    stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
   }
   rownames(df_metrics) <- paste0(df_metrics$normalization_type, "_", df_metrics$fit_source)
 
