@@ -1,4 +1,5 @@
 # Changes to v.1.0.1
+- upgrade validate_SE by checking if rowData and colData do not have empty strings
 - isolate flatten function
 
 # Changes to v.1.0.0
