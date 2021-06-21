@@ -12,3 +12,8 @@ pkgs:
     url: https://github.roche.com/gdrplatform/gDRtestData.git
     ref: GDR_1_0_0
     subdir: gDRtestData
+  gDRstyle:
+    ver: '>=0.0.3'
+    url: https://github.roche.com/gdrplatform/gDRstyle.git
+    ref: master
+    subdir: ~
