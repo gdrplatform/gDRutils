@@ -24,15 +24,15 @@ df_to_bm_assay <-
     data_type <- match.arg(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     
-    .Deprecated(new = BumpyMatrix::splitAsBumpyMatrix,
-    msg = "support for 'df_to_bm_assay' will be dropped next release cycle. See 'splitAsBumpyMatrix' instead")
-    
     data <- methods::as(data, "DataFrame")
-    allMetadata <- getMetaData(data, discard_keys = discard_keys)
+    allMetadata <- split_SE_components(data, nested_keys = discard_keys)
 
-    seColData <- allMetadata$colData
+    seColData <- allMetadata$condition_md
+    seColData$col_id <- as.numeric(gsub(".*_", "", rownames(seColData)))
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
-    seRowData <- allMetadata$rowData
+    seRowData <- allMetadata$treatment_md
+    seRowData$row_id <- as.numeric(gsub(".*_", "", rownames(seRowData)))
+    
     cond_entries <-
       setdiff(colnames(seRowData), c("row_id", "name_"))
     dataCols <- allMetadata$dataCols
@@ -56,10 +56,10 @@ df_to_bm_assay <-
     # use 'drop = FALSE' to avoid dropping a dimension if there is a single data column only
     # TODO: consier using 'splitToBumpyMatrix' in a sparse mode (GDR-596)
     bm <-
-      BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$dataCols, drop = FALSE],
-                                      row = data_assigned$name_.x,
-                                      column = data_assigned$name_.y)
-    bm <- bm[unique(data_assigned$name_.x), unique(data_assigned$name_.y)]
+      BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE],
+                                      row = data_assigned$row_id,
+                                      column = data_assigned$col_id)
+    bm <- bm[unique(data_assigned$row_id), unique(data_assigned$col_id)]
 
     if (data_type == "untreated") {
       untreatedConds <-

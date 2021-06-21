@@ -1,3 +1,8 @@
+# Changes to v.1.0.2
+- remove deprecated functions
+- switch from getMetadata to split_SE_components
+- refactor df_to_bm_assay
+
 # Changes to v.1.0.1
 - upgrade validate_SE by checking if rowData and colData do not have empty strings
 - isolate flatten function
