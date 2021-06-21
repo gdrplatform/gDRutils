@@ -64,10 +64,10 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
                                                    rowData = S4Vectors::DataFrame(rownames(mat)),
                                                    colData = S4Vectors::DataFrame(colnames(mat)))
   
-  obs <- assay_to_dt(se, "Metrics", merge_metrics = TRUE)
-  
-  expect_equal(nrow(obs), m)
-  expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs)))
+  obs <- convert_se_assay_to_dt(se, "Metrics")
+
+  expect_equal(nrow(obs), m * 2)
+  expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs)))
   
   # Insert random column. 
   metrics2 <- metrics
@@ -79,8 +79,8 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
                                                     rowData = S4Vectors::DataFrame(rownames(mat2)),
                                                     colData = S4Vectors::DataFrame(colnames(mat2)))
   
-  obs2 <- assay_to_dt(se2, "Metrics", merge_metrics = TRUE)
+  obs2 <- convert_se_assay_to_dt(se2, "Metrics")
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
-  expect_true(all(c(unname(get_header("metrics_names"))) %in% colnames(obs2)))
+  expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs2)))
 })
