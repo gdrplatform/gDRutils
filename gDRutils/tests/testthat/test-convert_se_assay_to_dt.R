@@ -67,7 +67,7 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   obs <- convert_se_assay_to_dt(se, "Metrics")
 
   expect_equal(nrow(obs), m * 2)
-  expect_true(all(c(colnames(get_header("metrics_names"))) %in% colnames(obs)))
+  expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs)))
   
   # Insert random column. 
   metrics2 <- metrics
@@ -82,5 +82,5 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   obs2 <- convert_se_assay_to_dt(se2, "Metrics")
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
-  expect_true(all(c(colnames(get_header("metrics_names"))) %in% colnames(obs2)))
+  expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs2)))
 })
