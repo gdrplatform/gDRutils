@@ -117,7 +117,7 @@ fit_curves <- function(df_,
   is_unique_normalization_type_and_fit_source <- 
     nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
-    stop("'normalization_type' and 'fit_source' columns do not create unqiue combinations") 
+    stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
   }
   rownames(df_metrics) <- paste0(df_metrics$normalization_type, "_", df_metrics$fit_source)
 
@@ -201,190 +201,114 @@ logisticFit <-
 
     # Check that values have not been logged yet. 
     if (any(concs < 0)) {
-      stop("function accepts only unlogged concentrations, negative concentrations are detected")
+      stop("logisticFit accepts only unlogged concentrations, negative concentrations are detected")
     }
 
-    resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
-    out <- as.data.frame(matrix(NA, ncol = length(resp_metric_cols)))
-    names(out) <- resp_metric_cols
-
-    # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
-    norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
-
-    ## Calculate metrics that do not require fitting.
+    out <- .setup_metric_output()
     out$maxlog10Concentration <- log10(max(concs))
     out$N_conc <- length(unique(concs))
     out$x_sd_avg <- mean(std_norm_values, na.rm = TRUE)
 
-    df_ <- data.frame(concs = concs,
-                      norm_values = norm_values)
+    # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
+    norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
+    df_ <- data.frame(concs = concs, norm_values = norm_values)
 
-    freq <- table(df_$concs)
-    xAvg <- df_
-    if (any(dups <- freq != 1L)) {
-      warning(
-        sprintf(
-          "duplicate concentrations were found: '%s', averaging values across a single concentration",
-          paste0(names(freq)[dups], collapse = ", ")
-        )
-      )
-      xAvg <- stats::aggregate(
-        list(norm_values = norm_values),
-        by = list(conc = df_$concs),
-        FUN = function(x) {
-          mean(x, na.rm = TRUE)
-        }
-      )
+    if (has_dups(df_$concs)) {
+      df_ <- average_dups(df_, "concs")
     }
 
-    mean_norm_value <- mean(xAvg$norm_values, na.rm = TRUE)
-    # Set temp values if fit fails.
+    mean_norm_value <- mean(df_$norm_values, na.rm = TRUE)
     out$x_mean <- mean_norm_value
     out$x_AOC <- 1 - mean_norm_value
-
-    ## 'x_max' can be considered either the lowest readout (max efficacy) 
-    ## or the efficacy at the max concentration. We take the min 
-    ## of the two highest concentrations as a compromise.
-    l <- nrow(xAvg)
-    if (all(is.na(xAvg$norm_values))) {
-      out$x_max <- NA
-    } else {
-      # takes the highest two measured values (Remove NAs)
-      out$x_max <- min(xAvg$norm_values[!is.na(xAvg$norm_values)][c(l, l - 1)], na.rm = TRUE)
-    }
-
-    # Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
-    .set_constant_fit_params <- function(out) {
-      out$fit_type <- "DRCConstantFitResult"
-      out$c50 <- 0
-      out$h <- 0.0001
-      out$xc50 <- .estimate_xc50(mean_norm_value)
-
-      if (!is.na(x_0)) {
-        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
-      }
-      out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
-      out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
-      out
-    }
-
-    non_na_avg_norm <- !is.na(xAvg$norm_values)
-
-    ## Test for known failure points.
-    if (length(unique(xAvg$norm_values[non_na_avg_norm])) == 1L) {
-      out <- .set_constant_fit_params(out)
-      return(out)
-    }
-
-    if (sum(non_na_avg_norm) < n_point_cutoff) {
-      out$fit_type <- "DRCTooFewPointsToFit"
-      out$xc50 <- .estimate_xc50(norm_values)
-      return(out)
-    }
-
-    # Set fit parameters and boundaries.
-    fit_param <- c("h", "x_inf", "x_0", "c50")
-    controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
+    out$x_max <- .calculate_x_max(df_)
 
     ## Perform a 3-param or 4-param fit. 
     ## Fit type is determined based on number of free variables available.
-    tryCatch({
+    fit_param <- c("h", "x_inf", "x_0", "c50")
+    controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
+
+    out <- tryCatch({
+      non_na_avg_norm <- !is.na(df_$norm_values)
+      if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
+        stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
+      }
+      if (sum(non_na_avg_norm) < n_point_cutoff) {
+        stop(fitting_handler("too_few_fit", message = "not enough data to perform fitting"))
+      }
+
       if (!is.na(x_0)) {
-        # For co-treatments.
-        # Override existing params for removal of x_0 parameter.
+        # Override existing params for removal of x_0 parameter (i.e. cotreatments).
         fit_param <- fit_param[-3]
         priors <- priors[-3]
         lower <- lower[-3]
-        
-        output_model_new <- drc::drm(
-          norm_values ~ concs,
-          data = df_,
-          logDose = NULL,
-          fct = drc::LL.3u(upper = x_0, names = fit_param),
-          start = priors,
-          lowerl = lower,
-          upperl = c(5, min(x_0 + cap, 1), max(concs) * 10),
-          control = controls,
-          na.action = stats::na.omit
-        )
+
+        fct <- drc::LL.3u(upper = x_0, names = fit_param)
+        upperl <- c(5, min(x_0 + cap, 1), max(concs) * 10)
+
         out$fit_type <- "DRC3pHillFitModelFixS0"
         out$x_0 <- x_0
-        
       } else {
-        
-        output_model_new <- drc::drm(
-          norm_values ~ concs,
-          data = df_,
-          logDose = NULL,
-          fct = drc::LL.4(names = fit_param),
-          start = priors,
-          lowerl = lower,
-          upperl = c(5, 1, 1 + cap, max(concs) * 10),
-          control = controls,
-          na.action = stats::na.omit
-        )
+        fct <- drc::LL.4(names = fit_param)
+        upperl <- c(5, 1, 1 + cap, max(concs) * 10)
+
         out$fit_type <- "DRC4pHillFitModel"
       }
-    }, error = function(e) {
-      out$r2 <- 0
-      out$fit_type <- "DRCInvalidFitResult"
-      out$xc50 <- .estimate_xc50(df_$norm_values)
+
+      fit_model <- drc::drm(
+        norm_values ~ concs,
+        data = df_,
+        logDose = NULL,
+        fct = fct,
+        start = priors,
+        lowerl = lower,
+        upperl = upperl,
+        control = controls,
+        na.action = stats::na.omit
+      )
+
+      out <- .set_model_fit_params(out, fit_model, fit_param)
+
+      out$x_mean <- .predict_mean_from_model(fit_model, min(df_$concs), max(df_$concs))
+      out$x_AOC <- 1 - out$x_mean
+
+      out$x_AOC_range <- 1 - .predict_mean_from_model(fit_model, range_conc[1], range_conc[2])
+
+      # F-test for the significance of the sigmoidal fit.
+      RSS2 <- sum(stats::residuals(fit_model) ^ 2, na.rm = TRUE)
+      RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
+      
+      out$r2 <- 1 - RSS2 / RSS1
+      out$xc50 <- .calculate_xc50(c50 = out$c50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
+
+      # Test the significance of the fit and replace with flat function if required.
+      nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
+      df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
+      df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
+
+      f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
+      if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
+        stop(fitting_handler("constant_fit", message = "fit is not statistically significant, setting constant fit"))
+      }
+
+      # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
+      if (is.na(out$xc50)) {
+        out$xc50 <- .estimate_xc50(out$x_inf)
+      }
+      out
+    }, too_few_fit = function(e) {
+      out <- .set_too_few_fit_params(out, df_$norm_values)
+
+    }, constant_fit = function(e) {
+      out <- .set_constant_fit_params(out, x_0, mean_norm_value)
+
+    }, invalid_fit = function(e) {
       warning(sprintf("fitting failed with error: '%s'", e))
-      return(out)
+      out <- .set_invalid_fit_params(out, df_$norm_values)
+
+    }, error = function(e) {
+      stop(e)
     })
-
-    # Successful fit.
-    for (p in fit_param) {
-      ## drm will output model with the ":(Intercept)" term concatenated at end. 
-      out[[p]] <- stats::coef(output_model_new)[paste0(p, ":(Intercept)")]
-    }
-
-    
-    lg_min_con <- log10(min(df_$concs))
-    lg_max_con <- log10(max(df_$concs))
-    out$x_mean <- 
-      mean(stats::predict(output_model_new, 
-                          data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / 100)))), 
-           na.rm = TRUE)
-    
-    out$x_AOC <- 1 - out$x_mean
-    lg_range1 <- log10(range_conc[1])
-    lg_range2 <- log10(range_conc[2])
-    out$x_AOC_range <- 
-      1 - mean(stats::predict(output_model_new,
-                              data.frame(concs = 10 ^ (seq(lg_range1, lg_range2, ((lg_range2 - lg_range1) / 100)))), 
-                              na.rm = TRUE))
-
-    # F-test for the significance of the sigmoidal fit.
-    RSS2 <- sum(stats::residuals(output_model_new) ^ 2, na.rm = TRUE)
-    RSS1 <-
-      sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
-    
-    out$r2 <- 1 - RSS2 / RSS1
-
-    nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x_0 = NA) {4}
-    df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
-    df2 <- (length(stats::na.omit(df_$norm_values)) - nparam + 1)
-
-    f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
-    f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
-
-    # analytical solution for ic50
-    out$xc50 <- out$c50 * ((out$x_0 - out$x_inf) / (0.5 - out$x_inf) - 1) ^
-      (1 / out$h)
-
-    # Test the significance of the fit and replace with flat function if required.
-    if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
-      out <- .set_constant_fit_params(out)
-      return(out)
-    }
-
-    # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
-    if (is.na(out$xc50)) {
-      out$xc50 <- .estimate_xc50(out$x_inf)
-    }
-
-    return(out)
+  data.frame(out)
   }
 
 
@@ -427,6 +351,15 @@ logistic_metrics <- function(c, x_metrics) {
 # Helper functions
 ##################
 
+#' @keywords internal
+.setup_metric_output <- function() {
+  resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+  out <- as.list(rep(NA, length(resp_metric_cols)))
+  names(out) <- resp_metric_cols
+  out
+}
+
+
 # Estimate values for undefined IC/GR50 values. 
 #' @keywords internal
 .estimate_xc50 <- function(param) {
@@ -439,4 +372,144 @@ logistic_metrics <- function(c, x_metrics) {
   } else {
     NA
   }
+}
+
+
+#' @keywords internal
+has_dups <- function(vec) {
+  freq <- table(vec)
+  any(freq != 1L)
+}
+
+
+#' @keywords internal
+#' @importFrom stats aggregate
+average_dups <- function(df, col) {
+  stopifnot(col %in% colnames(df))
+  warning("duplicates were found, averaging values")
+  aggregate(df[colnames(df) != col],
+    by = list(concs = df[[col]]),
+    FUN = function(x) {
+      mean(x, na.rm = TRUE)
+    }
+  )
+}
+
+############
+# Setters
+############
+
+#' @importFrom checkmate assert_number
+#' @export
+.set_mean_params <- function(out, mean_norm_value) {
+  assert_number(mean_norm_value)
+
+  out$xc50 <- .estimate_xc50(mean_norm_value)
+
+  out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
+  out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
+  out
+}
+
+
+#' @keywords internal
+.set_model_fit_params <- function(out, model, fit_param) {
+  for (p in fit_param) {
+    # drm will output model with the ":(Intercept)" term concatenated at end. 
+    out[[p]] <- stats::coef(model)[[paste0(p, ":(Intercept)")]]
+  }
+  out
+}
+
+
+#' @keywords internal
+.set_too_few_fit_params <- function(out, norm_values) {
+  out$fit_type <- "DRCTooFewPointsToFit"
+  out$xc50 <- .estimate_xc50(norm_values)
+  out
+}
+
+
+#' Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
+#' @export
+.set_constant_fit_params <- function(out, x0, mean_norm_value) {
+  out$fit_type <- "DRCConstantFitResult"
+  out$c50 <- 0
+  out$h <- 0.0001
+
+  if (!is.na(x0)) {
+    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x0, mean_norm_value))
+  }
+  out <- .set_mean_params(out, mean_norm_value)
+  out
+}
+
+
+#' @export
+.set_invalid_fit_params <- function(out, norm_values) {
+  out$fit_type <- "DRCInvalidFitResult"
+  out$r2 <- 0
+  out$xc50 <- .estimate_xc50(norm_values)
+  out
+}
+
+#################
+# Calculations
+#################
+
+#' @keywords internal
+.predict_mean_from_model <- function(model, min, max, intervals = 100) {
+  lg_min_con <- log10(min)
+  lg_max_con <- log10(max)
+  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
+  mean(stats::predict(model, inputs), na.rm = TRUE)
+} 
+
+
+#' @keywords internal
+.calculate_xc50 <- function(c50, x0, xInf, h) {
+  c50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1 / h)
+}
+
+
+# 'x_max' can be considered either the lowest readout (max efficacy) 
+# or the efficacy at the max concentration. We take the min 
+# of the two highest concentrations as a compromise.
+#' @keywords internal
+.calculate_x_max <- function(df) {
+  stopifnot(c("concs", "norm_values") %in% colnames(df))
+
+  # Ascending order for position norm_values subsetting.
+  df <- df[order(df$concs), ]
+  norm_values <- df$norm_values
+
+  if (all(is.na(norm_values))) {
+    x_max <- NA
+  } else {
+    norm_values <- norm_values[!is.na(norm_values)]
+    n <- length(norm_values)
+    x_max <- min(norm_values[c((n - 1):n)])
+  }
+  x_max
+}
+
+
+#' @keywords internal
+.calculate_f_pval <- function(df1, df2, RSS1, RSS2) {
+  f_value <- ((RSS1 - RSS2) / df1) / (RSS2 / df2)
+  f_pval <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
+  f_pval
+}
+
+
+#################
+# Error handling
+#################
+
+#' @keywords internal
+fitting_handler <- function(subclass, message, call = sys.call(-1), ...) {
+  structure(
+    class = c(subclass, "error", "condition"),
+    list(message = message, call = call, ...)
+  )
 }

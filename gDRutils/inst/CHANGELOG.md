@@ -1,3 +1,6 @@
+# Changes to v.1.0.3
+- refactor logisticFit with error handling
+
 # Changes to v.1.0.2
 - remove deprecated functions
 - switch from getMetadata to split_SE_components
