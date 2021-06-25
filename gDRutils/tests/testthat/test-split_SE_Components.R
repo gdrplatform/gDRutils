@@ -3,8 +3,8 @@ test_that("split_SE_components splits the correct columns", {
   md <- split_SE_components(test_df)
   expect_true(all(c("Gnumber", "DrugName", "replicates", "drug_moa") %in% colnames(md$treatment_md)))
   expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% colnames(md$condition_md)))
-  expect_equal(ncol(test_df), 
-    sum(ncol(md$treatment_md), ncol(md$condition_md), length(md$data_fields), ncol(md$experiment_md))) 
+  expect_equal(sum(ncol(md$treatment_md), ncol(md$condition_md), length(md$data_fields), ncol(md$experiment_md)), ncol(test_df))
+  expect_equal(md$identifiers_md, get_identifiers())
 
   # Check that nested_keys argument works as expected.
   md2 <- split_SE_components(test_df, nested_keys = c("replicates"))

@@ -36,6 +36,7 @@ split_SE_components <- function(df_, nested_keys = NULL) {
 
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
   identifiers_md <- get_identifier()
+  identifiers_md$nested_keys <- nested_keys
 
   df_ <- S4Vectors::DataFrame(df_)
   all_cols <- colnames(df_)
