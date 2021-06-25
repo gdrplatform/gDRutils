@@ -34,19 +34,22 @@ split_SE_components <- function(df_, nested_keys = NULL) {
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DataFrame")))
   checkmate::assert_character(nested_keys, null.ok = TRUE)
 
+  nested_keys <- .clean_key_inputs(nested_keys, cols)
+
   df_ <- S4Vectors::DataFrame(df_)
   all_cols <- colnames(df_)
 
   ## Identify all known fields.
   data_fields <- c(gDRutils::get_header("raw_data"),
-    gDRutils::get_header("normalized_results"),
-    gDRutils::get_header("averaged_results"),
-    gDRutils::get_header("metrics_results"),
-    gDRutils::get_identifier("well_position"),
-    "Template",
-    "Concentration",
+    get_header("normalized_results"),
+    get_header("averaged_results"),
+    get_header("metrics_results"),
+    get_identifier("well_position"),
+    get_identifier("template"),
+    get_identifier("concentration"),
     nested_keys
   )
+  # TODO: what to do about this column: cellline_ref_div_time
   data_fields <- unique(data_fields)
   data_cols <- data_fields[data_fields %in% all_cols]
 
@@ -58,9 +61,8 @@ split_SE_components <- function(df_, nested_keys = NULL) {
     gDRutils::get_identifier("drug"), 
     gDRutils::get_identifier("drugname"),
     gDRutils::get_identifier("drug_moa"))
-  drug_field_pattern <- sprintf("%s|%s|%s|%s", x[1], x[2], x[3], x[4])
+  drug_field_pattern <- paste0(x, collapse = "|")
   drug_cols <- all_cols[grepl(drug_field_pattern, all_cols)]
-
 
   ## Separate metadata from data fields.
   meta_cols <- setdiff(all_cols, data_cols) 
