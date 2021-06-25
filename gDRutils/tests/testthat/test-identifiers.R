@@ -21,7 +21,9 @@ test_that("get_identifier and set_identifier work", {
                                       drug_moa = "drug_moa",
                                       untreated_tag = c("untreated", "vehicle"), 
                                       masked_tag = "masked", 
-                                      well_position = c("WellRow", "WellColumn")))
+                                      well_position = c("WellRow", "WellColumn"),
+                                      concentration = "Concentration",
+                                      template = "Template"))
 })
 
 

@@ -22,5 +22,7 @@ IDENTIFIERS_LIST <- list(
   masked_tag = "masked",
   # flag for masked wells
 
-  well_position = c("WellRow", "WellColumn")
+  well_position = c("WellRow", "WellColumn"),
+  concentration = "Concentration",
+  template = "Template"
 )
