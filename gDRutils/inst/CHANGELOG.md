@@ -1,3 +1,6 @@
+# Changes to v.1.0.5
+- split_SE_components to freeze identifiers
+
 # Changes to v.1.0.4
 - add concnetration and template as additional identifiers
 
