@@ -137,7 +137,7 @@ get_SE_experiment_metadata <- function(se) {
 #' Get metadata for keys in SummarizedExperiment object metadata.
 #'
 #' @param se a \linkS4class{SummarizedExperiment} object for which to get metadata relating to keys.
-#' @param key_type string of a specific key type (i.e. 'nested_keys', 'Trt', 'masked_tag', etc.). 
+#' @param key_type string of a specific key type (i.e. 'nested_keys', 'trt', 'masked_tag', etc.). 
 #'
 #' @export
 #'
