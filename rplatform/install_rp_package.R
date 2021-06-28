@@ -8,7 +8,7 @@ options(Ncpus = parallel::detectCores())
 install.packages(c("git2r", "desc", "devtools", "stringr", "withr", "DelayedMatrixStats"))
 
 devtools::install_git(
-  url = "ssh://git@bitbucket.roche.com:7999/rp/rp-package.git",
+  url = "https://bitbucket.roche.com/stash/scm/rp/rp-package.git",
   ref = "master",
   upgrade = "never"
 )
