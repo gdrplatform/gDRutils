@@ -18,6 +18,7 @@
 #'  \item{condition_md}{condition metadata}
 #'  \item{data_fields}{all data.frame column names corresponding to fields represented within a BumpyMatrix cell}
 #'  \item{experiment_md}{metadata that is constant for all entries of the data.frame}
+#'  \item{identifiers_md}{key identifier mappings}
 #' }
 #'
 #' The \code{nested_keys} provides the user the opportunity to specify that they would not 
@@ -48,10 +49,8 @@ split_SE_components <- function(df_, nested_keys = NULL) {
     get_header("metrics_results"),
     identifiers_md$well_position,
     identifiers_md$template,
-    identifiers_md$concentration,
     nested_keys
   )
-  # TODO: what to do about this column: cellline_ref_div_time
   data_fields <- unique(data_fields)
   data_cols <- data_fields[data_fields %in% all_cols]
 
