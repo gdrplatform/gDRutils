@@ -1,5 +1,8 @@
+# Changes to v.1.0.5
+- update the logic for CI/CD (repos fetching is now handled with technical user)
+
 # Changes to v.1.0.4
-- add concnetration and template as additional identifiers
+- add concentration and template as additional identifiers
 
 # Changes to v.1.0.3
 - refactor logisticFit with error handling
