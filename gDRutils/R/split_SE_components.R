@@ -43,7 +43,7 @@ split_SE_components <- function(df_, nested_keys = NULL) {
   all_cols <- colnames(df_)
 
   ## Identify all known fields.
-  data_fields <- c(gDRutils::get_header("raw_data"),
+  data_fields <- c(get_header("raw_data"),
     get_header("normalized_results"),
     get_header("averaged_results"),
     get_header("metrics_results"),
@@ -55,7 +55,7 @@ split_SE_components <- function(df_, nested_keys = NULL) {
   data_cols <- data_fields[data_fields %in% all_cols]
 
   cell_id <- identifiers_md$cellline
-  cell_fields <- c(cell_id, gDRutils::get_header("add_clid"))
+  cell_fields <- c(cell_id, get_header("add_clid"))
   cell_cols <- cell_fields[cell_fields %in% all_cols]
 
   x <- c(identifiers_md$duration, 
