@@ -9,7 +9,7 @@ get_SE_keys(se, key_type = NULL)
 \arguments{
 \item{se}{a \linkS4class{SummarizedExperiment} object for which to get metadata relating to keys.}
 
-\item{key_type}{string of a specific key type (i.e. 'nested_keys', 'Trt', 'masked_tag', etc.).}
+\item{key_type}{string of a specific key type (i.e. 'nested_keys', 'trt', 'masked_tag', etc.).}
 }
 \description{
 Get metadata for keys in SummarizedExperiment object metadata.

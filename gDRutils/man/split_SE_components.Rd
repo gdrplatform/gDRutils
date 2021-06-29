@@ -28,6 +28,7 @@ Named list containing the following elements:
  \item{condition_md}{condition metadata}
  \item{data_fields}{all data.frame column names corresponding to fields represented within a BumpyMatrix cell}
  \item{experiment_md}{metadata that is constant for all entries of the data.frame}
+ \item{identifiers_md}{key identifier mappings}
 }
 
 The \code{nested_keys} provides the user the opportunity to specify that they would not 
