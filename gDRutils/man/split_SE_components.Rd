@@ -4,13 +4,16 @@
 \alias{split_SE_components}
 \title{split_SE_components}
 \usage{
-split_SE_components(df_, nested_keys = NULL)
+split_SE_components(df_, nested_keys = NULL, combine_on = c(1, 2))
 }
 \arguments{
 \item{df_}{data.frame with drug-response data}
 
 \item{nested_keys}{character vector of keys to discard from the row or column data, 
 and to leave in the matrix data. See details.}
+
+\item{combine_on}{integer value of \code{1} or \code{2}, indicating whether unrecognized columns
+should be combined on row or column respectively.}
 }
 \value{
 named list containing different elements of a \linkS4class{SummarizedExperiment};
@@ -18,7 +21,7 @@ see details.
 }
 \description{
 Divide the columns of an input data.frame into treatment metadata, condition metadata, 
-experiment metadata, and core data for further analysis. This will most commonly be used
+experiment metadata, and assay data for further analysis. This will most commonly be used
 to identify the different components of a \linkS4class{SummarizedExperiment} object.
 }
 \details{
@@ -26,15 +29,23 @@ Named list containing the following elements:
 \itemize{
  \item{treatment_md}{treatment metadata}
  \item{condition_md}{condition metadata}
- \item{data_fields}{all data.frame column names corresponding to fields represented within a BumpyMatrix cell}
+ \item{data_fields}{all data.frame column names corresponding to fields nested within a BumpyMatrix cell}
  \item{experiment_md}{metadata that is constant for all entries of the data.frame}
  \item{identifiers_md}{key identifier mappings}
 }
 
 The \code{nested_keys} provides the user the opportunity to specify that they would not 
 like to use that metadata field as a differentiator of the treatments, and instead, incorporate it
-into the \code{DataFrame} in the BumpyMatrix.
+into a nested \code{DataFrame} in the BumpyMatrix matrix object.
 
 In the event that if any of the \code{nested_keys} are constant throughout the whole data.frame, 
 they will still be included in the DataFrame of the BumpyMatrix and not in the experiment_metadata.
+
+Columns within the \code{df_} will be identified through the following logic:
+First, the known data fields and any specified \code{nested_keys} are extracted.
+Following that, known cell and drug metadata fields are detected, 
+and any remaining columns that represent constant metadata fields across all rows are extracted. 
+Next, any cell line metadata will be heuristically extracted.
+Finally, all remaining columns will be combined on either the rows or columns as specified by 
+\code{combine_on}.
 }
