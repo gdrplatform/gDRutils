@@ -9,6 +9,7 @@
 #' and to leave in the matrix data. See details.
 #' @param combine_on integer value of \code{1} or \code{2}, indicating whether unrecognized columns
 #' should be combined on row or column respectively.
+#' Defaults to \code{1}.
 #'
 #' @return named list containing different elements of a \linkS4class{SummarizedExperiment};
 #' see details.
@@ -40,11 +41,11 @@
 #'
 #' @export
 #'
-split_SE_components <- function(df_, nested_keys = NULL, combine_on = c(1, 2)) {
+split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   # Assertions.
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DataFrame")))
   checkmate::assert_character(nested_keys, null.ok = TRUE)
-  combine_on <- match.arg(combine_on)
+  checkmate::assert_choice(combine_on, c(1, 2))
 
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
   identifiers_md <- get_identifier()
@@ -93,7 +94,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = c(1, 2)) {
   remaining_cols <- remaining_cols[!singletons]
 
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
-  cl_entries <- identify_linear_dependence(md[remaining_cols], cell_id)
+  cl_entries <- identify_linear_dependence(md[c(cell_cols, remaining_cols)], cell_id)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   if (!all(present <- cell_cols %in% cl_entries)) {
     warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
@@ -102,9 +103,9 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = c(1, 2)) {
 
   trt_cols <- drug_cols
   cell_cols <- unique(c(cell_cols, cl_entries))
-  if (combine_on == 1) {
+  if (combine_on == 1L) {
     trt_cols <- c(remaining_cols, trt_cols)
-  } else if (combine_on == 2) {
+  } else if (combine_on == 2L) {
     cell_cols <- c(remaining_cols, cell_cols)
   } else {
     stop(sprintf("combine_on input: '%s' of class: '%s' is not supported",

@@ -4,7 +4,7 @@
 \alias{split_SE_components}
 \title{split_SE_components}
 \usage{
-split_SE_components(df_, nested_keys = NULL, combine_on = c(1, 2))
+split_SE_components(df_, nested_keys = NULL, combine_on = 1)
 }
 \arguments{
 \item{df_}{data.frame with drug-response data}
@@ -13,7 +13,8 @@ split_SE_components(df_, nested_keys = NULL, combine_on = c(1, 2))
 and to leave in the matrix data. See details.}
 
 \item{combine_on}{integer value of \code{1} or \code{2}, indicating whether unrecognized columns
-should be combined on row or column respectively.}
+should be combined on row or column respectively.
+Defaults to \code{1}.}
 }
 \value{
 named list containing different elements of a \linkS4class{SummarizedExperiment};
