@@ -20,7 +20,8 @@ test_that("split_SE_components splits the correct columns", {
   # combine_on argument works as expected
   md3 <- split_SE_components(test_df, nested_keys = c("replicates"), combine_on = 2L)
   expect_true(all(c("Gnumber", "DrugName", "drug_moa") %in% colnames(md3$treatment_md)))
-  expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime", "Concentration") %in% colnames(md3$condition_md)))
+  expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime", "Concentration") %in% 
+    colnames(md3$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "replicates") %in% md3$data_fields))
   expect_equal(ncol(test_df), 
     sum(ncol(md3$treatment_md), ncol(md3$condition_md), length(md3$data_fields), ncol(md3$experiment_md)))
