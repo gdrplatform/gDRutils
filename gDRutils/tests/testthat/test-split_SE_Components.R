@@ -10,7 +10,7 @@ test_that("split_SE_components splits the correct columns", {
 
   # nested_keys argument works as expected.
   md2 <- split_SE_components(test_df, nested_keys = c("replicates"), combine_on = 1)
-  expect_true(all(c("Gnumber", "DrugName", "drug_moa", "Concentration") %in% colnames(md2$treatment_md)))
+  expect_true(all(c("Gnumber", "DrugName", "drug_moa") %in% colnames(md2$treatment_md)))
   expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% colnames(md2$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "replicates") %in% md2$data_fields))
   expect_equal(ncol(test_df), 
@@ -19,7 +19,7 @@ test_that("split_SE_components splits the correct columns", {
   # combine_on argument works as expected
   md3 <- split_SE_components(test_df, nested_keys = c("replicates"), combine_on = 2L)
   expect_true(all(c("Gnumber", "DrugName", "drug_moa") %in% colnames(md3$treatment_md)))
-  expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime", "Concentration") %in% 
+  expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% 
     colnames(md3$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "replicates") %in% md3$data_fields))
   expect_equal(ncol(test_df), 
@@ -27,7 +27,7 @@ test_that("split_SE_components splits the correct columns", {
 
   # nested key is a main identifier.
   md4 <- split_SE_components(test_df, nested_keys = c("drug_moa"))
-  expect_true(all(c("Gnumber", "DrugName", "Concentration", "replicates") %in% colnames(md4$treatment_md)))
+  expect_true(all(c("Gnumber", "DrugName", "replicates") %in% colnames(md4$treatment_md)))
   expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% colnames(md4$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "drug_moa") %in% md4$data_fields))
   expect_equal(ncol(test_df), 
