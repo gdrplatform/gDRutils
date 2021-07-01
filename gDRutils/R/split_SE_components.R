@@ -70,10 +70,10 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   md_cols <- setdiff(all_cols, data_cols) 
   md <- unique(df_[, md_cols]) 
 
-  drug_md <- c(identifiers_md$duration, 
-    identifiers_md$drug, 
-    identifiers_md$drugname,
-    identifiers_md$drug_moa)
+  drug_md <- c(identifiers_md$drug,
+               identifiers_md$drugname,
+               identifiers_md$drug_moa,
+               identifiers_md$duration)
   drug_field_pattern <- paste0(drug_md, collapse = "|")
   drug_cols <- md_cols[grepl(drug_field_pattern, md_cols)]
 
@@ -105,9 +105,9 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   trt_cols <- drug_cols
   cell_cols <- unique(c(cell_cols, cl_entries))
   if (combine_on == 1L) {
-    trt_cols <- c(remaining_cols, trt_cols)
+    trt_cols <- c(trt_cols, remaining_cols)
   } else if (combine_on == 2L) {
-    cell_cols <- c(remaining_cols, cell_cols)
+    cell_cols <- c(cell_cols, remaining_cols)
   } else {
     stop(sprintf("combine_on input: '%s' of class: '%s' is not supported",
       combine_on, class(combine_on)))
