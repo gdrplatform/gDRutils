@@ -22,7 +22,7 @@ pkgs:
   gDRstyle:
     ver: '>=0.0.3'
     url: https://github.roche.com/gdrplatform/gDRstyle.git
-    ref: master
+    ref: main
     subdir: ~
   pkgload:
     source: CRAN
