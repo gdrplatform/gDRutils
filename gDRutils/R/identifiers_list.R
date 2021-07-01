@@ -24,5 +24,6 @@ IDENTIFIERS_LIST <- list(
 
   well_position = c("WellRow", "WellColumn"),
   concentration = "Concentration",
-  template = "Template"
+  template = "Template",
+  barcode = "Barcode"
 )

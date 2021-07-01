@@ -23,7 +23,8 @@ test_that("get_identifier and set_identifier work", {
                                       masked_tag = "masked", 
                                       well_position = c("WellRow", "WellColumn"),
                                       concentration = "Concentration",
-                                      template = "Template"))
+                                      template = "Template",
+                                      barcode = "Barcode"))
 })
 
 

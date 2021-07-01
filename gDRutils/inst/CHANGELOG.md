@@ -1,3 +1,6 @@
+# Changes to v.1.0.6
+- add barcode as identifiers and store identifiers within split_SE_components
+
 # Changes to v.1.0.5
 - update the logic for CI/CD (repos fetching is now handled with technical user)
 
