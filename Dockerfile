@@ -1,4 +1,4 @@
-FROM rocker/rstudio:4.0.3
+FROM rocker/rstudio:4.1.0
 
 # ------ Be aware that any changes in following may cause issue with RPlatform and CBS
 
