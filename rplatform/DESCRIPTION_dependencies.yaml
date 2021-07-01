@@ -1,5 +1,0 @@
-checkmate: '*'
-drc: '*'
-reshape2: '*'
-SummarizedExperiment: '*'
-testthat: '*'
