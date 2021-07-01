@@ -12,7 +12,7 @@ echo ">>>>>>>> Running linter"
 Rscript -e "gDRstyle::lintPkgInDir('/mnt/vol/gDRutils')"
 
 echo ">>>>> RUNNING UNIT TESTS"
-Rscript -e "devtools::test(pkg = '/mnt/vol/gDRutils', stop_on_failure = TRUE)"
+Rscript -e "testthat::test_local(path = '/mnt/vol/gDRutils', stop_on_failure = TRUE)"
 
 # TODO: fix the issue with R CMD CHECK
 #echo ">>>>> RUNNING DEVTOOLS::CHECK()"
