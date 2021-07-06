@@ -1,3 +1,6 @@
+# Changes to v.1.0.7
+- remove hard version equality for pkg deps 
+
 # Changes to v.1.0.6
 - add barcode as identifiers and store identifiers within split_SE_components
 
