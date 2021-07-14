@@ -4,13 +4,13 @@
 \alias{split_SE_components}
 \title{split_SE_components}
 \usage{
-split_SE_components(df_, nested_keys = NULL, combine_on = 1)
+split_SE_components(df_, nested_keys = NULL, combine_on = 1L)
 }
 \arguments{
 \item{df_}{data.frame with drug-response data}
 
-\item{nested_keys}{character vector of keys to discard from the row or column data, 
-and to leave in the matrix data. See details.}
+\item{nested_keys}{character vector of keys to exclude from the row or column metadata, 
+and to instead nest within an element of the matrix. See details.}
 
 \item{combine_on}{integer value of \code{1} or \code{2}, indicating whether unrecognized columns
 should be combined on row or column respectively.
@@ -28,11 +28,11 @@ to identify the different components of a \linkS4class{SummarizedExperiment} obj
 \details{
 Named list containing the following elements:
 \itemize{
- \item{treatment_md}{treatment metadata}
- \item{condition_md}{condition metadata}
- \item{data_fields}{all data.frame column names corresponding to fields nested within a BumpyMatrix cell}
- \item{experiment_md}{metadata that is constant for all entries of the data.frame}
- \item{identifiers_md}{key identifier mappings}
+ \item{"treatment_md": }{treatment metadata}
+ \item{"condition_md": }{condition metadata}
+ \item{"data_fields": }{all data.frame column names corresponding to fields nested within a BumpyMatrix cell}
+ \item{"experiment_md": }{metadata that is constant for all entries of the data.frame}
+ \item{"identifiers_md": }{key identifier mappings}
 }
 
 The \code{nested_keys} provides the user the opportunity to specify that they would not 
