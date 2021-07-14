@@ -1,6 +1,3 @@
-# Changes to v.1.0.8
-- docs: update the documentation
-
 # Changes to v.1.0.7
 - remove hard version equality for pkg deps 
 
