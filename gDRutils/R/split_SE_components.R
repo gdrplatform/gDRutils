@@ -59,6 +59,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     get_header("normalized_results"),
     get_header("averaged_results"),
     get_header("metrics_results"),
+    get_identifier("concentration"),
     identifiers_md$well_position,
     identifiers_md$template,
     nested_keys
