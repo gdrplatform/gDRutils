@@ -28,7 +28,8 @@
 #'  \item{"cellline_name": }{String of column name containing human-friendly cell line names}
 #'  \item{"cellline_tissue": }{String of column name containing metadata on cell line tissue type}
 #'  \item{"cellline_ref_div_time": }{String of column name containing reference division time for cell lines}
-#'  \item{"cellline_parental_identifier": }{String of column name containing unique, machine-readable parental cell line identifiers. Used in the case of derived or engineered cell lines.}
+#'  \item{"cellline_parental_identifier": }{String of column name containing unique, machine-readable 
+#'    parental cell line identifiers. Used in the case of derived or engineered cell lines.}
 #'  \item{"drug": }{String of column name containing unique, machine-readable drug identifiers}
 #'  \item{"drugname": }{String of column name containing human-friendly drug names}
 #'  \item{"drug_moa": }{String of column name containing metadata for drug mode of action}
