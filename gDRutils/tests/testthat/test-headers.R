@@ -13,7 +13,7 @@ test_that("reset_headers works", {
   reset_headers()
 
   set_identifier("duration", "TEST_DURATION")
-  expect_equal(get_header("manifest"), c("Barcode", "Template", "TEST_DURATION"))
+  expect_equal(get_header("manifest"), "TEST_DURATION")
 
   reset_identifiers()
   hlist <- reset_headers()
