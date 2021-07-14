@@ -5,6 +5,7 @@
 #' @return 
 #' For \code{reset_headers} a \code{NULL} invisibly.
 #' For \code{get_header} a character vector of headers for field \code{k}.
+#'
 #' @examples
 #' \dontrun{
 #' get_header(k = NULL)
