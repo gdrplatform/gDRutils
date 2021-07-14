@@ -1,3 +1,6 @@
+# Changes to v.1.0.8
+- fix: remove concentration from data columns
+
 # Changes to v.1.0.7
 - remove hard version equality for pkg deps 
 

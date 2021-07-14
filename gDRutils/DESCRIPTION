@@ -1,12 +1,13 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 1.0.7
-Date: 2021-07-06
+Version: 1.0.8
+Date: 2021-07-13
 Authors@R: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
              person("Marc", "Hafner", role=c("aut")),
+             person("Pawel", "Piatkowski", role=c("aut")),
              person("Dariusz", "Scigocki", role=c("aut")),
              person("Allison", "Vuong", role=c("aut")))
 Maintainer: Bartosz Czech <bartosz.czech@contractors.roche.com>
