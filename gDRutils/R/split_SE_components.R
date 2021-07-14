@@ -5,8 +5,8 @@
 #' to identify the different components of a \linkS4class{SummarizedExperiment} object.
 #'
 #' @param df_ data.frame with drug-response data
-#' @param nested_keys character vector of keys to discard from the row or column data, 
-#' and to leave in the matrix data. See details.
+#' @param nested_keys character vector of keys to exclude from the row or column metadata, 
+#' and to instead nest within an element of the matrix. See details.
 #' @param combine_on integer value of \code{1} or \code{2}, indicating whether unrecognized columns
 #' should be combined on row or column respectively.
 #' Defaults to \code{1}.
@@ -17,11 +17,11 @@
 #' @details
 #' Named list containing the following elements:
 #' \itemize{
-#'  \item{treatment_md}{treatment metadata}
-#'  \item{condition_md}{condition metadata}
-#'  \item{data_fields}{all data.frame column names corresponding to fields nested within a BumpyMatrix cell}
-#'  \item{experiment_md}{metadata that is constant for all entries of the data.frame}
-#'  \item{identifiers_md}{key identifier mappings}
+#'  \item{"treatment_md": }{treatment metadata}
+#'  \item{"condition_md": }{condition metadata}
+#'  \item{"data_fields": }{all data.frame column names corresponding to fields nested within a BumpyMatrix cell}
+#'  \item{"experiment_md": }{metadata that is constant for all entries of the data.frame}
+#'  \item{"identifiers_md": }{key identifier mappings}
 #' }
 #'
 #' The \code{nested_keys} provides the user the opportunity to specify that they would not 
@@ -116,13 +116,14 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   condition_md <- add_rownames_to_metadata(md, cell_cols)
   treatment_md <- add_rownames_to_metadata(md, trt_cols)
 
-  return(list(
+  out <- list(
     condition_md = condition_md,
     treatment_md = treatment_md,
     data_fields = data_cols,
     experiment_md = exp_md,
     identifiers_md = identifiers_md
-  ))
+  )
+  out
 }
 
 
