@@ -7,9 +7,6 @@ essential_pkgs <- list(
   list(name = "BiocManager", version = "1.30.16")
 )
 deps_yaml <- "/mnt/vol/dependencies.yaml"
-use_ssh <- FALSE
-# ssh_key_pub <- "/home/rstudio/.ssh/id_rsa.pub"
-# ssh_key_priv <- "/home/rstudio/.ssh/id_rsa"
 
 # Auxiliary functions
 verify_version <- function(name, required_version) {
@@ -43,6 +40,9 @@ for (pkg in essential_pkgs) {
 }
 
 # Use SSH keys
+use_ssh <- FALSE
+# ssh_key_pub <- "/home/rstudio/.ssh/id_rsa.pub"
+# ssh_key_priv <- "/home/rstudio/.ssh/id_rsa"
 keys <- if (isTRUE(use_ssh)) {
   git2r::cred_ssh_key(
     publickey = ssh_key_pub,
