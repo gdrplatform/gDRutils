@@ -7,6 +7,7 @@ Authors@R: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.cze
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
              person("Marc", "Hafner", role=c("aut")),
+             person("Pawel", "Piatkowski", role=c("aut")),
              person("Dariusz", "Scigocki", role=c("aut")),
              person("Allison", "Vuong", role=c("aut")))
 Maintainer: Bartosz Czech <bartosz.czech@contractors.roche.com>

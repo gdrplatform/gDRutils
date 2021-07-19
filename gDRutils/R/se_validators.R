@@ -19,7 +19,6 @@ validate_se_assay_name <- function(se, name) {
 }
 
 
-
 #' Validate SummarizedExperiment object
 #' 
 #' Function validates correctness of SE by checking multiple cases:
@@ -42,22 +41,17 @@ validate_SE <- function(se,
                         expect_single_agent = FALSE) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assert_subset(assayNames(se), c("RawTreated", "Controls", 
-                                              "Normalized", "RefGRvalue", 
-                                              "RefRelativeViability", "DivisionTime", 
-                                              "Averaged", "Metrics"))
-  checkmate::assert_true(all(c("experiment_metadata", "df_",
-                                "Keys", 
-                                #"df_raw_data",
-                                "fit_parameters", 
-                                #"drug_combinations",
-                                ".internal") %in%
-                                names(S4Vectors::metadata(se))))
+  exp_assay_names <- c("RawTreated", "Controls", "Normalized", "RefGRvalue", 
+    "RefRelativeViability", "DivisionTime", "Averaged", "Metrics")
+  checkmate::assert_subset(assayNames(se), exp_assay_names)
+  exp_metadata_names <- c("experiment_metadata", "df_", "Keys", "fit_parameters", ".internal")
+  checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
   checkmate::assert_true(all(c("normalization_type", "fit_source") %in% 
                              names(convert_se_assay_to_dt(se, "Metrics"))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Normalized"))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Averaged"))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Metrics"))))
+
   coldata <- colData(se)
   rowdata <- rowData(se)
   
@@ -83,5 +77,3 @@ validate_SE <- function(se,
   }
   invisible(NULL)
 }
-
-

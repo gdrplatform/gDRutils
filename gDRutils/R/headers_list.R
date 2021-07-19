@@ -5,8 +5,8 @@
 .getHeadersList <- function() {
   HEADERS_LIST <- list(
     manifest = c(
-      "Barcode", 
-      "Template", 
+      get_identifier("barcode"), 
+      get_identifier("template"), 
       get_identifier("duration")
     ),
 
