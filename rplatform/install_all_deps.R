@@ -6,7 +6,7 @@ essential_pkgs <- list(
   list(name = "yaml", version = "2.2.1"),
   list(name = "BiocManager", version = "1.30.16")
 )
-deps_yaml <- "/mnt/vol/dependencies.yaml"
+deps_yaml <- "rplatform/dependencies.yaml"
 
 # Auxiliary functions
 verify_version <- function(name, required_version) {
