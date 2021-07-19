@@ -28,5 +28,5 @@ jobs:
       - name: R CMD check
         run: Rscript -e "rcmdcheck::rcmdcheck("gDRutils", args = '--no-manual', error_on = 'error')"
 
-      - name Lint code
+      - name: Lint code
         run: Rscript -e "gDRstyle::lintPkg('gDRutils')"
