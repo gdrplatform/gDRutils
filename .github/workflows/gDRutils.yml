@@ -24,7 +24,7 @@ jobs:
         run: mkdir -p /mnt/vol/ && cp rplatform/dependencies.yaml /mnt/vol/
       
       - name: Install dependencies
-        run: Rscript rplatform/install_all_deps.R
+        run: GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} Rscript rplatform/install_all_deps.R
 
       - name: R CMD check
         run: Rscript -e "rcmdcheck::rcmdcheck('gDRutils', args = '--no-manual', error_on = 'error')"
