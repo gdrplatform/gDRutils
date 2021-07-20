@@ -20,6 +20,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: copy deps configuration
+        run: cp rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol/
+
       - name: Install dependencies
         run: Rscript rplatform/install_all_deps.R
 
