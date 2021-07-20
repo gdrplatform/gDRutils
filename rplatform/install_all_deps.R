@@ -4,9 +4,14 @@ options(repos = repos)
 essential_pkgs <- list(
   list(name = "git2r", version = "0.28.0"),
   list(name = "yaml", version = "2.2.1"),
-  list(name = "BiocManager", version = "1.30.16")
+  list(name = "BiocManager", version = "1.30.16"),
+  list(name = "curl", version = "4.3.2")
 )
-deps_yaml <- "rplatform/dependencies.yaml"
+base_dir <- "/mnt/vol"
+deps_yaml <- file.path(base_dir, "/dependencies.yaml")
+use_ssh <- FALSE
+# ssh_key_pub <- "/home/rstudio/.ssh/id_rsa.pub"
+# ssh_key_priv <- "/home/rstudio/.ssh/id_rsa"
 
 # Auxiliary functions
 verify_version <- function(name, required_version) {
@@ -23,11 +28,29 @@ verify_version <- function(name, required_version) {
     ))
   }
 }
+#' this function help figuring out which GitHub domain should be used 
+#' github.roche.com will be chosen if available 
+#' otherwise github.com
+get_github_hostname <- function() {
+  conn_status <- tryCatch(
+    curl::curl_fetch_memory("github.roche.com"),
+    error = function(e) {
+      e
+    }
+  )
+  # error in connection to database will be returned as error list with exit_code = 2
+  if (inherits(conn_status, "error")) {
+    "api.github.com"
+  } else {
+    "github.roche.com/api/v3"
+  }
+}
 
 # Install {remotes}
 if (!"remotes" %in% installed.packages()) {
   install.packages(pkgs = "remotes")
 }
+
 
 # Install essential tools
 for (pkg in essential_pkgs) {
@@ -39,16 +62,25 @@ for (pkg in essential_pkgs) {
   }
 }
 
+# determine GitHub domain
+gh_hostname <- get_github_hostname()
+
+# Use GitHub access_token if available
+gh_access_token_file <- file.path(base_dir, ".github_access_token.txt")
+if (file.exists(gh_access_token_file)) {
+  ac <- readLines(gh_access_token_file, n = 1L)
+  stopifnot(length(ac) > 0)
+  Sys.setenv(GITHUB_TOKEN = ac)
+}
+
 # Use SSH keys
-use_ssh <- FALSE
-# ssh_key_pub <- "/home/rstudio/.ssh/id_rsa.pub"
-# ssh_key_priv <- "/home/rstudio/.ssh/id_rsa"
 keys <- if (isTRUE(use_ssh)) {
   git2r::cred_ssh_key(
     publickey = ssh_key_pub,
     privatekey = ssh_key_priv
   )
 }
+
 
 # Install all dependencies
 deps <- yaml::read_yaml(deps_yaml)$pkgs
@@ -83,7 +115,8 @@ for (name in names(deps)) {
       remotes::install_github(
         repo = pkg$url,
         ref = pkg$ref,
-        subdir = pkg$subdir
+        subdir = pkg$subdir,
+        host = gh_hostname
       )
       verify_version(name, pkg$ver)
     },

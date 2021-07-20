@@ -13,14 +13,16 @@ pkgs:
     ver: "3.13"
   gDRtestData:
     ver: '>=1.0.0'
-    url: https://github.roche.com/gdrplatform/gDRtestData.git
+    url: gdrplatform/gDRtestData
     ref: master
     subdir: gDRtestData
+    source: GITHUB
   gDRstyle:
     ver: '>=0.0.3'
-    url: https://github.roche.com/gdrplatform/gDRstyle.git
+    url: gdrplatform/gDRstyle
     ref: main
     subdir: ~
+    source: GITHUB
   pkgload:
     source: CRAN
   roxygen2:
