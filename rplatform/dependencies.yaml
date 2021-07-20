@@ -11,18 +11,6 @@ pkgs:
   SummarizedExperiment:
     source: Bioc
     ver: "3.13"
-  gDRtestData:
-    ver: '>=1.0.0'
-    url: gdrplatform/gDRtestData
-    ref: master
-    subdir: gDRtestData
-    source: GITHUB
-  gDRstyle:
-    ver: '>=0.0.3'
-    url: gdrplatform/gDRstyle
-    ref: main
-    subdir: ~
-    source: GITHUB
   pkgload:
     source: CRAN
   roxygen2:
@@ -40,3 +28,15 @@ pkgs:
   lintr:
     ver: '>=1.0.0'
     url: https://github.com/jimhester/lintr.git
+  gDRtestData:
+    ver: '>=1.0.0'
+    url: gdrplatform/gDRtestData
+    ref: master
+    subdir: gDRtestData
+    source: GITHUB
+  gDRstyle:
+    ver: '>=0.0.3'
+    url: gdrplatform/gDRstyle
+    ref: main
+    subdir: ~
+    source: GITHUB
