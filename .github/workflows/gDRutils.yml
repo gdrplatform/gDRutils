@@ -22,8 +22,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: copy deps configuration
-        run: mkdir -p /mnt/vol/ && cp rplatform/dependencies.yaml /mnt/vol/
+      - name: Copy deps configuration
+        run: |
+          mkdir -p /mnt/vol/
+          cp rplatform/dependencies.yaml /mnt/vol/
+
+      - name: Cache R packages
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('DESCRIPTION') }}
       
       - name: Install dependencies
         run: Rscript rplatform/install_all_deps.R
