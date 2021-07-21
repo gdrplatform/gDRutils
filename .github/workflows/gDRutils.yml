@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: '/usr/local/lib/R/site-library'
-          key: ${{ runner.os }}-${{ hashFiles('DESCRIPTION') }}
+          key: ${{ runner.os }}-${{ hashFiles('gDRutils/DESCRIPTION') }}
       
       - name: Install dependencies
         run: Rscript rplatform/install_all_deps.R
