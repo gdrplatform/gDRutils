@@ -28,9 +28,6 @@ jobs:
       - name: Install dependencies
         run: Rscript rplatform/install_all_deps.R
       
-      - name: Install gDRutils package
-        run: cp -r gDRutils /mnt/vol/ && Rscript rplatform/install_repo.R
-
       - name: R CMD check
         run: Rscript -e "rcmdcheck::rcmdcheck('gDRutils', args = '--no-manual', error_on = 'error')"
         env: 
