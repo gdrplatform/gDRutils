@@ -41,9 +41,11 @@ validate_SE <- function(se,
                         expect_single_agent = FALSE) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
+
   exp_assay_names <- c("RawTreated", "Controls", "Normalized", "RefGRvalue", 
     "RefRelativeViability", "DivisionTime", "Averaged", "Metrics")
   checkmate::assert_subset(assayNames(se), exp_assay_names)
+
   exp_metadata_names <- c("experiment_metadata", "df_", "Keys", "fit_parameters", ".internal")
   checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
   checkmate::assert_true(all(c("normalization_type", "fit_source") %in% 
@@ -69,7 +71,7 @@ validate_SE <- function(se,
   vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
   if (expect_single_agent && length(vars_cotreatment) > 0) {
     if ("DrugName_2" %in% names(rowdata)) {
-      checkmate::assert_subset(rowdata[["DrugName_2"]], get_identifier("untreated_tag"))
+      checkmate::assert_subset(rowdata[["DrugName_2"]], get_SE_identifiers(se, "untreated_tag"))
     }
     if ("Concentration_2" %in% names(rowdata)) {
       checkmate::assert_subset(rowdata[["Concentration_2"]], 0)
