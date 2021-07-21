@@ -33,6 +33,8 @@ jobs:
 
       - name: R CMD check
         run: Rscript -e "rcmdcheck::rcmdcheck('gDRutils', args = '--no-manual', error_on = 'error')"
+        env: 
+          _R_CHECK_FORCE_SUGGESTS_: false
 
       - name: Lint code
         run: Rscript -e "gDRstyle::lintPkg('gDRutils')"
