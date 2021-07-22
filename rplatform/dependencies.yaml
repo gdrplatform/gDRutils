@@ -1,30 +1,40 @@
 pkgs:
-  S4Vectors:
+  BumpyMatrix:
     source: Bioc
     ver: "3.13"
   IRanges:
     source: Bioc
     ver: "3.13"
+  S4Vectors:
+    source: Bioc
+    ver: "3.13"
   SummarizedExperiment:
     source: Bioc
     ver: "3.13"
-  BumpyMatrix:
-    source: Bioc
-    ver: "3.13"
+  pkgload:
+    source: CRAN
+  roxygen2:
+    source: CRAN
+  checkmate:
+    source: CRAN
+  data.table:
+    source: CRAN
+  drc:
+    source: CRAN
+  reshape2:
+    source: CRAN
   lintr:
     ver: '>=1.0.0'
     url: https://github.com/jimhester/lintr.git
   gDRtestData:
     ver: '>=1.0.0'
-    url: https://github.roche.com/gdrplatform/gDRtestData.git
+    url: gdrplatform/gDRtestData
     ref: master
     subdir: gDRtestData
+    source: GITHUB
   gDRstyle:
     ver: '>=0.0.3'
-    url: https://github.roche.com/gdrplatform/gDRstyle.git
+    url: gdrplatform/gDRstyle
     ref: main
     subdir: ~
-  pkgload:
-    source: CRAN
-  roxygen2:
-    source: CRAN
+    source: GITHUB

@@ -42,3 +42,6 @@ vignettes/*.pdf
 # RPlatform cookies
 .rplatform.cookie
 .Rproj.user
+
+# support for build via github.com with access_token defined
+.github_access_token.txt
