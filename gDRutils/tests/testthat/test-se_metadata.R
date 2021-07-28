@@ -61,7 +61,7 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   expect_error(get_SE_identifiers(se, "INVALID"))
 
   # Set identifiers.
-  set_SE_identifiers(se, list())
+  se <- set_SE_identifiers(se, list())
   obs2 <- get_SE_identifiers(se)
   expect_equal(obs2, list())
 })
