@@ -68,7 +68,8 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_resp4 <- df_resp
   df_resp4$RelativeViability <- df_resp4$GRvalue <- 0.5
 
-  expect_warning(df_result <- fit_curves(df_resp4, series_identifiers = "Concentration"), reg = "overriding original x_0 argument") # Override.
+  expect_warning(df_result <- fit_curves(df_resp4, series_identifiers = "Concentration"),
+    reg = "overriding original x_0 argument") # Override.
   obs_fit <- unique(df_result[, "fit_type"])
   expect_equal(obs_fit, "DRCConstantFitResult")
   expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])),
@@ -119,7 +120,8 @@ test_that("appropriate fit type is assigned for various use cases", {
   # Test that pcutoff argument works as expected.
   df_result9 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE, pcutoff = 1)
   expect_equal(df_result9[, "fit_type"], c("DRC3pHillFitModelFixS0", "DRCConstantFitResult"))
-  df_result10 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
+  df_result10 <- fit_curves(df_resp7, series_identifiers = "Concentration", 
+    force_fit = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
   expect_equal(unique(df_result10[, "fit_type"]), "DRC3pHillFitModelFixS0")
 
   # Test for GR values from 0-1.
