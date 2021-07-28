@@ -18,6 +18,9 @@ test_that("fit_curves fails with expected errors", {
     reg = "unknown curve type")
   expect_error(fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = c("GR", "BOGUS")),
     reg = "unknown curve type")
+  
+  expect_error(fit_curves(df_resp, series_identifiers = c("Concentration", "add_conc"), normalization_type = c("GR")),
+    reg = "gDR does not yet support multiple series_identifiers, feature coming soon")
 })
 
 

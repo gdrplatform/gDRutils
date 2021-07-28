@@ -42,7 +42,7 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
 })
 
 
-test_that("get_SE_identifiers works as expected", {
+test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   exp <- list("drug" = "drug", "celllinename" = "CellLineName")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
 
@@ -59,6 +59,11 @@ test_that("get_SE_identifiers works as expected", {
 
   # Invalid identifier.
   expect_error(get_SE_identifiers(se, "INVALID"))
+
+  # Set identifiers.
+  se <- set_SE_identifiers(se, list())
+  obs2 <- get_SE_identifiers(se)
+  expect_equal(obs2, list())
 })
 
 test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {

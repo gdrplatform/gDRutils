@@ -1,29 +1,36 @@
-#' Set metadata for parameters used in fitting in SummarizedExperiment object.
+#' Get and set metadata for parameters on a SummarizedExperiment object.
 #'
 #' Set metadata for the fitting parameters that define the Metrics assay in SummarizedExperiment object metadata.
 #'
 #' @param se a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.
 #' @param value named list of metadata for fit parameters. 
+#' @param key_type string of a specific key type (i.e. 'nested_keys', 'trt', 'masked_tag', etc.). 
+#'
+#' @details
+#' For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines 
+#' the date_processed and packages versions in SummarizedExperiment object metadata.
+#' For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters 
+#' used to construct the Metrics assay in a SummarizedExperiment object.
 #'
 #' @return \code{se} with added metadata.
+#' @name SE_metadata
 #'
+NULL
+
+
+############
+# Setters
+############
+
 #' @export
+#' @rdname SE_metadata
 #'
 set_SE_fit_parameters <- function(se, value) {
   .set_SE_metadata(se, name = "fit_parameters", value)
 }
 
-#' Set metadata for the processing info in SummarizedExperiment object.
-#'
-#' Set metadata for the processing info that defines 
-#' the date_processed and packages versions in SummarizedExperiment object metadata.
-#'
-#' @param se a \linkS4class{SummarizedExperiment} object for which 
-#' to add processing info metadata.
-#' @param value named list of metadata for processing info. 
-#'
-#' @return \code{se} with added metadata.
-#'
+
+#' @rdname SE_metadata
 #' @export
 #'
 set_SE_processing_metadata <- function(se, value) {
@@ -31,16 +38,7 @@ set_SE_processing_metadata <- function(se, value) {
 }
 
 
-#' Set metadata for keys in SummarizedExperiment object.
-#'
-#' Set metadata for keys in SummarizedExperiment object metadata.
-#'
-#' @param se a \linkS4class{SummarizedExperiment} object for which to add key metadata.
-#' @param value named list of metadata for keys. 
-#' Names of list should represent key types and list values should contain key type values.
-#'
-#' @return \code{se} with added metadata.
-#'
+#' @rdname SE_metadata
 #' @export
 #'
 set_SE_keys <- function(se, value) {
@@ -48,32 +46,54 @@ set_SE_keys <- function(se, value) {
 }
 
 
-#' Set experiment-level metadata for a SummarizedExperiment object.
-#'
-#' Set experiment-level metadata in the metadata slot of a \linkS4class{SummarizedExperiment} object.
-#'
-#' @param se a \linkS4class{SummarizedExperiment} object for which to add experiment-level metadata.
-#' @param value named list of metadata for the \code{se} object. 
-#'
-#' @return \code{se} with added metadata.
-#'
+#' @rdname SE_metadata
 #' @export
 #'
 set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
 }
 
+############
+# Getters
+############
 
-#' Get metadata for the raw data identifier mappings used to create a SummarizedExperiment object.
+#' @rdname SE_metadata
+#' @export
 #'
-#' Get metadata for the identifiers used to construct the metadata and assay data of a SummarizedExperiment.
+get_SE_fit_parameters <- function(se) {
+  .get_SE_metadata(se, name = "fit_parameters")
+}
+
+
+#' @rdname SE_metadata
+#' @export
 #'
-#' @param se a \linkS4class{SummarizedExperiment} object for which to get identifiers.
-#' @param id_type string of identifier type to retrieve.
-#' Defaults to \code{NULL}.
+get_SE_processing_metadata <- function(se) {
+  .get_SE_metadata(se, name = ".internal")
+}
+
+
+#' @rdname SE_metadata
+#' @export
 #'
-#' @return named list of identifiers used during \code{create_SE} operations.
+get_SE_experiment_metadata <- function(se) {
+  .get_SE_metadata(se, name = "experiment_metadata")
+}
+
+
+#' @rdname SE_metadata
+#' @export
 #'
+get_SE_keys <- function(se, key_type = NULL) {
+  .get_SE_metadata(se, name = "Keys", subname = key_type)
+}
+
+
+##############
+# Identifiers
+##############
+
+#' @rdname identifiers
 #' @export
 #'
 get_SE_identifiers <- function(se, id_type = NULL) {
@@ -87,64 +107,12 @@ get_SE_identifiers <- function(se, id_type = NULL) {
 }
 
 
-#' Get metadata for fit parameters metadata in SummarizedExperiment object.
-#'
-#' Get metadata for fit parameters used to construct the Metrics assay in a SummarizedExperiment object.
-#'
-#' @param se a \linkS4class{SummarizedExperiment} object for which to get fit parameters.
-#'
-#' @return named list of fitting parameters.
-#'
+#' @rdname identifiers
 #' @export
 #'
-get_SE_fit_parameters <- function(se) {
-  .get_SE_metadata(se, name = "fit_parameters")
+set_SE_identifiers <- function(se, value) {
+  .set_SE_metadata(se, name = "identifiers", value)
 }
-
-#' Set metadata for the processing info in SummarizedExperiment object.
-#'
-#' Set metadata for the processing info that defines 
-#' the date_processed and packages versions in SummarizedExperiment object metadata.
-#' 
-#' @param se a \linkS4class{SummarizedExperiment} object for which to get processing info.
-#'
-#' @return named list of processing info.
-#'
-#' @export
-#'
-get_SE_processing_metadata <- function(se) {
-  .get_SE_metadata(se, name = ".internal")
-}
-
-
-#' Get metadata for experiment metadata in SummarizedExperiment object.
-#'
-#' Get metadata for experiment metadata in SummarizedExperiment object metadata.
-#'
-#' @param se a \linkS4class{SummarizedExperiment} object for which to get experiment metadata.
-#'
-#' @return experiment metadata.
-#'
-#' @export
-#'
-get_SE_experiment_metadata <- function(se) {
-  .get_SE_metadata(se, name = "experiment_metadata")
-}
-
-
-#' Get metadata for keys in SummarizedExperiment object.
-#'
-#' Get metadata for keys in SummarizedExperiment object metadata.
-#'
-#' @param se a \linkS4class{SummarizedExperiment} object for which to get metadata relating to keys.
-#' @param key_type string of a specific key type (i.e. 'nested_keys', 'trt', 'masked_tag', etc.). 
-#'
-#' @export
-#'
-get_SE_keys <- function(se, key_type = NULL) {
-  .get_SE_metadata(se, name = "Keys", subname = key_type)
-}
-
 
 ###############
 # Internals
