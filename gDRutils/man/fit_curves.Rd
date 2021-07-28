@@ -6,6 +6,7 @@
 \usage{
 fit_curves(
   df_,
+  series_identifiers,
   e_0 = 1,
   GR_0 = 1,
   n_point_cutoff = 4,
@@ -18,6 +19,9 @@ fit_curves(
 }
 \arguments{
 \item{df_}{data.frame containing data to fit. See details.}
+
+\item{series_identifiers}{character vector of the column names in \code{data.frame}
+whose combination represents a unique series for which to fit curves.}
 
 \item{e_0}{numeric value representing the \code{x_0} value for the RV curve.
 Defaults to \code{1}.}
@@ -52,7 +56,6 @@ Fit GR and RV curves from a data.frame.
 \details{
 The \code{df_} expects the following columns:
  \itemize{
-  \item{Concentration} unlogged concentration values
   \item{RelativeViability} normalized relative viability values (if \code{normalization_type} includes \code{"RV"})
   \item{GRvalue} normalized GR values (if \code{normalization_type} includes \code{"GR"})
  }

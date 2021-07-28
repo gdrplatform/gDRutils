@@ -3,6 +3,8 @@
 #' Fit GR and RV curves from a data.frame.
 #'
 #' @param df_ data.frame containing data to fit. See details.
+#' @param series_identifiers character vector of the column names in \code{data.frame}
+#' whose combination represents a unique series for which to fit curves. 
 #' @param e_0 numeric value representing the \code{x_0} value for the RV curve.
 #' Defaults to \code{1}.
 #' @param GR_0 numeric value representing the \code{x_0} value for the GR curve.
@@ -25,7 +27,6 @@
 #' @details
 #' The \code{df_} expects the following columns:
 #'  \itemize{
-#'   \item{Concentration} unlogged concentration values
 #'   \item{RelativeViability} normalized relative viability values (if \code{normalization_type} includes \code{"RV"})
 #'   \item{GRvalue} normalized GR values (if \code{normalization_type} includes \code{"GR"})
 #'  }
@@ -37,6 +38,7 @@
 #' @export
 #'
 fit_curves <- function(df_,
+                       series_identifiers,
                        e_0 = 1,
                        GR_0 = 1,
                        n_point_cutoff = 4,
@@ -46,13 +48,16 @@ fit_curves <- function(df_,
                        cap = 0.1, 
                        normalization_type = c("GR", "RV")) {
   
+  if (length(series_identifiers) != 1L) {
+    stop("gDR does not yet support multiple series_identifiers, feature coming soon")
+  }
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
   if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'", 
       paste0(normalization_type[bad_normalization_type], collapse = ", ")))
   } 
 
-  req_fields <- c("Concentration")
+  req_fields <- series_identifiers
   opt_fields <- NULL
 
   if ("GR" %in% normalization_type) {
@@ -74,12 +79,13 @@ fit_curves <- function(df_,
   }
 
   df_metrics <- NULL
-  med_concs <- stats::median(df_$Concentration)
-  min_concs <- min(df_$Concentration)
+  concs <- df_[[series_identifiers]]
+  med_concs <- stats::median(concs)
+  min_concs <- min(concs)
 
   if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
-      df_$Concentration, 
+      concs,
       df_$RelativeViability, 
       df_$std_RelativeViability, 
       priors = c(2, 0.4, 1, med_concs),
@@ -96,7 +102,7 @@ fit_curves <- function(df_,
 
   if ("GR" %in% normalization_type) {
     df_gr <- logisticFit(
-      df_$Concentration, 
+      concs,
       df_$GRvalue, 
       df_$std_GRvalue, 
       priors = c(2, 0.1, 1, med_concs),

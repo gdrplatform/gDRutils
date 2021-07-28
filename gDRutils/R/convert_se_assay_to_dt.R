@@ -41,10 +41,10 @@ convert_se_assay_to_dt <- function(se,
   }
 
   if (include_metadata) {
-    rData <- SummarizedExperiment::rowData(se)
+    rData <- rowData(se)
     rData$rId <- rownames(rData)
 
-    cData <- SummarizedExperiment::colData(se)
+    cData <- colData(se)
     cData$cId <- rownames(cData)
 
     ids <- expand.grid(rData$rId, cData$cId)
@@ -71,7 +71,7 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   
-  object <- SummarizedExperiment::assays(se)[[assay_name]]
+  object <- assays(se)[[assay_name]]
   checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
 
   if (methods::is(object, "BumpyDataFrameMatrix")) {

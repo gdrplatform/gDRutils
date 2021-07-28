@@ -34,7 +34,7 @@ merge_SE <- function(SElist,
   metadataNames <- identify_unique_se_metadata_fields(SElist)
   metadata <- merge_metadata(SElist, metadataNames)
   
-  se <- SummarizedExperiment::SummarizedExperiment(assays = list(Normalized = normalized$BM,
+  se <- SummarizedExperiment(assays = list(Normalized = normalized$BM,
                                                                  Averaged = averaged$BM,
                                                                  Metrics = metrics$BM),
                                                           colData = data$condition_md,
