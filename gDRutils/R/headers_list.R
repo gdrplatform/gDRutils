@@ -38,7 +38,7 @@
       "x_AOC_range",
       "xc50",
       "x_max",
-      "c50",
+      "ec50",
       "x_inf",
       "x_0",
       "h",
