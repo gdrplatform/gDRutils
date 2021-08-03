@@ -284,7 +284,7 @@ logisticFit <-
       RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
       
       out$r2 <- 1 - RSS2 / RSS1
-      out$xc50 <- .calculate_xc50(c50 = out$ec50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
+      out$xc50 <- .calculate_xc50(ec50 = out$ec50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
 
       # Test the significance of the fit and replace with flat function if required.
       nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
