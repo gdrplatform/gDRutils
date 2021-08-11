@@ -8,23 +8,10 @@ test_that("get_identifier and set_identifier work", {
 
   set_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_identifier("cellline"), "my_personal_cell_line_identifiers")
+  vals <- gDRutils::IDENTIFIERS_LIST
+  vals[["cellline"]] <- "my_personal_cell_line_identifiers"
 
-  expect_equal(get_identifier(), list(duration = "Duration", 
-                                      cellline = "my_personal_cell_line_identifiers", 
-                                      cellline_name = "CellLineName",
-                                      cellline_tissue = "Tissue",
-                                      cellline_ref_div_time = "ReferenceDivisionTime",
-                                      cellline_parental_identifier = "parental_identifier",
-                                      cellline_subtype = "subtype",
-                                      drug = "Gnumber",
-                                      drugname = "DrugName",
-                                      drug_moa = "drug_moa",
-                                      untreated_tag = c("untreated", "vehicle"), 
-                                      masked_tag = "masked", 
-                                      well_position = c("WellRow", "WellColumn"),
-                                      concentration = "Concentration",
-                                      template = "Template",
-                                      barcode = "Barcode"))
+  expect_equal(get_identifier(), vals)
 })
 
 
