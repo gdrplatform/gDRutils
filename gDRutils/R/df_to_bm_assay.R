@@ -59,6 +59,10 @@ df_to_bm_assay <-
                                       column = data_assigned$col_id)
     bm <- bm[unique(data_assigned$row_id), unique(data_assigned$col_id)]
     
+    # Check if the orderd of rows/cols are correct
+    stopifnot(!is.unsorted(as.numeric(rownames(bm))))
+    stopifnot(!is.unsorted(as.numeric(colnames(bm))))
+    
     if (data_type == "untreated") {
       untreatedConds <-
         .get_untreated_conditions(seRowData)
