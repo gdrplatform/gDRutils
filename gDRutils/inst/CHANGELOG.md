@@ -1,3 +1,6 @@
+# Changes to v.1.0.8
+- fix bug with wrong order of rows and cols in `df_to_bm_assay`
+
 # Changes to v.1.0.7
 - remove hard version equality for pkg deps 
 
