@@ -1,3 +1,4 @@
+
 #' df_to_bm_assay
 #'
 #' Convert data.frame with dose-reponse data into a BumpyMatrix assay.
@@ -26,7 +27,7 @@ df_to_bm_assay <-
     
     data <- methods::as(data, "DataFrame")
     allMetadata <- split_SE_components(data, nested_keys = discard_keys)
-
+    
     seColData <- allMetadata$condition_md
     seColData$col_id <- as.numeric(gsub(".*_", "", rownames(seColData)))
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
@@ -35,32 +36,29 @@ df_to_bm_assay <-
     
     cond_entries <-
       setdiff(colnames(seRowData), c("row_id", "name_"))
-    dataCols <- allMetadata$dataCols
-
+    
     complete <-
       S4Vectors::DataFrame(
         expand.grid(
-          row_id = seRowData$row_id,
           col_id = seColData$col_id,
+          row_id = seRowData$row_id,
           stringsAsFactors = FALSE
         )
       )
-    complete <- merge(merge(complete, seRowData, by = "row_id"),
-                      seColData, by = "col_id")
-    complete <- complete[order(complete$col_id, complete$row_id), ]
     complete$factor_id <- seq_len(nrow(complete))
+    completeMerged <- merge(merge(complete, seColData, by = "col_id"),
+                            seRowData, by = "row_id")
+    
     data_assigned <-
-      merge(data, complete, by = c(cond_entries, cl_entries))
-    data_assigned <-  data_assigned[order(data_assigned$col_id, data_assigned$row_id), ]
-
-    # use 'drop = FALSE' to avoid dropping a dimension if there is a single data column only
-    # TODO: consier using 'splitToBumpyMatrix' in a sparse mode (GDR-596)
+      merge(data, completeMerged, by = c(cond_entries, cl_entries))
+    data_assigned <- data_assigned[order(data_assigned$factor_id), ]
+    
     bm <-
       BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE],
                                       row = data_assigned$row_id,
                                       column = data_assigned$col_id)
     bm <- bm[unique(data_assigned$row_id), unique(data_assigned$col_id)]
-
+    
     if (data_type == "untreated") {
       untreatedConds <-
         .get_untreated_conditions(seRowData)
