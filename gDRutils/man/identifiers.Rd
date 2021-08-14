@@ -3,6 +3,8 @@
 \name{identifiers}
 \alias{identifiers}
 \alias{get_identifier}
+\alias{get_identifiers}
+\alias{get_prettified_identifiers}
 \alias{set_identifier}
 \alias{reset_identifiers}
 \alias{get_SE_identifiers}
@@ -11,11 +13,15 @@
 \usage{
 get_identifier(k = NULL)
 
+get_identifiers(ks = NULL)
+
+get_prettified_identifiers(k = NULL)
+
 set_identifier(k, v)
 
 reset_identifiers()
 
-get_SE_identifiers(se, id_type = NULL)
+get_SE_identifiers(se, id_type = NULL, add_defaults = TRUE)
 
 set_SE_identifiers(se, value)
 }
