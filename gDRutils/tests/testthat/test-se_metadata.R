@@ -44,16 +44,16 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
 
 test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
-  obs <- get_SE_identifiers(se,add_defaults = TRUE)
+  obs <- get_SE_identifiers(se, add_defaults = TRUE)
   expect_equal(obs, get_identifier())
   
   exp <- list("drug" = "drug", "celllinename" = "CellLineName")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
 
-  obs <- get_SE_identifiers(se)
+  obs <- get_SE_identifiers(se, add_defaults = FALSE)
   expect_equal(obs, exp)
 
-  obs <- get_SE_identifiers(se, "celllinename")
+  obs <- get_SE_identifiers(se, "cellline_name")
   expect_equal(obs, exp[["celllinename"]])
 
   # Identifier does not exist on the SummarizedExperiment. 
@@ -66,7 +66,7 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
 
   # Set identifiers.
   se <- set_SE_identifiers(se, list())
-  obs2 <- get_SE_identifiers(se)
+  obs2 <- get_SE_identifiers(se, add_defaults = FALSE)
   expect_equal(obs2, list())
 })
 
