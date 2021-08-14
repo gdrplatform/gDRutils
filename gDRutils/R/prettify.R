@@ -102,7 +102,7 @@ prettify_flat_metrics <- function(x,
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
   # Exact replacements.
-  metadata <- c("Cell line", 
+  metadata <- c("Cell Line", 
     "Primary Tissue", 
     "Subtype",
     "Parental cell line",
@@ -116,7 +116,7 @@ prettify_flat_metrics <- function(x,
     get_identifier("cellline_tissue"), # Tissue
     get_identifier("cellline_subtype"), # subtype
     get_identifier("cellline_parental_identifier"), # parental_identifier
-    "ReferenceDivisionTime", 
+    get_identifier("cellline_ref_div_time"),
     "DivisionTime",
     "N_conc", 
     "maxlog10Concentration")
