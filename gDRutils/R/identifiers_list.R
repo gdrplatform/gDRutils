@@ -37,5 +37,8 @@ IDENTIFIERS_LIST <- list(
   drug3 = "Gnumber_3",
   drugname3 = "DrugName_3",
   drug_moa3 = "drug_moa_3",
-  concentration3 = "Concentration_3"
+  concentration3 = "Concentration_3",
+  
+  # data source
+  data_source = "data_source"
 )
