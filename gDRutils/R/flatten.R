@@ -70,7 +70,5 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   filtered <- out[lapply(out, nrow) > 0L]
   reduced <- Reduce(function(x, y) merge(x, y, by = intersect(names(x), names(y))), filtered)
   
-  #return 'identifiers' attribute provided by input tbl
-  attributes(reduced) <- c(attributes(reduced), attributes(tbl)["identifiers"])
   reduced
 }
