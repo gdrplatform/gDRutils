@@ -58,6 +58,35 @@ get_identifier <- function(k = NULL) {
 #' @rdname identifiers
 #' @export
 #' 
+get_identifiers <- function(ks = NULL) {
+  idfs <- if (is.null(ks)) {
+    .get_id()
+  } else {
+    checkmate::assert_true(all(ks %in% names(.get_id())))
+    as.character(vapply(ks, .get_id, character(1)))
+  }
+  idfs
+}
+
+
+#' @rdname identifiers
+#' @export
+get_prettified_identifiers <- function(k = NULL) {
+  idfs <- get_identifiers(k)
+  pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
+  if (is.null(k)) {
+    names(pidfs) <- names(idfs)
+    # dirty hack for 'untreated_tag' and 'well_position' which are charvec improperly prettified
+    # TODO: fix this issue on the prettify_* function level
+    pidfs["untreated_tag"] <- idfs["untreated_tag"]
+    pidfs["well_position"] <- idfs["well_position"]
+  }
+  pidfs
+}
+
+#' @rdname identifiers
+#' @export
+#' 
 set_identifier <- function(k, v) {
   .set_id(k, v)
 }
