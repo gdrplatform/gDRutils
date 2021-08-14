@@ -96,20 +96,22 @@ get_SE_keys <- function(se, key_type = NULL) {
 #' @rdname identifiers
 #' @export
 #'
-get_SE_identifiers <- function(se, id_type = NULL, add_defaults = FALSE) {
+get_SE_identifiers <- function(se, id_type = NULL, add_defaults = TRUE) {
   ## `strict = FALSE` is present for backwards compatibility.
   ## If the identifier does not exist on the se object, we fetch it from the environment.
-  value <- .get_SE_metadata(se, name = "identifiers", subname = id_type, strict = FALSE)
-  if (is.null(value)) {
-    value <- get_identifier(id_type)
-  } else { 
-    if (add_defaults) {
-      def_value <- get_identifier()
-      c(value, def_value[!names(def_value) %in% names(value)])
+  se_value <- .get_SE_metadata(se, name = "identifiers", subname = id_type, strict = FALSE)
+  
+  value <- if (!add_defaults) {
+    se_value
+  } else {
+    def_value <- get_identifier(id_type)
+    if (is.null(id_type)) {
+      c(se_value, def_value[!names(def_value) %in% names(se_value)])
     } else {
-      value
+      ifelse(is.null(se_value), def_value, se_value)
     }
   }
+  value
 }
 
 
