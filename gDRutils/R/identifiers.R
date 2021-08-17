@@ -60,9 +60,9 @@ get_identifier <- function(k = NULL) {
 #' 
 get_identifiers <- function(ks = NULL) {
   idfs <- if (is.null(ks)) {
-    .get_id()
+    get_identifier()
   } else {
-    checkmate::assert_true(all(ks %in% names(.get_id())))
+    checkmate::assert_true(all(ks %in% names(get_identifier())))
     as.character(vapply(ks, .get_id, character(1)))
   }
   idfs
