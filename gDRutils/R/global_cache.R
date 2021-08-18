@@ -15,19 +15,20 @@ global_cache$headers_list <- list()
   if (length(global_cache$identifiers_list) == 0L) {
     global_cache$identifiers_list <- IDENTIFIERS_LIST
   }
-
+  
   valid_ids <- names(IDENTIFIERS_LIST)
   if (!is.null(k)) {
     checkmate::assert_string(k, null.ok = TRUE)
     checkmate::assert_choice(k, choices = valid_ids)
-
+    
     return(global_cache$identifiers_list[[k]])
   } else {
-    missing_ids <- setdiff(valid_ids, names(global_cache$identifiers_list))	
+    missing_ids <-
+      setdiff(valid_ids, names(global_cache$identifiers_list))
     if (length(missing_ids) != 0L) {
-      sapply(missing_ids, get_identifier) 	
+      global_cache$identifiers_list <-
+        c(IDENTIFIERS_LIST[missing_ids], global_cache$identifiers_list)
     }
-
     return(global_cache$identifiers_list)
   }
 }
