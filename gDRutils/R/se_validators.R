@@ -42,8 +42,7 @@ validate_SE <- function(se,
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
 
-  exp_assay_names <- c("RawTreated", "Controls", "Normalized", "RefGRvalue", 
-    "RefRelativeViability", "DivisionTime", "Averaged", "Metrics")
+  exp_assay_names <- c("RawTreated", "Controls", "Normalized", "Averaged", "Metrics")
   checkmate::assert_subset(assayNames(se), exp_assay_names)
 
   exp_metadata_names <- c("experiment_metadata", "df_", "Keys", "fit_parameters", ".internal")
