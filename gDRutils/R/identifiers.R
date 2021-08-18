@@ -46,33 +46,26 @@
 #' @name identifiers
 NULL
 
-
 #' @rdname identifiers
 #' @export
 #' 
 get_identifier <- function(k = NULL) {
-  .get_id(k)
-}
-
-
-#' @rdname identifiers
-#' @export
-#' 
-get_identifiers <- function(ks = NULL) {
-  idfs <- if (is.null(ks)) {
-    get_identifier()
+  idfs <- .get_id()
+  out <- if (is.null(k)) {
+    idfs
   } else {
-    checkmate::assert_true(all(ks %in% names(get_identifier())))
-    as.character(vapply(ks, .get_id, character(1)))
+    checkmate::assert_true(all(k %in% names(idfs)))
+   # identifiers not being strings (e.g. "well_column") are not handled properly
+   as.character(idfs[k])
   }
-  idfs
+  out
 }
 
 
 #' @rdname identifiers
 #' @export
-get_prettified_identifiers <- function(k = NULL) {
-  idfs <- get_identifiers(k)
+get_prettified_identifier <- function(k = NULL) {
+  idfs <- get_identifier(k)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
   if (is.null(k)) {
     names(pidfs) <- names(idfs)
