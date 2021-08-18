@@ -3,8 +3,7 @@
 \name{identifiers}
 \alias{identifiers}
 \alias{get_identifier}
-\alias{get_identifiers}
-\alias{get_prettified_identifiers}
+\alias{get_prettified_identifier}
 \alias{set_identifier}
 \alias{reset_identifiers}
 \alias{get_SE_identifiers}
@@ -13,9 +12,7 @@
 \usage{
 get_identifier(k = NULL)
 
-get_identifiers(ks = NULL)
-
-get_prettified_identifiers(k = NULL)
+get_prettified_identifier(k = NULL)
 
 set_identifier(k, v)
 
