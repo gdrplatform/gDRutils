@@ -26,8 +26,8 @@ global_cache$headers_list <- list()
     missing_ids <-
       setdiff(valid_ids, names(global_cache$identifiers_list))
     if (length(missing_ids) != 0L) {
-      global_cache$identifiers_list <-
-        c(IDENTIFIERS_LIST[missing_ids], global_cache$identifiers_list)
+      global_cache$identifiers_list[missing_ids] <-
+        IDENTIFIERS_LIST[missing_ids]
     }
     return(global_cache$identifiers_list)
   }
