@@ -5,7 +5,9 @@ test_that("get_identifier and set_identifier work", {
   expect_error(get_identifier("BOGUS"))
 
   expect_equal(get_identifier("duration"), "Duration")
-
+  
+  expect_equal(get_identifier(c("duration", "barcode")), c("Duration", "Barcode"))
+  
   set_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_identifier("cellline"), "my_personal_cell_line_identifiers")
   vals <- gDRutils::IDENTIFIERS_LIST
