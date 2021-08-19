@@ -1,3 +1,8 @@
+# Changes to v.1.0.8
+- update list of available identifiers (2nd and 3rd drug, data_source)
+- update the logic for get_identifier and .get_id
+- add prettified_identifier()
+
 # Changes to v.1.0.7
 - remove hard version equality for pkg deps 
 
