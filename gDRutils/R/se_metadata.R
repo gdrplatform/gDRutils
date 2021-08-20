@@ -96,22 +96,30 @@ get_SE_keys <- function(se, key_type = NULL) {
 #' @rdname identifiers
 #' @export
 #'
-get_SE_identifiers <- function(se, id_type = NULL, add_defaults = TRUE) {
+get_SE_identifiers <- function(se, id_type = NULL) {
   ## `strict = FALSE` is present for backwards compatibility.
-  ## If the identifier does not exist on the se object, we fetch it from the environment.
-  se_value <- .get_SE_metadata(se, name = "identifiers", subname = id_type, strict = FALSE)
+  out <-
+    .get_SE_metadata(se,
+                     name = "identifiers",
+                     subname = id_type,
+                     strict = FALSE)
   
-  value <- if (!add_defaults) {
-    se_value
-  } else {
-    def_value <- get_identifier(id_type)
-    if (is.null(id_type)) {
-      c(se_value, def_value[!names(def_value) %in% names(se_value)])
-    } else {
-      ifelse(is.null(se_value), def_value, se_value)
-    }
+  # throw error if an invalid identifier is provided with 'id_type'
+  if (!is.null(id_type) && !id_type %in% names(get_identifier())) {
+    stop(sprintf("Error: id_type:'%s' is an invalid identifier",
+                 id_type))
   }
-  value
+  
+  # throw error if invalid identifier(s) is/are provided with metadata(se)
+  invalid_idfs <- setdiff(names(out), names(get_identifier()))
+  if (length(invalid_idfs) > 0) {
+    stop(sprintf(
+      "Error: metadata(se) contains invalid identifier(s): '%s'",
+      toString(invalid_idfs)
+    ))
+  }
+  
+  out
 }
 
 
