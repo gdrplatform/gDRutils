@@ -18,7 +18,7 @@ set_identifier(k, v)
 
 reset_identifiers()
 
-get_SE_identifiers(se, id_type = NULL, add_defaults = TRUE)
+get_SE_identifiers(se, id_type = NULL)
 
 set_SE_identifiers(se, value)
 }
