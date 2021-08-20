@@ -43,30 +43,31 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
 
 
 test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
-  se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
-  obs <- get_SE_identifiers(se, add_defaults = TRUE)
-  expect_equal(obs, get_identifier())
-  
-  exp <- list("drug" = "drug", "celllinename" = "CellLineName")
+  exp <- list("drug" = "gDrug", "cellline_name" = "gCell")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-
-  obs <- get_SE_identifiers(se, add_defaults = FALSE)
+  obs <- get_SE_identifiers(se)
   expect_equal(obs, exp)
-
+  
   obs <- get_SE_identifiers(se, "cellline_name")
-  expect_equal(obs, exp[["celllinename"]])
+  expect_equal(obs, exp[["cellline_name"]])
+  
+  exp <- list("drug" = "drug", "celllinename" = "CellLineName", "bugy_idfs" = "test")
+  err_msg1 <- "Error: metadata(se) contains invalid identifier(s): 'celllinename, bugy_idfs'"
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
+  expect_error(get_SE_identifiers(se), regexp = err_msg1, fixed = TRUE)
+
 
   # Identifier does not exist on the SummarizedExperiment. 
-  # Used mainly for backwards compatibility purposes.
+  # this is valid identifiers thus null will be returned (not error)
   obs <- get_SE_identifiers(se, "masked_tag")
-  expect_equal(obs, "masked")
+  expect_equal(obs, NULL)
 
   # Invalid identifier.
-  expect_error(get_SE_identifiers(se, "INVALID"))
+  expect_error(get_SE_identifiers(se, "INVALID"), "Error: id_type:'INVALID' is an invalid identifier")
 
   # Set identifiers.
   se <- set_SE_identifiers(se, list())
-  obs2 <- get_SE_identifiers(se, add_defaults = FALSE)
+  obs2 <- get_SE_identifiers(se)
   expect_equal(obs2, list())
 })
 
