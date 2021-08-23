@@ -32,3 +32,13 @@ test_that("support deprecated get_identifiers", {
   obs <- get_identifier("drugname")
   expect_equal(obs, "DrugName")
 })
+
+
+test_that("get_prettified_identifiers works as expected", {
+  obs <- get_prettified_identifiers(c("drugname", "cellline_name"))
+  expect_equal(obs, c("Drug", "Cell Line"))
+
+  obs <- get_prettified_identifiers()
+  expect_true(is(obs, "list"))
+  expect_true(length(obs) > 1L)
+})
