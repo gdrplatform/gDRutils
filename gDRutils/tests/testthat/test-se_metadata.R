@@ -45,30 +45,38 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
 test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   exp <- list("drug" = "gDrug", "cellline_name" = "gCell")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
+
+  # No identifier passed.
   obs <- get_SE_identifiers(se)
   expect_equal(obs, exp)
   
+  # Single identifier.
   obs <- get_SE_identifiers(se, "cellline_name")
   expect_equal(obs, exp[["cellline_name"]])
   
-  exp <- list("drug" = "drug", "celllinename" = "CellLineName", "bugy_idfs" = "test")
-  err_msg1 <- "Error: metadata(se) contains invalid identifier(s): 'celllinename, bugy_idfs'"
-  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_error(get_SE_identifiers(se), regexp = err_msg1, fixed = TRUE)
-
-
-  # Identifier does not exist on the SummarizedExperiment. 
-  # this is valid identifiers thus null will be returned (not error)
-  obs <- get_SE_identifiers(se, "masked_tag")
-  expect_equal(obs, NULL)
-
   # Invalid identifier.
-  expect_error(get_SE_identifiers(se, "INVALID"), "Error: id_type:'INVALID' is an invalid identifier")
+  exp <- list("drug" = "drug", "celllinename" = "CellLineName", "buggy_idfs" = "test")
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
+  expect_equal(get_SE_identifiers(se), exp)
+  expect_error(get_SE_identifiers(se, "buggy_idfs"), "Assertion on 'id_type' failed: Must be element of set")
+  expect_error(get_SE_identifiers(se, "INVALID"), "Assertion on 'id_type' failed: Must be element of set")
+
+  # Identifier does not exist on the SummarizedExperiment,
+  # so get it from the environment.
+  expect_warning(obs <- get_SE_identifiers(se, "masked_tag"), 
+    regexp = "'se' was passed, but identifier 'masked_tag' not found on se's identifiers")
+  expect_equal(obs, "masked")
 
   # Set identifiers.
   se <- set_SE_identifiers(se, list())
   obs2 <- get_SE_identifiers(se)
   expect_equal(obs2, list())
+
+  # Multiple identifiers.
+  exp <- list("drugname" = "Drugs", "cellline_name" = "Cells")
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
+  expect_equal(get_SE_identifiers(se, c("drugname", "duration")), c("Drugs", "Duration")) # Env and se identifiers.
+  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname")), c("Cells", "Drugs")) # Order.
 })
 
 test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {
