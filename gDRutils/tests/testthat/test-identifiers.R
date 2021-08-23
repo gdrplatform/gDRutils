@@ -18,7 +18,6 @@ test_that("reset_env_identifiers works", {
   reset_env_identifiers()
 
   d <- get_env_identifiers()
-  expect_true(length(d) != 0L)
   set_env_identifier("duration", "TEST_DURATION")
   expect_equal(get_env_identifiers("duration"), "TEST_DURATION")
 
