@@ -3,31 +3,33 @@
 
 global_cache <- new.env(parent = emptyenv())
 global_cache$identifiers_list <- list() 
-global_cache$headers_list <- list()
-
 
 #############
 # Identifiers
 #############
 
 #' @keywords internal
+.get_ids <- function(ks) {
+  out <- unname(vapply(ks, function(x) .get_id(x), character(1)))
+  if (length(out) != length(ks)) {
+    stop(sprintf("unequal returned identifiers: '%s' and input identifiers: '%s'", ks, out))
+  }
+  out
+}
+
+
+#' @keywords internal
 .get_id <- function(k = NULL) {
   if (length(global_cache$identifiers_list) == 0L) {
     global_cache$identifiers_list <- IDENTIFIERS_LIST
   }
-
-  valid_ids <- names(IDENTIFIERS_LIST)
+  
   if (!is.null(k)) {
     checkmate::assert_string(k, null.ok = TRUE)
-    checkmate::assert_choice(k, choices = valid_ids)
-
+    checkmate::assert_choice(k, choices = names(IDENTIFIERS_LIST))
+    
     return(global_cache$identifiers_list[[k]])
   } else {
-    missing_ids <- setdiff(valid_ids, names(global_cache$identifiers_list))	
-    if (length(missing_ids) != 0L) {
-      sapply(missing_ids, get_identifier) 	
-    }
-
     return(global_cache$identifiers_list)
   }
 }
@@ -37,7 +39,7 @@ global_cache$headers_list <- list()
 .set_id <- function(k, v) {
   valid_ids <- names(IDENTIFIERS_LIST)
 
-  checkmate::assert_string(k, null.ok = TRUE)
+  checkmate::assert_string(k, null.ok = FALSE)
   checkmate::assert_choice(k, choices = valid_ids)
 
   global_cache$identifiers_list[[k]] <- v
@@ -47,7 +49,7 @@ global_cache$headers_list <- list()
 
 #' @keywords internal
 .reset_ids <- function() {
-  global_cache$identifiers_list <- list()
+  global_cache$identifiers_list <- IDENTIFIERS_LIST
   invisible(NULL)
 }
 
@@ -60,25 +62,13 @@ global_cache$headers_list <- list()
 .get_header <- function(k = NULL) {
   ## The following .getHeadersList() call is inside the function .get_header
   ## to avoid cyclical dependencies and collation order problems.
-
-  if (length(global_cache$headers_list) == 0L) {
-    global_cache$headers_list <- .getHeadersList()
-  }
-
+  headers <- .getHeadersList()
   if (!is.null(k)) {
-    valid_headers <- names(global_cache$headers_list) 
-
     checkmate::assert_string(k, null.ok = TRUE)
-    checkmate::assert_choice(k, choices = valid_headers)
-
-    return(global_cache$headers_list[[k]])
+    checkmate::assert_choice(k, choices = names(headers))
+    out <- headers[[k]]
   } else {
-    return(global_cache$headers_list)
+    out <- headers
   }
-}
-
-#' @keywords internal
-.reset_headers <- function() {
-  global_cache$headers_list <- list()
-  invisible(NULL)
+  out
 }
