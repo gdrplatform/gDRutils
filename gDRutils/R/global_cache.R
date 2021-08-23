@@ -12,7 +12,7 @@ global_cache$headers_list <- list()
 
 #' @keywords internal
 .get_ids <- function(ks) {
-  out <- vapply(ks, function(x) .get_id(x), character(1))
+  out <- unname(vapply(ks, function(x) .get_id(x), character(1)))
   if (length(out) != length(ks)) {
     stop(sprintf("unequal returned identifiers: '%s' and input identifiers: '%s'", ks, out))
   }
