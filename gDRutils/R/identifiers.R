@@ -17,11 +17,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' get_identifier("duration") # "Duration"
-#' set_identifier("duration", "Duration_Time")
-#' get_identifier("duration") # "Duration_Time"
-#' reset_identifiers() 
-#' get_identifier("duration") # "Duration"
+#' get_env_identifiers("duration") # "Duration"
+#' set_env_identifier("duration", "Duration_Time")
+#' get_env_identifiers("duration") # "Duration_Time"
+#' reset_env_identifiers() 
+#' get_env_identifiers("duration") # "Duration"
 #'}
 #'
 #' @details
@@ -49,22 +49,18 @@ NULL
 #' @rdname identifiers
 #' @export
 #' 
-get_identifier <- function(k = NULL) {
-  idfs <- .get_id()
-  out <- if (is.null(k)) {
-    idfs
+get_env_identifiers <- function(k = NULL) {
+  if (length(k) > 1L) {
+    .get_ids(k)
   } else {
-    checkmate::assert_true(all(k %in% names(idfs)))
-   # identifiers not being strings (e.g. "well_column") are not handled properly
-   as.character(idfs[k])
+    .get_id(k)
   }
-  out
 }
 
 
 #' @rdname identifiers
 #' @export
-get_prettified_identifier <- function(k = NULL) {
+get_prettified_identifiers <- function(k = NULL) {
   idfs <- get_identifier(k)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
   if (is.null(k)) {
@@ -77,10 +73,11 @@ get_prettified_identifier <- function(k = NULL) {
   pidfs
 }
 
+
 #' @rdname identifiers
 #' @export
 #' 
-set_identifier <- function(k, v) {
+set_env_identifier <- function(k, v) {
   .set_id(k, v)
 }
 
@@ -88,6 +85,13 @@ set_identifier <- function(k, v) {
 #' @rdname identifiers
 #' @export
 #' 
-reset_identifiers <- function() {
+reset_env_identifiers <- function() {
   .reset_ids()
+}
+  
+
+#' @export
+get_identifier <- function(k = NULL) {
+  .Deprecated("get_env_identifiers")
+  get_env_identifiers(k = k)
 }

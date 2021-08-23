@@ -53,6 +53,7 @@ set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
 }
 
+
 ############
 # Getters
 ############
@@ -98,27 +99,31 @@ get_SE_keys <- function(se, key_type = NULL) {
 #'
 get_SE_identifiers <- function(se, id_type = NULL) {
   ## `strict = FALSE` is present for backwards compatibility.
+  if (is.null(id_type)) {
+    out <- .get_SE_identifier(se, id_type)      
+  } else {
+    out <- unname(vapply(id_type, function(x) .get_SE_identifier(se, x), character(1)))
+    if (length(out) != length(id_type)) {
+      stop("output identifiers are unequal to input identifiers")
+    }
+  }
+  out
+}
+
+
+#' @keywords internal
+.get_SE_identifier <- function(se, id_type) {
+  checkmate::assert_choice(id_type, choices = names(IDENTIFIERS_LIST), null.ok = TRUE)
   out <-
     .get_SE_metadata(se,
                      name = "identifiers",
                      subname = id_type,
                      strict = FALSE)
-  
-  # throw error if an invalid identifier is provided with 'id_type'
-  if (!is.null(id_type) && !id_type %in% names(get_identifier())) {
-    stop(sprintf("Error: id_type:'%s' is an invalid identifier",
-                 id_type))
+  # For backwards compatibility, get identifiers from environment if not found on `se`.
+  if (is.null(out)) {
+    warning(sprintf("'se' was passed, but identifier '%s' not found on se's identifiers", id_type))
+    out <- get_env_identifiers(id_type)
   }
-  
-  # throw error if invalid identifier(s) is/are provided with metadata(se)
-  invalid_idfs <- setdiff(names(out), names(get_identifier()))
-  if (length(invalid_idfs) > 0) {
-    stop(sprintf(
-      "Error: metadata(se) contains invalid identifier(s): '%s'",
-      toString(invalid_idfs)
-    ))
-  }
-  
   out
 }
 

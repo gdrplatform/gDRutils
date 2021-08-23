@@ -11,24 +11,27 @@ global_cache$headers_list <- list()
 #############
 
 #' @keywords internal
+.get_ids <- function(ks) {
+  out <- vapply(ks, function(x) .get_id(x), character(1))
+  if (length(out) != length(ks)) {
+    stop(sprintf("unequal returned identifiers: '%s' and input identifiers: '%s'", ks, out))
+  }
+  out
+}
+
+
+#' @keywords internal
 .get_id <- function(k = NULL) {
   if (length(global_cache$identifiers_list) == 0L) {
     global_cache$identifiers_list <- IDENTIFIERS_LIST
   }
   
-  valid_ids <- names(IDENTIFIERS_LIST)
   if (!is.null(k)) {
     checkmate::assert_string(k, null.ok = TRUE)
-    checkmate::assert_choice(k, choices = valid_ids)
+    checkmate::assert_choice(k, choices = names(IDENTIFIERS_LIST))
     
     return(global_cache$identifiers_list[[k]])
   } else {
-    missing_ids <-
-      setdiff(valid_ids, names(global_cache$identifiers_list))
-    if (length(missing_ids) != 0L) {
-      global_cache$identifiers_list[missing_ids] <-
-        IDENTIFIERS_LIST[missing_ids]
-    }
     return(global_cache$identifiers_list)
   }
 }
@@ -38,7 +41,7 @@ global_cache$headers_list <- list()
 .set_id <- function(k, v) {
   valid_ids <- names(IDENTIFIERS_LIST)
 
-  checkmate::assert_string(k, null.ok = TRUE)
+  checkmate::assert_string(k, null.ok = FALSE)
   checkmate::assert_choice(k, choices = valid_ids)
 
   global_cache$identifiers_list[[k]] <- v
@@ -77,6 +80,7 @@ global_cache$headers_list <- list()
     return(global_cache$headers_list)
   }
 }
+
 
 #' @keywords internal
 .reset_headers <- function() {
