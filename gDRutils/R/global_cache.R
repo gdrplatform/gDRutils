@@ -3,8 +3,6 @@
 
 global_cache <- new.env(parent = emptyenv())
 global_cache$identifiers_list <- list() 
-global_cache$headers_list <- list()
-
 
 #############
 # Identifiers
@@ -51,7 +49,7 @@ global_cache$headers_list <- list()
 
 #' @keywords internal
 .reset_ids <- function() {
-  global_cache$identifiers_list <- list()
+  global_cache$identifiers_list <- IDENTIFIERS_LIST
   invisible(NULL)
 }
 
@@ -64,26 +62,13 @@ global_cache$headers_list <- list()
 .get_header <- function(k = NULL) {
   ## The following .getHeadersList() call is inside the function .get_header
   ## to avoid cyclical dependencies and collation order problems.
-
-  if (length(global_cache$headers_list) == 0L) {
-    global_cache$headers_list <- .getHeadersList()
-  }
-
+  headers <- .getHeadersList()
   if (!is.null(k)) {
-    valid_headers <- names(global_cache$headers_list) 
-
     checkmate::assert_string(k, null.ok = TRUE)
-    checkmate::assert_choice(k, choices = valid_headers)
-
-    return(global_cache$headers_list[[k]])
+    checkmate::assert_choice(k, choices = names(headers))
+    out <- headers[[k]]
   } else {
-    return(global_cache$headers_list)
+    out <- headers
   }
-}
-
-
-#' @keywords internal
-.reset_headers <- function() {
-  global_cache$headers_list <- list()
-  invisible(NULL)
+  out
 }
