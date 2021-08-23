@@ -2,21 +2,21 @@
 % Please edit documentation in R/identifiers.R, R/se_metadata.R
 \name{identifiers}
 \alias{identifiers}
-\alias{get_identifier}
-\alias{get_prettified_identifier}
-\alias{set_identifier}
-\alias{reset_identifiers}
+\alias{get_env_identifiers}
+\alias{get_prettified_identifiers}
+\alias{set_env_identifier}
+\alias{reset_env_identifiers}
 \alias{get_SE_identifiers}
 \alias{set_SE_identifiers}
 \title{Get, set, or reset identifiers for one or all identifier field(s)}
 \usage{
-get_identifier(k = NULL)
+get_env_identifiers(k = NULL)
 
-get_prettified_identifier(k = NULL)
+get_prettified_identifiers(k = NULL)
 
-set_identifier(k, v)
+set_env_identifier(k, v)
 
-reset_identifiers()
+reset_env_identifiers()
 
 get_SE_identifiers(se, id_type = NULL)
 
@@ -61,11 +61,11 @@ Identifiers supported by the gDR suite include:
 }
 \examples{
 \dontrun{
-get_identifier("duration") # "Duration"
-set_identifier("duration", "Duration_Time")
-get_identifier("duration") # "Duration_Time"
-reset_identifiers() 
-get_identifier("duration") # "Duration"
+get_env_identifiers("duration") # "Duration"
+set_env_identifier("duration", "Duration_Time")
+get_env_identifiers("duration") # "Duration_Time"
+reset_env_identifiers() 
+get_env_identifiers("duration") # "Duration"
 }
 
 }
