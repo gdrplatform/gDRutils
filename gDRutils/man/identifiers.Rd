@@ -29,7 +29,7 @@ set_SE_identifiers(se, value)
 }
 \value{
 For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.
-For \code{get_identifier} a character vector of identifiers for field \code{k}.
+For \code{get_env_identifiers} a character vector of identifiers for field \code{k}.
 For functions called with no arguments, the entire available identifier list is returned.
 }
 \description{
