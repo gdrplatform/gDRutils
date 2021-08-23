@@ -12,7 +12,7 @@
 #'
 #' @return 
 #' For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.
-#' For \code{get_identifier} a character vector of identifiers for field \code{k}.
+#' For \code{get_env_identifiers} a character vector of identifiers for field \code{k}.
 #' For functions called with no arguments, the entire available identifier list is returned.
 #'
 #' @examples
@@ -61,7 +61,7 @@ get_env_identifiers <- function(k = NULL) {
 #' @rdname identifiers
 #' @export
 get_prettified_identifiers <- function(k = NULL) {
-  idfs <- get_identifier(k)
+  idfs <- get_env_identifiers(k)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
   if (is.null(k)) {
     names(pidfs) <- names(idfs)
