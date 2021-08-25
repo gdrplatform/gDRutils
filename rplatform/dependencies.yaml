@@ -29,7 +29,7 @@ pkgs:
   gDRtestData:
     ver: '>=1.0.0'
     url: gdrplatform/gDRtestData
-    ref: GDR-1069
+    ref: master
     subdir: gDRtestData
     source: GITHUB
   gDRstyle:
