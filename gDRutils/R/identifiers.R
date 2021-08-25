@@ -12,16 +12,16 @@
 #'
 #' @return 
 #' For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.
-#' For \code{get_identifier} a character vector of identifiers for field \code{k}.
+#' For \code{get_env_identifiers} a character vector of identifiers for field \code{k}.
 #' For functions called with no arguments, the entire available identifier list is returned.
 #'
 #' @examples
 #' \dontrun{
-#' get_identifier("duration") # "Duration"
-#' set_identifier("duration", "Duration_Time")
-#' get_identifier("duration") # "Duration_Time"
-#' reset_identifiers() 
-#' get_identifier("duration") # "Duration"
+#' get_env_identifiers("duration") # "Duration"
+#' set_env_identifier("duration", "Duration_Time")
+#' get_env_identifiers("duration") # "Duration_Time"
+#' reset_env_identifiers() 
+#' get_env_identifiers("duration") # "Duration"
 #'}
 #'
 #' @details
@@ -50,22 +50,63 @@ NULL
 #' @rdname identifiers
 #' @export
 #' 
-get_identifier <- function(k = NULL) {
-  .get_id(k)
+get_env_identifiers <- function(k = NULL) {
+  if (length(k) > 1L) {
+    .get_ids(k)
+  } else {
+    .get_id(k)
+  }
+}
+
+
+#' @rdname identifiers
+#' @export
+get_prettified_identifiers <- function(k = NULL) {
+  idfs <- get_env_identifiers(k)
+  pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
+  if (is.null(k)) {
+    names(pidfs) <- names(idfs)
+    # dirty hack for 'untreated_tag' and 'well_position' which are charvec improperly prettified
+    # TODO: fix this issue on the prettify_* function level
+    pidfs["untreated_tag"] <- idfs["untreated_tag"]
+    pidfs["well_position"] <- idfs["well_position"]
+  }
+  pidfs
 }
 
 
 #' @rdname identifiers
 #' @export
 #' 
-set_identifier <- function(k, v) {
+set_env_identifier <- function(k, v) {
   .set_id(k, v)
 }
 
 
+#' @export
+set_identifier <- function(k, v) {
+  .Deprecated("set_env_identifier")
+  set_env_identifier(k = k, v = v)
+}
+
+
+#' @export
+reset_identifier <- function(k, v) {
+  .Deprecated("reset_env_identifiers")
+  reset_env_identifiers(k = k, v = v)
+}
+
+
 #' @rdname identifiers
 #' @export
 #' 
-reset_identifiers <- function() {
+reset_env_identifiers <- function() {
   .reset_ids()
+}
+  
+
+#' @export
+get_identifier <- function(k = NULL) {
+  .Deprecated("get_env_identifiers")
+  get_env_identifiers(k = k)
 }

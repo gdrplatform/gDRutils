@@ -3,13 +3,11 @@
 #' @description Get the expected header(s) for one field or reset all header fields
 #'
 #' @return 
-#' For \code{reset_headers} a \code{NULL} invisibly.
 #' For \code{get_header} a character vector of headers for field \code{k}.
 #'
 #' @examples
 #' \dontrun{
 #' get_header(k = NULL)
-#' reset_headers()
 #' set_identifier("duration", "X_TIME")
 #' get_header(k = NULL)
 #' }
@@ -30,15 +28,4 @@ NULL
 get_header <- function(k = NULL) {
   checkmate::assert_string(k, null.ok = TRUE)
   .get_header(k)
-}
-
-
-#' @details
-#' \code{reset_headers} should be used if processing multiple files within the same R session
-#' that use different file headers.  
-#' @rdname headers
-#' @export
-#' 
-reset_headers <- function() {
-  .reset_headers()
 }

@@ -1,3 +1,14 @@
+# Change to v.1.0.10
+- remove additional ordering line in df_to_bm_assay.R
+
+# Changes to v.1.0.9
+- update list of available identifiers (2nd and 3rd drug, data_source)
+- update the logic for get_identifier and .get_id
+- add prettified_identifier()
+
+# Changes to v.1.0.8
+- fix bug with wrong order of rows and cols in `df_to_bm_assay`
+
 # Changes to v.1.0.7
 - remove hard version equality for pkg deps 
 

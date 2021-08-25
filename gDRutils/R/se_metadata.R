@@ -53,6 +53,7 @@ set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
 }
 
+
 ############
 # Getters
 ############
@@ -98,12 +99,32 @@ get_SE_keys <- function(se, key_type = NULL) {
 #'
 get_SE_identifiers <- function(se, id_type = NULL) {
   ## `strict = FALSE` is present for backwards compatibility.
-  ## If the identifier does not exist on the se object, we fetch it from the environment.
-  value <- .get_SE_metadata(se, name = "identifiers", subname = id_type, strict = FALSE)
-  if (is.null(value)) {
-    value <- get_identifier(id_type)
+  if (is.null(id_type)) {
+    out <- .get_SE_identifier(se, id_type)      
+  } else {
+    out <- unname(vapply(id_type, function(x) .get_SE_identifier(se, x), character(1)))
+    if (length(out) != length(id_type)) {
+      stop("output identifiers are unequal to input identifiers")
+    }
   }
-  value
+  out
+}
+
+
+#' @keywords internal
+.get_SE_identifier <- function(se, id_type) {
+  checkmate::assert_choice(id_type, choices = names(IDENTIFIERS_LIST), null.ok = TRUE)
+  out <-
+    .get_SE_metadata(se,
+                     name = "identifiers",
+                     subname = id_type,
+                     strict = FALSE)
+  # For backwards compatibility, get identifiers from environment if not found on `se`.
+  if (is.null(out)) {
+    warning(sprintf("'se' was passed, but identifier '%s' not found on se's identifiers", id_type))
+    out <- get_env_identifiers(id_type)
+  }
+  out
 }
 
 
