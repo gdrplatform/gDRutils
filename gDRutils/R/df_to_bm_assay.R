@@ -57,8 +57,7 @@ df_to_bm_assay <-
       BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE],
                                       row = data_assigned$row_id,
                                       column = data_assigned$col_id)
-    bm <- bm[unique(data_assigned$row_id), unique(data_assigned$col_id)]
-    
+
     # Check if the orderd of rows/cols are correct
     stopifnot(!is.unsorted(as.numeric(rownames(bm))))
     stopifnot(!is.unsorted(as.numeric(colnames(bm))))
