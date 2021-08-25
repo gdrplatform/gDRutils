@@ -164,7 +164,7 @@ fit_curves <- function(df_,
 #'  \item{xc50}{The concentration at which the effect reaches a value of 0.5 based 
 #'  on interpolation of the fitted curve}
 #'  \item{x_max}{The maximum effect of the drug}
-#'  \item{c50}{The drug concentration at half-maximal effect}
+#'  \item{ec50}{The drug concentration at half-maximal effect}
 #'  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response 
 #'  data as concentration goes to infinity}
 #'  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 
@@ -230,7 +230,7 @@ logisticFit <-
 
     ## Perform a 3-param or 4-param fit. 
     ## Fit type is determined based on number of free variables available.
-    fit_param <- c("h", "x_inf", "x_0", "c50")
+    fit_param <- c("h", "x_inf", "x_0", "ec50")
     controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
 
     out <- tryCatch({
@@ -284,7 +284,7 @@ logisticFit <-
       RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
       
       out$r2 <- 1 - RSS2 / RSS1
-      out$xc50 <- .calculate_xc50(c50 = out$c50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
+      out$xc50 <- .calculate_xc50(ec50 = out$ec50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
 
       # Test the significance of the fit and replace with flat function if required.
       nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
@@ -292,7 +292,7 @@ logisticFit <-
       df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
 
       f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
-      if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$c50))) {
+      if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
         stop(fitting_handler("constant_fit", message = "fit is not statistically significant, setting constant fit"))
       }
 
@@ -331,7 +331,7 @@ logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
 
 
 logistic_metrics <- function(c, x_metrics) {
-  metrics <- c("x_inf", "x_0", "h", "c50")
+  metrics <- c("x_inf", "x_0", "h", "ec50")
   if (all(metrics %in% names(x_metrics))) {
     DRC_metrics <- as.vector(x_metrics[metrics])
   } else {
@@ -349,7 +349,7 @@ logistic_metrics <- function(c, x_metrics) {
   }
 
   DRC_metrics$x_inf + (DRC_metrics$x_0 - DRC_metrics$x_inf) /
-                          (1 + (c / DRC_metrics$c50) ^ DRC_metrics$h)
+                          (1 + (c / DRC_metrics$ec50) ^ DRC_metrics$h)
 }
 
 
@@ -436,11 +436,11 @@ average_dups <- function(df, col) {
 }
 
 
-#' Replace values for flat fits: c50 = 0, h = 0.0001 and xc50 = +/- Inf
+#' Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf
 #' @export
 .set_constant_fit_params <- function(out, x0, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
-  out$c50 <- 0
+  out$ec50 <- 0
   out$h <- 0.0001
 
   if (!is.na(x0)) {
@@ -473,8 +473,8 @@ average_dups <- function(df, col) {
 
 
 #' @keywords internal
-.calculate_xc50 <- function(c50, x0, xInf, h) {
-  c50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1 / h)
+.calculate_xc50 <- function(ec50, x0, xInf, h) {
+  ec50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1 / h)
 }
 
 

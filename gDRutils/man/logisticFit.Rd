@@ -62,7 +62,7 @@ The output parameter names correspond to the following definitions:
  \item{xc50}{The concentration at which the effect reaches a value of 0.5 based 
  on interpolation of the fitted curve}
  \item{x_max}{The maximum effect of the drug}
- \item{c50}{The drug concentration at half-maximal effect}
+ \item{ec50}{The drug concentration at half-maximal effect}
  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response 
  data as concentration goes to infinity}
  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 
