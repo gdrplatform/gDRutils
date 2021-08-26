@@ -1,5 +1,8 @@
-# Changes to v.1.0.10
+# Changes to v.1.0.11
 - move NA logic for elements of BumpyMatrix with no data to fit_curve
+
+# Change to v.1.0.10
+- remove additional ordering line in df_to_bm_assay.R
 
 # Changes to v.1.0.9
 - update list of available identifiers (2nd and 3rd drug, data_source)
