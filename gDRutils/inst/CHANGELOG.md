@@ -1,3 +1,6 @@
+# Changes to v.1.0.10
+- move NA logic for elements of BumpyMatrix with no data to fit_curve
+
 # Changes to v.1.0.9
 - update list of available identifiers (2nd and 3rd drug, data_source)
 - update the logic for get_identifier and .get_id
