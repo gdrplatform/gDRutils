@@ -83,9 +83,9 @@ fit_curves <- function(df_,
   med_concs <- stats::median(concs)
   min_concs <- min(concs)
 
-  concsNA <- is.na(concs)
-  concs <- ifelse(concsNA, 0, concs)
-  
+  concsNA <- all(is.na(concs))
+  if (concsNA) concs[] <- 0
+
   if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
       concs,
