@@ -83,7 +83,7 @@ fit_curves <- function(df_,
   med_concs <- stats::median(concs)
   min_concs <- min(concs)
 
-  concsNA <- all(is.na(concs))
+  concsNA <- is.na(concs)
   concs <- ifelse(concsNA, 0, concs)
   
   if ("RV" %in% normalization_type) {
