@@ -83,6 +83,9 @@ fit_curves <- function(df_,
   med_concs <- stats::median(concs)
   min_concs <- min(concs)
 
+  concsNA <- all(is.na(concs))
+  if (concsNA) concs[] <- 0
+
   if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
       concs,
@@ -119,7 +122,7 @@ fit_curves <- function(df_,
   }
   
   df_metrics$fit_source <- "gDR"
-
+  
   is_unique_normalization_type_and_fit_source <- 
     nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
@@ -127,6 +130,7 @@ fit_curves <- function(df_,
   }
   rownames(df_metrics) <- paste0(df_metrics$normalization_type, "_", df_metrics$fit_source)
 
+  if (concsNA) df_metrics[] <- NA
   df_metrics
 }
 
