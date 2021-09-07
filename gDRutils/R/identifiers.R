@@ -50,11 +50,16 @@ NULL
 #' @rdname identifiers
 #' @export
 #' 
-get_env_identifiers <- function(k = NULL) {
-  if (length(k) > 1L) {
-    .get_ids(k)
+get_env_identifiers <- function(k = NULL, simplify = TRUE) {
+  if (simplify) {
+    if (length(k) > 1L){
+      stop("more than one identifier found, please use: simplify = FALSE")
+    } else {
+      .get_id(k)
+    }
   } else {
-    .get_id(k)
+    id_vector <- Vectorize(function(i) .get_id(i))
+    id_vector(k)
   }
 }
 

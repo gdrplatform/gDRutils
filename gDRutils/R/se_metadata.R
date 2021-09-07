@@ -97,18 +97,25 @@ get_SE_keys <- function(se, key_type = NULL) {
 #' @rdname identifiers
 #' @export
 #'
-get_SE_identifiers <- function(se, id_type = NULL) {
+get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
   ## `strict = FALSE` is present for backwards compatibility.
-  if (is.null(id_type)) {
-    out <- .get_SE_identifier(se, id_type)      
-  } else if (id_type %in% c("untreated_tag", "well_position")) {
-    out <- unlist(unname(lapply(id_type, function(x) .get_SE_identifier(se, x))))
-  } else {
-    out <- unname(vapply(id_type, function(x) .get_SE_identifier(se, x), character(1)))
-    if (length(out) != length(id_type)) {
-      stop("output identifiers are unequal to input identifiers")
+  if (simplify) {
+    if (length(id_type) > 1L) {
+      stop("more than one identifier found, please use: simplify = FALSE")
     }
+    if (is.null(id_type)) {
+      out <- .get_SE_identifier(se, id_type)
+    } else {
+      out <- unname(vapply(id_type, function(x) .get_SE_identifier(se, x), character(1)))
+      if (length(out) != length(id_type)) {
+        stop("output identifiers are unequal to input identifiers")
+      }
+    }
+  } else {
+    id_vector <- Vectorize(function(i) unlist(unname(lapply(i, function(x) .get_SE_identifier(se, x)))))
+    out <- id_vector(id_type)
   }
+  
   out
 }
 
