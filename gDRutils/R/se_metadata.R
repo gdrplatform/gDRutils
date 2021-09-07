@@ -101,6 +101,8 @@ get_SE_identifiers <- function(se, id_type = NULL) {
   ## `strict = FALSE` is present for backwards compatibility.
   if (is.null(id_type)) {
     out <- .get_SE_identifier(se, id_type)      
+  } else if (id_type %in% c("untreated_tag", "well_position")) {
+    out <- unlist(unname(lapply(id_type, function(x) .get_SE_identifier(se, x))))
   } else {
     out <- unname(vapply(id_type, function(x) .get_SE_identifier(se, x), character(1)))
     if (length(out) != length(id_type)) {
@@ -112,6 +114,7 @@ get_SE_identifiers <- function(se, id_type = NULL) {
 
 
 #' @keywords internal
+#' @noRd
 .get_SE_identifier <- function(se, id_type) {
   checkmate::assert_choice(id_type, choices = names(IDENTIFIERS_LIST), null.ok = TRUE)
   out <-

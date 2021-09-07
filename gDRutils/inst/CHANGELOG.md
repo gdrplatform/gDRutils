@@ -1,3 +1,6 @@
+# Changes to v.1.0.12
+- fix bug with getting identifiers for untreated_tag
+
 # Changes to v.1.0.11
 - move NA logic for elements of BumpyMatrix with no data to fit_curve
 

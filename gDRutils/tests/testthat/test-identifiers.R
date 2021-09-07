@@ -41,3 +41,9 @@ test_that("get_prettified_identifiers works as expected", {
   expect_true(is(obs, "list"))
   expect_true(length(obs) > 1L)
 })
+
+test_that("get_identifier works with untreated_tag", {
+  obs <- get_env_identifiers("untreated_tag")
+  expect_length(obs, 2)
+  expect_equal(obs, c("untreated", "vehicle"))
+})
