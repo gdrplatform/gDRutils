@@ -70,7 +70,7 @@ validate_SE <- function(se,
   vars_cotreatment <- intersect(c("DrugName_2", "Concentration_2"), names(rowdata))
   if (expect_single_agent && length(vars_cotreatment) > 0) {
     if ("DrugName_2" %in% names(rowdata)) {
-      checkmate::assert_subset(rowdata[["DrugName_2"]], get_SE_identifiers(se, "untreated_tag"))
+      checkmate::assert_subset(rowdata[["DrugName_2"]], get_SE_identifiers(se, "untreated_tag", simplify = TRUE))
     }
     if ("Concentration_2" %in% names(rowdata)) {
       checkmate::assert_subset(rowdata[["Concentration_2"]], 0)

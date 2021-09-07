@@ -47,36 +47,36 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
 
   # No identifier passed.
-  obs <- get_SE_identifiers(se)
+  obs <- get_SE_identifiers(se, simplify = TRUE)
   expect_equal(obs, exp)
   
   # Single identifier.
-  obs <- get_SE_identifiers(se, "cellline_name")
+  obs <- get_SE_identifiers(se, "cellline_name", simplify = TRUE)
   expect_equal(obs, exp[["cellline_name"]])
   
   # Invalid identifier.
   exp <- list("drug" = "drug", "celllinename" = "CellLineName", "buggy_idfs" = "test")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_equal(get_SE_identifiers(se), exp)
-  expect_error(get_SE_identifiers(se, "buggy_idfs"), "Assertion on 'id_type' failed: Must be element of set")
-  expect_error(get_SE_identifiers(se, "INVALID"), "Assertion on 'id_type' failed: Must be element of set")
+  expect_equal(get_SE_identifiers(se), exp, simplify = FALSE)
+  expect_error(get_SE_identifiers(se, "buggy_idfs", simplify = TRUE), "Assertion on 'id_type' failed: Must be element of set")
+  expect_error(get_SE_identifiers(se, "INVALID", simplify = TRUE), "Assertion on 'id_type' failed: Must be element of set")
 
   # Identifier does not exist on the SummarizedExperiment,
   # so get it from the environment.
-  expect_warning(obs <- get_SE_identifiers(se, "masked_tag"), 
+  expect_warning(obs <- get_SE_identifiers(se, "masked_tag", simplify = TRUE), 
     regexp = "'se' was passed, but identifier 'masked_tag' not found on se's identifiers")
   expect_equal(obs, "masked")
 
   # Set identifiers.
   se <- set_SE_identifiers(se, list())
-  obs2 <- get_SE_identifiers(se)
+  obs2 <- get_SE_identifiers(se, simplify = TRUE)
   expect_equal(obs2, list())
 
   # Multiple identifiers.
   exp <- list("drugname" = "Drugs", "cellline_name" = "Cells")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_equal(get_SE_identifiers(se, c("drugname", "duration")), c("Drugs", "Duration")) # Env and se identifiers.
-  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname")), c("Cells", "Drugs")) # Order.
+  expect_equal(get_SE_identifiers(se, c("drugname", "duration")), c("Drugs", "Duration"), simplify = FALSE) # Env and se identifiers.
+  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname")), c("Cells", "Drugs"), simplify = FALSE) # Order.
 })
 
 test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {

@@ -137,10 +137,10 @@ convert_se_ref_assay_to_dt <- function(se,
 
   # Fill primary drug with 'untreated_tag'.
   dt$Concentration <- 0
-  untreated <- get_SE_identifiers(se, "untreated_tag")[1]
-  dt[, get_SE_identifiers(se, "drug")] <- untreated
-  dt[, get_SE_identifiers(se, "drugname")] <- untreated
-  dt[, get_SE_identifiers(se, "drug_moa")] <- untreated
+  untreated <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)[1]
+  dt[, get_SE_identifiers(se, "drug", simplify = TRUE)] <- untreated
+  dt[, get_SE_identifiers(se, "drugname", simplify = TRUE)] <- untreated
+  dt[, get_SE_identifiers(se, "drug_moa", simplify = TRUE)] <- untreated
 
   data.table::as.data.table(dt)
 }
