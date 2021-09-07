@@ -67,7 +67,7 @@ get_env_identifiers <- function(k = NULL, simplify = TRUE) {
 #' @rdname identifiers
 #' @export
 get_prettified_identifiers <- function(k = NULL) {
-  idfs <- get_env_identifiers(k)
+  idfs <- get_env_identifiers(k, simplify = TRUE)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
   if (is.null(k)) {
     names(pidfs) <- names(idfs)
@@ -111,7 +111,7 @@ reset_env_identifiers <- function() {
   
 
 #' @export
-get_identifier <- function(k = NULL) {
+get_identifier <- function(k = NULL, simplify = TRUE) {
   .Deprecated("get_env_identifiers")
-  get_env_identifiers(k = k)
+  get_env_identifiers(k = k, simplify = simplify)
 }

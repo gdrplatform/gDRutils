@@ -1,29 +1,29 @@
 test_that("get_env_identifiers and set_env_identifier work", {
   reset_env_identifiers()
 
-  expect_error(get_env_identifiers("BOGUS"))
-  expect_equal(get_env_identifiers("duration"), "Duration")
-  expect_equal(get_env_identifiers(c("duration", "barcode")), c("Duration", "Barcode"))
+  expect_error(get_env_identifiers("BOGUS", simplify = TRUE))
+  expect_equal(get_env_identifiers("duration", simplify = TRUE), "Duration")
+  expect_equal(get_env_identifiers(c("duration", "barcode"), simplify = FALSE), c("Duration", "Barcode"))
   
   set_env_identifier("cellline", "my_personal_cell_line_identifiers")
-  expect_equal(get_env_identifiers("cellline"), "my_personal_cell_line_identifiers")
+  expect_equal(get_env_identifiers("cellline", simplify = TRUE), "my_personal_cell_line_identifiers")
   vals <- gDRutils:::IDENTIFIERS_LIST
   vals[["cellline"]] <- "my_personal_cell_line_identifiers"
 
-  expect_equal(get_env_identifiers(), vals)
+  expect_equal(get_env_identifiers(simplify = TRUE), vals)
 })
 
 
 test_that("reset_env_identifiers works", {
   reset_env_identifiers()
 
-  d <- get_env_identifiers()
+  d <- get_env_identifiers(simplify = TRUE)
   set_env_identifier("duration", "TEST_DURATION")
-  expect_equal(get_env_identifiers("duration"), "TEST_DURATION")
+  expect_equal(get_env_identifiers("duration", simplify = TRUE), "TEST_DURATION")
 
   ilist <- reset_env_identifiers()
   expect_equal(ilist, NULL)
-  expect_equal(get_env_identifiers("duration"), "Duration")
+  expect_equal(get_env_identifiers("duration", simplify = TRUE), "Duration")
 })
 
 
@@ -43,7 +43,7 @@ test_that("get_prettified_identifiers works as expected", {
 })
 
 test_that("get_identifier works with untreated_tag", {
-  obs <- get_env_identifiers("untreated_tag")
+  obs <- get_env_identifiers("untreated_tag", simplify = TRUE)
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
 })

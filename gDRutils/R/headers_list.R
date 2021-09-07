@@ -4,14 +4,14 @@
 #' @keywords internal
 .getHeadersList <- function() {
   HEADERS_LIST <- list(
-    manifest = get_env_identifiers(c("barcode", "template", "duration")),
+    manifest = get_env_identifiers(c("barcode", "template", "duration"), simplify = FALSE),
 
     raw_data = c(
       "ReadoutValue",
       "BackgroundValue",
       "UntrtReadout",
       "Day0Readout",
-      get_env_identifiers("masked_tag")
+      get_env_identifiers("masked_tag", simplify = TRUE)
     ),
 
     normalized_results = c(
@@ -44,7 +44,7 @@
     ),
 
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
-    add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue", "cellline_ref_div_time"))
+    add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue", "cellline_ref_div_time"), simplify = FALSE)
   )
 
   metrics_names <- rbind(
@@ -88,33 +88,33 @@
   )
 
   HEADERS_LIST[["controlled"]] <- c(
-    get_env_identifiers("cellline"),
+    get_env_identifiers("cellline", simplify = TRUE),
     HEADERS_LIST[["manifest"]],
-    get_env_identifiers("drug"),
+    get_env_identifiers("drug", simplify = TRUE),
     "Concentration",
-    paste0(get_env_identifiers("drug"), "_", 2:10),
+    paste0(get_env_identifiers("drug", simplify = TRUE), "_", 2:10),
     paste0("Concentration_", 2:10)
   )
 
   HEADERS_LIST[["reserved"]] <- c(
     HEADERS_LIST[["add_clid"]],
-    get_env_identifiers("drugname"),
-    get_env_identifiers("masked_tag"),
-    paste0(get_env_identifiers("drugname"), "_", 2:10),
+    get_env_identifiers("drugname", simplify = TRUE),
+    get_env_identifiers("masked_tag", simplify = TRUE),
+    paste0(get_env_identifiers("drugname", simplify = TRUE), "_", 2:10),
     HEADERS_LIST[["raw_data"]],
     HEADERS_LIST[["normalized_results"]],
     HEADERS_LIST[["averaged_results"]],
     HEADERS_LIST[["metrics_results"]],
-    get_env_identifiers("well_position")
+    get_env_identifiers("well_position", simplify = TRUE)
   )
 
   HEADERS_LIST[["ordered_1"]] <- c(
-    get_env_identifiers("cellline_name"),
-    get_env_identifiers("cellline_tissue"),
-    get_env_identifiers("duration"),
-    get_env_identifiers("drugname"),
+    get_env_identifiers("cellline_name", simplify = TRUE),
+    get_env_identifiers("cellline_tissue", simplify = TRUE),
+    get_env_identifiers("duration", simplify = TRUE),
+    get_env_identifiers("drugname", simplify = TRUE),
     "Concentration",
-    paste0(c(paste0(get_env_identifiers("drugname"), "_"), "Concentration_"), 
+    paste0(c(paste0(get_env_identifiers("drugname", simplify = TRUE), "_"), "Concentration_"), 
       rep(2:10, each = 2))
   )
 
@@ -123,12 +123,12 @@
     HEADERS_LIST[["averaged_results"]],
     HEADERS_LIST[["metrics_results"]],
     HEADERS_LIST[["raw_data"]],
-    get_env_identifiers("cellline_ref_div_time"),
-    get_env_identifiers("cellline"),
-    get_env_identifiers("drug"),
-    paste0(get_env_identifiers("drug"), "_", 2:10),
+    get_env_identifiers("cellline_ref_div_time", simplify = TRUE),
+    get_env_identifiers("cellline", simplify = TRUE),
+    get_env_identifiers("drug", simplify = TRUE),
+    paste0(get_env_identifiers("drug", simplify = TRUE), "_", 2:10),
     HEADERS_LIST[["manifest"]],
-    get_env_identifiers("well_position")
+    get_env_identifiers("well_position", simplify = TRUE)
   )
 
   HEADERS_LIST

@@ -5,7 +5,7 @@ test_that("split_SE_components splits the correct columns", {
   expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% colnames(md$condition_md)))
   expect_equal(sum(ncol(md$treatment_md), ncol(md$condition_md), length(md$data_fields), ncol(md$experiment_md)), 
     ncol(test_df))
-  pure <- get_env_identifiers()
+  pure <- get_env_identifiers(simplify = TRUE)
   expect_equal(md$identifiers_md[names(pure)], pure)
 
   # nested_keys argument works as expected.

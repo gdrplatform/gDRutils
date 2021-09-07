@@ -132,7 +132,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
   # For backwards compatibility, get identifiers from environment if not found on `se`.
   if (is.null(out)) {
     warning(sprintf("'se' was passed, but identifier '%s' not found on se's identifiers", id_type))
-    out <- get_env_identifiers(id_type)
+    out <- get_env_identifiers(id_type, simplify = TRUE)
   }
   out
 }

@@ -75,7 +75,7 @@ prettify_flat_metrics <- function(x,
   # Replace underscore by space for the Drug/Concentration for co-treatment.
   pattern <- "[0-9]+"
   conc_cotrt <- paste0("^Concentration_", pattern, "$")
-  drug_cotrt <- paste0("^", get_env_identifiers("drug"), "_", pattern, "$|^Drug_", pattern, "$")
+  drug_cotrt <- paste0("^", get_env_identifiers("drug", simplify = TRUE), "_", pattern, "$|^Drug_", pattern, "$")
 
   replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
   cols[replace] <- gsub("_", " ", cols[replace])
@@ -113,10 +113,10 @@ prettify_flat_metrics <- function(x,
 
   # TODO: Eventually, these identifiers can come from the SE object itself.
   names(metadata) <- c(get_env_identifiers("cellline_name"), # CellLineName
-    get_env_identifiers("cellline_tissue"), # Tissue
-    get_env_identifiers("cellline_subtype"), # subtype
-    get_env_identifiers("cellline_parental_identifier"), # parental_identifier
-    get_env_identifiers("cellline_ref_div_time"),
+    get_env_identifiers("cellline_tissue", simplify = TRUE), # Tissue
+    get_env_identifiers("cellline_subtype", simplify = TRUE), # subtype
+    get_env_identifiers("cellline_parental_identifier", simplify = TRUE), # parental_identifier
+    get_env_identifiers("cellline_ref_div_time", simplify = TRUE),
     "DivisionTime",
     "N_conc", 
     "maxlog10Concentration")
@@ -124,7 +124,7 @@ prettify_flat_metrics <- function(x,
   cols[cols %in% names(metadata)] <- unname(metadata[cols[cols %in% names(metadata)]])
 
   # Pattern replacements.
-  multiples <- c(get_env_identifiers("drugname"), get_env_identifiers("drug_moa"))
+  multiples <- c(get_env_identifiers("drugname", simplify = TRUE), get_env_identifiers("drug_moa"))
   names(multiples) <- c("Drug", "Drug MOA")
 
   for (i in seq_len(length(multiples))) {

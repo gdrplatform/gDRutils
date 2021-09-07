@@ -26,7 +26,7 @@ getMetaData <- function(data, discard_keys = NULL) {
   stopifnot(any(inherits(data, "data.frame"), inherits(data, "DataFrame")))
   checkmate::assert_character(discard_keys, null.ok = TRUE)
 
-  cell_id <- gDRutils::get_env_identifiers("cellline")
+  cell_id <- gDRutils::get_env_identifiers("cellline", simplify = TRUE)
 
   data <- S4Vectors::DataFrame(data)
   all_data_cols <- colnames(data)
@@ -40,7 +40,7 @@ getMetaData <- function(data, discard_keys = NULL) {
         gDRutils::get_header("normalized_results"),
         gDRutils::get_header("averaged_results"),
         gDRutils::get_header("metrics_results"),
-        gDRutils::get_env_identifiers("well_position"),
+        gDRutils::get_env_identifiers("well_position", simplify = TRUE),
         "Barcode",
         "Template",
         # not sure how to handle these ones ....    < --------
@@ -52,7 +52,7 @@ getMetaData <- function(data, discard_keys = NULL) {
 
   # Remove cell-related metadata.
   nocell_metavars <- setdiff(metavars,
-                             c(gDRutils::get_env_identifiers("cellline"), gDRutils::get_header("add_clid")))
+                             c(gDRutils::get_env_identifiers("cellline", simplify = TRUE), gDRutils::get_header("add_clid")))
   singleton_cols <- vapply(nocell_metavars,
                            function(x) {
                              nrow(unique(conditions[, x, drop = FALSE])) == 1L
@@ -61,16 +61,16 @@ getMetaData <- function(data, discard_keys = NULL) {
 
   # Remove drug metadata and duration.
   constant_metavars <- setdiff(nocell_metavars[singleton_cols],
-                               c(gDRutils::get_env_identifiers("drug"),
-                                 gDRutils::get_env_identifiers("drugname"),
-                                 gDRutils::get_env_identifiers("duration")
+                               c(gDRutils::get_env_identifiers("drug", simplify = TRUE),
+                                 gDRutils::get_env_identifiers("drugname", simplify = TRUE),
+                                 gDRutils::get_env_identifiers("duration", simplify = TRUE)
                                  ))
 
-  unique_metavars <- c(intersect(c(gDRutils::get_env_identifiers("cellline"),
+  unique_metavars <- c(intersect(c(gDRutils::get_env_identifiers("cellline", simplify = TRUE),
                                    gDRutils::get_header("add_clid"),
-                                   gDRutils::get_env_identifiers("drug"),
-                                   gDRutils::get_env_identifiers("drugname"),
-                                   gDRutils::get_env_identifiers("duration")),
+                                   gDRutils::get_env_identifiers("drug", simplify = TRUE),
+                                   gDRutils::get_env_identifiers("drugname", simplify = TRUE),
+                                   gDRutils::get_env_identifiers("duration", simplify = TRUE)),
                                  metavars),
                        nocell_metavars[!singleton_cols])
 
@@ -83,7 +83,7 @@ getMetaData <- function(data, discard_keys = NULL) {
     }
 
   pattern <- sprintf("^%s*|^%s*|^%s$",
-                     gDRutils::get_env_identifiers(c("drug", "drugname", "duration")))
+                     gDRutils::get_env_identifiers(c("drug", "drugname", "duration"), simplify = FALSE))
   cl_entries <- cl_entries[!grepl(pattern, cl_entries)]
 
   ## colData

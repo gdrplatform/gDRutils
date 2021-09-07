@@ -48,7 +48,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   checkmate::assert_choice(combine_on, c(1, 2))
 
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
-  identifiers_md <- get_env_identifiers()
+  identifiers_md <- get_env_identifiers(simplify = TRUE)
   identifiers_md$nested_keys <- nested_keys
 
   df_ <- S4Vectors::DataFrame(df_)
@@ -59,7 +59,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     get_header("normalized_results"),
     get_header("averaged_results"),
     get_header("metrics_results"),
-    get_env_identifiers("concentration"),
+    get_env_identifiers("concentration", simplify = TRUE),
     identifiers_md$well_position,
     identifiers_md$template,
     nested_keys
