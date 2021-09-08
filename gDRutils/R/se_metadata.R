@@ -112,7 +112,9 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
       }
     }
   } else {
-    id_vector <- Vectorize(function(i) unlist(unname(lapply(i, function(x) .get_SE_identifier(se, x)))))
+    id_vector <- Vectorize(function(i) 
+      unlist(unname(lapply(i, function(x) .get_SE_identifier(se, x)))),
+      SIMPLIFY = FALSE)
     out <- id_vector(id_type)
   }
   

@@ -3,7 +3,8 @@ test_that("get_env_identifiers and set_env_identifier work", {
 
   expect_error(get_env_identifiers("BOGUS", simplify = TRUE))
   expect_equal(get_env_identifiers("duration", simplify = TRUE), "Duration")
-  expect_equal(get_env_identifiers(c("duration", "barcode"), simplify = FALSE), c("Duration", "Barcode"))
+  expect_equal(get_env_identifiers(c("duration", "barcode"), simplify = FALSE), 
+               list(duration = "Duration", barcode = "Barcode"))
   
   set_env_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_env_identifiers("cellline", simplify = TRUE), "my_personal_cell_line_identifiers")
@@ -34,10 +35,10 @@ test_that("support deprecated get_identifiers", {
 
 
 test_that("get_prettified_identifiers works as expected", {
-  obs <- get_prettified_identifiers(c("drugname", "cellline_name"))
+  obs <- get_prettified_identifiers(c("drugname", "cellline_name"), simplify = FALSE)
   expect_equal(obs, c("Drug", "Cell Line"))
 
-  obs <- get_prettified_identifiers()
+  obs <- get_prettified_identifiers(simplify = TRUE)
   expect_true(is(obs, "list"))
   expect_true(length(obs) > 1L)
 })

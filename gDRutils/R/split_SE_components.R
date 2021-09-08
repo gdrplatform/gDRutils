@@ -95,7 +95,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   remaining_cols <- remaining_cols[!singletons]
 
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
-  cl_entries <- identify_linear_dependence(md[c(cell_cols, remaining_cols)], cell_id)
+  cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], cell_id)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   if (!all(present <- cell_cols %in% cl_entries)) {
     warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
@@ -148,7 +148,7 @@ identify_linear_dependence <- function(df, identifier) {
 
 #' @keywords internal
 add_rownames_to_metadata <- function(md, cols) {
-  md <- unique(md[, cols, drop = FALSE])
+  md <- unique(md[, unname(unlist(cols)), drop = FALSE])
   md$unique_id <- seq_len(nrow(md))
   rownames(md) <- apply(md, 1, function(x) {
     paste(x, collapse = "_")

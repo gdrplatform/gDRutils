@@ -58,8 +58,10 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   exp <- list("drug" = "drug", "celllinename" = "CellLineName", "buggy_idfs" = "test")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
   expect_equal(get_SE_identifiers(se), exp, simplify = FALSE)
-  expect_error(get_SE_identifiers(se, "buggy_idfs", simplify = TRUE), "Assertion on 'id_type' failed: Must be element of set")
-  expect_error(get_SE_identifiers(se, "INVALID", simplify = TRUE), "Assertion on 'id_type' failed: Must be element of set")
+  expect_error(get_SE_identifiers(se, "buggy_idfs", simplify = TRUE), 
+               "Assertion on 'id_type' failed: Must be element of set")
+  expect_error(get_SE_identifiers(se, "INVALID", simplify = TRUE), 
+               "Assertion on 'id_type' failed: Must be element of set")
 
   # Identifier does not exist on the SummarizedExperiment,
   # so get it from the environment.
@@ -75,8 +77,10 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   # Multiple identifiers.
   exp <- list("drugname" = "Drugs", "cellline_name" = "Cells")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_equal(get_SE_identifiers(se, c("drugname", "duration")), c("Drugs", "Duration"), simplify = FALSE) # Env and se identifiers.
-  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname")), c("Cells", "Drugs"), simplify = FALSE) # Order.
+  expect_equal(get_SE_identifiers(se, c("drugname", "duration"), simplify = FALSE), 
+               list(drugname = "Drugs", duration = "Duration")) # Env and se identifiers.
+  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname"), simplify = FALSE), 
+               list(cellline_name = "Cells", drugname = "Drugs")) # Order.
 })
 
 test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {
