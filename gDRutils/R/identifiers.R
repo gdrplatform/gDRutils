@@ -52,7 +52,7 @@ NULL
 #' 
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
   if (simplify) {
-    if (length(k) > 1L){
+    if (length(k) > 1L) {
       stop("more than one identifier found, please use: simplify = FALSE")
     } else {
       .get_id(k)

@@ -52,7 +52,8 @@ getMetaData <- function(data, discard_keys = NULL) {
 
   # Remove cell-related metadata.
   nocell_metavars <- setdiff(metavars,
-                             c(gDRutils::get_env_identifiers("cellline", simplify = TRUE), gDRutils::get_header("add_clid")))
+                             c(gDRutils::get_env_identifiers("cellline", simplify = TRUE), 
+                               gDRutils::get_header("add_clid")))
   singleton_cols <- vapply(nocell_metavars,
                            function(x) {
                              nrow(unique(conditions[, x, drop = FALSE])) == 1L
