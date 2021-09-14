@@ -48,7 +48,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   checkmate::assert_choice(combine_on, c(1, 2))
 
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
-  identifiers_md <- get_env_identifiers()
+  identifiers_md <- get_env_identifiers(simplify = TRUE)
   identifiers_md$nested_keys <- nested_keys
 
   df_ <- S4Vectors::DataFrame(df_)
@@ -59,7 +59,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     get_header("normalized_results"),
     get_header("averaged_results"),
     get_header("metrics_results"),
-    get_env_identifiers("concentration"),
+    get_env_identifiers("concentration", simplify = TRUE),
     identifiers_md$well_position,
     identifiers_md$template,
     nested_keys
@@ -95,7 +95,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   remaining_cols <- remaining_cols[!singletons]
 
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
-  cl_entries <- identify_linear_dependence(md[c(cell_cols, remaining_cols)], cell_id)
+  cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], cell_id)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   if (!all(present <- cell_cols %in% cl_entries)) {
     warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
@@ -148,7 +148,7 @@ identify_linear_dependence <- function(df, identifier) {
 
 #' @keywords internal
 add_rownames_to_metadata <- function(md, cols) {
-  md <- unique(md[, cols, drop = FALSE])
+  md <- unique(md[, unname(unlist(cols)), drop = FALSE])
   md$unique_id <- seq_len(nrow(md))
   rownames(md) <- apply(md, 1, function(x) {
     paste(x, collapse = "_")

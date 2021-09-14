@@ -50,19 +50,24 @@ NULL
 #' @rdname identifiers
 #' @export
 #' 
-get_env_identifiers <- function(k = NULL) {
-  if (length(k) > 1L) {
-    .get_ids(k)
+get_env_identifiers <- function(k = NULL, simplify = TRUE) {
+  if (simplify) {
+    if (length(k) > 1L) {
+      stop("more than one identifier found, please use: simplify = FALSE")
+    } else {
+      .get_id(k)
+    }
   } else {
-    .get_id(k)
+    id_vector <- Vectorize(function(i) .get_id(i), SIMPLIFY = FALSE)
+    id_vector(k)
   }
 }
 
 
 #' @rdname identifiers
 #' @export
-get_prettified_identifiers <- function(k = NULL) {
-  idfs <- get_env_identifiers(k)
+get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
+  idfs <- get_env_identifiers(k, simplify = simplify)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
   if (is.null(k)) {
     names(pidfs) <- names(idfs)
@@ -106,7 +111,7 @@ reset_env_identifiers <- function() {
   
 
 #' @export
-get_identifier <- function(k = NULL) {
+get_identifier <- function(k = NULL, simplify = TRUE) {
   .Deprecated("get_env_identifiers")
-  get_env_identifiers(k = k)
+  get_env_identifiers(k = k, simplify = simplify)
 }
