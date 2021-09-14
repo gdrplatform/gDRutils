@@ -93,7 +93,7 @@ set_identifier <- function(k, v) {
 #' @export
 reset_identifier <- function(k, v) {
   .Deprecated("reset_env_identifiers")
-  reset_env_identifiers(k = k, v = v)
+  reset_env_identifiers()
 }
 
 

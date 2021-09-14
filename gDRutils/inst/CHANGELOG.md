@@ -1,3 +1,6 @@
+# Changes to v.1.0.13
+- fix obsolete arguments in `reset_env_identifiers`
+
 # Changes to v.1.0.12
 - fix bug with getting identifiers for untreated_tag
 
