@@ -29,7 +29,7 @@ Imports:
 Suggests:
     futile.logger,
     gDRstyle,
-    gDRtestData (>= 1.0.5),
+    gDRtestData (>= 1.0.6),
     knitr,
     lintr,
     testthat
