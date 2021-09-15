@@ -102,14 +102,8 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
   if (simplify) {
     if (length(id_type) > 1L) {
       stop("more than one identifier found, please use: simplify = FALSE")
-    }
-    if (is.null(id_type)) {
-      out <- .get_SE_identifier(se, id_type)
     } else {
-      out <- unname(vapply(id_type, function(x) .get_SE_identifier(se, x), character(1)))
-      if (length(out) != length(id_type)) {
-        stop("output identifiers are unequal to input identifiers")
-      }
+      out <- .get_SE_identifier(se, id_type)
     }
   } else {
     id_vector <- Vectorize(function(i) 

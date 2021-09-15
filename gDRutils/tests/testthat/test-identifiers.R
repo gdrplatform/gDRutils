@@ -48,3 +48,10 @@ test_that("get_identifier works with untreated_tag", {
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
 })
+
+test_that("get_SE_identifier works with untreated_tag", {
+  se <- SummarizedExperiment()
+  obs <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)
+  expect_length(obs, 2)
+  expect_equal(obs, c("untreated", "vehicle"))
+})
