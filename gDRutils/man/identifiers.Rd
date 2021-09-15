@@ -10,15 +10,15 @@
 \alias{set_SE_identifiers}
 \title{Get, set, or reset identifiers for one or all identifier field(s)}
 \usage{
-get_env_identifiers(k = NULL)
+get_env_identifiers(k = NULL, simplify = TRUE)
 
-get_prettified_identifiers(k = NULL)
+get_prettified_identifiers(k = NULL, simplify = TRUE)
 
 set_env_identifier(k, v)
 
 reset_env_identifiers()
 
-get_SE_identifiers(se, id_type = NULL)
+get_SE_identifiers(se, id_type = NULL, simplify = TRUE)
 
 set_SE_identifiers(se, value)
 }
