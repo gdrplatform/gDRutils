@@ -46,7 +46,7 @@ fit_curves <- function(df_,
                        force_fit = FALSE,
                        pcutoff = 0.05,
                        cap = 0.1, 
-                       normalization_type =c("GRvalue", "RelativeViability")) {
+                       normalization_type = c("GRvalue", "RelativeViability")) {
   
   
   if (length(series_identifiers) != 1L) {
