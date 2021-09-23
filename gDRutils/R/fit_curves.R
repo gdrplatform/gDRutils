@@ -60,17 +60,12 @@ fit_curves <- function(df_,
 
   req_fields <- series_identifiers
   opt_fields <- NULL
-
-  if ("GRvalue" %in% normalization_type) {
-    req_fields <- c(req_fields, "GRvalue")
-    opt_fields <- c(opt_fields, "std_GRvalue")
+  
+  for (nt in normalization_type) {
+    req_fields <- c(req_fields, nt)
+    opt_fields <- c(opt_fields, paste0("std_", nt))
   }
-
-  if ("RelativeViability" %in% normalization_type) {
-    req_fields <- c(req_fields, "RelativeViability")
-    opt_fields <- c(opt_fields, "std_RelativeViability")
-  }
-
+  
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
