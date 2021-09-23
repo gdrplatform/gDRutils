@@ -48,7 +48,7 @@ validate_SE <- function(se,
   }
   checkmate::assert_subset(exp_assay_names, assayNames(se))
 
-  exp_metadata_names <- c("experiment_metadata", "Keys", "drug_combinations")
+  exp_metadata_names <- c("experiment_metadata", "Keys")
   checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Normalized"))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Averaged"))))
