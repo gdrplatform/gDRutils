@@ -1,5 +1,8 @@
-# Changes to v.1.0.15
+# Changes to v.1.0.16
 - update validate_SE as per combos
+
+# Changes to v.1.0.15
+- feat: use 'GRvalue' and 'RelativeViability' as normalization_types in 'fit_curves'
 
 # Changes to v.1.0.14
 - fix bug with getting_SE_identifiers for untreated_tag
