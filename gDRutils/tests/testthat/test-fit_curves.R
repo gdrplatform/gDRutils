@@ -16,11 +16,15 @@ test_that("fit_curves fails with expected errors", {
   # Invalid normalization_type.
   expect_error(fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "BOGUS"),
     reg = "unknown curve type")
-  expect_error(fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = c("GR", "BOGUS")),
+  expect_error(fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = c("GRvalue", "BOGUS")),
     reg = "unknown curve type")
   
-  expect_error(fit_curves(df_resp, series_identifiers = c("Concentration", "add_conc"), normalization_type = c("GR")),
-    reg = "gDR does not yet support multiple series_identifiers, feature coming soon")
+  expect_error(fit_curves(
+    df_resp,
+    series_identifiers = c("Concentration", "add_conc"),
+    normalization_type = c("GRvalue")
+  ),
+  reg = "gDR does not yet support multiple series_identifiers, feature coming soon")
 })
 
 
@@ -154,11 +158,11 @@ test_that("appropriate fit type is assigned for various use cases", {
 
 
 test_that("normalization_type can be specified", {
-  GR_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "GR")
+  GR_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "GRvalue")
   expect_equal(rownames(GR_df_result), "GR_gDR")
   expect_equal(.round_params(GR_df_result[, names(params)]), expected["GR_gDR", ], tolerance = 1e-5)
 
-  RV_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RV")
+  RV_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RelativeViability")
   expect_equal(rownames(RV_df_result), "RV_gDR")
   expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV_gDR", ], tolerance = 1e-5)
 })
