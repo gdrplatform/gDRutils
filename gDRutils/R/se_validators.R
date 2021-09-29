@@ -42,16 +42,22 @@ validate_SE <- function(se,
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
 
-  exp_assay_names <- c("Normalized", "Averaged", "Metrics")
+  exp_assay_names <- c("Normalized", "Averaged")
+  if (expect_single_agent) {
+    exp_assay_names <- c(exp_assay_names, "Metrics")
+  }
   checkmate::assert_subset(exp_assay_names, assayNames(se))
 
-  exp_metadata_names <- c("experiment_metadata", "df_", "Keys", "fit_parameters", ".internal")
+  exp_metadata_names <- c("experiment_metadata", "Keys")
   checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
-  checkmate::assert_true(all(c("normalization_type", "fit_source") %in% 
-                             names(convert_se_assay_to_dt(se, "Metrics"))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Normalized"))))
   checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Averaged"))))
-  checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Metrics"))))
+  
+  if (expect_single_agent) {
+    checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Metrics"))))
+    checkmate::assert_true(all(c("normalization_type", "fit_source") %in% 
+                                 names(convert_se_assay_to_dt(se, "Metrics"))))
+  }
 
   coldata <- colData(se)
   rowdata <- rowData(se)
