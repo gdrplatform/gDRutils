@@ -319,3 +319,13 @@ test_that(".calculate_x_max works as expected", {
   df$norm_values <- rep(NA, n)
   expect_equal(gDRutils:::.calculate_x_max(df), NA)
 })
+
+
+test_that(".calculate_xc50 works as expected", {
+  Vinf <- 0.1
+  V0 <- 1
+  h <- 2
+  EC50 <- 0.5
+  obs <- gDRutils:::.calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
+  expect_equal(obs, 0.559017)
+})
