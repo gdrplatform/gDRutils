@@ -318,8 +318,11 @@ logisticFit <-
   }
 
 
+#' Evaluate efficacy values given fit parameters and a concentration.
+#' @details The inverse of this function is \code{predict_conc_from_fit}.
+#' @seealso predict_conc_from_fit
 #' @export
-logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
+evaluate_efficacy_from_conc <- function(c, Vinf, V0, EC50, h) {
   checkmate::assert_numeric(c)
   checkmate::assert_numeric(Vinf)
   checkmate::assert_numeric(V0)
@@ -327,6 +330,15 @@ logistic_4parameters <- function(c, Vinf, V0, EC50, h) {
   checkmate::assert_numeric(h)
 
   Vinf + (V0 - Vinf) / (1 + (c / EC50) ^ h)
+}
+
+
+#' Predict a concentration for a given efficacy from a fit.
+#' @details The inverse of this function is \code{logistic_4parameters}.
+#' @seealso logistic_4parameters .calculate_x50
+#' @export
+predict_conc_from_fit <- function(ec50, x0, xInf, h, efficacy) {
+  ec50 * ((x0 - xInf) / (efficacy - xInf) - 1) ^ (1 / h)
 }
 
 
@@ -474,7 +486,7 @@ average_dups <- function(df, col) {
 
 #' @keywords internal
 .calculate_xc50 <- function(ec50, x0, xInf, h) {
-  ec50 * ((x0 - xInf) / (0.5 - xInf) - 1) ^ (1 / h)
+  predict_conc_from_fit(ec50, x0, xInf, h, efficacy = 0.5)
 }
 
 
