@@ -335,7 +335,7 @@ evaluate_efficacy_from_conc <- function(c, Vinf, V0, EC50, h) {
 
 #' Predict a concentration for a given efficacy from a fit.
 #' @details The inverse of this function is \code{logistic_4parameters}.
-#' @seealso logistic_4parameters .calculate_x50
+#' @seealso evaluate_efficacy_from_conc .calculate_x50
 #' @export
 predict_conc_from_fit <- function(ec50, x0, xInf, h, efficacy) {
   ec50 * ((x0 - xInf) / (efficacy - xInf) - 1) ^ (1 / h)
