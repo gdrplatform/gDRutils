@@ -167,6 +167,43 @@ test_that("normalization_type can be specified", {
   expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV_gDR", ], tolerance = 1e-5)
 })
 
+test_that("evaluate_efficacy_from_conc works as expected", {
+    c <- 1
+    Vinf <- 0.1
+    V0 <- 1
+    h <- 2
+    EC50 <- 0.5
+
+    # Non-numeric values cause an error.
+    expect_error(evaluate_efficacy_from_conc(
+        c = "non-numeric_entry",
+        Vinf = Vinf,
+        V0 = V0,
+        EC50 = EC50,
+        h = h
+    ))
+
+    # Normal fit.
+    v <- evaluate_efficacy_from_conc(
+        c = c,
+        Vinf = Vinf,
+        V0 = V0,
+        EC50 = EC50,
+        h = h
+    )
+    expect_equal(v, 0.28)
+
+    # Flat fit.
+    EC50 <- 0
+    v <- evaluate_efficacy_from_conc(
+        c = c,
+        Vinf = Vinf,
+        V0 = V0,
+        EC50 = EC50,
+        h = h
+    )
+    expect_equal(v, Vinf)
+})
 
 test_that("logistic_4parameters works as expected", {
     c <- 1
