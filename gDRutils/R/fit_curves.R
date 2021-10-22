@@ -337,8 +337,14 @@ evaluate_efficacy_from_conc <- function(c, Vinf, V0, EC50, h) {
 #' @details The inverse of this function is \code{logistic_4parameters}.
 #' @seealso evaluate_efficacy_from_conc .calculate_x50
 #' @export
-predict_conc_from_fit <- function(ec50, x0, xInf, h, efficacy) {
-  ec50 * ((x0 - xInf) / (efficacy - xInf) - 1) ^ (1 / h)
+predict_conc_from_fit <- function(ec50, x_0, x_inf, h, efficacy) {
+  ifelse(efficacy > x_0,
+    0,
+    ifelse(efficacy < x_inf,
+      Inf,
+      ec50 * ((x_0 - x_inf) / (efficacy - x_inf) - 1) ^ (1 / h)
+    )
+  )
 }
 
 
