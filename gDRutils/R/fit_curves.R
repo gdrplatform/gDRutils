@@ -494,7 +494,7 @@ average_dups <- function(df, col) {
 
 #' @keywords internal
 .calculate_xc50 <- function(ec50, x0, xInf, h) {
-  predict_conc_from_efficacy(ec50, x0, xInf, h, efficacy = 0.5)
+  predict_conc_from_efficacy(efficacy = 0.5, x_inf = xInf, x_0 = x0, ec50 = ec50, h = h)
 }
 
 
