@@ -340,15 +340,13 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #' @export
 predict_conc_from_efficacy <- function(efficacy, x_inf, x_0, ec50, h) {
   assert_equal_input_len(outlier = efficacy, x_inf, x_0, ec50, h)
-  if (efficacy > x_0) {
-    0
-  } else {
-    if (efficacy < x_inf) {
-      Inf
-    } else {
+  ifelse(efficacy > x_0,
+    0,
+    ifelse(efficacy < x_inf,
+      Inf,
       ec50 * ((x_0 - x_inf) / (efficacy - x_inf) - 1) ^ (1 / h)
-    }
-  }
+    )
+  )
 }
 
 
