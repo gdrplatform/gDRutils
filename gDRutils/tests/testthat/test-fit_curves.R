@@ -167,44 +167,80 @@ test_that("normalization_type can be specified", {
   expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV_gDR", ], tolerance = 1e-5)
 })
 
+test_that("predict_efficacy_from_conc works as expected", {
+  c <- 1
+  Vinf <- 0.1
+  V0 <- 1
+  h <- 2
+  EC50 <- 0.5
 
-test_that("logistic_4parameters works as expected", {
-    c <- 1
-    Vinf <- 0.1
-    V0 <- 1
-    h <- 2
-    EC50 <- 0.5
+  # Non-numeric values cause an error.
+  expect_error(predict_efficacy_from_conc(
+    c = "non-numeric_entry",
+    x_inf = Vinf,
+    x_0 = V0,
+    ec50 = EC50,
+    h = h
+  ))
 
-    # Non-numeric values cause an error.
-    expect_error(logistic_4parameters(
-        c = "non-numeric_entry",
-        Vinf = Vinf,
-        V0 = V0,
-        EC50 = EC50,
-        h = h
-    ))
+  # Normal fit.
+  v <- predict_efficacy_from_conc(
+    c = c,
+    x_inf = Vinf,
+    x_0 = V0,
+    ec50 = EC50,
+    h = h
+  )
+  expect_equal(v, 0.28)
 
-    # Normal fit.
-    v <- logistic_4parameters(
-        c = c,
-        Vinf = Vinf,
-        V0 = V0,
-        EC50 = EC50,
-        h = h
-    )
-    expect_equal(v, 0.28)
+  # Flat fit.
+  EC50 <- 0
+  v <- predict_efficacy_from_conc(
+    c = c,
+    x_inf = Vinf,
+    x_0 = V0,
+    ec50 = EC50,
+    h = h
+  )
+  expect_equal(v, Vinf)
 
-    # Flat fit.
-    EC50 <- 0
-    v <- logistic_4parameters(
-        c = c,
-        Vinf = Vinf,
-        V0 = V0,
-        EC50 = EC50,
-        h = h
-    )
-    expect_equal(v, Vinf)
+  # Multiple concentrations.
+  conc <- c(1, 1.5)
+  obs <- predict_conc_from_efficacy(conc, Vinf, V0, EC50, h)
+  expect_equal(length(obs), length(conc))
+
 })
+
+
+test_that("predict_conc_from_efficacy works as expected", {
+  c <- 1
+  Vinf <- 0.1
+  V0 <- 1
+  h <- 2
+  EC50 <- 0.5
+
+  efficacy <- predict_efficacy_from_conc(c, Vinf, V0, EC50, h)
+
+  # Normal in-range.
+  expect_equal(predict_conc_from_efficacy(efficacy, Vinf, V0, EC50, h), c)
+
+  # Edge case: efficacy > x_0.
+  V0 <- 0.8
+  efficacy <- 0.9
+  expect_equal(predict_conc_from_efficacy(efficacy, Vinf, V0, EC50, h), 0)
+
+  # Edge case: efficacy < x_inf.
+  V0 <- 1
+  efficacy <- 0.05
+  expect_equal(predict_conc_from_efficacy(efficacy, Vinf, V0, EC50, h), Inf)
+
+  # Multiple efficacies.
+  efficacy <- c(0.05, 0.15)
+  obs <- predict_conc_from_efficacy(efficacy, Vinf, V0, EC50, h)
+  expect_equal(length(obs), length(efficacy))
+  expect_equal(obs[1], Inf)
+})
+
 
 ###################
 # Helper functions
@@ -294,4 +330,14 @@ test_that(".calculate_x_max works as expected", {
 
   df$norm_values <- rep(NA, n)
   expect_equal(gDRutils:::.calculate_x_max(df), NA)
+})
+
+
+test_that(".calculate_xc50 works as expected", {
+  Vinf <- 0.1
+  V0 <- 1
+  h <- 2
+  EC50 <- 0.5
+  obs <- gDRutils:::.calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
+  expect_equal(obs, 0.559017)
 })

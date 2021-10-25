@@ -1,3 +1,6 @@
+# Changes to v.1.0.17
+- refactor: generalize prediction help functions for fits
+
 # Changes to v.1.0.16
 - update validate_SE as per combos
 
