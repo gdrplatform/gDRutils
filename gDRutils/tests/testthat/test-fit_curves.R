@@ -203,6 +203,12 @@ test_that("predict_efficacy_from_conc works as expected", {
     h = h
   )
   expect_equal(v, Vinf)
+
+  # Multiple concentrations.
+  conc <- c(1, 1.5)
+  obs <- predict_conc_from_efficacy(conc, Vinf, V0, EC50, h)
+  expect_equal(length(obs), length(conc))
+
 })
 
 
@@ -227,6 +233,12 @@ test_that("predict_conc_from_efficacy works as expected", {
   V0 <- 1
   efficacy <- 0.05
   expect_equal(predict_conc_from_efficacy(efficacy, Vinf, V0, EC50, h), Inf)
+
+  # Multiple efficacies.
+  efficacy <- c(0.05, 0.15)
+  obs <- predict_conc_from_efficacy(efficacy, Vinf, V0, EC50, h)
+  expect_equal(length(obs), length(efficacy))
+  expect_equal(obs[1], Inf)
 })
 
 
