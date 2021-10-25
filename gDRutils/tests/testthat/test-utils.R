@@ -22,7 +22,6 @@ test_that("assert_equal_input_len works as expected", {
   ec50 <- 0.5
   efficacy <- c(0.6, 0.7, 0.8)
   expect_equal(gDRutils:::assert_equal_input_len(outlier = efficacy, ec50, x_0, x_inf, h), NULL)
-  #expect_equal(length(), 3)
 
   # Length 1 outlier.
   ec50 <- c(0.5, 0.6)
@@ -31,6 +30,4 @@ test_that("assert_equal_input_len works as expected", {
   h <- c(2, 2)
   efficacy <- 0.6
   expect_equal(gDRutils:::assert_equal_input_len(outlier = efficacy, ec50, x_0, x_inf, h), NULL)
-
-  #expect_equal(length(), 2)
 })
