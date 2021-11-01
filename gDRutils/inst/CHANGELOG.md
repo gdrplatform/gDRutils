@@ -1,3 +1,7 @@
+
+# Changes to v.1.0.18
+- fixed issued with new SummarizedExperiment
+
 # Changes to v.1.0.17
 - refactor: generalize prediction help functions for fits
 
