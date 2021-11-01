@@ -1,16 +1,16 @@
 pkgs:
   BumpyMatrix:
     source: Bioc
-    ver: "3.13"
+    ver: "3.14"
   IRanges:
     source: Bioc
-    ver: "3.13"
+    ver: "3.14"
   S4Vectors:
     source: Bioc
-    ver: "3.13"
+    ver: "3.14"
   SummarizedExperiment:
     source: Bioc
-    ver: "3.13"
+    ver: "3.14"
   pkgload:
     source: CRAN
   roxygen2:
