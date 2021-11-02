@@ -34,6 +34,8 @@ merge_SE <- function(SElist,
   metadataNames <- identify_unique_se_metadata_fields(SElist)
   metadata <- merge_metadata(SElist, metadataNames)
   
+  # 2021.11.01 - param checkDimnames was added to Summarized Experiment in Bioc 3.14, 
+  # to make it compatible with previous solution we set the value to FALSE.
   se <-
     SummarizedExperiment(
       assays = list(
