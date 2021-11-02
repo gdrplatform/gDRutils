@@ -34,12 +34,20 @@ merge_SE <- function(SElist,
   metadataNames <- identify_unique_se_metadata_fields(SElist)
   metadata <- merge_metadata(SElist, metadataNames)
   
-  se <- SummarizedExperiment(assays = list(Normalized = normalized$BM,
-                                                                 Averaged = averaged$BM,
-                                                                 Metrics = metrics$BM),
-                                                          colData = data$condition_md,
-                                                          rowData = data$treatment_md,
-                                                          metadata = metadata)
+  # 2021.11.01 - param checkDimnames was added to Summarized Experiment in Bioc 3.14, 
+  # to make it compatible with previous solution we set the value to FALSE.
+  se <-
+    SummarizedExperiment(
+      assays = list(
+        Normalized = normalized$BM,
+        Averaged = averaged$BM,
+        Metrics = metrics$BM
+      ),
+      colData = data$condition_md,
+      rowData = data$treatment_md,
+      metadata = metadata,
+      checkDimnames = FALSE
+    )
   se
 }
 
