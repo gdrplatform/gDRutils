@@ -37,7 +37,7 @@ merge_SE <- function(SElist,
   identifiersNames <- "identifiers"
   if (identifiersNames %in% metadataNames) {
     metadataNames <- setdiff(metadataNames, identifiersNames)
-    identifiers <- S4Vectors::metadata(SElist[[1]])[[identifiersNames]]
+    identifiers <- S4Vectors::metadata(SElist[[1]])[identifiersNames]
   }
   
   metadata <- merge_metadata(SElist, metadataNames)
