@@ -125,7 +125,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
                      name = "identifiers",
                      subname = id_type,
                      strict = FALSE)
-  if (!is.null(out) && is.list(out[[1]])) { # check if out is a nested list
+  if (length(out) > 0 && is.list(out[[1]])) { # check if out is a nested list
     out <- unlist(unique(lapply(out, unlist)))
     out <- lapply(out, function(x) x)
   }
