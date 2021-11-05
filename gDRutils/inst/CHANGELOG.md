@@ -1,5 +1,5 @@
 # Change to v.1.0.19
-- added support for nested list of identifiers
+- do not create a nested list of identifiers during mergin SE
 
 # Changes to v.1.0.18
 - fixed issued with new SummarizedExperiment
