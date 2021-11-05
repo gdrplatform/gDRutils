@@ -32,7 +32,16 @@ merge_SE <- function(SElist,
   
   data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
+  
+  identifiers <- NULL
+  identifiersNames <- "identifiers"
+  if (identifiersNames %in% metadataNames) {
+    metadataNames <- setdiff(metadataNames, identifiersNames)
+    identifiers <- S4Vectors::metadata(SElist[[1]])[identifiersNames]
+  }
+  
   metadata <- merge_metadata(SElist, metadataNames)
+  metadata <- c(metadata, identifiers)
   
   # 2021.11.01 - param checkDimnames was added to Summarized Experiment in Bioc 3.14, 
   # to make it compatible with previous solution we set the value to FALSE.
