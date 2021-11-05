@@ -125,10 +125,6 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
                      name = "identifiers",
                      subname = id_type,
                      strict = FALSE)
-  if (length(out) > 0 && is.list(out[[1]])) { # check if out is a nested list
-    out <- unlist(unique(lapply(out, unlist)))
-    out <- lapply(out, function(x) x)
-  }
   # For backwards compatibility, get identifiers from environment if not found on `se`.
   if (is.null(out)) {
     warning(sprintf("'se' was passed, but identifier '%s' not found on se's identifiers", id_type))
