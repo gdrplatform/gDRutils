@@ -25,3 +25,31 @@ assert_equal_input_len <- function(outlier, ...) {
 
   invisible(NULL)
 }
+
+#' shorten normalization type
+shorten_normalization_type_name <- function(x) {
+  dict <- c("RelativeViability" = "RV", "GRvalue" = "GR")
+  dict[[x]]
+}
+
+#' extend abbreviated normalization type
+extend_normalization_type_name <- function(x) {
+  dict <- c("RV" = "RelativeViability", "GR" = "GRvalue")
+  dict[[x]]
+}
+
+assert_choices <- function(x, choices, ...) {
+  out <- vapply(x, function(y) {
+    checkmate::test_choice(y, choices, ...)
+  }, FUN.VALUE = logical(1))
+
+  if (!all(out)) {
+    msg <-
+      sprintf(
+        "Assertion on '%s' failed. Must be element(s) of {'%s'} set.",
+        toString(x[!out]),
+        toString(choices)
+      )
+    stop(msg)
+  }
+}
