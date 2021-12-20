@@ -27,7 +27,6 @@ ASSAY_INFO_TBL <- tibble::tribble(
 #' @param simplify logical flag, simplify the output?
 #'    will return single string instead of named vector with single element
 #'    useful when function is expect to return single element/assay only
-#' @export
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
@@ -96,12 +95,14 @@ get_env_assay_names <-
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
+#' @export
 get_assay_names <- function(se = NULL, ...) {
   if (!is.null(se) &&
       !is.null(metadata(se = NULL)[["assay_info_tbl"]])) {
     # TODO: extend the logic to support metadata from se
     # i.e. sth like `get_se_assay_names(group = "combo_base")`
     # more details: https://jira.gene.com/jira/browse/GDR-1116
+    stop("'get_assay_name' currently does not support non-null 'se'")
   } else {
     get_env_assay_names(...)
   }
