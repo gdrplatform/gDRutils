@@ -4,21 +4,6 @@ ASSAY_INFO_TBL <- tibble::tribble(
   "Controls", "Controls", "control", "core", "single-agent",
   "Normalized", "Normalized", "normalized", "core", "single-agent",
   "Averaged", "Averaged", "averaged", "core", "single-agent",
-assert_choices <- function(x, choices, ...) {
-  out <- vapply(x, function(y) {
-    checkmate::test_choice(y, choices, ...)
-  }, FUN.VALUE = logical(1))
-
-  if (!all(out)) {
-    msg <-
-      sprintf(
-        "Assertion on '%s' failed. Must be element(s) of {'%s'} set.",
-        toString(x[!out]),
-        toString(choices)
-      )
-    stop(msg)
-  }
-}
   "Metrics", "Metrics", "metrics", "core", "single-agent",
   "SmoothMatrix", "MX full", "smooth", "combo_base_mx", "combo",
   "BlissExcess", "Bliss excess", "bliss_excess", "combo_base_excess", "combo",
@@ -121,4 +106,3 @@ get_assay_names <- function(se = NULL, ...) {
     get_env_assay_names(...)
   }
 }
-
