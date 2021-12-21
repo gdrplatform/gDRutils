@@ -42,3 +42,16 @@ test_that("convert_combo_data_to_dt",  {
     fixed = TRUE
   )
 })
+
+test_that("get_iso_colors",  {
+  ### expected values
+  gic <- get_iso_colors()
+  expect_true(length(gic) > 2)
+  expect_identical("character", class(gic))
+  gic2 <- get_iso_colors(formals(get_iso_colors)[[1]][[3]])
+  expect_true(any(gic != gic2))
+  expect_identical(length(gic), length(gic2))
+  
+  ### errors
+  expect_error(get_iso_colors("inv_param"), "'arg' should be one of ")
+})
