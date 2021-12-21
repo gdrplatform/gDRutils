@@ -70,3 +70,21 @@ test_that("get_combo_col_settings",  {
   err_msg <- "Assertion on 'g_metric' failed: "
   expect_error(get_combo_col_settings("grvalue", 8), err_msg)
 })
+
+test_that("shorten_normalization_type_name", {
+  ### expected values
+  expect_identical("GR", shorten_normalization_type_name("GRvalue"))
+  
+  ### errors
+  err_msg <- "Assertion on 'x' failed: Must be element of set"
+  expect_error(shorten_normalization_type_name("invalid"), err_msg)
+})
+
+test_that("extend_normalization_type_name", {
+  ### expected values
+  expect_identical("GRvalue", extend_normalization_type_name("GR"))
+  
+  ### errors
+  err_msg <- "Assertion on 'x' failed: Must be element of set"
+  expect_error(shorten_normalization_type_name("invalid"), err_msg)
+})
