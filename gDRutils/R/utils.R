@@ -27,17 +27,20 @@ assert_equal_input_len <- function(outlier, ...) {
 }
 
 #' shorten normalization type
+#' @export
 shorten_normalization_type_name <- function(x) {
   dict <- c("RelativeViability" = "RV", "GRvalue" = "GR")
   dict[[x]]
 }
 
 #' extend abbreviated normalization type
+#' @export
 extend_normalization_type_name <- function(x) {
   dict <- c("RV" = "RelativeViability", "GR" = "GRvalue")
   dict[[x]]
 }
 
+#' @export
 assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
     checkmate::test_choice(y, choices, ...)
