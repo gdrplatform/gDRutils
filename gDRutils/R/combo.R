@@ -60,7 +60,10 @@ convert_combo_data_to_dt <-
     names(my_l) <- as.character(c_assays)
     my_l
   }
-
+#' get_iso_colors
+#' #' 
+#' @param  normalization_type charvec normalization_types expected in the data
+#' @return named charvec with iso colors
 #' @export
 get_iso_colors <-
   function(normalization_type = c("RelativeViability", "GRvalue")) {

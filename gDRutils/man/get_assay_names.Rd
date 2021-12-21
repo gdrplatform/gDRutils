@@ -9,7 +9,7 @@ use predefined values from `get_env_assay_names` otherwise}
 get_assay_names(se = NULL, ...)
 }
 \arguments{
-\item{se}{summarized experiment}
+\item{se}{SummarizedExperiment or NULL}
 }
 \description{
 get assay names of the given se/dataset

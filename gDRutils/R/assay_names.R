@@ -90,7 +90,8 @@ get_env_assay_names <-
 #' fetch the data from the se if provided as metadata
 #' use predefined values from `get_env_assay_names` otherwise
 #'
-#' @param se summarized experiment
+#' @param se SummarizedExperiment or NULL
+#' 
 #' @inheritParams get_env_assay_names
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
@@ -119,6 +120,9 @@ get_combo_assay_names <- function(se = NULL, ...) {
 }
 
 #' get names of combo base assays
+#' 
+#' @param se SummarizedExperiment or NULL
+#' 
 #' @return  charvec
 #' @export
 #'
@@ -129,7 +133,11 @@ get_combo_base_assay_names <- function(se = NULL, ...) {
 }
 
 #' get names of combo score assays
+#' 
+#' @param se SummarizedExperiment or NULL
+#' 
 #' @return  charvec
+#' 
 #' @export
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}

@@ -6,6 +6,9 @@
 \usage{
 extend_normalization_type_name(x)
 }
+\arguments{
+\item{x}{string with normalization type}
+}
 \description{
 extend abbreviated normalization type
 }
