@@ -60,12 +60,12 @@ get_env_assay_names <-
     v_filters <- filters[!are_null]
 
     if (all(are_null)) {
-      structure(ASSAY_INFO_TBL[[fname]], names = ASSAY_INFO_TBL$type)
-    } else {
-      df <- ASSAY_INFO_TBL
-      for (filter in names(v_filters)) {
-        df <- df[df[[eval(filter)]] %in% v_filters[[filter]], ]
-      }
+      return(structure(ASSAY_INFO_TBL[[fname]], names = ASSAY_INFO_TBL$type))
+    }
+      
+    df <- ASSAY_INFO_TBL
+    for (filter in names(v_filters)) {
+      df <- df[df[[eval(filter)]] %in% v_filters[[filter]], ]
     }
 
     if ((nrow(df)) == 0)  {
