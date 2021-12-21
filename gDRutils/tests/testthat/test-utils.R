@@ -31,3 +31,20 @@ test_that("assert_equal_input_len works as expected", {
   efficacy <- 0.6
   expect_equal(gDRutils:::assert_equal_input_len(outlier = efficacy, ec50, x_0, x_inf, h), NULL)
 })
+
+test_that("assert_choices",  {
+  ### expected values
+  expect_null(assert_choices(letters[1], letters))
+  expect_null(assert_choices(letters[1:2], letters))
+  expect_null(assert_choices(1:5, 1:10))
+  expect_null(assert_choices(1, 1:10))
+  
+  ### errors
+  err_msg <- sprintf("Assertion on '%s' failed.", letters[8])
+  expect_error(assert_choices(letters[5:8], letters[1:7]), err_msg)
+  err_msg <-
+    sprintf("Assertion on '%s, %s' failed.", letters[7], letters[8])
+  expect_error(assert_choices(letters[5:8], letters[1:6]), err_msg)
+})
+
+
