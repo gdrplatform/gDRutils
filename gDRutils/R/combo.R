@@ -91,7 +91,7 @@ get_combo_score_assay_names <- function(se = NULL, ...) {
         get_combo_assay_names(group = c("combo_score_excess", "combo_score_mx"), ...)
 }
 
-
+#' @export
 get_iso_colors <-
   function(normalization_type = c("RelativeViability", "GRvalue")) {
     normalization_type <- match.arg(normalization_type)
@@ -131,7 +131,8 @@ assert_RGB_format <- function(x) {
 #' @examples
 #'
 #' @return list with colors, breaks and limits
-#'
+#' 
+#' @export
 get_combo_col_settings <-
   function(g_metric,
            assay_type) {
