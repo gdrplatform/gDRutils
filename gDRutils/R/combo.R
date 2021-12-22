@@ -33,7 +33,7 @@ convert_combo_data_to_dt <-
           if (x == names(get_combo_assay_names(group = "combo_base_mx"))) {
             dt <- convert_se_assay_to_dt(se, c_assays[[x]])
             for (n in names(ntype_dict)) {
-              setnames(dt, n, ntype_dict[n])
+              data.table::setnames(dt, n, ntype_dict[n])
             }
             dt <- data.table::melt(
               dt,
