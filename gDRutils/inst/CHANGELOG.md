@@ -1,3 +1,7 @@
+# Change to v.1.0.20
+- move combo-related functions from gDRviz
+- add unit tests for combo-related functions
+
 # Change to v.1.0.19
 - do not create a nested list of identifiers during mergin SE
 
