@@ -1,4 +1,4 @@
-From dockerreg.kubemeainfra.science.roche.com/cbs/temp/githubroche/gdrplatform/gdr_shiny:PR-6-ab87421e-build-3
+FROM dockerreg.kubemeainfra.science.roche.com/cbs/temp/githubroche/gdrplatform/gdr_shiny:PR-6
 
 # ------ Be aware that any changes in following may cause issue with RPlatform and CBS
 
