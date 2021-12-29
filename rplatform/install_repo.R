@@ -14,4 +14,4 @@ if (file.exists(gh_access_token_file)) {
   Sys.setenv(GITHUB_TOKEN = ac)
 }
 
-remotes::install_local(path = "/tmp/gDRutils", upgrade = "never")
+remotes::install_local(path = "/tmp/gDRutils")
