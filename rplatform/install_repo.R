@@ -1,4 +1,8 @@
 # Settings
+repos <- c(
+CRAN = "https://cran.microsoft.com/snapshot/2021-08-25"
+)
+options(repos = repos)
 repo_path <- "/tmp/gDRutils"
 base_dir <- "/mnt/vol"
 

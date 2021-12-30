@@ -54,8 +54,9 @@ merge_SE <- function(SElist,
       ),
       colData = data$condition_md,
       rowData = data$treatment_md,
-      metadata = metadata,
-      checkDimnames = FALSE
+      metadata = metadata
+      # uncomment this line once we switch from BioC 3.13 to 3.14
+      # checkDimnames = FALSE # nolint
     )
   se
 }

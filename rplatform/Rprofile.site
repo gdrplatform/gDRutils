@@ -1,6 +1,6 @@
 options(
   repos = c(
-    CRAN = "https://cran.r-project.org"
+    CRAN = "https://cran.microsoft.com/snapshot/2021-08-25"
   ),
   HTTPUserAgent = sprintf(
     "R/%s R (%s)",
