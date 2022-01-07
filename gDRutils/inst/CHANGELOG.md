@@ -1,3 +1,6 @@
+# Change to v.1.0.21
+- update SE-related functions of gDRutils to support MAE
+
 # Change to v.1.0.20
 - move combo-related functions from gDRviz
 - add unit tests for combo-related functions

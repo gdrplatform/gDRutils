@@ -94,3 +94,4 @@ test_that("get_SE_processing_metadata and set_SE_processing_metadata work as exp
   se <- set_SE_processing_metadata(se, params)
   expect_equal(get_SE_processing_metadata(se), params)
 })
+

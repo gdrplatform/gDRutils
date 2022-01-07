@@ -84,3 +84,37 @@ validate_SE <- function(se,
   }
   invisible(NULL)
 }
+
+#' Validate MultiAssayExperiment object
+#' 
+#' Function validates correctness of SE included in MAE by checking multiple cases:
+#' - detection of duplicated rowData/colData,
+#' - incompatibility of rownames/colnames,
+#' - occurrence of necessary assays,
+#' - detection of mismatch of CLIDs inside colData and colnames (different order),
+#' - correctness of metadata names.
+#'
+#' @param mae MultiAssayExperiment object 
+#' produced by the gDR pipeline
+#'
+#' @return \code{NULL} invisibly if the MultiAssayExperiment is valid.
+#' Throws an error if the MultiAssayExperiment is not valid.
+#' @export
+#'
+#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+validate_MAE <- function(mae) {
+  # Validate the SE structure, assays and metadata, as well as dimnames of assays
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  experiments <- names(mae)
+  checkmate::assert_true(experiments %in% c("single-agent", "co-dilution",
+                                           "matrix", "cotreatment", "other"))
+  for (experiment in experiments) {
+    if (experiment == "single-agent") {
+      validate_SE(mae[[experiment]], expect_single_agent = TRUE)
+    } else {
+      validate_SE(mae[[experiment]])
+    }
+  }
+  invisible(NULL)
+}
+

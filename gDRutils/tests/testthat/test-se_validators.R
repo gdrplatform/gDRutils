@@ -43,3 +43,41 @@ test_that("validate_SE works as expected on real data", {
                regexp = "Assertion on \'any(na.omit(unlist(rowdata)) == \"\")\' failed: Must be FALSE.",
                fixed = TRUE)
 })
+
+test_that("validate_mae works as expected", {
+  m <- 20
+  n <- 10
+  rnames <- LETTERS[1:m]
+  cnames <- letters[1:n]
+  
+  ref_gr_value <-  matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
+  se1 <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value[1:10, ]),
+                                                    rowData = S4Vectors::DataFrame(rnames)[1:10, , drop = FALSE],
+                                                    colData = S4Vectors::DataFrame(cnames))
+  
+  se2 <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value[11:20, ]),
+                                                    rowData = S4Vectors::DataFrame(rnames)[11:20, , drop = FALSE],
+                                                    colData = S4Vectors::DataFrame(cnames))
+  
+  mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list(one = se1,
+                                                                       two = se2))
+  
+  expect_error(validate_MAE(mae))
+  x <- IRanges::NumericList(split(runif(1000), factor(sample(50, 1000, replace = TRUE), 1:50))) 
+  se3 <- SummarizedExperiment::SummarizedExperiment(assays = 
+                                                      list("RawTreated" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "Controls" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "Normalized" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "RefGRvalue" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "RefRelativeViability" = 
+                                                             BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "DivisionTime" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "Averaged" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
+                                                           "Metrics" = BumpyMatrix::BumpyMatrix(x, c(10, 5))))
+  
+  mae2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se3))
+  
+  seReal <- readRDS(system.file("testdata/finalSE_small.RDS", package = "gDRtestData"))
+  maeReal <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = seReal))
+  validate_MAE(maeReal)
+})
