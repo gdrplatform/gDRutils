@@ -20,6 +20,7 @@ Imports:
     drc,
     magrittr,
     methods,
+    plyr,
     reshape2,
     stats,
     BumpyMatrix (>= 0.99.7),
