@@ -80,4 +80,7 @@ test_that("validate_mae works as expected", {
   seReal <- readRDS(system.file("testdata/finalSE_small.RDS", package = "gDRtestData"))
   maeReal <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = seReal))
   validate_MAE(maeReal)
+  maeReal2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = seReal,
+                                                                            "matrix" = seReal))
+  validate_MAE(maeReal2)
 })

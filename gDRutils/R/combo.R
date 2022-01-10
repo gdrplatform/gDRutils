@@ -5,7 +5,7 @@
 #' @param  normalization_type charvec normalization_types expected in the data
 #' @param prettify logic flag prettify the colnames od the returned list of data.tables?
 #' @examples
-#' combo_data_l <- combo_data_to_dt(se)
+#' combo_data_l <- convert_combo_data_to_dt(se)
 #'
 #' @return list of data.table(s) with combo data
 #'

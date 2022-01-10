@@ -1,4 +1,7 @@
 # Change to v.1.0.21
+- update assert in `validate_MAE`
+
+# Change to v.1.0.21
 - update SE-related functions of gDRutils to support MAE
 
 # Change to v.1.0.20
