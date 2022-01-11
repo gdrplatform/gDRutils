@@ -106,7 +106,7 @@ validate_MAE <- function(mae) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(mae, "MultiAssayExperiment")
   experiments <- names(mae)
-  checkmate::assert_true(experiments %in% c("single-agent", "co-dilution",
+  checkmate::assert_subset(experiments, c("single-agent", "co-dilution",
                                            "matrix", "cotreatment", "other"))
   for (experiment in experiments) {
     if (experiment == "single-agent") {
