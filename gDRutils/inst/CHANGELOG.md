@@ -1,3 +1,6 @@
+# Change to v.1.0.22
+- switch unit tests from SE to MAE from `gDRtestData`
+
 # Change to v.1.0.21
 - update assert in `validate_MAE`
 
