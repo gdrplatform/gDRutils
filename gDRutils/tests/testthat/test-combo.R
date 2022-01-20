@@ -1,7 +1,5 @@
 library(testthat)
 context("combo-related functions")
-# test_se <-
-#   readRDS(gDRtestData::get_test_dataset_paths()["finalMAE_combo_with_metrics"])
 test_mae <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
 test_l <- convert_combo_data_to_dt(test_mae[[1]])
 
