@@ -33,13 +33,13 @@ test_that("validate_SE works as expected", {
 
 
 test_that("validate_SE works as expected on real data", {
-  seReal <- readRDS(system.file("testdata/finalSE_small.RDS", package = "gDRtestData"))
-  validate_SE(seReal)
+  maeReal <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
+  validate_SE(maeReal[[1]])
   # Add empty drug_moa in one record of rowData
-  rowdata <- SummarizedExperiment::rowData(seReal)
+  rowdata <- SummarizedExperiment::rowData(maeReal[[1]])
   rowdata[2, "drug_moa"] <- ""
-  SummarizedExperiment::rowData(seReal) <- rowdata
-  expect_error(validate_SE(seReal),
+  SummarizedExperiment::rowData(maeReal[[1]]) <- rowdata
+  expect_error(validate_SE(maeReal[[1]]),
                regexp = "Assertion on \'any(na.omit(unlist(rowdata)) == \"\")\' failed: Must be FALSE.",
                fixed = TRUE)
 })
@@ -77,10 +77,9 @@ test_that("validate_mae works as expected", {
   
   mae2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se3))
   
-  seReal <- readRDS(system.file("testdata/finalSE_small.RDS", package = "gDRtestData"))
-  maeReal <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = seReal))
+  maeReal <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
   validate_MAE(maeReal)
-  maeReal2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = seReal,
-                                                                            "matrix" = seReal))
+  maeReal2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = maeReal[[1]],
+                                                                            "matrix" = maeReal[[1]]))
   validate_MAE(maeReal2)
 })
