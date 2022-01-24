@@ -2,7 +2,7 @@ DockerfilePipeline(
   preBuild: { tags,labels, rpServiceUrl, rpCookie ->
     def rpsession_cookie = "${rpCookie}"
     def rp_service_url = "${rpServiceUrl}"
-    def rp_project_id = "604"
+    def rp_project_id = "779"
     def GIT_URL = env.GIT_URL ? env.GIT_URL : env.GIT_URL_1
 
     // create new tag from branch's name (and commit for devel and master)
@@ -43,7 +43,7 @@ DockerfilePipeline(
   onFailure: { tags,labels, rpServiceUrl, rpCookie ->
     def rpsession_cookie = "${rpCookie}"
     def rp_service_url = "${rpServiceUrl}"
-    def rp_project_id = "604"
+    def rp_project_id = "779"
 
     sh 'export PYTHONWARNINGS="ignore:Unverified HTTPS request"'
     sh 'printenv | sort'
@@ -60,7 +60,7 @@ DockerfilePipeline(
   onSuccess: { tags,labels,rpServiceUrl,rpCookie ->
     def rpsession_cookie = "${rpCookie}"
     def rp_service_url = "${rpServiceUrl}"
-    def rp_project_id = "604"
+    def rp_project_id = "779"
     sh 'printenv | sort'
 
     // overwrite docker credentials and registry address
@@ -74,7 +74,7 @@ DockerfilePipeline(
     // create new tag from branch's name (and commit for devel and master)
     def tag = null
     def image = null
-    def cbs_docker_image = "${registry}/githubroche/gdrplatform/gdrutils"
+    def cbs_docker_image = "${registry}/github/gdrplatform/gdrutils-gh"
     def commit_11 = sh returnStdout: true, script: "echo ${GIT_COMMIT} | head -c 11"
     if ("${GIT_BRANCH}" == "master" || "${GIT_BRANCH}" == "devel") {
         // master goes to CBS registry
