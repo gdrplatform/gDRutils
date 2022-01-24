@@ -8,12 +8,23 @@ echo "Working directory contains: `ls | tr '\n' ' '`"
 # exit when any command fails
 set -e
 
-echo ">>>>>>>> Running linter"
+echo ">>>>>>>> RUNNING LINTER"
 Rscript -e "gDRstyle::lintPkgInDir('/mnt/vol/gDRutils')"
 
 echo ">>>>> RUNNING UNIT TESTS"
 Rscript -e "testthat::test_local(path = '/mnt/vol/gDRutils', stop_on_failure = TRUE)"
 
+echo ">>>>> RUNNING DEPENDENCIES CHECK"
+Rscript -e "gDRstyle::checkDependencies('/mnt/vol/gDRutils')"
+
 # TODO: fix the issue with R CMD CHECK
 #echo ">>>>> RUNNING DEVTOOLS::CHECK()"
 #sudo R CMD check --no-build-vignettes --no-manual --no-tests /mnt/vol/gDRwrapper
+
+
+echo ">>>>>>>> RUNNING CHECK DEPENDENCIES"
+Rscript -e "gDRstyle::checkDependencies('/mnt/vol/gDRutils')"
+
+
+echo ">>>>>>>> RUNNING CHECK DEPENDENCIES"
+Rscript -e "gDRstyle::checkDependencies('/mnt/vol/gDRutils')"
