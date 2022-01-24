@@ -14,9 +14,6 @@ Rscript -e "gDRstyle::lintPkgDirs('/mnt/vol/gDRutils')"
 echo ">>>>> RUNNING UNIT TESTS"
 Rscript -e "testthat::test_local(path = '/mnt/vol/gDRutils', stop_on_failure = TRUE)"
 
-echo ">>>>> RUNNING DEPENDENCIES CHECK"
-Rscript -e "gDRstyle::checkDependencies('/mnt/vol/gDRutils')"
-
 # TODO: fix the issue with R CMD CHECK
 #echo ">>>>> RUNNING DEVTOOLS::CHECK()"
 #sudo R CMD check --no-build-vignettes --no-manual --no-tests /mnt/vol/gDRwrapper
