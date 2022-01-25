@@ -1,5 +1,8 @@
-# Change to v.1.0.23
+# Change to v.1.0.24
 - standardize/improve CI
+
+# Change to v.1.0.23
+- switch unit tests from SE to MAE from `gDRtestData`
 
 # Change to v.1.0.21
 - update assert in `validate_MAE`

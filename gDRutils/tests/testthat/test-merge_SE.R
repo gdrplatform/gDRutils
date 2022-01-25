@@ -1,7 +1,10 @@
+listMAE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
+                             "final", full.names = TRUE)[1:2], readRDS)
+listSE <- lapply(listMAE, function(x) x[[1]])
+names(listSE) <- c("combo1", "combo2")
+
+
 test_that("merge_assay works as expected", {
-  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                              "final", full.names = TRUE)[1:2], readRDS)
-  names(listSE) <- c("combo1", "combo2")
   normalizedMerged <- merge_assay(listSE, "Normalized")
   checkmate::expect_list(normalizedMerged)
   testthat::expect_true(all(c("DT", "BM") == names(normalizedMerged)))
@@ -10,9 +13,6 @@ test_that("merge_assay works as expected", {
 })
 
 test_that("merge_metadata and identify_unique_se_metadata_fields work as expected", {
-  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                              "final", full.names = TRUE)[1:2], readRDS)
-  names(listSE) <- c("combo1", "combo2")
   metadata_fields <- identify_unique_se_metadata_fields(listSE)
   mergedMetadata <- merge_metadata(listSE, metadata_fields)
   expect_identical(names(mergedMetadata), metadata_fields)
@@ -28,9 +28,6 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
-  listSE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                              "final", full.names = TRUE)[1:2], readRDS)
-  names(listSE) <- c("combo1", "combo2")
   mergedSE <- merge_SE(listSE)
   checkmate::expect_class(mergedSE, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE)[["df_raw_data"]] <- list(NULL)

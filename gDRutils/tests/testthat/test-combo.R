@@ -1,11 +1,10 @@
 library(testthat)
 context("combo-related functions")
-test_se <-
-  readRDS(gDRtestData::get_test_dataset_paths()["finalSE_combo_with_metrics"])
-test_l <- convert_combo_data_to_dt(test_se)
+test_mae <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
+test_l <- convert_combo_data_to_dt(test_mae[[1]])
 
 test_that("convert_combo_data_to_dt",  {
-  res_l <- convert_combo_data_to_dt(test_se)
+  res_l <- convert_combo_data_to_dt(test_mae[[1]])
 
   # expected assays converted
   exp_as <- as.character(get_combo_assay_names())
@@ -27,17 +26,17 @@ test_that("convert_combo_data_to_dt",  {
   err_msg2 <-
     "HSAExcess, HSAScore, BlissScore, CIScore_50, CIScore_80, isobolograms'} set."
   expect_error(
-    convert_combo_data_to_dt(test_se, c_assays = c("dummy", "Smooth_Matrix", "HSAExcess")),
+    convert_combo_data_to_dt(test_mae[[1]], c_assays = c("dummy", "Smooth_Matrix", "HSAExcess")),
     sprintf("%s%s", err_msg, err_msg2),
     fixed = TRUE
   )
   expect_error(
-    convert_combo_data_to_dt(test_se, normalization_type = 1),
+    convert_combo_data_to_dt(test_mae[[1]], normalization_type = 1),
     "Assertion on 'normalization_type' failed: Must be of type 'character', not 'double'.",
     fixed = TRUE
   )
   expect_error(
-    convert_combo_data_to_dt(test_se, prettify = "true"),
+    convert_combo_data_to_dt(test_mae[[1]], prettify = "true"),
     "Assertion on 'prettify' failed: Must be of type 'logical flag', not 'character'.",
     fixed = TRUE
   )
