@@ -23,13 +23,13 @@ Imports:
     plyr,
     reshape2,
     stats,
-    BumpyMatrix (>= 0.99.7),
+    BumpyMatrix,
     IRanges,
     S4Vectors,
     SummarizedExperiment
 Suggests:
     futile.logger,
-    gDRstyle,
+    gDRstyle (>= 0.0.8),
     gDRtestData (>= 1.0.5),
     knitr,
     lintr,
