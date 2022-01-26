@@ -20,4 +20,4 @@ Rscript -e "testthat::test_local(path = '$repo_path', stop_on_failure = TRUE)"
 #sudo R CMD check --no-build-vignettes --no-manual --no-tests /mnt/vol/gDRutils
 
 echo ">>>>>>>> RUNNING CHECK DEPENDENCIES"
-Rscript -e "gDRstyle::checkDependencies(dep_path='/mnt/vol/dependencies.yaml', desc_path='/mnt/vol/gDRutils/DESCRIPTION')"
+Rscript -e "gDRstyle::checkDependencies(dep_path='/mnt/vol/rplatform/dependencies.yaml', desc_path='/mnt/vol/gDRutils/DESCRIPTION')"
