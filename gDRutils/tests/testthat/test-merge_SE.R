@@ -28,6 +28,7 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
+  testthat::skip_if(BiocManager::version() >  "3.13")
   mergedSE <- merge_SE(listSE)
   checkmate::expect_class(mergedSE, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE)[["df_raw_data"]] <- list(NULL)
