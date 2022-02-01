@@ -1,3 +1,6 @@
+# Change to v.1.0.25
+- support SE() init for different BioC versions
+
 # Change to v.1.0.24
 - standardize/improve CI
 
