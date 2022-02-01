@@ -5,7 +5,9 @@
 #' @param  normalization_type charvec normalization_types expected in the data
 #' @param prettify logic flag prettify the colnames od the returned list of data.tables?
 #' @examples
+#' \dontrun{
 #' combo_data_l <- convert_combo_data_to_dt(se)
+#' }
 #'
 #' @return list of data.table(s) with combo data
 #'
@@ -101,7 +103,6 @@ assert_RGB_format <- function(x) {
 #'
 #' @param g_metric growth metric
 #' @param assay_type assay_type
-#' @examples
 #'
 #' @return list with colors, breaks and limits
 #' 

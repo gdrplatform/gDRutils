@@ -17,6 +17,3 @@ list with colors, breaks and limits
 \description{
 Get colorscale data for given combo assay and growth metric
 }
-\examples{
-
-}

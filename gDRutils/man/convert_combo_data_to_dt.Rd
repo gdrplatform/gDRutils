@@ -27,7 +27,9 @@ list of data.table(s) with combo data
 convert combo assays from SummarizedExperiments to the list of data.tables
 }
 \examples{
+\dontrun{
 combo_data_l <- convert_combo_data_to_dt(se)
+}
 
 }
 \author{
