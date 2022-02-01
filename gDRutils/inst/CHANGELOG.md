@@ -1,5 +1,5 @@
 # Change to v.1.0.25
-- skip test not working on BioC 3.14
+- support SE() init for different BioC versions
 
 # Change to v.1.0.24
 - standardize/improve CI
