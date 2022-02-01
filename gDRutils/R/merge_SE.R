@@ -45,7 +45,7 @@ merge_SE <- function(SElist,
   
   # 2021.11.01 - param checkDimnames was added to Summarized Experiment in Bioc 3.14, 
   # to make it compatible with previous solution we set the value to FALSE.
-  se <-
+  se <- if (BiocManager::version() <= "3.13") {
     SummarizedExperiment(
       assays = list(
         Normalized = normalized$BM,
@@ -55,9 +55,20 @@ merge_SE <- function(SElist,
       colData = data$condition_md,
       rowData = data$treatment_md,
       metadata = metadata
-      # uncomment this line once we switch from BioC 3.13 to 3.14
-      # checkDimnames = FALSE # nolint
     )
+  } else {
+    SummarizedExperiment(
+      assays = list(
+        Normalized = normalized$BM,
+        Averaged = averaged$BM,
+        Metrics = metrics$BM
+      ),
+      colData = data$condition_md,
+      rowData = data$treatment_md,
+      metadata = metadata,
+      checkDimnames = FALSE
+    )
+  }
   se
 }
 
