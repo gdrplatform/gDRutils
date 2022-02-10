@@ -53,7 +53,7 @@ test_that("MAEpply works as expectd", {
   expect_length(list1, 2)
   expect_true(inherits(list1, "list"))
   list2 <- MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE)
-  expect_length(list1, 5)
+  expect_length(list2, 5)
   expect_true(inherits(list2, "character"))
 })
 
