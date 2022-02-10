@@ -192,10 +192,15 @@ convert_mae_assay_to_dt <- function(mae,
     experiment_name <- names(mae)
   }
   
-  dtList <- lapply(experiment_name, function(x) convert_se_assay_to_dt(mae[[x]],
-                                                           assay_name = assay_name,
-                                                           include_metadata = include_metadata,
-                                                           retain_nested_rownames = retain_nested_rownames))
+  dtList <- lapply(experiment_name, function(x) {
+    if(!assay_name %in% assayNames(mae[[x]])) {
+      return()
+    }
+    convert_se_assay_to_dt(mae[[x]],
+                           assay_name = assay_name,
+                           include_metadata = include_metadata,
+                           retain_nested_rownames = retain_nested_rownames)
+  })
   dt <- plyr::rbind.fill(dtList)
   dt
 }
