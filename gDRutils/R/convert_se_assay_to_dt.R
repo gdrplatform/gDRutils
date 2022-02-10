@@ -193,7 +193,7 @@ convert_mae_assay_to_dt <- function(mae,
   }
   
   dtList <- lapply(experiment_name, function(x) {
-    if(!assay_name %in% assayNames(mae[[x]])) {
+    if (!assay_name %in% assayNames(mae[[x]])) {
       return()
     }
     convert_se_assay_to_dt(mae[[x]],
