@@ -73,7 +73,8 @@ assert_choices <- function(x, choices, ...) {
 #' 
 #' @param mae MultiAssayExperiment object
 #' @param FUN function that should be applied on each experiment of MultiAssayExperiment object
-#' @param unify logical indicating if the output should be a unlisted object of unique values across all the experiments 
+#' @param unify logical indicating if the output should be a unlisted object of unique
+#' values across all the experiments 
 #' @export
 #' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
