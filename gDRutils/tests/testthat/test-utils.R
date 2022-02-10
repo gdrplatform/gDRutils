@@ -47,4 +47,14 @@ test_that("assert_choices",  {
   expect_error(assert_choices(letters[5:8], letters[1:6]), err_msg)
 })
 
+test_that("MAEpply works as expectd", {
+  maeReal <- readRDS(system.file("testdata", "finalMAE_combo_2dose_nonoise2.RDS", package = "gDRtestData"))
+  list1 <- MAEpply(maeReal, SummarizedExperiment::assayNames)
+  expect_length(list1, 2)
+  expect_true(inherits(list1, "list"))
+  list2 <- MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE)
+  expect_length(list1, 5)
+  expect_true(inherits(list2, "character"))
+})
+
 
