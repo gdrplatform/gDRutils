@@ -75,12 +75,12 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   expect_equal(obs2, list())
 
   # Multiple identifiers.
-  exp <- list("drugname" = "Drugs", "cellline_name" = "Cells")
+  exp <- list("drug_name" = "Drugs", "cellline_name" = "Cells")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_equal(get_SE_identifiers(se, c("drugname", "duration"), simplify = FALSE), 
-               list(drugname = "Drugs", duration = "Duration")) # Env and se identifiers.
-  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname"), simplify = FALSE), 
-               list(cellline_name = "Cells", drugname = "Drugs")) # Order.
+  expect_equal(get_SE_identifiers(se, c("drug_name", "duration"), simplify = FALSE), 
+               list(drug_name = "Drugs", duration = "Duration")) # Env and se identifiers.
+  expect_equal(get_SE_identifiers(se, c("cellline_name", "drug_name"), simplify = FALSE), 
+               list(cellline_name = "Cells", drug_name = "Drugs")) # Order.
 })
 
 test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {

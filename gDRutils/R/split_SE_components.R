@@ -71,7 +71,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   md <- unique(df_[, md_cols]) 
 
   drug_md <- c(identifiers_md$drug,
-               identifiers_md$drugname,
+               identifiers_md$drug_name,
                identifiers_md$drug_moa,
                identifiers_md$duration)
   drug_field_pattern <- paste0(drug_md, collapse = "|")

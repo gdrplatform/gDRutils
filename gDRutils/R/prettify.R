@@ -124,7 +124,7 @@ prettify_flat_metrics <- function(x,
   cols[cols %in% names(metadata)] <- unname(metadata[cols[cols %in% names(metadata)]])
 
   # Pattern replacements.
-  multiples <- c(get_env_identifiers("drugname", simplify = TRUE), get_env_identifiers("drug_moa"))
+  multiples <- c(get_env_identifiers("drug_name", simplify = TRUE), get_env_identifiers("drug_moa"))
   names(multiples) <- c("Drug", "Drug MOA")
 
   for (i in seq_len(length(multiples))) {
