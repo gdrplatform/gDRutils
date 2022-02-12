@@ -68,3 +68,25 @@ assert_choices <- function(x, choices, ...) {
     stop(msg)
   }
 }
+
+#' Lapply through all the experiments in MultiAssayExperiment object
+#' 
+#' @param mae MultiAssayExperiment object
+#' @param FUN function that should be applied on each experiment of MultiAssayExperiment object
+#' @param unify logical indicating if the output should be a unlisted object of unique
+#' values across all the experiments 
+#' @export
+#' 
+#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+MAEpply <- function(mae, FUN, unify = FALSE) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  checkmate::assert_function(FUN)
+  checkmate::assert_flag(unify)
+  experiments <- as.list(MultiAssayExperiment::experiments(mae))
+  out <- lapply(experiments, FUN)
+  if (unify) {
+    unique(unlist(out))
+  } else {
+    out
+  }
+}

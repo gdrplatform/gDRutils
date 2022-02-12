@@ -1,3 +1,6 @@
+# Change to v.1.0.27
+- add `MAEpply` function
+
 # Change to v.1.0.26
 - update documentation
 
