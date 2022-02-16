@@ -1,5 +1,8 @@
-# Change to v.1.0.27
+# Change to v.1.0.28
 - refactor identifier `drugname` to `drug_name`
+
+# Change to v.1.0.27
+- add `MAEpply` function
 
 # Change to v.1.0.26
 - update documentation
