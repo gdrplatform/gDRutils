@@ -12,7 +12,7 @@ test_that("convert_combo_data_to_dt",  {
 
   # check content of data.table
   expect_true(nrow(res_l[[1]]) > 1 && ncol(res_l[[1]]) > 1)
-  exp_idfs <- get_prettified_identifiers(c("drugname", "drugname2", "cellline"), simplify = FALSE)
+  exp_idfs <- get_prettified_identifiers(c("drug_name", "drug_name2", "cellline"), simplify = FALSE)
   expect_true(all(exp_idfs %in% colnames(res_l[[1]])))
 
   # errors

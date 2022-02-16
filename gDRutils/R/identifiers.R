@@ -35,7 +35,7 @@
 #'  \item{"cellline_parental_identifier": String of column name containing unique, machine-readable 
 #'    parental cell line identifiers. Used in the case of derived or engineered cell lines.}
 #'  \item{"drug": String of column name containing unique, machine-readable drug identifiers}
-#'  \item{"drugname": String of column name containing human-friendly drug names}
+#'  \item{"drug_name": String of column name containing human-friendly drug names}
 #'  \item{"drug_moa": String of column name containing metadata for drug mode of action}
 #'  \item{"duration": String of column name containing metadata on duration that cells were treated (in hours)}
 #'  \item{"template": String of collumn name containing template metadata}

@@ -63,14 +63,14 @@ getMetaData <- function(data, discard_keys = NULL) {
   # Remove drug metadata and duration.
   constant_metavars <- setdiff(nocell_metavars[singleton_cols],
                                c(gDRutils::get_env_identifiers("drug", simplify = TRUE),
-                                 gDRutils::get_env_identifiers("drugname", simplify = TRUE),
+                                 gDRutils::get_env_identifiers("drug_name", simplify = TRUE),
                                  gDRutils::get_env_identifiers("duration", simplify = TRUE)
                                  ))
 
   unique_metavars <- c(intersect(c(gDRutils::get_env_identifiers("cellline", simplify = TRUE),
                                    gDRutils::get_header("add_clid"),
                                    gDRutils::get_env_identifiers("drug", simplify = TRUE),
-                                   gDRutils::get_env_identifiers("drugname", simplify = TRUE),
+                                   gDRutils::get_env_identifiers("drug_name", simplify = TRUE),
                                    gDRutils::get_env_identifiers("duration", simplify = TRUE)),
                                  metavars),
                        nocell_metavars[!singleton_cols])
@@ -84,7 +84,7 @@ getMetaData <- function(data, discard_keys = NULL) {
     }
 
   pattern <- sprintf("^%s*|^%s*|^%s$",
-                     gDRutils::get_env_identifiers(c("drug", "drugname", "duration"), simplify = FALSE))
+                     gDRutils::get_env_identifiers(c("drug", "drug_name", "duration"), simplify = FALSE))
   cl_entries <- cl_entries[!grepl(pattern, cl_entries)]
 
   ## colData
