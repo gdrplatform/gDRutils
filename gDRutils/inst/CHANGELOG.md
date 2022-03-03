@@ -1,3 +1,6 @@
+# Change to v.1.0.29
+- add getter and setter for experiment_raw_data
+
 # Change to v.1.0.28
 - refactor identifier `drugname` to `drug_name`
 

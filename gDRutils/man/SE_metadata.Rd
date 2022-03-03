@@ -6,8 +6,10 @@
 \alias{set_SE_processing_metadata}
 \alias{set_SE_keys}
 \alias{set_SE_experiment_metadata}
+\alias{set_SE_experiment_raw_data}
 \alias{get_SE_fit_parameters}
 \alias{get_SE_processing_metadata}
+\alias{get_SE_experiment_raw_data}
 \alias{get_SE_experiment_metadata}
 \alias{get_SE_keys}
 \title{Get and set metadata for parameters on a SummarizedExperiment object.}
@@ -20,9 +22,13 @@ set_SE_keys(se, value)
 
 set_SE_experiment_metadata(se, value)
 
+set_SE_experiment_raw_data(se, value)
+
 get_SE_fit_parameters(se)
 
 get_SE_processing_metadata(se)
+
+get_SE_experiment_raw_data(se)
 
 get_SE_experiment_metadata(se)
 
