@@ -95,3 +95,12 @@ test_that("get_SE_processing_metadata and set_SE_processing_metadata work as exp
   expect_equal(get_SE_processing_metadata(se), params)
 })
 
+test_that("get_SE_experiment_raw_data and set_SE_experiment_raw_data work as expected", {
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
+  experiment_raw_data <- get_SE_experiment_raw_data(se)
+  expect_equal(experiment_raw_data, NULL)
+  raw_data <- data.frame(a = 1:3, b = 3:5)
+  se <- set_SE_experiment_raw_data(se, raw_data)
+  expect_equal(get_SE_experiment_raw_data(se), raw_data)
+})
+
