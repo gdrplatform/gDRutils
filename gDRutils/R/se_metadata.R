@@ -53,6 +53,14 @@ set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
 }
 
+#' @rdname SE_metadata
+#' @export
+#'
+set_SE_experiment_raw_data <- function(se, value) {
+  .set_SE_metadata(se, name = "df_raw_data", value)
+}
+
+
 
 ############
 # Getters
@@ -77,10 +85,17 @@ get_SE_processing_metadata <- function(se) {
 #' @rdname SE_metadata
 #' @export
 #'
-get_SE_experiment_metadata <- function(se) {
+get_SE_experiment_raw_data <- function(se) {
   .get_SE_metadata(se, name = "experiment_metadata")
 }
 
+#' @rdname SE_metadata
+#' @export
+#'
+#'
+get_SE_experiment_metadata <- function(se) {
+  .get_SE_metadata(se, name = "df_raw_data")
+}
 
 #' @rdname SE_metadata
 #' @export
