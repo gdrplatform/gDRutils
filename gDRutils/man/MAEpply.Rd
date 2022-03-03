@@ -11,7 +11,8 @@ MAEpply(mae, FUN, unify = FALSE)
 
 \item{FUN}{function that should be applied on each experiment of MultiAssayExperiment object}
 
-\item{unify}{logical indicating if the output should be a unlisted object of unique values across all the experiments}
+\item{unify}{logical indicating if the output should be a unlisted object of unique
+values across all the experiments}
 }
 \description{
 Lapply through all the experiments in MultiAssayExperiment object
