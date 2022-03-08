@@ -55,3 +55,14 @@ test_that("get_SE_identifier works with untreated_tag", {
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
 })
+
+test_that("get_required_identifiers works as expected", {
+  expect_true(all(get_required_identifiers() %in% get_env_identifiers))
+  expect_true(length(get_required_identifiers()) > 1L)
+})
+
+test_that("get_required_identifiers works as expected", {
+  expect_true(all(get_required_identifiers() %in% get_env_identifiers))
+  expect_true(length(get_required_identifiers()) > 1L)
+  expect_true(all(get_required_identifiers() %in% get_expect_one_identifiers()))
+})
