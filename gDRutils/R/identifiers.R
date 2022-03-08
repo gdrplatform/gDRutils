@@ -53,7 +53,7 @@ NULL
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
   if (simplify) {
     if (length(k) > 1L) {
-      stop("more than one identifier found, please use: simplify = FALSE")
+      stop("more than one identifier found, please use argument: `simplify = FALSE`")
     } else {
       .get_id(k)
     }
@@ -77,6 +77,20 @@ get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
     pidfs["well_position"] <- idfs["well_position"]
   }
   pidfs
+}
+
+
+#' Get identifiers required for downstream analysis.
+#' @export
+get_required_identifiers <- function() {
+  REQ_COL_IDENTIFIERS
+}
+
+
+#' Get identifiers that expect only one value for each identifier.
+#' @export
+get_expect_one_identifiers <- function() {
+  EXPECT_ONE_IDENTIFIERS
 }
 
 
@@ -108,10 +122,62 @@ reset_identifier <- function(k, v) {
 reset_env_identifiers <- function() {
   .reset_ids()
 }
-  
 
+
+#' Check that specified identifiers exist in the data.
+#' 
+#' @param df data.frame with \code{colnames}.
+#' @param identifiers Named list of identifiers.
+#' If not passed, defaults to \code{get_env_identifiers}.
+#'
+#' @return Named list of identifiers.
+#'
+#' @details
+#' Note that this does NOT set the identifiers.
+#' If identifiers do not validate, will throw error as side effect.
 #' @export
-get_identifier <- function(k = NULL, simplify = TRUE) {
-  .Deprecated("get_env_identifiers")
-  get_env_identifiers(k = k, simplify = simplify)
+validate_identifiers <- function(df, identifiers = NULL) {
+  if (is.null(identifiers)) {
+    identifiers <- get_env_identifiers()
+  }
+
+  # Reverse check which have more than one that expect only one.
+  exp_one_id_maps <- identifiers[get_expect_one_identifiers()]
+  polymappings <- exp_one_id_maps[lapply(exp_one_id_maps, function(x) length(x) > 1L)]
+
+  npoly <- length(polymappings)
+  msg <- NULL
+  if (npoly > 0L) {
+    for (id in names(polymappings)) {
+      shared <- intersect(polymappings[[id]], colnames(df))
+      n_shared <- length(shared)
+      if (nshared > 1L) {
+        msg <- c(msg, paste0("more than one mapping for identifier:", id, "\n"))
+      } else {
+        new_v <- if (nshared == 0L) {
+          NA
+        } else if (nshared == 1L) {
+          shared
+        } 
+        identifiers[[id]] <- new_v
+      }
+    }
+  }
+
+  msg <- c(msg, check_required_identifiers(df, identifiers))
+  if (!is.null(msg)) {
+    stop(msg)
+  }
+  identifiers
+}
+
+check_required_identifiers <- function(df, identifiers) {
+  msg <- NULL
+  req_ids <- get_required_identifiers()
+  # TODO: check only one value for each identifier.
+  present <- unlist(unname(identifiers[req_ids])) %in% colnames(df)
+  if (!all(present)) {
+    msg <- paste0("specified identifiers do not exist for:", paste0(collapse = ", "))
+  }
+  msg
 }
