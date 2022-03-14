@@ -24,7 +24,6 @@ Imports:
     reshape2,
     stats,
     BumpyMatrix,
-    IRanges,
     S4Vectors,
     SummarizedExperiment
 Suggests:
