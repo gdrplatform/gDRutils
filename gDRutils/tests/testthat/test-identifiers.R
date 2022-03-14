@@ -28,12 +28,6 @@ test_that("reset_env_identifiers works", {
 })
 
 
-test_that("support deprecated get_identifiers", {
-  obs <- get_identifier("drug_name")
-  expect_equal(obs, "DrugName")
-})
-
-
 test_that("get_prettified_identifiers works as expected", {
   obs <- get_prettified_identifiers(c("drug_name", "cellline_name"), simplify = FALSE)
   expect_equal(obs, c("Drug", "Cell Line"))
@@ -43,7 +37,7 @@ test_that("get_prettified_identifiers works as expected", {
   expect_true(length(obs) > 1L)
 })
 
-test_that("get_identifier works with untreated_tag", {
+test_that("get_env_identifier works with untreated_tag", {
   obs <- get_env_identifiers("untreated_tag", simplify = TRUE)
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
