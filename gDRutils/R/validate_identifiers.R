@@ -1,12 +1,17 @@
 #' Check that specified identifier values exist in the data.
 #' 
-#'
+#' Check that specified identifier values exist in the data and error otherwise.
 #'
 #' @param df data.frame with \code{colnames}.
-#' @param identifiers Named list of identifiers.
+#' @param identifiers Named list of identifiers where the \code{names} are standardized identifier names.
 #' If not passed, defaults to \code{get_env_identifiers()}.
+#' @param req_ids Character vector of identifiers required to pass identifier validation.
+#' @param exp_one_ids Character vector of standardized identifiers names
+#' where only one identifier value is expected. 
+#' If not passed, defaults to \code{get_expect_one_identifiers()}.
 #'
-#' @return Named list of identifiers.
+#' @return Named list of identifiers modified to pass validation against the input data.
+#' Errors with explanatory message if validation cannot pass with the given identifiers and data.
 #'
 #' @details
 #' Note that this does NOT set the identifiers anywhere (i.e. environment or \code{SummarizedExperiment} object).
@@ -23,30 +28,34 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
     exp_one_ids <- get_expect_one_identifiers()
   }
 
-  identifiers <- .singlefy_polymapped_identifiers(df, exp_one_ids, id_map)
+  identifiers <- .validate_polymapped_identifiers(df, exp_one_ids, id_map)
   .check_identifiers(df, identifiers, exp_one_ids, req_ids)
 
   identifiers
 }
 
 
-#' Ensure all identifiers that are expected to have only one identifier indeed have only one.
+#' Modify identifier values to reflect the data.
 #'
-#' In some cases, the environment identifiers may have a many-to-one mapping between
-#' the standardized identifier and its values. In such cases, this function will check
-#' that only the identifier that is present in the data is in the returned identifiers.
+#' Identifier mappings may have a many-to-one relationship between
+#' the standardized identifier and its values. This relationship is used to store "default values"
+#' in cases where a column may be named in many ways depending on the source. 
+#' In such cases, this function will replace the
+#' many-to-one mapping with only the identifier value that is present in the data is in the returned identifiers.
 #'
 #' @param df data.frame with named columns
-#' @param exp_one_ids Character vector of identifiers where only one column name is expected. 
+#' @param exp_one_ids Character vector of standardized identifiers
+#' where only one identifier value is expected. 
 #' @param id_map Named list where values represent column names in \code{df} and
 #' \code{names()} of list represent standardized identifier names.
 #'
-#' @return String describing validation failures. \code{NULL} if no failures.
+#' @return Named list of validated identifiers for many-to-one mappings.
 #' 
 #' @details
+#' This is most often used when the identifiers are by default set to include some default values.
 #' Note that this will not change the environment identifiers.
 #' @noRd
-.singlefy_polymapped_identifiers <- function(df, exp_one_ids, id_map) {
+.validate_polymapped_identifiers <- function(df, exp_one_ids, id_map) {
   exp_one_id_maps <- id_map[names(id_map) %in% exp_one_ids]
   polymappings <- exp_one_id_maps[lengths(exp_one_id_maps) > 1L]
 
@@ -55,9 +64,9 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
     for (id in names(polymappings)) {
       shared <- intersect(polymappings[[id]], colnames(df))
       n_shared <- length(shared)
-      new_v <- if (nshared == 0L) {
+      new_v <- if (n_shared == 0L) {
         NA
-      } else if (nshared == 1L) {
+      } else if (n_shared == 1L) {
         shared
       } 
       id_map[[id]] <- new_v
@@ -86,7 +95,7 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
 #' Ensure all required identifiers are present in the data according to an identifier map.
 #'
 #' @param df data.frame with named columns
-#' @param req_ids Character vector of identifiers required in the \code{data.frame} 
+#' @param req_ids Character vector of identifiers required to pass identifier validation.
 #' @param id_map Named list where values represent column names in \code{df} and
 #' \code{names()} of list represent standardized identifier names.
 #'
@@ -118,7 +127,7 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
 }
 
 
-#' @return String or \code{NULL} of message
+#' @return String of message or \code{NULL}.
 #' @noRd
 .check_polymapped_identifiers <- function(df, exp_one_ids, id_map) {
   exp_one_id_maps <- id_map[names(id_map) %in% exp_one_ids]
@@ -126,8 +135,7 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
 
   msg <- NULL
   if (length(polymappings) > 0L) {
-    multi <- vapply(polymappings, function(x) {length(intersect(polymappings[[x]], colnames(df))) > 1}, boolean(0))
-    msg <- paste0("more than one mapping for identifier(s):", paste0(names(polymappings)[multi], collapse = ", "), "\n")
+    msg <- sprintf("more than one mapping for identifier(s): '%s'\n", paste0(names(polymappings), collapse = ", "))
   }
   msg
 }
