@@ -28,7 +28,7 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
     exp_one_ids <- get_expect_one_identifiers()
   }
 
-  identifiers <- .modify_polymapped_identifiers(df, exp_one_ids, id_map)
+  identifiers <- .modify_polymapped_identifiers(df, exp_one_ids, identifiers)
   .check_identifiers(df, identifiers, exp_one_ids, req_ids)
 
   identifiers
