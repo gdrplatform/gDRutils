@@ -64,10 +64,10 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
     for (id in names(polymappings)) {
       shared <- intersect(polymappings[[id]], colnames(df))
       nshared <- length(shared)
-      new_v <- if (nshared == 0L) {
-        NA
+      if (nshared == 0L) {
+        new_v <- NA
       } else if (nshared == 1L) {
-        shared
+        new_v <- shared
       }  else {
         stop(sprintf("multiple valid identifier values found for identifier: '%s'", id))
       }
