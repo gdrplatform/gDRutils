@@ -210,7 +210,7 @@ convert_mae_assay_to_dt <- function(mae,
 #' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{MultiAssayExperiment} object to a long data.table.
 #' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
 #'
-#' @param se A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.
+#' @param mae A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.
 #' @param experiment_name String of name of the experiment in `mae` whose `assay_name` should be converted.
 #' Default to `NULL` that all the experiment should be converted into one data.table object.
 #' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 

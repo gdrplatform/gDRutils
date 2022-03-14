@@ -52,6 +52,7 @@ extend_normalization_type_name <- function(x) {
 #' 
 #' @param x charvec expected subset
 #' @param choices charvec reference set
+#' @param ... Additional arguments to pass to \code{checkmate::test_choice}
 #' @export
 assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
