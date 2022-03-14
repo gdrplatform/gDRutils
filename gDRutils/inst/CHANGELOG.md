@@ -1,3 +1,6 @@
+# Change to v.1.0.30
+- add support for identifier validation
+
 # Change to v.1.0.29
 - add getter and setter for experiment_raw_data
 
