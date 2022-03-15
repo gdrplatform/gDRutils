@@ -1,3 +1,6 @@
+# Change to v.1.0.30
+- fix hardcoded identifiers in validate SE
+
 # Change to v.1.0.29
 - add getter and setter for experiment_raw_data
 
