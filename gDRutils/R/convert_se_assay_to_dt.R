@@ -140,7 +140,7 @@ convert_se_ref_assay_to_dt <- function(se,
   dt$Concentration <- 0
   untreated <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)[1]
   dt[, get_SE_identifiers(se, "drug", simplify = TRUE)] <- untreated
-  dt[, get_SE_identifiers(se, "drugname", simplify = TRUE)] <- untreated
+  dt[, get_SE_identifiers(se, "drug_name", simplify = TRUE)] <- untreated
   dt[, get_SE_identifiers(se, "drug_moa", simplify = TRUE)] <- untreated
 
   data.table::as.data.table(dt)
@@ -192,10 +192,15 @@ convert_mae_assay_to_dt <- function(mae,
     experiment_name <- names(mae)
   }
   
-  dtList <- lapply(experiment_name, function(x) convert_se_assay_to_dt(mae[[x]],
-                                                           assay_name = assay_name,
-                                                           include_metadata = include_metadata,
-                                                           retain_nested_rownames = retain_nested_rownames))
+  dtList <- lapply(experiment_name, function(x) {
+    if (!assay_name %in% assayNames(mae[[x]])) {
+      return()
+    }
+    convert_se_assay_to_dt(mae[[x]],
+                           assay_name = assay_name,
+                           include_metadata = include_metadata,
+                           retain_nested_rownames = retain_nested_rownames)
+  })
   dt <- plyr::rbind.fill(dtList)
   dt
 }
@@ -205,7 +210,7 @@ convert_mae_assay_to_dt <- function(mae,
 #' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{MultiAssayExperiment} object to a long data.table.
 #' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
 #'
-#' @param se A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.
+#' @param mae A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.
 #' @param experiment_name String of name of the experiment in `mae` whose `assay_name` should be converted.
 #' Default to `NULL` that all the experiment should be converted into one data.table object.
 #' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 

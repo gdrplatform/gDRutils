@@ -28,14 +28,8 @@ test_that("reset_env_identifiers works", {
 })
 
 
-test_that("support deprecated get_identifiers", {
-  obs <- get_identifier("drugname")
-  expect_equal(obs, "DrugName")
-})
-
-
 test_that("get_prettified_identifiers works as expected", {
-  obs <- get_prettified_identifiers(c("drugname", "cellline_name"), simplify = FALSE)
+  obs <- get_prettified_identifiers(c("drug_name", "cellline_name"), simplify = FALSE)
   expect_equal(obs, c("Drug", "Cell Line"))
 
   obs <- get_prettified_identifiers(simplify = TRUE)
@@ -43,7 +37,7 @@ test_that("get_prettified_identifiers works as expected", {
   expect_true(length(obs) > 1L)
 })
 
-test_that("get_identifier works with untreated_tag", {
+test_that("get_env_identifier works with untreated_tag", {
   obs <- get_env_identifiers("untreated_tag", simplify = TRUE)
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
@@ -54,4 +48,15 @@ test_that("get_SE_identifier works with untreated_tag", {
   obs <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
+})
+
+test_that("get_expect_one_identifiers works as expected", {
+  expect_true(all(get_expect_one_identifiers() %in% names(get_env_identifiers())))
+  expect_true(length(get_expect_one_identifiers()) > 1L)
+})
+
+test_that("get_required_identifiers works as expected", {
+  expect_true(all(get_required_identifiers() %in% names(get_env_identifiers())))
+  expect_true(length(get_required_identifiers()) > 1L)
+  expect_true(all(get_required_identifiers() %in% get_expect_one_identifiers()))
 })

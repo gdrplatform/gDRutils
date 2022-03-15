@@ -75,12 +75,12 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   expect_equal(obs2, list())
 
   # Multiple identifiers.
-  exp <- list("drugname" = "Drugs", "cellline_name" = "Cells")
+  exp <- list("drug_name" = "Drugs", "cellline_name" = "Cells")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_equal(get_SE_identifiers(se, c("drugname", "duration"), simplify = FALSE), 
-               list(drugname = "Drugs", duration = "Duration")) # Env and se identifiers.
-  expect_equal(get_SE_identifiers(se, c("cellline_name", "drugname"), simplify = FALSE), 
-               list(cellline_name = "Cells", drugname = "Drugs")) # Order.
+  expect_equal(get_SE_identifiers(se, c("drug_name", "duration"), simplify = FALSE), 
+               list(drug_name = "Drugs", duration = "Duration")) # Env and se identifiers.
+  expect_equal(get_SE_identifiers(se, c("cellline_name", "drug_name"), simplify = FALSE), 
+               list(cellline_name = "Cells", drug_name = "Drugs")) # Order.
 })
 
 test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {
@@ -93,5 +93,14 @@ test_that("get_SE_processing_metadata and set_SE_processing_metadata work as exp
   
   se <- set_SE_processing_metadata(se, params)
   expect_equal(get_SE_processing_metadata(se), params)
+})
+
+test_that("get_SE_experiment_raw_data and set_SE_experiment_raw_data work as expected", {
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
+  experiment_raw_data <- get_SE_experiment_raw_data(se)
+  expect_equal(experiment_raw_data, NULL)
+  raw_data <- data.frame(a = 1:3, b = 3:5)
+  se <- set_SE_experiment_raw_data(se, raw_data)
+  expect_equal(get_SE_experiment_raw_data(se), raw_data)
 })
 

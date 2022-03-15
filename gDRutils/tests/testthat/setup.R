@@ -6,7 +6,7 @@
     std_RelativeViability = 0.1,
     std_GRvalue = 0.1,
     RelativeViability =
-      logistic_4parameters(
+      predict_efficacy_from_conc(
         conc, 
         params$x_inf, 
         params$x_0,
@@ -14,7 +14,7 @@
         params$h
       ),
     GRvalue =
-      logistic_4parameters(
+      predict_efficacy_from_conc(
         conc,
         params_GR$x_inf,
         params_GR$x_0,

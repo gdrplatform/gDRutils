@@ -1,3 +1,27 @@
+# Change to v.1.0.30
+- add support for identifier validation
+
+# Change to v.1.0.29
+- add getter and setter for experiment_raw_data
+
+# Change to v.1.0.28
+- refactor identifier `drugname` to `drug_name`
+
+# Change to v.1.0.27
+- add `MAEpply` function
+
+# Change to v.1.0.26
+- update documentation
+
+# Change to v.1.0.25
+- support SE() init for different BioC versions
+
+# Change to v.1.0.24
+- standardize/improve CI
+
+# Change to v.1.0.23
+- switch unit tests from SE to MAE from `gDRtestData`
+
 # Change to v.1.0.21
 - update assert in `validate_MAE`
 

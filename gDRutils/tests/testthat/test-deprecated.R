@@ -35,3 +35,8 @@ test_that("logistic_4parameters works as expected", {
     )
     expect_equal(v, Vinf)
 })
+
+test_that("support deprecated get_identifiers", {
+  obs <- get_identifier("drug_name")
+  expect_equal(obs, "DrugName")
+})

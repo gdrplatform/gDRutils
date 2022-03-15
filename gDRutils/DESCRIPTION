@@ -1,9 +1,9 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for dealing with drug response data
-Version: 1.0.22
-Date: 2021-01-07
-Authors@R: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
+Version: 1.0.30
+Date: 2022-03-14
+Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
              person("Marc", "Hafner", role=c("aut")),
@@ -23,13 +23,12 @@ Imports:
     plyr,
     reshape2,
     stats,
-    BumpyMatrix (>= 0.99.7),
-    IRanges,
+    BumpyMatrix,
     S4Vectors,
     SummarizedExperiment
 Suggests:
     futile.logger,
-    gDRstyle,
+    gDRstyle (>= 0.0.8),
     gDRtestData (>= 1.0.5),
     knitr,
     lintr,

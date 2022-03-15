@@ -98,9 +98,9 @@
 
   HEADERS_LIST[["reserved"]] <- c(
     HEADERS_LIST[["add_clid"]],
-    get_env_identifiers("drugname", simplify = TRUE),
+    get_env_identifiers("drug_name", simplify = TRUE),
     get_env_identifiers("masked_tag", simplify = TRUE),
-    paste0(get_env_identifiers("drugname", simplify = TRUE), "_", 2:10),
+    paste0(get_env_identifiers("drug_name", simplify = TRUE), "_", 2:10),
     HEADERS_LIST[["raw_data"]],
     HEADERS_LIST[["normalized_results"]],
     HEADERS_LIST[["averaged_results"]],
@@ -112,9 +112,9 @@
     get_env_identifiers("cellline_name", simplify = TRUE),
     get_env_identifiers("cellline_tissue", simplify = TRUE),
     get_env_identifiers("duration", simplify = TRUE),
-    get_env_identifiers("drugname", simplify = TRUE),
+    get_env_identifiers("drug_name", simplify = TRUE),
     "Concentration",
-    paste0(c(paste0(get_env_identifiers("drugname", simplify = TRUE), "_"), "Concentration_"), 
+    paste0(c(paste0(get_env_identifiers("drug_name", simplify = TRUE), "_"), "Concentration_"), 
       rep(2:10, each = 2))
   )
 
