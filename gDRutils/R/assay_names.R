@@ -99,7 +99,7 @@ get_env_assay_names <-
 #' @export
 get_assay_names <- function(se = NULL, ...) {
   if (!is.null(se) &&
-      !is.null(metadata(se = NULL)[["assay_info_tbl"]])) {
+      !is.null(S4Vectors::metadata(se = NULL)[["assay_info_tbl"]])) {
     # TODO: extend the logic to support metadata from se
     # i.e. sth like `get_se_assay_names(group = "combo_base")`
     # more details: https://jira.gene.com/jira/browse/GDR-1116

@@ -12,6 +12,8 @@ convert_mae_ref_assay_to_dt(
 )
 }
 \arguments{
+\item{mae}{A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.}
+
 \item{experiment_name}{String of name of the experiment in `mae` whose `assay_name` should be converted.
 Default to `NULL` that all the experiment should be converted into one data.table object.}
 
@@ -19,8 +21,6 @@ Default to `NULL` that all the experiment should be converted into one data.tabl
 holding the reference relative viability data.}
 
 \item{ref_gr_value_assay}{String of the name of the assay in the \code{se} holding the reference GR value data.}
-
-\item{se}{A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.}
 }
 \value{
 data.table representation of the reference data.
