@@ -1,3 +1,24 @@
+#' Validate dimnames
+#' 
+#' Assure that dimnames of two objects are the same
+#' 
+#' @param obj first object with dimnames to compare
+#' @param obj2 second object with dimnames to compare
+#' @param skip_empty a logical indicating whether to skip comparison
+#'        if a given dimname is empty in the case of both objects
+#' 
+validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
+  # let's start with assuring that dimnames have the same length
+  checkmate::assert_true(identical(length(dimnames(obj)), length(dimnames(obj2))))
+  
+  for (idx in seq_along(dimnames(obj))) {
+    found_non_empty <- sum(length(dimnames(obj)[[idx]]), length(dimnames(obj2)[[idx]]))
+    if (!skip_empty || (skip_empty && found_non_empty)) {
+      checkmate::assert_true(identical(dimnames(obj)[idx], dimnames(obj2)[idx]))
+    }
+  }
+}
+
 #' Check whether or not an assay exists in a SummarizedExperiment object.
 #'
 #' Check for the presence of an assay in a SummarizedExperiment object.
@@ -50,11 +71,11 @@ validate_SE <- function(se,
 
   exp_metadata_names <- c("experiment_metadata", "Keys")
   checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
-  checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Normalized"))))
-  checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Averaged"))))
+  validate_dimnames(se, assay(se, "Normalized"))
+  validate_dimnames(se, assay(se, "Averaged"))
   
   if (expect_single_agent) {
-    checkmate::assert_true(identical(dimnames(se), dimnames(assay(se, "Metrics"))))
+    validate_dimnames(se, assay(se, "Metrics"))
     checkmate::assert_true(all(c("normalization_type", "fit_source") %in% 
                                  names(convert_se_assay_to_dt(se, "Metrics"))))
   }
@@ -109,7 +130,7 @@ validate_MAE <- function(mae) {
   checkmate::assert_subset(experiments, c("single-agent", "co-dilution",
                                            "matrix", "cotreatment", "other"))
   for (experiment in experiments) {
-    if (experiment == "single-agent") {
+    if (experiment %in% EXPERIMENT_GROUPS[["single-agent"]]) {
       validate_SE(mae[[experiment]], expect_single_agent = TRUE)
     } else {
       validate_SE(mae[[experiment]])
