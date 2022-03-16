@@ -1,3 +1,6 @@
+# Change to v.1.0.31
+- move duplication warning 
+
 # Change to v.1.0.30
 - add support for identifier validation
 
