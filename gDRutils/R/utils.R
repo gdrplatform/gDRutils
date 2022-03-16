@@ -79,14 +79,15 @@ assert_choices <- function(x, choices, ...) {
 #' @export
 #' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
-MAEpply <- function(mae, FUN, unify = FALSE) {
+MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   checkmate::assert_function(FUN)
   checkmate::assert_flag(unify)
   experiments <- as.list(MultiAssayExperiment::experiments(mae))
-  out <- lapply(experiments, FUN)
+  out <- lapply(experiments, FUN, ...)
   if (unify) {
-    unique(unlist(out))
+    plyr::rbind.fill(lapply(out, data.frame))
+    
   } else {
     out
   }
