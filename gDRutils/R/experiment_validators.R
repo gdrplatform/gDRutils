@@ -130,7 +130,7 @@ validate_MAE <- function(mae) {
   checkmate::assert_subset(experiments, c("single-agent", "co-dilution",
                                            "matrix", "cotreatment", "other"))
   for (experiment in experiments) {
-    if (experiment %in% EXPERIMENT_GROUPS[["single-agent"]]) {
+    if (experiment %in% get_experiment_groups("single-agent")) {
       validate_SE(mae[[experiment]], expect_single_agent = TRUE)
     } else {
       validate_SE(mae[[experiment]])
