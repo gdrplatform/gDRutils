@@ -92,3 +92,86 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     out
   }
 }
+
+#' is_mae_empty
+#' 
+#' check if all mae experiments are empty
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return logical
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+is_mae_empty <- function(mae) {
+  sum(MAEpply(mae, function(x) {
+    nrow(SummarizedExperiment::assay(x))
+  }, unify = TRUE)) == 0
+}
+
+#' is_any_exp_empty
+#' 
+#' check if any experiment is empty
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return logical
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+is_any_exp_empty <- function(mae) {
+  any(MAEpply(mae, function(x) {
+    nrow(SummarizedExperiment::assay(x))
+  }) == 0)
+}
+
+#' is_exp_empty
+#' 
+#' check if experiment (SE) is empty
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return logical
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+is_exp_empty <- function(exp) {
+    nrow(SummarizedExperiment::assay(exp)) == 0
+}
+
+#' get_non_empty_assays
+#' 
+#' get non empty assays
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return charvec with non-empty experiments
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+get_non_empty_assays <- function(mae) {
+  ne_info <- MAEpply(mae, is_exp_empty) == FALSE
+  names(ne_info[ne_info == TRUE])
+}
+
+#' mcolData
+#'
+#' get colData of all experiments
+#' @param mae MultiAssayExperiment object
+#' @export
+#'
+#' @return tibble with all-experiments colData
+#'
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+mcolData <- function(mae) {
+  MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
+}
+
+#' mrowData
+#'
+#' get rowData of all experiments
+#' @param mae MultiAssayExperiment object
+#' @export
+#'
+#' @return tibble with all-experiments rowData
+#'
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+mrowData <- function(mae) {
+  gDRutils::MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
+}
