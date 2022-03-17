@@ -220,6 +220,7 @@ logisticFit <-
     df_ <- data.frame(concs = concs, norm_values = norm_values)
 
     if (has_dups(df_$concs)) {
+      warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
     }
 
@@ -412,7 +413,6 @@ has_dups <- function(vec) {
 #' @importFrom stats aggregate
 average_dups <- function(df, col) {
   stopifnot(col %in% colnames(df))
-  warning("duplicates were found, averaging values")
   aggregate(df[colnames(df) != col],
     by = list(concs = df[[col]]),
     FUN = function(x) {
