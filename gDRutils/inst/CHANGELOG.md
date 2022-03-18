@@ -1,3 +1,6 @@
+# Change to v.1.0.32
+- add .calculate_complement 
+
 # Change to v.1.0.31
 - move duplication warning 
 
