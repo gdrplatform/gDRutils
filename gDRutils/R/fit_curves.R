@@ -320,6 +320,20 @@ logisticFit <-
 
 
 #' Predict efficacy values given fit parameters and a concentration.
+#'
+#' Predict efficacy values given fit parameters and a concentration.
+#'
+#' @param c Numeric vector representing concentrations to predict efficacies for.
+#' @param x_inf Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
+#'  data as concentration goes to infinity.
+#' @param x_0 Numeric vector representing the asymptotic metric value corresponding to a concentration of 0 
+#'  for the primary drug.
+#' @param ec50 Numeric vector representing the drug concentration at half-maximal effect.
+#' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep 
+#'  the dose-response curve is.
+#'
+#' @return Numeric vector representing predicted efficacies from given concentrations and fit parameters.
+#'
 #' @details The inverse of this function is \code{predict_conc_from_efficacy}.
 #' @seealso predict_conc_from_efficacy
 #' @export
@@ -336,6 +350,19 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 
 
 #' Predict a concentration for a given efficacy with fit parameters.
+#'
+#' Predict a concentration for a given efficacy with fit parameters.
+#'
+#' @param efficacy Numeric vector representing efficacies to predict concentrations for.
+#' @param x_inf Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
+#'  data as concentration goes to infinity.
+#' @param x_0 Numeric vector representing the asymptotic metric value corresponding to a concentration of 0 
+#'  for the primary drug.
+#' @param ec50 Numeric vector representing the drug concentration at half-maximal effect.
+#' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep 
+#'
+#' @return Numeric vector representing predicted concentrations from given efficacies and fit parameters.
+#'
 #' @details The inverse of this function is \code{predict_efficacy_from_conc}.
 #' @seealso predict_efficacy_from_conc .calculate_x50
 #' @export
@@ -456,7 +483,12 @@ average_dups <- function(df, col) {
 }
 
 
+#' Set fit parameters for a constant fit.
+#'
 #' Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf
+#'
+#' @param out Named list of fit parameters.
+#' @return Modified named list of fit parameters.
 #' @export
 .set_constant_fit_params <- function(out, x0, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
@@ -471,6 +503,9 @@ average_dups <- function(df, col) {
 }
 
 
+#' Set fit parameters for an invalid fit.
+#' @param out Named list of fit parameters.
+#' @return Modified named list of fit parameters.
 #' @export
 .set_invalid_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCInvalidFitResult"
