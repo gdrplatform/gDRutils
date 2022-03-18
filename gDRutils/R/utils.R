@@ -86,7 +86,11 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   experiments <- as.list(MultiAssayExperiment::experiments(mae))
   out <- lapply(experiments, FUN, ...)
   if (unify) {
-    plyr::rbind.fill(lapply(out, data.frame))
+    if (all(vapply(out, is.atomic, logical(1)))) {
+      unlist(out, use.names = FALSE)
+    } else {
+      plyr::rbind.fill(lapply(out, data.frame))
+    }
     
   } else {
     out
