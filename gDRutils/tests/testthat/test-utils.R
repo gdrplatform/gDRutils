@@ -52,9 +52,11 @@ test_that("MAEpply works as expectd", {
   list1 <- MAEpply(maeReal, SummarizedExperiment::assayNames)
   expect_length(list1, 2)
   expect_true(inherits(list1, "list"))
-  list2 <- MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE)
-  expect_length(list2, 5)
-  expect_true(inherits(list2, "character"))
+  v1 <- unique(MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE))
+  expect_length(v1, 5)
+  expect_true(inherits(v1, "character"))
+  
+  v2 <- unique(MAEpply(maeReal, SummarizedExperiment::rowData, unify = TRUE))
+  expect_identical(vapply(dimnames(v2), length, numeric(1)), c(10,8))
+  expect_true(inherits(v2, "data.frame"))
 })
-
-
