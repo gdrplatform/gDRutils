@@ -226,7 +226,7 @@ logisticFit <-
 
     mean_norm_value <- mean(df_$norm_values, na.rm = TRUE)
     out$x_mean <- mean_norm_value
-    out$x_AOC <- 1 - mean_norm_value
+    out$x_AOC <- .calculate_complement(mean_norm_value)
     out$x_max <- .calculate_x_max(df_)
 
     ## Perform a 3-param or 4-param fit. 
@@ -491,6 +491,8 @@ average_dups <- function(df, col) {
 #' Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf
 #'
 #' @param out Named list of fit parameters.
+#' @param mean_norm_value Numeric value that be used to set all parameters
+#' that can be calculated from the mean.
 #' @return Modified named list of fit parameters.
 #' @export
 .set_constant_fit_params <- function(out, mean_norm_value) {
@@ -505,6 +507,7 @@ average_dups <- function(df, col) {
 
 #' Set fit parameters for an invalid fit.
 #' @param out Named list of fit parameters.
+#' @param norm_values Numeric vector used to estimate an \code{xc50} value.
 #' @return Modified named list of fit parameters.
 #' @export
 .set_invalid_fit_params <- function(out, norm_values) {
