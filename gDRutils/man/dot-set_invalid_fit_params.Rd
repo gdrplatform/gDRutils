@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{out}{Named list of fit parameters.}
+
+\item{norm_values}{Numeric vector used to estimate an \code{xc50} value.}
 }
 \value{
 Modified named list of fit parameters.

@@ -8,6 +8,9 @@
 }
 \arguments{
 \item{out}{Named list of fit parameters.}
+
+\item{mean_norm_value}{Numeric value that be used to set all parameters
+that can be calculated from the mean.}
 }
 \value{
 Modified named list of fit parameters.
