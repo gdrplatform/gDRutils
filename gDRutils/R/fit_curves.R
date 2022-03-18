@@ -433,7 +433,7 @@ average_dups <- function(df, col) {
   out$xc50 <- .estimate_xc50(mean_norm_value)
 
   out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
-  out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
+  out$x_AOC_range <- out$x_AOC <- .calculate_complement(mean_norm_value)
   out
 }
 
@@ -527,6 +527,11 @@ average_dups <- function(df, col) {
   f_pval
 }
 
+
+#' @export
+.calculate_complement <- function(x) {
+  1 - x
+} 
 
 #################
 # Error handling
