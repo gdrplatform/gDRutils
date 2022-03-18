@@ -101,7 +101,7 @@ test_that("get_non_empty_assays works as expectd", {
 test_that("mrowData works as expectd", {
   mr <- mrowData(maeReal)
   expect_identical(vapply(dimnames(mr), length, numeric(1)), c(10, 8))
-  expect_class(mr, "data.frame")
+  checkmate::expect_class(mr, "data.frame")
   
   mr <- mrowData(empty_mae)
   expect_identical(mr, data.frame())
@@ -110,7 +110,7 @@ test_that("mrowData works as expectd", {
 test_that("mcolData works as expectd", {
   mc <- mcolData(maeReal)
   expect_identical(vapply(dimnames(mc), length, numeric(1)), c(6, 4))
-  expect_class(mc, "data.frame")
+  checkmate::expect_class(mc, "data.frame")
   
   mc <- mcolData(empty_mae)
   expect_identical(mc, data.frame())
