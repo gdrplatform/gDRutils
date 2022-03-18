@@ -91,6 +91,7 @@ get_env_assay_names <-
 #' use predefined values from `get_env_assay_names` otherwise
 #'
 #' @param se SummarizedExperiment or NULL
+#' @param ... Additional arguments to pass to \code{get_env_assay_names}.
 #' 
 #' @inheritParams get_env_assay_names
 #'
@@ -110,18 +111,22 @@ get_assay_names <- function(se = NULL, ...) {
 }
 
 #' get names of combo assays
-#' @return  charvec
+#'
+#' @param se SummarizedExperiment or NULL
+#' @param ... Additional arguments to pass to \code{get_assay_names}.
+#' @return charvec of combo assay names.
 #' @export
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_assay_names <- function(se = NULL, ...) {
-        get_assay_names(se, data_type = "combo", simplify = FALSE, ...)
+  get_assay_names(se, data_type = "combo", simplify = FALSE, ...)
 }
 
 #' get names of combo base assays
 #' 
 #' @param se SummarizedExperiment or NULL
+#' @param ... Additional arguments to pass to \code{get_combo_assay_names}.
 #' 
 #' @return  charvec
 #' @export
@@ -129,12 +134,13 @@ get_combo_assay_names <- function(se = NULL, ...) {
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_base_assay_names <- function(se = NULL, ...) {
-        get_combo_assay_names(group = c("combo_base_excess", "combo_base_mx"), ...)
+  get_combo_assay_names(group = c("combo_base_excess", "combo_base_mx"), ...)
 }
 
 #' get names of combo score assays
 #' 
 #' @param se SummarizedExperiment or NULL
+#' @param ... Additional arguments to pass to \code{get_combo_assay_names}.
 #' 
 #' @return  charvec
 #' 
@@ -143,5 +149,5 @@ get_combo_base_assay_names <- function(se = NULL, ...) {
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_score_assay_names <- function(se = NULL, ...) {
-        get_combo_assay_names(group = c("combo_score_excess", "combo_score_mx"), ...)
+  get_combo_assay_names(group = c("combo_score_excess", "combo_score_mx"), ...)
 }

@@ -30,7 +30,7 @@ df_to_assay <-
     ####
     data <- S4Vectors::DataFrame(data)
     
-    allMetadata <- gDR::getMetaData(data, discard_keys = discard_keys)
+    allMetadata <- getMetaData(data, discard_keys = discard_keys)
 
     seColData <- allMetadata$colData
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
