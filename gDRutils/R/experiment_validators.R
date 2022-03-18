@@ -8,13 +8,17 @@
 #'        if a given dimname is empty in the case of both objects
 #' 
 validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
-  # let's start with assuring that dimnames have the same length
-  checkmate::assert_true(identical(length(dimnames(obj)), length(dimnames(obj2))))
   
-  for (idx in seq_along(dimnames(obj))) {
-    found_non_empty <- sum(length(dimnames(obj)[[idx]]), length(dimnames(obj2)[[idx]]))
+  dn1 <- dimnames(obj)
+  dn2 <- dimnames(obj2)
+  
+  # let's start with assuring that dimnames have the same length
+  checkmate::assert_true(identical(length(dn1), length(dn2)))
+  
+  for (idx in seq_along(dn1)) {
+    found_non_empty <- sum(length(dn1[[idx]]), length(dn2[[idx]]))
     if (!skip_empty || (skip_empty && found_non_empty)) {
-      checkmate::assert_true(identical(dimnames(obj)[idx], dimnames(obj2)[idx]))
+      checkmate::assert_true(identical(dn1[idx], dn2[idx]))
     }
   }
 }
