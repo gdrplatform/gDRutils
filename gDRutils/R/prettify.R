@@ -101,35 +101,13 @@ prettify_flat_metrics <- function(x,
 
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
-  # Exact replacements.
-  metadata <- c("Cell Line", 
-    "Primary Tissue", 
-    "Subtype",
-    "Parental cell line",
-    "Reference cell division time", 
-    "cell division time",
-    "Nbre of tested conc.", 
-    "Highest log10(conc.)")
+  # prettifying formatting
 
-  # TODO: Eventually, these identifiers can come from the SE object itself.
-  names(metadata) <- c(get_env_identifiers("cellline_name"), # CellLineName
-    get_env_identifiers("cellline_tissue", simplify = TRUE), # Tissue
-    get_env_identifiers("cellline_subtype", simplify = TRUE), # subtype
-    get_env_identifiers("cellline_parental_identifier", simplify = TRUE), # parental_identifier
-    get_env_identifiers("cellline_ref_div_time", simplify = TRUE),
-    "DivisionTime",
-    "N_conc", 
-    "maxlog10Concentration")
+  # adding space between words like “ReferenceDivisionTime”
+  cols <- gsub("([a-z])([A-Z])", "\\1 \\2", cols)
 
-  cols[cols %in% names(metadata)] <- unname(metadata[cols[cols %in% names(metadata)]])
-
-  # Pattern replacements.
-  multiples <- c(get_env_identifiers("drug_name", simplify = TRUE), get_env_identifiers("drug_moa"))
-  names(multiples) <- c("Drug", "Drug MOA")
-
-  for (i in seq_len(length(multiples))) {
-    cols <- gsub(multiples[[i]], names(multiples)[[i]], cols)
-  }
-                        
+  cols <- gsub("_", " ", cols)
+  cols <- tools::toTitleCase(cols)
+  cols <- gsub("Moa", "MOA", cols)
   cols
 }
