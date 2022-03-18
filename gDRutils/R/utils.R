@@ -189,5 +189,5 @@ mcolData <- function(mae) {
 mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
-  gDRutils::MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
+  MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }
