@@ -107,6 +107,8 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' 
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 is_mae_empty <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
   sum(MAEpply(mae, function(x) {
     nrow(SummarizedExperiment::assay(x))
   }, unify = TRUE)) == 0
@@ -122,6 +124,8 @@ is_mae_empty <- function(mae) {
 #' 
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 is_any_exp_empty <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
   any(MAEpply(mae, function(x) {
     nrow(SummarizedExperiment::assay(x))
   }) == 0)
@@ -137,7 +141,9 @@ is_any_exp_empty <- function(mae) {
 #' 
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 is_exp_empty <- function(exp) {
-    nrow(SummarizedExperiment::assay(exp)) == 0
+  checkmate::assert_class(exp, "SummarizedExperiment")
+  
+  nrow(SummarizedExperiment::assay(exp)) == 0
 }
 
 #' get_non_empty_assays
@@ -150,6 +156,8 @@ is_exp_empty <- function(exp) {
 #' 
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 get_non_empty_assays <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
   ne_info <- MAEpply(mae, is_exp_empty) == FALSE
   names(ne_info[ne_info == TRUE])
 }
@@ -164,6 +172,8 @@ get_non_empty_assays <- function(mae) {
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mcolData <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
   MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
 }
 
@@ -177,5 +187,7 @@ mcolData <- function(mae) {
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mrowData <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
   gDRutils::MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }
