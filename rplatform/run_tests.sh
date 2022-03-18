@@ -15,9 +15,9 @@ Rscript -e "gDRstyle::lintPkgDirs('$repo_path')"
 echo ">>>>> RUNNING UNIT TESTS"
 Rscript -e "testthat::test_local(path = '$repo_path', stop_on_failure = TRUE)"
 
-# TODO: fix the issue with R CMD CHECK
 #echo ">>>>> RUNNING DEVTOOLS::CHECK()"
-#sudo R CMD check --no-build-vignettes --no-manual --no-tests /mnt/vol/gDRutils
+# TODO: Call gDRstyle::set_check_env_vars()
+#Rscript -e "devtools::check('$repo_path', error_on = "warning")
 
 echo ">>>>>>>> RUNNING CHECK DEPENDENCIES"
 Rscript -e "gDRstyle::checkDependencies(dep_path='/mnt/vol/rplatform/dependencies.yaml', desc_path='/mnt/vol/gDRutils/DESCRIPTION')"
