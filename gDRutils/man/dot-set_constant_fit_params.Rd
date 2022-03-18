@@ -2,9 +2,15 @@
 % Please edit documentation in R/fit_curves.R
 \name{.set_constant_fit_params}
 \alias{.set_constant_fit_params}
-\title{Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf}
+\title{Set fit parameters for a constant fit.}
 \usage{
 .set_constant_fit_params(out, x0, mean_norm_value)
+}
+\arguments{
+\item{out}{Named list of fit parameters.}
+}
+\value{
+Modified named list of fit parameters.
 }
 \description{
 Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf

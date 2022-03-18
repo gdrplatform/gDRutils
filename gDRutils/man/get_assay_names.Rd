@@ -10,6 +10,8 @@ get_assay_names(se = NULL, ...)
 }
 \arguments{
 \item{se}{SummarizedExperiment or NULL}
+
+\item{...}{Additional arguments to pass to \code{get_env_assay_names}.}
 }
 \description{
 get assay names of the given se/dataset

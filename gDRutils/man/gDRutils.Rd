@@ -11,4 +11,7 @@ An object of class \code{logical} of length 1.
 \usage{
 .datatable.aware
 }
+\description{
+A package with helper functions for processing drug response data
+}
 \keyword{datasets}
