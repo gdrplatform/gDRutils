@@ -4,7 +4,7 @@
 \alias{.set_constant_fit_params}
 \title{Set fit parameters for a constant fit.}
 \usage{
-.set_constant_fit_params(out, x0, mean_norm_value)
+.set_constant_fit_params(out, mean_norm_value)
 }
 \arguments{
 \item{out}{Named list of fit parameters.}

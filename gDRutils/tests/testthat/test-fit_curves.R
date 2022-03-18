@@ -297,7 +297,7 @@ test_that(".set_constant_fit_params works as expected", {
   x_0 <- NA
   na <- list(x_0 = x_0)
   na$x_0 <- x_0
-  na <- gDRutils:::.set_constant_fit_params(na, x0 = x_0, mean_norm_value = 0.6)
+  na <- gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
 
   expect_equal(na$ec50, 0)
   expect_equal(na$h, 0.0001)
@@ -308,7 +308,7 @@ test_that(".set_constant_fit_params works as expected", {
 
   x_0 <- 1
   out <- list(x_0 = x_0)
-  expect_warning(one <- gDRutils:::.set_constant_fit_params(out, x0 = x_0, mean_norm_value = 0.6))
+  one <- gDRutils:::.set_constant_fit_params(out, mean_norm_value = 0.6)
 
   expect_equal(one$ec50, 0)
   expect_equal(one$h, 0.0001)

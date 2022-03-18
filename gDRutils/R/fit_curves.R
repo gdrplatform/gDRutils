@@ -306,7 +306,10 @@ logisticFit <-
       out <- .set_too_few_fit_params(out, df_$norm_values)
 
     }, constant_fit = function(e) {
-      out <- .set_constant_fit_params(out, x_0, mean_norm_value)
+      if (!is.na(x_0)) {
+        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
+      }
+      out <- .set_constant_fit_params(out, mean_norm_value)
 
     }, invalid_fit = function(e) {
       warning(sprintf("fitting failed with error: '%s'", e))
@@ -490,14 +493,11 @@ average_dups <- function(df, col) {
 #' @param out Named list of fit parameters.
 #' @return Modified named list of fit parameters.
 #' @export
-.set_constant_fit_params <- function(out, x0, mean_norm_value) {
+.set_constant_fit_params <- function(out, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
   out$ec50 <- 0
   out$h <- 0.0001
 
-  if (!is.na(x0)) {
-    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x0, mean_norm_value))
-  }
   out <- .set_mean_params(out, mean_norm_value)
   out
 }
