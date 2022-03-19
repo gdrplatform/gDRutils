@@ -296,7 +296,6 @@ test_that(".set_mean_params works as expected", {
 test_that(".set_constant_fit_params works as expected", {
   x_0 <- NA
   na <- list(x_0 = x_0)
-  na$x_0 <- x_0
   na <- gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
 
   expect_equal(na$ec50, 0)
