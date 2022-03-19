@@ -1,3 +1,6 @@
+# Change to v.1.0.33
+- change prettify functions to not substitute metadata
+
 # Change to v.1.0.32
 - add .calculate_complement 
 
