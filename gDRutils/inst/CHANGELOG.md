@@ -1,3 +1,6 @@
+# Change to v.1.0.33
+- move constant fit warning
+
 # Change to v.1.0.32
 - add .calculate_complement 
 
