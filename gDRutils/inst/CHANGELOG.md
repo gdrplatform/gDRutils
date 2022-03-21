@@ -1,5 +1,11 @@
-# Change to v.1.0.32
+# Change to v.1.0.34
 - add helper function for MAE/experiments
+
+# Change to v.1.0.33
+- move constant fit warning
+
+# Change to v.1.0.32
+- add .calculate_complement 
 
 # Change to v.1.0.31
 - move duplication warning 
