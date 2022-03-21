@@ -109,9 +109,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
-  sum(MAEpply(mae, function(x) {
-    nrow(SummarizedExperiment::assay(x))
-  }, unify = TRUE)) == 0
+  all(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
 #' is_any_exp_empty
@@ -126,9 +124,7 @@ is_mae_empty <- function(mae) {
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
-  any(MAEpply(mae, function(x) {
-    nrow(SummarizedExperiment::assay(x))
-  }) == 0)
+  any(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
 #' is_exp_empty
