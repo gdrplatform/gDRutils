@@ -16,7 +16,7 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
   checkmate::assert_true(identical(length(dn1), length(dn2)))
   
   for (idx in seq_along(dn1)) {
-    found_non_empty <- sum(length(dn1[[idx]]), length(dn2[[idx]]))
+    found_non_empty <- sum(length(dn1[[idx]]), length(dn2[[idx]])) > 0
     if (!skip_empty || (skip_empty && found_non_empty)) {
       checkmate::assert_true(identical(dn1[idx], dn2[idx]))
     }
