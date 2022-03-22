@@ -4,7 +4,7 @@
 \alias{MAEpply}
 \title{Lapply through all the experiments in MultiAssayExperiment object}
 \usage{
-MAEpply(mae, FUN, unify = FALSE)
+MAEpply(mae, FUN, unify = FALSE, ...)
 }
 \arguments{
 \item{mae}{MultiAssayExperiment object}
