@@ -1,5 +1,20 @@
-# Change to v.1.0.30
+# Change to v.1.0.35
 - fix hardcoded identifiers in validate SE
+
+# Change to v.1.0.34
+- add helper function for MAE/experiments
+
+# Change to v.1.0.33
+- move constant fit warning
+
+# Change to v.1.0.32
+- add .calculate_complement 
+
+# Change to v.1.0.31
+- move duplication warning 
+
+# Change to v.1.0.30
+- add support for identifier validation
 
 # Change to v.1.0.29
 - add getter and setter for experiment_raw_data

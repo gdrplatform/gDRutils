@@ -1,3 +1,14 @@
+test_that("validate_dimnames works as expected", {
+  err_msg1 <-
+    "Assertion on 'identical(dn1[idx], dn2[idx])' failed: Must be TRUE."
+  expect_error(validate_dimnames(data.frame(a = 2, b = 3), data.frame(a = 3, c = 4)), err_msg1, fixed = TRUE)
+  expect_error(validate_dimnames(data.frame(a = 2, b = 3), data.frame(a = 3, b = 4, c = 4)), err_msg1, fixed = TRUE)
+  expect_error(validate_dimnames(data.frame(), data.frame(a = 3, b = 4, c = 4)), err_msg1, fixed = TRUE)
+  
+  expect_null(validate_dimnames(data.frame(a = 2, b = 3), data.frame(a = 3, b = 4)))
+  expect_null(validate_dimnames(data.frame(), data.frame()))
+})
+
 test_that("validate_se_assay_name works as expected", {
   se <- SummarizedExperiment::SummarizedExperiment(assays = list("orange" = matrix(1, 1, 1)))
   expect_error(validate_se_assay_name(se, "apple"))

@@ -220,6 +220,7 @@ logisticFit <-
     df_ <- data.frame(concs = concs, norm_values = norm_values)
 
     if (has_dups(df_$concs)) {
+      warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
     }
 
@@ -305,7 +306,10 @@ logisticFit <-
       out <- .set_too_few_fit_params(out, df_$norm_values)
 
     }, constant_fit = function(e) {
-      out <- .set_constant_fit_params(out, x_0, mean_norm_value)
+      if (!is.na(x_0)) {
+        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
+      }
+      out <- .set_constant_fit_params(out, mean_norm_value)
 
     }, invalid_fit = function(e) {
       warning(sprintf("fitting failed with error: '%s'", e))
@@ -412,7 +416,6 @@ has_dups <- function(vec) {
 #' @importFrom stats aggregate
 average_dups <- function(df, col) {
   stopifnot(col %in% colnames(df))
-  warning("duplicates were found, averaging values")
   aggregate(df[colnames(df) != col],
     by = list(concs = df[[col]]),
     FUN = function(x) {
@@ -433,7 +436,7 @@ average_dups <- function(df, col) {
   out$xc50 <- .estimate_xc50(mean_norm_value)
 
   out$x_0 <- out$x_inf <- out$x_mean <- mean_norm_value
-  out$x_AOC_range <- out$x_AOC <- 1 - mean_norm_value
+  out$x_AOC_range <- out$x_AOC <- .calculate_complement(mean_norm_value)
   out
 }
 
@@ -458,14 +461,11 @@ average_dups <- function(df, col) {
 
 #' Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf
 #' @export
-.set_constant_fit_params <- function(out, x0, mean_norm_value) {
+.set_constant_fit_params <- function(out, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
   out$ec50 <- 0
   out$h <- 0.0001
 
-  if (!is.na(x0)) {
-    warning(sprintf("overriding original x_0 argument '%s' with '%s'", x0, mean_norm_value))
-  }
   out <- .set_mean_params(out, mean_norm_value)
   out
 }
@@ -527,6 +527,11 @@ average_dups <- function(df, col) {
   f_pval
 }
 
+
+#' @export
+.calculate_complement <- function(x) {
+  1 - x
+} 
 
 #################
 # Error handling

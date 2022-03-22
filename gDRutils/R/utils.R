@@ -52,6 +52,7 @@ extend_normalization_type_name <- function(x) {
 #' 
 #' @param x charvec expected subset
 #' @param choices charvec reference set
+#' @param ... Additional arguments to pass to \code{checkmate::test_choice}
 #' @export
 assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
@@ -78,15 +79,111 @@ assert_choices <- function(x, choices, ...) {
 #' @export
 #' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
-MAEpply <- function(mae, FUN, unify = FALSE) {
+MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   checkmate::assert_function(FUN)
   checkmate::assert_flag(unify)
   experiments <- as.list(MultiAssayExperiment::experiments(mae))
-  out <- lapply(experiments, FUN)
+  out <- lapply(experiments, FUN, ...)
   if (unify) {
-    unique(unlist(out))
+    if (all(vapply(out, is.atomic, logical(1)))) {
+      unlist(out, use.names = FALSE)
+    } else {
+      plyr::rbind.fill(lapply(out, data.frame))
+    }
+    
   } else {
     out
   }
+}
+
+#' is_mae_empty
+#' 
+#' check if all mae experiments are empty
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return logical
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+is_mae_empty <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
+  all(MAEpply(mae, is_exp_empty, unify = TRUE))
+}
+
+#' is_any_exp_empty
+#' 
+#' check if any experiment is empty
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return logical
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+is_any_exp_empty <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
+  any(MAEpply(mae, is_exp_empty, unify = TRUE))
+}
+
+#' is_exp_empty
+#' 
+#' check if experiment (SE) is empty
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return logical
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+is_exp_empty <- function(exp) {
+  checkmate::assert_class(exp, "SummarizedExperiment")
+  
+  nrow(SummarizedExperiment::assay(exp)) == 0
+}
+
+#' get_non_empty_assays
+#' 
+#' get non empty assays
+#' @param mae MultiAssayExperiment object
+#' @export
+#' 
+#' @return charvec with non-empty experiments
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+get_non_empty_assays <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
+  ne_info <- MAEpply(mae, is_exp_empty) == FALSE
+  names(ne_info[ne_info == TRUE])
+}
+
+#' mcolData
+#'
+#' get colData of all experiments
+#' @param mae MultiAssayExperiment object
+#' @export
+#'
+#' @return tibble with all-experiments colData
+#'
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+mcolData <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
+  MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
+}
+
+#' mrowData
+#'
+#' get rowData of all experiments
+#' @param mae MultiAssayExperiment object
+#' @export
+#'
+#' @return tibble with all-experiments rowData
+#'
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+mrowData <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
+  MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }

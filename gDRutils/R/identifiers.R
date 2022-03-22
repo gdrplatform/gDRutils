@@ -53,7 +53,7 @@ NULL
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
   if (simplify) {
     if (length(k) > 1L) {
-      stop("more than one identifier found, please use: simplify = FALSE")
+      stop("more than one identifier found, please use argument: `simplify = FALSE`")
     } else {
       .get_id(k)
     }
@@ -80,6 +80,20 @@ get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
 }
 
 
+#' Get identifiers required for downstream analysis.
+#' @export
+get_required_identifiers <- function() {
+  REQ_COL_IDENTIFIERS
+}
+
+
+#' Get identifiers that expect only one value for each identifier.
+#' @export
+get_expect_one_identifiers <- function() {
+  EXPECT_ONE_IDENTIFIERS
+}
+
+
 #' @rdname identifiers
 #' @export
 #' 
@@ -88,30 +102,9 @@ set_env_identifier <- function(k, v) {
 }
 
 
-#' @export
-set_identifier <- function(k, v) {
-  .Deprecated("set_env_identifier")
-  set_env_identifier(k = k, v = v)
-}
-
-
-#' @export
-reset_identifier <- function(k, v) {
-  .Deprecated("reset_env_identifiers")
-  reset_env_identifiers()
-}
-
-
 #' @rdname identifiers
 #' @export
 #' 
 reset_env_identifiers <- function() {
   .reset_ids()
-}
-  
-
-#' @export
-get_identifier <- function(k = NULL, simplify = TRUE) {
-  .Deprecated("get_env_identifiers")
-  get_env_identifiers(k = k, simplify = simplify)
 }

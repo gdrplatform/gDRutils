@@ -10,6 +10,8 @@ assert_choices(x, choices, ...)
 \item{x}{charvec expected subset}
 
 \item{choices}{charvec reference set}
+
+\item{...}{Additional arguments to pass to \code{checkmate::test_choice}}
 }
 \description{
 assert choices
