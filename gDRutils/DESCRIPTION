@@ -32,7 +32,7 @@ Suggests:
     devtools,
     futile.logger,
     gDRstyle (>= 0.0.9),
-    gDRtestData (>= 1.0.5),
+    gDRtestData (>= 1.0.11),
     knitr,
     lintr,
     rcmdcheck,
