@@ -1,3 +1,20 @@
+### input MAEs ###
+empty_se <-
+  SummarizedExperiment::SummarizedExperiment(assays = list(data.frame()))
+empty_mae <-
+  MultiAssayExperiment::MultiAssayExperiment(experiments = MultiAssayExperiment::ExperimentList(test = empty_se))
+maeReal <-
+  readRDS(
+    system.file("testdata", "finalMAE_combo_2dose_nonoise2.RDS", package = "gDRtestData")
+)
+partially_empty_mae <-
+  MultiAssayExperiment::MultiAssayExperiment(experiments = (MultiAssayExperiment::ExperimentList(
+    experiments = c(
+      MultiAssayExperiment::experiments(empty_mae),
+      MultiAssayExperiment::experiments(maeReal)
+    )
+  )))
+
 test_that(".clean_key_inputs works as expected", {
   keys <- LETTERS[1:5]
   cols <- LETTERS[1:3]
@@ -48,13 +65,53 @@ test_that("assert_choices",  {
 })
 
 test_that("MAEpply works as expectd", {
-  maeReal <- readRDS(system.file("testdata", "finalMAE_combo_2dose_nonoise2.RDS", package = "gDRtestData"))
   list1 <- MAEpply(maeReal, SummarizedExperiment::assayNames)
   expect_length(list1, 2)
   expect_true(inherits(list1, "list"))
-  list2 <- MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE)
-  expect_length(list2, 5)
-  expect_true(inherits(list2, "character"))
+  v1 <- unique(MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE))
+  expect_length(v1, 5)
+  expect_true(inherits(v1, "character"))
+  
+  v2 <- unique(MAEpply(maeReal, SummarizedExperiment::rowData, unify = TRUE))
+  expect_identical(vapply(dimnames(v2), length, numeric(1)), c(10, 8))
+  expect_true(inherits(v2, "data.frame"))
 })
 
+test_that("is_mae_empty works as expectd", {
+  expect_false(is_mae_empty(maeReal))
+  expect_true(is_mae_empty(empty_mae))
+})
 
+test_that("is_any_exp_empty works as expectd", {
+  expect_false(is_any_exp_empty(maeReal))
+  expect_true(is_any_exp_empty(empty_mae))
+  expect_true(is_any_exp_empty(partially_empty_mae))
+})
+
+test_that("is_exp_empty works as expectd", {
+  expect_false(is_exp_empty(maeReal[[1]]))
+  expect_true(is_exp_empty(empty_mae[[1]]))
+})
+
+test_that("get_non_empty_assays works as expectd", {
+  expect_identical(get_non_empty_assays(maeReal), get_non_empty_assays(partially_empty_mae))
+  expect_identical(get_non_empty_assays(empty_mae), character(0))
+})
+
+test_that("mrowData works as expectd", {
+  mr <- mrowData(maeReal)
+  expect_identical(vapply(dimnames(mr), length, numeric(1)), c(10, 8))
+  checkmate::expect_class(mr, "data.frame")
+  
+  mr <- mrowData(empty_mae)
+  expect_identical(mr, data.frame())
+})
+  
+test_that("mcolData works as expectd", {
+  mc <- mcolData(maeReal)
+  expect_identical(vapply(dimnames(mc), length, numeric(1)), c(6, 4))
+  checkmate::expect_class(mc, "data.frame")
+  
+  mc <- mcolData(empty_mae)
+  expect_identical(mc, data.frame())
+})
