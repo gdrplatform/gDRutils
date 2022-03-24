@@ -76,6 +76,7 @@ assert_choices <- function(x, choices, ...) {
 #' @param FUN function that should be applied on each experiment of MultiAssayExperiment object
 #' @param unify logical indicating if the output should be a unlisted object of unique
 #' values across all the experiments 
+#' @param ... Additional args to be passed to teh \code{FUN}.
 #' @export
 #' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
@@ -130,7 +131,7 @@ is_any_exp_empty <- function(mae) {
 #' is_exp_empty
 #' 
 #' check if experiment (SE) is empty
-#' @param mae MultiAssayExperiment object
+#' @param exp \linkS4class{SummarizedExperiment} object.
 #' @export
 #' 
 #' @return logical

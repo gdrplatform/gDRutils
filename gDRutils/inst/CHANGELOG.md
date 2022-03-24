@@ -1,3 +1,6 @@
+# Change to v.1.0.36
+- remove all R CMD check warnings
+
 # Change to v.1.0.35
 - change prettify functions to not substitute metadata
 

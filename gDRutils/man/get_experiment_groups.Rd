@@ -7,7 +7,8 @@
 get_experiment_groups(type = NULL)
 }
 \arguments{
-\item{mae}{MultiAssayExperiment object}
+\item{type}{String indicating the name of an assay group.
+Defaults to all experiment groups.}
 }
 \value{
 list with experiment groups or string (if type not NULL)

@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.0.35
-Date: 2022-03-22
+Version: 1.0.36
+Date: 2022-03-24
 Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -12,7 +12,7 @@ Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@
              person("Allison", "Vuong", role=c("aut")))
 Maintainer: Bartosz Czech <bartosz.czech@contractors.roche.com>
 Description: This package contains utility functions used throughout the gDR package suite. 
-License: file GNE_LICENSE
+License: file LICENSE
 LazyLoad: yes
 Imports:
     checkmate,
@@ -31,11 +31,13 @@ Imports:
 Suggests:
     futile.logger,
     gDRstyle (>= 0.0.8),
-    gDRtestData (>= 1.0.5),
+    gDRtestData (>= 1.0.11),
     knitr,
     lintr,
+    rcmdcheck,
     testthat,
-    tools
+    tools,
+    IRanges
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.2

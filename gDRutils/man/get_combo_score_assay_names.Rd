@@ -8,6 +8,8 @@ get_combo_score_assay_names(se = NULL, ...)
 }
 \arguments{
 \item{se}{SummarizedExperiment or NULL}
+
+\item{...}{Additional arguments to pass to \code{get_combo_assay_names}.}
 }
 \value{
 charvec

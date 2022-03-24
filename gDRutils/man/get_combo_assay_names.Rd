@@ -6,8 +6,13 @@
 \usage{
 get_combo_assay_names(se = NULL, ...)
 }
+\arguments{
+\item{se}{SummarizedExperiment or NULL}
+
+\item{...}{Additional arguments to pass to \code{get_assay_names}.}
+}
 \value{
-charvec
+charvec of combo assay names.
 }
 \description{
 get names of combo assays

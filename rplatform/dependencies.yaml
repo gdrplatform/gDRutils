@@ -1,6 +1,6 @@
 pkgs:
   gDRtestData:
-    ver: '>=1.0.5'
+    ver: '>=1.0.11'
     url: gdrplatform/gDRtestData
     ref: master
     subdir: gDRtestData
@@ -11,3 +11,5 @@ pkgs:
     ref: main
     subdir: ~
     source: GITHUB
+  rcmdcheck:
+    source: CRAN
