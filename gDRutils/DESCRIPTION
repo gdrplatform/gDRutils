@@ -30,7 +30,7 @@ Imports:
     SummarizedExperiment
 Suggests:
     futile.logger,
-    gDRstyle (>= 0.0.9),
+    gDRstyle (>= 0.0.8),
     gDRtestData (>= 1.0.11),
     knitr,
     lintr,
