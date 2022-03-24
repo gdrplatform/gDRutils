@@ -1,5 +1,8 @@
-# Change to v.1.0.34
+# Change to v.1.0.35
 - remove all R CMD check warnings
+
+# Change to v.1.0.34
+- add helper function for MAE/experiments
 
 # Change to v.1.0.33
 - move constant fit warning
