@@ -6,6 +6,8 @@ test_that("prettify_flat_metrics works as expected", {
          "Concentration_2", "Gnumber_2", "Drug_3",
          "E_0", "GR_gDR_x_AOC_range"
   )
+  
+  y <- c("Gnumber", "Gnumber_2", "MyDrug", "MyDrug_2")
 
   obs <- prettify_flat_metrics(x, human_readable = FALSE)
   exp <- c("CellLineName", "Tissue",
@@ -24,6 +26,9 @@ test_that("prettify_flat_metrics works as expected", {
            "RV Mean Viability (GDS)",
            "Concentration 2", "Gnumber 2", "Drug 3",
            "E0", "GR AOC within set range")
+  expect_equal(obs, exp)
+  obs <- prettify_flat_metrics(y, human_readable = TRUE)
+  exp <- c("Gnumber", "Gnumber 2", "MyDrug", "MyDrug 2")
   expect_equal(obs, exp)
 })
 
