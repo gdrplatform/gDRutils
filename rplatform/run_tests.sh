@@ -16,7 +16,7 @@ echo ">>>>> RUNNING UNIT TESTS"
 Rscript -e "testthat::test_local(path = '$repo_path', stop_on_failure = TRUE)"
 
 echo ">>>>> RUNNING DEVTOOLS::CHECK()"
-Rscript -e "rcmdcheck::rcmdcheck('$repo_path', error_on = 'warning')"
+Rscript -e "rcmdcheck::rcmdcheck('$repo_path', error_on = 'warning', args = '--no-manual')"
 
 echo ">>>>>>>> RUNNING CHECK DEPENDENCIES"
 Rscript -e "gDRstyle::checkDependencies(dep_path='/mnt/vol/rplatform/dependencies.yaml', desc_path='/mnt/vol/gDRutils/DESCRIPTION')"
