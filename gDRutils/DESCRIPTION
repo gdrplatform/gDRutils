@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.0.35
-Date: 2022-03-23
+Version: 1.0.36
+Date: 2022-03-24
 Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -34,9 +34,14 @@ Suggests:
     gDRtestData (>= 1.0.11),
     knitr,
     lintr,
+<<<<<<< HEAD
     rcmdcheck,
     testthat,
     IRanges
+=======
+    testthat,
+    tools
+>>>>>>> master
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.2

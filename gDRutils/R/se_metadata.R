@@ -132,6 +132,21 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
   out
 }
 
+#' get_MAE_identifiers
+#'
+#' get the identifiers of all SE's in the MAE
+#' @param mae MultiAssayExperiment
+#'
+#' @return named list with identifiers for each SE
+#' @export
+#'
+#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
+get_MAE_identifiers <- function(mae) {
+  checkmate::assert_class(mae, "MultiAssayExperiment")
+  
+  MAEpply(mae, get_SE_identifiers)
+}
+
 
 #' @keywords internal
 #' @noRd
