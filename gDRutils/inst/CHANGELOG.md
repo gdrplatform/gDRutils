@@ -1,5 +1,8 @@
-# Change to v.1.0.35
+# Change to v.1.0.36
 - fix hardcoded identifiers in validate SE
+
+# Change to v.1.0.35
+- change prettify functions to not substitute metadata
 
 # Change to v.1.0.34
 - add helper function for MAE/experiments

@@ -34,7 +34,8 @@ Suggests:
     gDRtestData (>= 1.0.5),
     knitr,
     lintr,
-    testthat
+    testthat,
+    tools
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.2
