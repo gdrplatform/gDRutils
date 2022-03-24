@@ -131,7 +131,7 @@ is_any_exp_empty <- function(mae) {
 #' is_exp_empty
 #' 
 #' check if experiment (SE) is empty
-#' @param se \linkS4class{SummarizedExperiment} object.
+#' @param exp \linkS4class{SummarizedExperiment} object.
 #' @export
 #' 
 #' @return logical
