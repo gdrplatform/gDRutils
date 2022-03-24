@@ -7,7 +7,7 @@
 is_exp_empty(exp)
 }
 \arguments{
-\item{se}{\linkS4class{SummarizedExperiment} object.}
+\item{exp}{\linkS4class{SummarizedExperiment} object.}
 }
 \value{
 logical
