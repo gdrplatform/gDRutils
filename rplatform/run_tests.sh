@@ -12,10 +12,7 @@ set -e
 echo ">>>>>>>> RUNNING LINTER"
 Rscript -e "gDRstyle::lintPkgDirs('$repo_path')"
 
-echo ">>>>> RUNNING UNIT TESTS"
-Rscript -e "testthat::test_local(path = '$repo_path', stop_on_failure = TRUE)"
-
-echo ">>>>> RUNNING DEVTOOLS::CHECK()"
+echo ">>>>> RUNNING RCMDCHECK"
 Rscript -e "rcmdcheck::rcmdcheck('$repo_path', error_on = 'warning', args = '--no-manual')"
 
 echo ">>>>>>>> RUNNING CHECK DEPENDENCIES"
