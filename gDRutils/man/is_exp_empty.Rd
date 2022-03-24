@@ -7,7 +7,7 @@
 is_exp_empty(exp)
 }
 \arguments{
-\item{mae}{MultiAssayExperiment object}
+\item{se}{\linkS4class{SummarizedExperiment} object.}
 }
 \value{
 logical
