@@ -34,14 +34,10 @@ Suggests:
     gDRtestData (>= 1.0.11),
     knitr,
     lintr,
-<<<<<<< HEAD
     rcmdcheck,
     testthat,
+    tools,
     IRanges
-=======
-    testthat,
-    tools
->>>>>>> master
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.2
