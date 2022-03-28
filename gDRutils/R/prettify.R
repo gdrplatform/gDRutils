@@ -36,7 +36,7 @@ prettify_flat_metrics <- function(x,
   # gDR is the default name.
   new_names <- gsub("gDR", "", new_names)
   new_names <- gsub("^_+", "", new_names)
-  new_names <- gsub("moa", "MOA", new_names)
+  new_names <- gsub("Moa", "MOA", new_names)
   trimws(new_names)
 }
 
