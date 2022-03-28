@@ -82,7 +82,7 @@ prettify_flat_metrics <- function(x,
 
   replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
   cols[replace] <- gsub("_", " ", cols[replace])
-  cols[replace] <- stringr::str_to_sentence(gsub("([a-z])([A-Z])", "\\1 \\2", cols[replace]))
+  cols[replace] <- stringr::str_to_title(gsub("([a-z])([A-Z])", "\\1 \\2", cols[replace]))
   cols
 }
 
