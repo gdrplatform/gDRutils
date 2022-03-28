@@ -30,13 +30,13 @@ prettify_flat_metrics <- function(x,
     new_names <- .prettify_metadata_columns(new_names)
     new_names <- .prettify_metric_columns(new_names)
     new_names <- .prettify_cotreatment_columns(new_names)
-    new_names <- stringr::str_to_title(gsub("_", " ", new_names))
+    new_names <- gsub("_", " ", new_names)
   } 
 
   # gDR is the default name.
   new_names <- gsub("gDR", "", new_names)
   new_names <- gsub("^_+", "", new_names)
-  new_names <- gsub("Moa", "MOA", new_names)
+  new_names <- gsub("moa", "MOA", new_names)
   trimws(new_names)
 }
 
@@ -77,11 +77,12 @@ prettify_flat_metrics <- function(x,
   # Replace underscore by space for the Drug/Concentration for co-treatment.
   pattern <- "[0-9]+"
   conc_cotrt <- paste0("^Concentration_", pattern, "$")
-  drug_cotrt <- paste0("^", get_env_identifiers("drug", simplify = TRUE), "_", pattern, "$|^Drug_", pattern, "$")
+  drug_cotrt <- paste0("^", get_env_identifiers("drug", simplify = TRUE), "_", pattern, "$|^drug_.*", pattern,
+                       "$|^DrugName_", pattern, "$")
 
   replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
   cols[replace] <- gsub("_", " ", cols[replace])
-  cols <- gsub("([a-z])([A-Z])", "\\1 \\2", cols)
+  cols[replace] <- stringr::str_to_sentence(gsub("([a-z])([A-Z])", "\\1 \\2", cols[replace]))
   cols
 }
 
