@@ -82,6 +82,7 @@ prettify_flat_metrics <- function(x,
 
   replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
   cols[replace] <- gsub("_", " ", cols[replace])
+  cols[replace] <- gsub("Name", "", cols[replace])
   cols[replace] <- stringr::str_to_title(gsub("([a-z])([A-Z])", "\\1 \\2", cols[replace]))
   cols
 }
@@ -106,13 +107,13 @@ prettify_flat_metrics <- function(x,
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
   metadata <- c("Cell Line", 
-                "Drug Name",
+                "Drug",
                 "Drug MOA",
-                "Primary Tissue", 
+                "Tissue", 
                 "Subtype",
                 "Parental cell line",
                 "Reference cell division time", 
-                "cell division time",
+                "Cell division time",
                 "Nbre of tested conc.", 
                 "Highest log10(conc.)")
   
@@ -130,11 +131,7 @@ prettify_flat_metrics <- function(x,
   
   # prettifying formatting
   # adding space between words like “ReferenceDivisionTime”
-  prettified_cols <- cols[cols %in% names(metadata)]
-  prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", prettified_cols)
-  prettified_cols <- gsub("_", " ", prettified_cols)
-  prettified_cols <- tools::toTitleCase(prettified_cols)
-  prettified_cols <- gsub("Moa", "MOA", prettified_cols)
+  prettified_cols <- metadata[cols[cols %in% names(metadata)]]
   cols[cols %in% names(metadata)] <- prettified_cols
   cols
 }
