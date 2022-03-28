@@ -20,7 +20,7 @@ test_that("prettify_flat_metrics works as expected", {
 
   # Human readable names work.
   obs <- prettify_flat_metrics(x, human_readable = TRUE)
-  exp <- c("Cell Line Name", "Tissue",
+  exp <- c("Cell Line", "Tissue",
            "Primary Tissue",
            "GR Mean Viability", "GR50", 
            "RV Mean Viability (GDS)",
@@ -31,4 +31,3 @@ test_that("prettify_flat_metrics works as expected", {
   exp <- c("Gnumber", "Gnumber 2", "MyDrug", "MyDrug 2")
   expect_equal(obs, exp)
 })
-
