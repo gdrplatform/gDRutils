@@ -30,7 +30,7 @@ prettify_flat_metrics <- function(x,
     new_names <- .prettify_metadata_columns(new_names)
     new_names <- .prettify_metric_columns(new_names)
     new_names <- .prettify_cotreatment_columns(new_names)
-    new_names <- gsub("_", " ", new_names)
+    new_names <- stringr::str_to_sentence(gsub("_", " ", new_names))
   } 
 
   # gDR is the default name.
