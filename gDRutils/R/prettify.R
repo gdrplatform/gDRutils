@@ -107,6 +107,7 @@ prettify_flat_metrics <- function(x,
 .prettify_metadata_columns <- function(cols) {
   metadata <- c("Cell Line", 
                 "Drug Name",
+                "Drug MOA",
                 "Primary Tissue", 
                 "Subtype",
                 "Parental cell line",
@@ -118,6 +119,7 @@ prettify_flat_metrics <- function(x,
   # TODO: Eventually, these identifiers can come from the SE object itself.
   names(metadata) <- c(get_env_identifiers("cellline_name"), # CellLineName
                        get_env_identifiers("drug_name"), #DrugName
+                       get_env_identifiers("drug_moa"),
                        get_env_identifiers("cellline_tissue", simplify = TRUE), # Tissue
                        get_env_identifiers("cellline_subtype", simplify = TRUE), # subtype
                        get_env_identifiers("cellline_parental_identifier", simplify = TRUE), # parental_identifier
