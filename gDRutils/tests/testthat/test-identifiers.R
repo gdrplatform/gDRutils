@@ -60,3 +60,4 @@ test_that("get_required_identifiers works as expected", {
   expect_true(length(get_required_identifiers()) > 1L)
   expect_true(all(get_required_identifiers() %in% get_expect_one_identifiers()))
 })
+
