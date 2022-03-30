@@ -1,3 +1,6 @@
+# Change to v.1.0.38
+- extend possible `Barcode` identifiers
+
 # Change to v.1.0.37
 - added a space between two-word cotreatment identifiers
 
