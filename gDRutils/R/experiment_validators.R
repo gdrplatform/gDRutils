@@ -90,7 +90,7 @@ validate_SE <- function(se,
   # Validate the correctness of rowData and colData
   # setting no lint due to curly braces inside the pattern of gsub
   #nolint start
-  checkmate::assert_true(all(gsub("^(?:[^_]+_){3}([^_]+).*", "\\1",
+  checkmate::assert_true(all(gsub("_.*", "",
                                   rownames(se)) == rowdata[[gDRutils::get_env_identifiers("drug")]]))
   #nolint end
   checkmate::assert_true(all(gsub("_.*", "", colnames(se)) == coldata[[gDRutils::get_env_identifiers("cellline")]]))
