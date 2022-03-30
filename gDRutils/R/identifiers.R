@@ -9,6 +9,7 @@
 #'
 #' @param k String corresponding to identifier name.
 #' @param v Character vector corresponding to the value for given identifier \code{k}.
+#' @param simplify Boolean indicating whether output should be simplified.
 #'
 #' @return 
 #' For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.

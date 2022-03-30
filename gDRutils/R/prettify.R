@@ -36,6 +36,7 @@ prettify_flat_metrics <- function(x,
   # gDR is the default name.
   new_names <- gsub("gDR", "", new_names)
   new_names <- gsub("^_+", "", new_names)
+  new_names <- gsub("Moa", "MOA", new_names)
   trimws(new_names)
 }
 
@@ -76,10 +77,13 @@ prettify_flat_metrics <- function(x,
   # Replace underscore by space for the Drug/Concentration for co-treatment.
   pattern <- "[0-9]+"
   conc_cotrt <- paste0("^Concentration_", pattern, "$")
-  drug_cotrt <- paste0("^", get_env_identifiers("drug", simplify = TRUE), "_", pattern, "$|^Drug_", pattern, "$")
+  drug_cotrt <- paste0("^", get_env_identifiers("drug", simplify = TRUE), "_", pattern, "$|^drug_.*", pattern,
+                       "$|^DrugName_", pattern, "$")
 
   replace <- grepl(paste0(conc_cotrt, "|", drug_cotrt), cols)
   cols[replace] <- gsub("_", " ", cols[replace])
+  cols[replace] <- gsub("Name", "", cols[replace])
+  cols[replace] <- stringr::str_to_title(gsub("([a-z])([A-Z])", "\\1 \\2", cols[replace]))
   cols
 }
 
@@ -103,18 +107,20 @@ prettify_flat_metrics <- function(x,
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
   metadata <- c("Cell Line", 
-                "Drug Name",
+                "Drug",
+                "Drug MOA",
                 "Primary Tissue", 
                 "Subtype",
                 "Parental cell line",
                 "Reference cell division time", 
-                "cell division time",
+                "Cell division time",
                 "Nbre of tested conc.", 
                 "Highest log10(conc.)")
   
   # TODO: Eventually, these identifiers can come from the SE object itself.
   names(metadata) <- c(get_env_identifiers("cellline_name"), # CellLineName
                        get_env_identifiers("drug_name"), #DrugName
+                       get_env_identifiers("drug_moa"),
                        get_env_identifiers("cellline_tissue", simplify = TRUE), # Tissue
                        get_env_identifiers("cellline_subtype", simplify = TRUE), # subtype
                        get_env_identifiers("cellline_parental_identifier", simplify = TRUE), # parental_identifier
@@ -125,11 +131,7 @@ prettify_flat_metrics <- function(x,
   
   # prettifying formatting
   # adding space between words like “ReferenceDivisionTime”
-  prettified_cols <- cols[cols %in% names(metadata)]
-  prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", prettified_cols)
-  prettified_cols <- gsub("_", " ", prettified_cols)
-  prettified_cols <- tools::toTitleCase(prettified_cols)
-  prettified_cols <- gsub("Moa", "MOA", prettified_cols)
+  prettified_cols <- metadata[cols[cols %in% names(metadata)]]
   cols[cols %in% names(metadata)] <- prettified_cols
   cols
 }

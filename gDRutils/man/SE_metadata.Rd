@@ -12,6 +12,8 @@
 \alias{get_SE_experiment_raw_data}
 \alias{get_SE_experiment_metadata}
 \alias{get_SE_keys}
+\alias{get_SE_identifiers}
+\alias{set_SE_identifiers}
 \title{Get and set metadata for parameters on a SummarizedExperiment object.}
 \usage{
 set_SE_fit_parameters(se, value)
@@ -33,13 +35,21 @@ get_SE_experiment_raw_data(se)
 get_SE_experiment_metadata(se)
 
 get_SE_keys(se, key_type = NULL)
+
+get_SE_identifiers(se, id_type = NULL, simplify = TRUE)
+
+set_SE_identifiers(se, value)
 }
 \arguments{
 \item{se}{a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.}
 
 \item{value}{named list of metadata for fit parameters.}
 
-\item{key_type}{string of a specific key type (i.e. 'nested_keys', 'trt', 'masked_tag', etc.).}
+\item{key_type}{string of a specific key type (i.e. 'nested_keys', etc.).}
+
+\item{id_type}{string of a specific id type (i.e. 'duration', 'cellline_name', etc.).}
+
+\item{simplify}{Boolean indicating whether output should be simplified.}
 }
 \value{
 \code{se} with added metadata.

@@ -6,6 +6,22 @@
 \usage{
 predict_conc_from_efficacy(efficacy, x_inf, x_0, ec50, h)
 }
+\arguments{
+\item{efficacy}{Numeric vector representing efficacies to predict concentrations for.}
+
+\item{x_inf}{Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
+data as concentration goes to infinity.}
+
+\item{x_0}{Numeric vector representing the asymptotic metric value corresponding to a concentration of 0 
+for the primary drug.}
+
+\item{ec50}{Numeric vector representing the drug concentration at half-maximal effect.}
+
+\item{h}{Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep}
+}
+\value{
+Numeric vector representing predicted concentrations from given efficacies and fit parameters.
+}
 \description{
 Predict a concentration for a given efficacy with fit parameters.
 }

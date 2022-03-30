@@ -6,11 +6,12 @@ EXPERIMENT_GROUPS <-
 #' get_experiment_groups
 #'
 #' get experiment groups
-#' @param mae MultiAssayExperiment object
-#' @export
+#' @param type String indicating the name of an assay group.
+#' Defaults to all experiment groups.
 #'
 #' @return list with experiment groups or string (if type not NULL)
 #'
+#' @export
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 get_experiment_groups <- function(type = NULL) {
   

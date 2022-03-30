@@ -1,5 +1,11 @@
-# Change to v.1.0.36
+# Change to v.1.0.38
 - fix hardcoded identifiers in validate SE
+
+# Change to v.1.0.37
+- added a space between two-word cotreatment identifiers
+
+# Change to v.1.0.36
+- remove all R CMD check warnings
 
 # Change to v.1.0.35
 - change prettify functions to not substitute metadata

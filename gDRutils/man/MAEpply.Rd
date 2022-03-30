@@ -13,6 +13,8 @@ MAEpply(mae, FUN, unify = FALSE, ...)
 
 \item{unify}{logical indicating if the output should be a unlisted object of unique
 values across all the experiments}
+
+\item{...}{Additional args to be passed to teh \code{FUN}.}
 }
 \description{
 Lapply through all the experiments in MultiAssayExperiment object

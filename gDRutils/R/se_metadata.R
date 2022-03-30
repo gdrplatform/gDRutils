@@ -4,7 +4,9 @@
 #'
 #' @param se a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.
 #' @param value named list of metadata for fit parameters. 
-#' @param key_type string of a specific key type (i.e. 'nested_keys', 'trt', 'masked_tag', etc.). 
+#' @param key_type string of a specific key type (i.e. 'nested_keys', etc.). 
+#' @param id_type string of a specific id type (i.e. 'duration', 'cellline_name', etc.). 
+#' @param simplify Boolean indicating whether output should be simplified.
 #'
 #' @details
 #' For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines 
@@ -109,7 +111,7 @@ get_SE_keys <- function(se, key_type = NULL) {
 # Identifiers
 ##############
 
-#' @rdname identifiers
+#' @rdname SE_metadata
 #' @export
 #'
 get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
@@ -164,7 +166,7 @@ get_MAE_identifiers <- function(mae) {
 }
 
 
-#' @rdname identifiers
+#' @rdname SE_metadata
 #' @export
 #'
 set_SE_identifiers <- function(se, value) {
