@@ -4,7 +4,7 @@ test_that("get_env_identifiers and set_env_identifier work", {
   expect_error(get_env_identifiers("BOGUS", simplify = TRUE))
   expect_equal(get_env_identifiers("duration", simplify = TRUE), "Duration")
   expect_equal(get_env_identifiers(c("duration", "barcode"), simplify = FALSE), 
-               list(duration = "Duration", barcode = "Barcode"))
+               list(duration = "Duration", barcode = c("Barcode", "Plate")))
   
   set_env_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_env_identifiers("cellline", simplify = TRUE), "my_personal_cell_line_identifiers")

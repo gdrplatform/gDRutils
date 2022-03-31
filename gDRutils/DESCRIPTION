@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.0.38
-Date: 2022-03-28
+Version: 1.0.39
+Date: 2022-03-31
 Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -10,7 +10,7 @@ Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@
              person("Pawel", "Piatkowski", role=c("aut")),
              person("Dariusz", "Scigocki", role=c("aut")),
              person("Allison", "Vuong", role=c("aut")))
-Maintainer: Bartosz Czech <bartosz.czech@contractors.roche.com>
+Maintainer: gDR team <gdr-support-d@gene.com>
 Description: This package contains utility functions used throughout the gDR package suite. 
 License: file LICENSE
 LazyLoad: yes
