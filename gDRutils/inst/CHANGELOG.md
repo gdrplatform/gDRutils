@@ -1,5 +1,8 @@
-# Change to v.1.0.38
+# Change to v.1.0.39
 - extend possible `Barcode` identifiers
+
+# Change to v.1.0.38
+- fix hardcoded identifiers in validate SE
 
 # Change to v.1.0.37
 - added a space between two-word cotreatment identifiers
