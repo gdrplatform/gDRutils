@@ -1,3 +1,6 @@
+# Change to v.1.0.40
+- added identifier description
+
 # Change to v.1.0.39
 - extend possible `Barcode` identifiers
 
