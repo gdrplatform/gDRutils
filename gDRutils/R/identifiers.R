@@ -116,10 +116,12 @@ reset_env_identifiers <- function() {
 #'
 #' @export
 get_identifers_desc <- function(k = NULL) {
+  checkmate::assert_string(k, null.ok = TRUE)
+  desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
   if (is.null(k)) {
-    desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+    desc
   } else {
-    desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))[[k]]
+    checkmate::assert_true(k %in% names(desc))
+    desc[[k]]
   }
-  desc
 }
