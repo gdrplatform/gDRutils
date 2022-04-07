@@ -1,5 +1,8 @@
-# Change to v.1.0.40
-- added identifier description
+# Change to v.1.0.41
+- added identifier descriptions
+
+# Change to v.1.0.41
+- add cap_ic50 function
 
 # Change to v.1.0.39
 - extend possible `Barcode` identifiers
