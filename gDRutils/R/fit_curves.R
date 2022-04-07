@@ -581,7 +581,9 @@ average_dups <- function(df, col) {
 #'
 #' @return Capped IC50 value.
 #'
-#' @details Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
+#' @details 
+#' Note: \code{ic50} and \code{max_conc} should share the same units.
+#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
 #' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
 #' @export
 cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
