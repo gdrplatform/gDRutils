@@ -112,7 +112,14 @@ reset_env_identifiers <- function() {
 
 #' Get descriptions for identifiers
 #'
+#' @param k identifier key
+#'
 #' @export
-get_identifers_desc <- function() {
-  yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+get_identifers_desc <- function(k = NULL) {
+  if (is.null(k)) {
+    desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+  } else {
+    desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))[[k]]
+  }
+  desc
 }

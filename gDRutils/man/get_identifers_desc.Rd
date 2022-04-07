@@ -4,7 +4,10 @@
 \alias{get_identifers_desc}
 \title{Get descriptions for identifiers}
 \usage{
-get_identifers_desc()
+get_identifers_desc(k = NULL)
+}
+\arguments{
+\item{k}{identifier key}
 }
 \description{
 Get descriptions for identifiers
