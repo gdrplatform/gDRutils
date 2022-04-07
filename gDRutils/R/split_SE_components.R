@@ -74,9 +74,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
                identifiers_md$drug_name,
                identifiers_md$drug_moa,
                identifiers_md$duration)
-  drug_field_pattern <- paste0(drug_md, collapse = "|")
-  drug_cols <- md_cols[grepl(drug_field_pattern, md_cols)]
-
+  drug_cols <- unlist(lapply(drug_md, function(x) grep(x, md_cols, value = TRUE)))
   cell_id <- identifiers_md$cellline
   cell_fields <- c(cell_id, get_header("add_clid"))
   cell_cols <- cell_fields[cell_fields %in% md_cols]
