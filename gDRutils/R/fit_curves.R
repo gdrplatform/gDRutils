@@ -585,9 +585,9 @@ average_dups <- function(df, col) {
 #' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
 #' @export
 cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
-  checkmate::check_int(capping_fold)
-  checkmate::check_number(ic50)
-  checkmate::check_number(max_conc)
+  checkmate::assert_int(capping_fold)
+  checkmate::assert_number(ic50)
+  checkmate::assert_number(max_conc)
 
   upper_cap <- max_conc * capping_fold
   lower_cap <- max_conc / (capping_fold * 1e5)
