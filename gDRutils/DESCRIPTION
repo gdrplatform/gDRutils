@@ -38,7 +38,8 @@ Suggests:
     rcmdcheck,
     testthat,
     tools,
-    IRanges
+    IRanges,
+    yaml
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.2
