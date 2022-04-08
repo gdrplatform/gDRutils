@@ -1,6 +1,9 @@
 # Change to v.1.0.40
 - fix wrong order of elements in rownames in SE
 
+# Change to v.1.0.41
+- add cap_ic50 function
+
 # Change to v.1.0.39
 - extend possible `Barcode` identifiers
 
