@@ -1,7 +1,10 @@
-# Change to v.1.0.41
+# Change to v.1.0.42
 - added identifier descriptions
 
 # Change to v.1.0.41
+- fix wrong order of elements in rownames in SE
+
+# Change to v.1.0.40
 - add cap_ic50 function
 
 # Change to v.1.0.39
