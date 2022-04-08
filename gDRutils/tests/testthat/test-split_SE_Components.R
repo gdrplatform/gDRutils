@@ -51,3 +51,9 @@ test_that("add_rownames_to_metadata works as expected", {
   expect_true(all(rownames(out) != as.character(seq(nrow(md)))))
   expect_equal(colnames(out), cols)
 })
+
+test_that("split_SE_components returns rowData in a proper order", {
+  md <- split_SE_components(test_df)
+  testthat::expect_true(all(gsub("_.*", "",
+                                  rownames(md$treatment_md)) == md$treatment_md[[gDRutils::get_env_identifiers("drug")]]))
+})
