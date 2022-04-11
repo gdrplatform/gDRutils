@@ -1,0 +1,50 @@
+duration:
+  "Duration of treatment"
+clid:
+  "Cell Line identifier"
+cellline_name:
+  "Cell Line common name"
+cellline_tissue:
+  "Tissue name"
+cellline_ref_div_time:
+  "Cell Line reference division time"
+cellline_parental_identifier:
+  "Cell Line parental identifier"
+cellline_subtype:
+  "Cell Line subtype"
+drug:
+  "Drug identifier"
+drug_name:
+  "Drug common name"
+drug_moa:
+  "Drug mechanism of action"
+untreated_tag:
+  "Tags for untreated cellines"
+masked_tag:
+  "Tag for masked celllines"
+well_position:
+  "Position in the wells"
+concentration:
+  "Concentration of the drug used"
+template:
+  "Treatment layout template"
+barcode:
+  "Plate identifier"
+drug_2:
+  "Drug 2 identifier"
+drug_name2:
+  "Drug 2 common name"
+drug_moa2:
+  "Drug 2 mechanism of action"
+concentration2:
+  "Concentration of Drug 2 used"
+drug_3:
+  "Drug 3 identifier"
+drug_name3:
+  "Drug 3 common name"
+drug_moa3:
+  "Drug 3 mechanism of action"
+concentration3:
+  "Concentration of Drug 3 used"
+data_source:
+  "Source of the data"
