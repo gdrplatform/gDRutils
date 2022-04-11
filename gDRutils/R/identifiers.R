@@ -109,3 +109,19 @@ set_env_identifier <- function(k, v) {
 reset_env_identifiers <- function() {
   .reset_ids()
 }
+
+#' Get descriptions for identifiers
+#'
+#' @param k identifier key
+#'
+#' @export
+get_identifers_desc <- function(k = NULL) {
+  checkmate::assert_string(k, null.ok = TRUE)
+  desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+  if (is.null(k)) {
+    desc
+  } else {
+    checkmate::assert_true(k %in% names(desc))
+    desc[[k]]
+  }
+}

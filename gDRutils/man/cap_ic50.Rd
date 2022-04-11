@@ -20,6 +20,7 @@ Capped IC50 value.
 Cap IC50 value by upper and lower limits.
 }
 \details{
+Note: \code{ic50} and \code{max_conc} should share the same units.
 Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
 However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
 }
