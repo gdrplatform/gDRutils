@@ -27,9 +27,9 @@ well_position:
 concentration:
   "Concentration of the drug used"
 template:
-  "Template identifier"
+  "Treatment layout template"
 barcode:
-  "Cell Line barcode"
+  "Plate identifier"
 drug_2:
   "Drug 2 identifier"
 drug_name2:
