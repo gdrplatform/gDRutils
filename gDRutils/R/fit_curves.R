@@ -408,7 +408,7 @@ logistic_metrics <- function(c, x_metrics) {
 # Helper functions
 ##################
 
-#' @keywords internal
+#' @export
 .setup_metric_output <- function() {
   resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
   out <- as.list(rep(NA, length(resp_metric_cols)))
