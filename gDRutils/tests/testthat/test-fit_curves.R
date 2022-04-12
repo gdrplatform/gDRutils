@@ -335,7 +335,7 @@ test_that(".set_invalid_fit_params works as expected", {
   expect_equal(obs_low$xc50, -Inf)
 
   # Mixed.
-  obs_mixed <- .set_invalid_fit_params(out, norm_values - rep(c(0.3, 0.7), 3))
+  obs_mixed <- .set_invalid_fit_params(out, norm_values = rep(c(0.3, 0.7), 3))
   expect_equal(obs_mixed$xc50, NA)
   expect_equal(obs_mixed$r2, NA)
 })
