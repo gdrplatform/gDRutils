@@ -299,6 +299,7 @@ test_that(".set_constant_fit_params works as expected", {
   na <- gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
 
   expect_equal(na$ec50, 0)
+  expect_equal(na$r2, 0)
   expect_equal(na$h, 0.0001)
   expect_equal(na$fit_type, "DRCConstantFitResult")
   expect_true(all(c(na$x_0, na$x_inf, na$x_mean) == 0.6))
@@ -310,6 +311,7 @@ test_that(".set_constant_fit_params works as expected", {
   one <- gDRutils:::.set_constant_fit_params(out, mean_norm_value = 0.6)
 
   expect_equal(one$ec50, 0)
+  expect_equal(na$r2, 0)
   expect_equal(one$h, 0.0001)
   expect_equal(one$fit_type, "DRCConstantFitResult")
   expect_true(all(c(one$x_0, one$x_inf, one$x_mean) == 0.6))
@@ -317,6 +319,26 @@ test_that(".set_constant_fit_params works as expected", {
   expect_equal(one$xc50, Inf)
 })
 
+test_that(".set_invalid_fit_params works as expected", {
+  out <- list()
+
+  # All NA.
+  obs_na <- .set_invalid_fit_params(out, norm_values = rep(NA, 6))
+  expect_equal(obs_na$xc50, NA)
+
+  # > 0.5.
+  obs_high <- .set_invalid_fit_params(out, norm_values = rep(0.7, 6))
+  expect_equal(obs_high$xc50, Inf)
+
+  # < 0.5.
+  obs_low <- .set_invalid_fit_params(out, norm_values = rep(0.3, 6))
+  expect_equal(obs_low$xc50, -Inf)
+
+  # Mixed.
+  obs_mixed <- .set_invalid_fit_params(out, norm_values - rep(c(0.3, 0.7), 3))
+  expect_equal(obs_mixed$xc50, NA)
+  expect_equal(obs_mixed$r2, NA)
+})
 
 ###############
 # Calculations
