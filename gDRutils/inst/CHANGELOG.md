@@ -1,3 +1,6 @@
+# Change to v.1.0.43
+- set r2 value to NA for invalid and 0 for constant fits
+
 # Change to v.1.0.42
 - added identifier descriptions
 

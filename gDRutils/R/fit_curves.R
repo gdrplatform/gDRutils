@@ -408,7 +408,7 @@ logistic_metrics <- function(c, x_metrics) {
 # Helper functions
 ##################
 
-#' @keywords internal
+#' @export
 .setup_metric_output <- function() {
   resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
   out <- as.list(rep(NA, length(resp_metric_cols)))
@@ -499,6 +499,7 @@ average_dups <- function(df, col) {
   out$fit_type <- "DRCConstantFitResult"
   out$ec50 <- 0
   out$h <- 0.0001
+  out$r2 <- 0
 
   out <- .set_mean_params(out, mean_norm_value)
   out
@@ -512,7 +513,7 @@ average_dups <- function(df, col) {
 #' @export
 .set_invalid_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCInvalidFitResult"
-  out$r2 <- 0
+  out$r2 <- NA
   out$xc50 <- .estimate_xc50(norm_values)
   out
 }
