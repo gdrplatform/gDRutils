@@ -107,16 +107,17 @@ prettify_flat_metrics <- function(x,
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
   
-  metadata <- gDRutils::get_env_identifiers()
-  idx <- cols %in% metadata
-  
   # prettifying formatting
-  # adding space between words like “ReferenceDivisionTime”
-  prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", cols[idx])
   
+  prettified_cols <- gsub("gDR", "", cols)
+  # adding space between words like “ReferenceDivisionTime”
+  prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", prettified_cols)
+  # replace underscore with space
   prettified_cols <- gsub("_", " ", prettified_cols)
   prettified_cols <- tools::toTitleCase(prettified_cols)
   prettified_cols <- gsub("Moa", "MOA", prettified_cols)
-  cols[idx] <- prettified_cols
-  cols
+  
+  # remove leading and trailing whitespace
+  prettified_cols <- trimws(prettified_cols)
+  prettified_cols
 }
