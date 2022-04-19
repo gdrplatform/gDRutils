@@ -106,32 +106,17 @@ prettify_flat_metrics <- function(x,
 
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
-  metadata <- c("Cell Line", 
-                "Drug",
-                "Drug MOA",
-                "Primary Tissue", 
-                "Subtype",
-                "Parental cell line",
-                "Reference cell division time", 
-                "Cell division time",
-                "Nbre of tested conc.", 
-                "Highest log10(conc.)")
   
-  # TODO: Eventually, these identifiers can come from the SE object itself.
-  names(metadata) <- c(get_env_identifiers("cellline_name"), # CellLineName
-                       get_env_identifiers("drug_name"), #DrugName
-                       get_env_identifiers("drug_moa"),
-                       get_env_identifiers("cellline_tissue", simplify = TRUE), # Tissue
-                       get_env_identifiers("cellline_subtype", simplify = TRUE), # subtype
-                       get_env_identifiers("cellline_parental_identifier", simplify = TRUE), # parental_identifier
-                       get_env_identifiers("cellline_ref_div_time", simplify = TRUE),
-                       "DivisionTime",
-                       "N_conc", 
-                       "maxlog10Concentration")
+  metadata <- gDRutils::get_env_identifiers()
+  idx <- cols %in% metadata
   
   # prettifying formatting
   # adding space between words like “ReferenceDivisionTime”
-  prettified_cols <- metadata[cols[cols %in% names(metadata)]]
-  cols[cols %in% names(metadata)] <- prettified_cols
+  prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", cols[idx])
+  
+  prettified_cols <- gsub("_", " ", prettified_cols)
+  prettified_cols <- tools::toTitleCase(prettified_cols)
+  prettified_cols <- gsub("Moa", "MOA", prettified_cols)
+  cols[idx] <- prettified_cols
   cols
 }
