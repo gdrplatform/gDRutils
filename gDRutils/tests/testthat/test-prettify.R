@@ -22,10 +22,10 @@ test_that("prettify_flat_metrics works as expected", {
   obs <- prettify_flat_metrics(x, human_readable = TRUE)
   exp <- c("Cell Line Name", "Tissue",
            "Primary Tissue",
-           "GR Mean", "GR50", 
-           "RV Mean (GDS)",
+           "GR Mean Viability", "GR50", 
+           "RV Mean Viability (GDS)",
            "Concentration 2", "Gnumber 2", "Drug 3",
-           "E 0", "GR AOC Range")
+           "E 0", "GR AOC range")
   expect_equal(obs, exp)
   obs <- prettify_flat_metrics(y, human_readable = TRUE)
   exp <- c("Gnumber", "Gnumber 2", "My Drug", "My Drug 2")
