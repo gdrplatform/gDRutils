@@ -1,3 +1,6 @@
+# Change to v.1.0.44
+- update prettify function
+
 # Change to v.1.0.43
 - set r2 value to NA for invalid and 0 for constant fits
 
