@@ -1,6 +1,7 @@
 ## The following are the default values that will be used for handling MAE experiments
 EXPERIMENT_GROUPS <-
-  list(`single-agent` = c("single-agent", "cotreatment"),
+  list(`single-agent` = c(`single-agent` = "single-agent",
+                          `cotreatment` = "cotreatment"),
        matrix = "matrix")
 
 #' get_experiment_groups
