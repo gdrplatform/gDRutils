@@ -10,17 +10,17 @@
 #'
 #' @return character vector of prettified names.
 #'
-#' @details 
-#' A common use case for this function is to prettify column names from a flattened version of 
+#' @details
+#' A common use case for this function is to prettify column names from a flattened version of
 #' the \code{"Metrics"} assay.
 #' Mode \code{"human_readable" = TRUE} is often used for prettification in the context
-#' of front-end applications, whereas \code{"human_readable" = FALSE} is often used for 
+#' of front-end applications, whereas \code{"human_readable" = FALSE} is often used for
 #' prettification in the context of the command line.
 #'
 #' @export
 #'
-prettify_flat_metrics <- function(x, 
-                                  human_readable = FALSE, 
+prettify_flat_metrics <- function(x,
+                                  human_readable = FALSE,
                                   normalization_type = c("GR", "RV")) {
 
   new_names <- .convert_norm_specific_metrics(x, normalization_type = normalization_type)
@@ -31,7 +31,7 @@ prettify_flat_metrics <- function(x,
     new_names <- .prettify_metric_columns(new_names)
     new_names <- .prettify_cotreatment_columns(new_names)
     new_names <- gsub("_", " ", new_names)
-  } 
+  }
 
   # gDR is the default name.
   new_names <- gsub("gDR", "", new_names)
@@ -73,7 +73,7 @@ prettify_flat_metrics <- function(x,
 
 #' @keywords internal
 .prettify_cotreatment_columns <- function(cols) {
-  
+
   # Replace underscore by space for the Drug/Concentration for co-treatment.
   pattern <- "[0-9]+"
   conc_cotrt <- paste0("^Concentration_", pattern, "$")
@@ -90,8 +90,8 @@ prettify_flat_metrics <- function(x,
 
 #' @keywords internal
 .prettify_metric_columns <- function(cols) {
-  metric_patterns <- list("E_0" = "E0",
-                          "AOC_range" = "AOC within set range",
+  metric_patterns <- list("E 0" = "E0",
+                          "AOC Range" = "AOC within set range",
                           "GRvalue" = "GR value",
                           "RelativeViability" = "Relative Viability",
                           "mean" = "Mean Viability")
@@ -106,16 +106,15 @@ prettify_flat_metrics <- function(x,
 
 #' @keywords internal
 .prettify_metadata_columns <- function(cols) {
-  
+
   # prettifying formatting
-  
+
   prettified_cols <- gsub("gDR", "", cols)
+  prettified_cols <- gsub("_", " ", prettified_cols)
+  prettified_cols <- tools::toTitleCase(prettified_cols)
   # adding space between words like “ReferenceDivisionTime”
   prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", prettified_cols)
-  # replace underscore with space
-  prettified_cols <- gsub("_", " ", prettified_cols)
-  prettified_cols <- gsub("moa", "MOA", prettified_cols)
-  
+
   # remove leading and trailing whitespace
   prettified_cols <- trimws(prettified_cols)
   prettified_cols
