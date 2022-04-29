@@ -73,8 +73,16 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   drug_md <- c(identifiers_md$drug,
                identifiers_md$drug_name,
                identifiers_md$drug_moa,
-               identifiers_md$duration)
-  drug_cols <- unlist(lapply(drug_md, function(x) grep(x, md_cols, value = TRUE)))
+               identifiers_md$duration,
+               identifiers_md$drug2,
+               identifiers_md$drug_name2,
+               identifiers_md$drug_moa2,
+               identifiers_md$duration2,
+               identifiers_md$drug3,
+               identifiers_md$drug_name3,
+               identifiers_md$drug_moa3,
+               identifiers_md$duration3)
+  drug_cols <- intersect(drug_md, md_cols)
   cell_id <- identifiers_md$cellline
   cell_fields <- c(cell_id, get_header("add_clid"))
   cell_cols <- cell_fields[cell_fields %in% md_cols]
