@@ -43,7 +43,6 @@ test_that("split_SE_components splits the correct columns", {
   names(test_df_modified)[1] <- new_identifier_name
   md5 <- split_SE_components(test_df_modified)
   expect_equal(names(md5$treatment_md), c(new_identifier_name, "DrugName", "drug_moa", "Duration", "replicates"))
-  
 })
 
 
