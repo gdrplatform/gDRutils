@@ -32,6 +32,18 @@ test_that("split_SE_components splits the correct columns", {
   expect_true(all(c("WellRow", "WellColumn", "drug_moa") %in% md4$data_fields))
   expect_equal(ncol(test_df), 
     sum(ncol(md4$treatment_md), ncol(md4$condition_md), length(md4$data_fields), ncol(md4$experiment_md)))
+  
+  # order of columns is correct
+  expect_equal(names(md$treatment_md), c("Gnumber", "DrugName", "drug_moa", "Duration", "replicates"))
+  
+  # split_SE_components with changed identifiers
+  new_identifier_name <- "SomeDrug"
+  set_env_identifier("drug", new_identifier_name)
+  test_df_modified <- test_df
+  names(test_df_modified)[1] <- new_identifier_name
+  md5 <- split_SE_components(test_df_modified)
+  expect_equal(names(md5$treatment_md), c(new_identifier_name, "DrugName", "drug_moa", "Duration", "replicates"))
+  
 })
 
 
@@ -58,3 +70,4 @@ test_that("split_SE_components returns rowData in a proper order", {
                                   rownames(md$treatment_md)) ==
                               md$treatment_md[[gDRutils::get_env_identifiers("drug")]]))
 })
+
