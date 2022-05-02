@@ -70,18 +70,8 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   md_cols <- setdiff(all_cols, data_cols) 
   md <- unique(df_[, md_cols]) 
 
-  drug_md <- c(identifiers_md$drug,
-               identifiers_md$drug_name,
-               identifiers_md$drug_moa,
-               identifiers_md$duration,
-               identifiers_md$drug2,
-               identifiers_md$drug_name2,
-               identifiers_md$drug_moa2,
-               identifiers_md$duration2,
-               identifiers_md$drug3,
-               identifiers_md$drug_name3,
-               identifiers_md$drug_moa3,
-               identifiers_md$duration3)
+  req_identifier_names <- c("drug", "drug_name", "drug_moa", "duration")
+  drug_md <- identifiers_md[grep(paste0(req_identifier_names, collapse = "|"), names(identifiers_md))]
   drug_cols <- intersect(drug_md, md_cols)
   cell_id <- identifiers_md$cellline
   cell_fields <- c(cell_id, get_header("add_clid"))
