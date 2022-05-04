@@ -1,3 +1,6 @@
+# Change to v.1.0.45
+- avoid using `grep` for getting cotreatment identifiers
+
 # Change to v.1.0.44
 - switched from unnamed to named vector of experiment groups for `single-agent`
 - fixed the logic in validating single-agent experiments
