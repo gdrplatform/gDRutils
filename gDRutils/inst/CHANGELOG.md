@@ -1,6 +1,9 @@
-# Change to v.1.0.45
+# Change to v.1.0.46
 - update prettify function
 - fix hardcoded identifiers in validated_SE
+
+# Change to v.1.0.45
+- avoid using `grep` for getting cotreatment identifiers
 
 # Change to v.1.0.44
 - switched from unnamed to named vector of experiment groups for `single-agent`
