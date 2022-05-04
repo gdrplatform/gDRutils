@@ -30,7 +30,7 @@ test_that("reset_env_identifiers works", {
 
 test_that("get_prettified_identifiers works as expected", {
   obs <- get_prettified_identifiers(c("drug_name", "cellline_name"), simplify = FALSE)
-  expect_equal(obs, c("Drug", "Cell Line"))
+  expect_equal(obs, c("Drug Name", "Cell Line Name"))
 
   obs <- get_prettified_identifiers(simplify = TRUE)
   expect_true(is(obs, "list"))
