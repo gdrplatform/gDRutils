@@ -1,5 +1,10 @@
-# Change to v.1.0.44
+# Change to v.1.0.45
 - update prettify function
+- fix hardcoded identifiers in validated_SE
+
+# Change to v.1.0.44
+- switched from unnamed to named vector of experiment groups for `single-agent`
+- fixed the logic in validating single-agent experiments
 
 # Change to v.1.0.43
 - set r2 value to NA for invalid and 0 for constant fits
