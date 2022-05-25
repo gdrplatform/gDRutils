@@ -93,9 +93,9 @@ validate_SE <- function(se,
   pattern = paste0("^(?:[^_]+_){",
                    as.character(which(names(rowdata) == get_env_identifiers("drug")) - 1),
                    "}([^_]+).*")
-  #nolint end
   #checkmate::assert_true(all(gsub(pattern, "\\1",
   #                                rownames(se)) == rowdata[[gDRutils::get_env_identifiers("drug")]]))
+  #nolint end
   checkmate::assert_true(all(gsub("_.*", "", colnames(se)) == coldata[[gDRutils::get_env_identifiers("cellline")]]))
 
   checkmate::assert_true(nrow(coldata) == nrow(unique(coldata)))
