@@ -1,3 +1,6 @@
+# Change to v.1.0.47
+- correct recognition of empty SE
+
 # Change to v.1.0.46
 - update prettify function
 - fix hardcoded identifiers in validated_SE
