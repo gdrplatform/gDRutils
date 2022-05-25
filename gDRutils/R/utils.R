@@ -140,9 +140,16 @@ is_any_exp_empty <- function(mae) {
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
   
+  names <- SummarizedExperiment::assayNames(exp)
+  dt <- `if`(
+    is.null(names),
+    data.table::data.table(),
+    convert_se_assay_to_dt(exp, names[[1]])
+  )
+  
   any(
     nrow(SummarizedExperiment::assay(exp)) == 0,
-    nrow(convert_se_assay_to_dt(exp, "Normalized")) == 0
+    nrow(dt) == 0
   )
 }
 
