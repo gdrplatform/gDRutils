@@ -1,3 +1,6 @@
+# Change to v.1.0.48
+- correct recognition of empty SE
+
 # Change to v.1.0.47
 - remove redundant validation of rownames in SE
 
