@@ -29,11 +29,11 @@ df_to_bm_assay <-
     allMetadata <- split_SE_components(data, nested_keys = discard_keys)
     
     seColData <- allMetadata$condition_md
-    seColData$col_id <- as.numeric(gsub(".*_", "", rownames(seColData)))
+    seColData$col_id <- seq_along(rownames(seColData))
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
     seRowData <- allMetadata$treatment_md
-    seRowData$row_id <- as.numeric(gsub(".*_", "", rownames(seRowData)))
-    
+    seRowData$row_id <- seq_along(rownames(seRowData))
+
     cond_entries <-
       setdiff(colnames(seRowData), c("row_id", "name_"))
     

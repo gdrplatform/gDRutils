@@ -1,3 +1,6 @@
+# Change to v.1.3.1
+- Remove adding integer identifiers at the end of colnames/rownames
+
 # Change to v.1.3.0
 - Release
 

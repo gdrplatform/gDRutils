@@ -146,7 +146,6 @@ identify_linear_dependence <- function(df, identifier) {
 #' @keywords internal
 add_rownames_to_metadata <- function(md, cols) {
   md <- unique(md[, unname(unlist(cols)), drop = FALSE])
-  md$unique_id <- seq_len(nrow(md))
   rownames(md) <- apply(md, 1, function(x) {
     paste(x, collapse = "_")
     })
