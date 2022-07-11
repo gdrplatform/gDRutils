@@ -37,33 +37,36 @@ standardize_se <- function(se) {
   idf_diff <- idfs_se[unlist(lapply(names(idfs_se),
                                     function(x) !identical(idfs_se[[x]], matching_default_idfs[[x]])))]
   default_idfs_diff <- matching_default_idfs[names(idf_diff)]
-  if (length(idf_diff) == 0) next
-  mapping_vector_list <- lapply(names(default_idfs_diff), function(x) {
-    if (length(default_idfs_diff[[x]]) != length(idf_diff[[x]])) {
-      min_val <- min(length(default_idfs_diff[[x]]), length(idf_diff[[x]]))
-      c(name = idf_diff[[x]][seq_len(min_val)],
-        value = default_idfs_diff[[x]][seq_len(min_val)])
-    } else {
-      c(name = idf_diff[[x]],
-        value = default_idfs_diff[[x]])
-    }
-  })
-  names(mapping_vector_list) <- names(default_idfs_diff)
-  
-  mapping_vector <- lapply(mapping_vector_list, "[[", "value")
-  names(mapping_vector) <- unlist(lapply(mapping_vector_list, "[[", "name"))
-  mapping_vector <- unlist(mapping_vector)
-  rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
-  colData(se) <- rename_DFrame(colData(se), mapping_vector)
-  assayList <- lapply(assays(se), function(x) {
-    rename_bumpy(x, mapping_vector)
-  })
-  assays(se) <- assayList
-  idfs_new <- idfs
-  idfs_new[names(mapping_vector_list)] <- lapply(mapping_vector_list, "[[", "value")
-  # replace identifiers in the metadata of SE
-  se <- set_SE_identifiers(se, idfs_new)
-  se
+  if (length(idf_diff) == 0) {
+    se
+  } else {
+    mapping_vector_list <- lapply(names(default_idfs_diff), function(x) {
+      if (length(default_idfs_diff[[x]]) != length(idf_diff[[x]])) {
+        min_val <- min(length(default_idfs_diff[[x]]), length(idf_diff[[x]]))
+        c(name = idf_diff[[x]][seq_len(min_val)],
+          value = default_idfs_diff[[x]][seq_len(min_val)])
+      } else {
+        c(name = idf_diff[[x]],
+          value = default_idfs_diff[[x]])
+      }
+    })
+    names(mapping_vector_list) <- names(default_idfs_diff)
+    
+    mapping_vector <- lapply(mapping_vector_list, "[[", "value")
+    names(mapping_vector) <- unlist(lapply(mapping_vector_list, "[[", "name"))
+    mapping_vector <- unlist(mapping_vector)
+    rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
+    colData(se) <- rename_DFrame(colData(se), mapping_vector)
+    assayList <- lapply(assays(se), function(x) {
+      rename_bumpy(x, mapping_vector)
+    })
+    assays(se) <- assayList
+    idfs_new <- idfs
+    idfs_new[names(mapping_vector_list)] <- lapply(mapping_vector_list, "[[", "value")
+    # replace identifiers in the metadata of SE
+    se <- set_SE_identifiers(se, idfs_new)
+    se
+  }
 }
 
 
