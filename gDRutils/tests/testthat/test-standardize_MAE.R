@@ -21,7 +21,7 @@ test_that("standardize_se works as expected",  {
   se <- se_original
   se@metadata$identifiers$drug <- "druuug"
   se@metadata$identifiers$concentration2 <- "dose 2"
-  rowData(se) <- rename_DFrame(rowData(mae[[1]]), c("Gnumber" = "druuug"))
+  rowData(se) <- rename_DFrame(rowData(se), c("Gnumber" = "druuug"))
   assay(se, "RawTreated") <- rename_bumpy(assay(se, "RawTreated"), c("Concentration_2" = "dose 2"))
   se_standardized <- standardize_se(se)
   expect_equal(get_SE_identifiers(se_standardized),
