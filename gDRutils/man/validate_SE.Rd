@@ -7,7 +7,7 @@
 validate_SE(se, expect_single_agent = FALSE)
 }
 \arguments{
-\item{se}{SummarizedExperiment object 
+\item{se}{SummarizedExperiment object
 produced by the gDR pipeline}
 
 \item{expect_single_agent}{a logical indicating if the function
