@@ -5,49 +5,65 @@
 #' @return mae a MultiAssayExperiment with default gDR identifiers
 #' @export
 #'
-standardize_MAE <- function(mae) {
+standardize_mae <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  reset_env_identifiers()
-  idfs <- get_env_identifiers()
   experiments <- names(mae)
   for (experiment in experiments) {
-    se <- mae[[experiment]]
-    idfs_se <- get_SE_identifiers(se)
-    matching_default_idfs <- idfs[names(idfs_se)]
-    
-    matching_default_idfs <- matching_default_idfs[lengths(matching_default_idfs) != 0]
-    idfs_se <- idfs_se[names(matching_default_idfs)]
-    idf_diff <- idfs_se[unlist(lapply(names(idfs_se),
-                                      function(x) !identical(idfs_se[[x]], matching_default_idfs[[x]])))]
-    default_idfs_diff <- matching_default_idfs[names(idf_diff)]
-    if (length(idf_diff) == 0) next
-    mapping_vector_list <- lapply(names(default_idfs_diff), function(x) {
-      if (length(default_idfs_diff[[x]]) != length(idf_diff[[x]])) {
-        min_val <- min(length(default_idfs_diff[[x]]),  length(idf_diff[[x]]))
-        c(name = idf_diff[[x]][seq_len(min_val)],
-          value = default_idfs_diff[[x]][seq_len(min_val)])
-      } else {
-        c(name = idf_diff[[x]],
-          value = default_idfs_diff[[x]])
-      }
-    })
-    names(mapping_vector_list) <- names(default_idfs_diff)
-    
-    mapping_vector <- lapply(mapping_vector_list, "[[", "value")
-    names(mapping_vector) <- unlist(lapply(mapping_vector_list, "[[", "name"))
-    mapping_vector <- unlist(mapping_vector)
-    rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
-    colData(se) <- rename_DFrame(colData(se), mapping_vector)
-    assayList <- lapply(assays(se), function(x) {
-      rename_bumpy(x, mapping_vector)
-    })
-    assays(se) <- assayList
-    idfs_new <- idfs
-    idfs_new[names(mapping_vector_list)] <- lapply(mapping_vector_list, "[[", "value")
-    se <- set_SE_identifiers(se, idfs_new)
-    mae[[experiment]] <- se
+    mae[[experiment]] <- standardize_se(mae[[experiment]])
   }
   mae
+}
+
+#' Standardize SE by switching from custom identifiers into gDR-default
+#'
+#' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
+#'
+#' @return se a SummarizedExperiment with default gDR identifiers
+#' @export
+#'
+standardize_se <- function(se) {
+  checkmate::assert_class(se, "SummarizedExperiment")
+  
+  # we reset identifiers to allow `get_env_identifiers` returns only
+  # gDR default identifiers (to be sure that users did not set their own custom identifiers,
+  # e.g. by using set_GDS_identifiers())
+  reset_env_identifiers()
+  idfs <- get_env_identifiers()
+  idfs_se <- get_SE_identifiers(se)
+  matching_default_idfs <- idfs[names(idfs_se)]
+  
+  matching_default_idfs <- matching_default_idfs[lengths(matching_default_idfs) != 0]
+  idfs_se <- idfs_se[names(matching_default_idfs)]
+  idf_diff <- idfs_se[unlist(lapply(names(idfs_se),
+                                    function(x) !identical(idfs_se[[x]], matching_default_idfs[[x]])))]
+  default_idfs_diff <- matching_default_idfs[names(idf_diff)]
+  if (length(idf_diff) == 0) next
+  mapping_vector_list <- lapply(names(default_idfs_diff), function(x) {
+    if (length(default_idfs_diff[[x]]) != length(idf_diff[[x]])) {
+      min_val <- min(length(default_idfs_diff[[x]]), length(idf_diff[[x]]))
+      c(name = idf_diff[[x]][seq_len(min_val)],
+        value = default_idfs_diff[[x]][seq_len(min_val)])
+    } else {
+      c(name = idf_diff[[x]],
+        value = default_idfs_diff[[x]])
+    }
+  })
+  names(mapping_vector_list) <- names(default_idfs_diff)
+  
+  mapping_vector <- lapply(mapping_vector_list, "[[", "value")
+  names(mapping_vector) <- unlist(lapply(mapping_vector_list, "[[", "name"))
+  mapping_vector <- unlist(mapping_vector)
+  rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
+  colData(se) <- rename_DFrame(colData(se), mapping_vector)
+  assayList <- lapply(assays(se), function(x) {
+    rename_bumpy(x, mapping_vector)
+  })
+  assays(se) <- assayList
+  idfs_new <- idfs
+  idfs_new[names(mapping_vector_list)] <- lapply(mapping_vector_list, "[[", "value")
+  # replace identifiers in the metadata of SE
+  se <- set_SE_identifiers(se, idfs_new)
+  se
 }
 
 
