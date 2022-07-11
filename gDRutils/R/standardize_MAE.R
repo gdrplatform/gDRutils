@@ -17,7 +17,8 @@ standardize_MAE <- function(mae) {
     
     matching_default_idfs <- matching_default_idfs[lengths(matching_default_idfs) != 0]
     idfs_se <- idfs_se[names(matching_default_idfs)]
-    idf_diff <- idfs_se[unlist(lapply(names(idfs_se), function(x) !identical(idfs_se[[x]], matching_default_idfs[[x]])))]
+    idf_diff <- idfs_se[unlist(lapply(names(idfs_se),
+                                      function(x) !identical(idfs_se[[x]], matching_default_idfs[[x]])))]
     default_idfs_diff <- matching_default_idfs[names(idf_diff)]
     if (length(idf_diff) == 0) next
     mapping_vector_list <- lapply(names(default_idfs_diff), function(x) {
