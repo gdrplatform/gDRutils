@@ -23,52 +23,75 @@ standardize_mae <- function(mae) {
 #'
 standardize_se <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
-  
-  # we reset identifiers to allow `get_env_identifiers` returns only
-  # gDR default identifiers (to be sure that users did not set their own custom identifiers,
-  # e.g. by using set_GDS_identifiers())
-  reset_env_identifiers()
-  idfs <- get_env_identifiers()
+  idfs <- get_default_identifiers()
   idfs_se <- get_SE_identifiers(se)
-  matching_default_idfs <- idfs[names(idfs_se)]
   
-  matching_default_idfs <- matching_default_idfs[lengths(matching_default_idfs) != 0]
-  idfs_se <- idfs_se[names(matching_default_idfs)]
-  idf_diff <- idfs_se[unlist(lapply(names(idfs_se),
-                                    function(x) !identical(idfs_se[[x]], matching_default_idfs[[x]])))]
-  default_idfs_diff <- matching_default_idfs[names(idf_diff)]
-  if (length(idf_diff) == 0) {
-    se
-  } else {
-    mapping_vector_list <- lapply(names(default_idfs_diff), function(x) {
-      if (length(default_idfs_diff[[x]]) != length(idf_diff[[x]])) {
-        min_val <- min(length(default_idfs_diff[[x]]), length(idf_diff[[x]]))
-        c(name = idf_diff[[x]][seq_len(min_val)],
-          value = default_idfs_diff[[x]][seq_len(min_val)])
-      } else {
-        c(name = idf_diff[[x]],
-          value = default_idfs_diff[[x]])
-      }
-    })
-    names(mapping_vector_list) <- names(default_idfs_diff)
-    
-    mapping_vector <- lapply(mapping_vector_list, "[[", "value")
-    names(mapping_vector) <- unlist(lapply(mapping_vector_list, "[[", "name"))
-    mapping_vector <- unlist(mapping_vector)
-    rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
-    colData(se) <- rename_DFrame(colData(se), mapping_vector)
-    assayList <- lapply(assays(se), function(x) {
+  # Extract matching names of identifiers
+  matching_idfs <- .extract_matching_identifiers(idfs,
+                                                 idfs_se)
+  
+  # Extract changed identifiers
+  diff_identifiers <- .extract_diff_identifiers(matching_idfs$default,
+                                                matching_idfs$se)
+  
+  diff_names <- unique(unlist(lapply(diff_identifiers, names)))
+  
+  if ("untreated_tag" %in% diff_names) {
+    rowData(se) <- .replace_untreated_tag(rowData(se))
+  }
+  
+  # Create mapping vector
+  mapping_df <- do.call(rbind,
+                        lapply(seq_along(diff_names),
+                               function(x)
+                                 data.frame(x = unlist(diff_identifiers$default[x]),
+                                            y = unlist(diff_identifiers$se[x]))))
+  mapping_vector <- mapping_df$x
+  names(mapping_vector) <- mapping_df$y
+  
+  # Replace rowData, colData and assays
+  rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
+  colData(se) <- rename_DFrame(colData(se), mapping_vector)
+  assayList <- lapply(assays(se), function(x) {
       rename_bumpy(x, mapping_vector)
     })
-    assays(se) <- assayList
-    idfs_new <- idfs
-    idfs_new[names(mapping_vector_list)] <- lapply(mapping_vector_list, "[[", "value")
-    # replace identifiers in the metadata of SE
-    se <- set_SE_identifiers(se, idfs_new)
-    se
-  }
+  assays(se) <- assayList
+  se <- set_SE_identifiers(se, idfs)
+  se
 }
 
+#' @keywords internal
+.extract_matching_identifiers <- function(default, se_identifiers) {
+  matching_default_idfs <- default[names(se_identifiers)]
+  # Drop non-matching identifiers
+  matching_default_idfs <- matching_default_idfs[lengths(matching_default_idfs) != 0]
+  idfs_se <- se_identifiers[names(matching_default_idfs)]
+  list(default = matching_default_idfs,
+       se = idfs_se)
+}
+
+#' @keywords internal
+.extract_diff_identifiers <- function(default,
+                                      se_identifiers) {
+  
+  diff_names <- names(which(vapply(names(se_identifiers),
+                                   function(x) !identical(se_identifiers[[x]], default[[x]]),
+                                   FUN.VALUE = logical(1))))
+  list(default = default[diff_names],
+       se = se_identifiers[diff_names])
+}
+
+#' @keywords internal
+.replace_untreated_tag <- function(row_data,
+                                   default,
+                                   se_identifiers) {
+  untreated_tag <- data.frame(x = default[["untreated_tag"]],
+                              y = se_identifiers[["untreated_tag"]])
+  untreated_tag_mapping <- untreated_tag$x
+  names(untreated_tag_mapping) <- untreated_tag$y
+  S4Vectors::DataFrame(lapply(row_data, function(x) stringr::str_replace_all(x, untreated_tag_mapping)),
+                       row.names = rownames(row_data(se)))
+}
 
 #' Rename DFrame
 #'
