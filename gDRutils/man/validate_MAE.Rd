@@ -7,7 +7,7 @@
 validate_MAE(mae)
 }
 \arguments{
-\item{mae}{MultiAssayExperiment object 
+\item{mae}{MultiAssayExperiment object
 produced by the gDR pipeline}
 }
 \value{

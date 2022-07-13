@@ -87,6 +87,12 @@ get_required_identifiers <- function() {
   REQ_COL_IDENTIFIERS
 }
 
+#' Get gDR default identifiers required for downstream analysis.
+#' @export
+get_default_identifiers <- function() {
+  IDENTIFIERS_LIST
+}
+
 
 #' Get identifiers that expect only one value for each identifier.
 #' @export
