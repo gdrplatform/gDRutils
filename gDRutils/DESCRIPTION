@@ -18,6 +18,8 @@ Imports:
     checkmate,
     data.table,
     drc,
+    jsonlite,
+    jsonvalidate,
     magrittr,
     methods,
     plyr,
