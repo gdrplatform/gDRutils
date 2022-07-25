@@ -25,7 +25,7 @@ test_that("validate works as expected", {
              duration = 4)
   se <- gDRutils::set_SE_experiment_metadata(se, md)
   sejson <- convert_se_to_json(se)
-  schema_path <- file.path(system.file("schemas", package = "gDRelastic"), "se.json")
+  schema_path <- file.path(system.file("schemas", package = "gDRutils"), "se.json")
   expect_true(validate_json(sejson, schema_path = schema_path))
   
   # original MAE not converted to DSDB MAE

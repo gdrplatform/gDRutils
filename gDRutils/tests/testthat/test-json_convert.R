@@ -31,5 +31,5 @@ test_that(".convert_element_metadata_to_json works as expected", {
 })
 
 test_that("strip_first_and_last_char works as expected", {
-  expect_equal(gDRelastic:::strip_first_and_last_char("hello"), "ell")
+  expect_equal(strip_first_and_last_char("hello"), "ell")
 })
