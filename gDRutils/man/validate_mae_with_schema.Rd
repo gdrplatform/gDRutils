@@ -6,7 +6,7 @@
 \usage{
 validate_mae_with_schema(
   mae,
-  schema_path = system.file(package = "gDRelastic", "schemas"),
+  schema_path = system.file(package = "gDRutils", "schemas"),
   schema = c(se = "se.json", mae = "mae.json")
 )
 }
