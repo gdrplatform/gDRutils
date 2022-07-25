@@ -25,7 +25,7 @@ cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllineti
 identifiers <- list(cellline = "mycellline",
                     cellline_name = "mycelllinename",
                     cellline_tissue = "mycelllinetissue")
-.convert_colData_to_json(cdata, identifiers) 
+gDRutils:::.convert_colData_to_json(cdata, identifiers) 
 
 }
 \keyword{internal}

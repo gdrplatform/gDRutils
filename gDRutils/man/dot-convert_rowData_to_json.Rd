@@ -23,7 +23,7 @@ with other JSON responses.
 \examples{
 rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
 identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa")
-.convert_rowData_to_json(rdata, identifiers) 
+gDRutils:::.convert_rowData_to_json(rdata, identifiers) 
 
 }
 \keyword{internal}
