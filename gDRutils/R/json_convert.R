@@ -68,7 +68,7 @@ convert_se_to_json <- function(se) {
 #'   description = "description of experiment",
 #'   sources = list(list(name = "GeneData_Screener", id = "QCS-12345")))
 #' se <- SummarizedExperiment::SummarizedExperiment(metadata = md)
-#' gDRelastic:::.convert_metadata_to_json(se)
+#' .convert_metadata_to_json(se)
 #'
 #' @keywords internal
 .convert_metadata_to_json <- function(se) {
@@ -94,7 +94,7 @@ convert_se_to_json <- function(se) {
 #' @examples
 #' rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
 #' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa")
-#' gDRelastic:::.convert_rowData_to_json(rdata, identifiers) 
+#' .convert_rowData_to_json(rdata, identifiers) 
 #'
 #' @details Standardizes the \code{rdata} to common schema fields
 #' and tidies formatting to be condusive to joining 
@@ -120,7 +120,7 @@ convert_se_to_json <- function(se) {
 #' identifiers <- list(cellline = "mycellline",
 #'                     cellline_name = "mycelllinename",
 #'                     cellline_tissue = "mycelllinetissue")
-#' gDRelastic:::.convert_colData_to_json(cdata, identifiers) 
+#' .convert_colData_to_json(cdata, identifiers) 
 #'
 #' @details Standardizes the \code{cdata} to common schema fields
 #' and tidies formatting to be condusive to joining 

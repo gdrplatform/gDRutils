@@ -20,7 +20,7 @@ md <- list(title = "my awesome experiment",
   description = "description of experiment",
   sources = list(list(name = "GeneData_Screener", id = "QCS-12345")))
 se <- SummarizedExperiment::SummarizedExperiment(metadata = md)
-gDRelastic:::.convert_metadata_to_json(se)
+.convert_metadata_to_json(se)
 
 }
 \keyword{internal}
