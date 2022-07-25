@@ -1,4 +1,12 @@
 # TODO: FUNCTION INCOMPLETE
+#' Create JSON document.
+#'
+#' Convert a MultiAssayExperiment object to a JSON document.
+#'
+#' @param mae SummarizedExperiment object.
+#'
+#' @return String representation of a JSON document.
+#'
 #' @export
 convert_mae_to_json <- function(mae) {
   all_se_json <- vector("list", length(mae))

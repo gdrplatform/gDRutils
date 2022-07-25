@@ -70,7 +70,7 @@ validate_json <- function(json, schema_path) {
 #'
 #' @param mae MultiAssayExperiment object
 #' @param schema_path path to the dir with JSON schema files
-#' @param schemas named charvec with filenames of schemas to validate against.
+#' @param schema named charvec with filenames of schemas to validate against.
 #'
 #' @return Boolean of whether or not mae is valid
 #'
@@ -78,7 +78,7 @@ validate_json <- function(json, schema_path) {
 #' @export
 validate_mae_with_schema <-
   function(mae,
-           schema_path = system.file(package = "gDRutils", "schemas"),
+           schema_path = system.file(package = "gDRelastic", "schemas"),
            schema = c(se = "se.json", mae = "mae.json")) {
     checkmate::assert_class(mae, "MultiAssayExperiment")
     experiments <- names(mae)

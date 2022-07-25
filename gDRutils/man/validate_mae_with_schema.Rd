@@ -6,7 +6,7 @@
 \usage{
 validate_mae_with_schema(
   mae,
-  schema_path = system.file(package = "gDRutils", "schemas"),
+  schema_path = system.file(package = "gDRelastic", "schemas"),
   schema = c(se = "se.json", mae = "mae.json")
 )
 }
@@ -15,7 +15,7 @@ validate_mae_with_schema(
 
 \item{schema_path}{path to the dir with JSON schema files}
 
-\item{schemas}{named charvec with filenames of schemas to validate against.}
+\item{schema}{named charvec with filenames of schemas to validate against.}
 }
 \value{
 Boolean of whether or not mae is valid
