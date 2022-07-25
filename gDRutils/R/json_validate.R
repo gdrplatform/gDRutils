@@ -78,7 +78,7 @@ validate_json <- function(json, schema_path) {
 #' @export
 validate_mae_with_schema <-
   function(mae,
-           schema_path = system.file(package = "gDRelastic", "schemas"),
+           schema_path = system.file(package = "gDRutils", "schemas"),
            schema = c(se = "se.json", mae = "mae.json")) {
     checkmate::assert_class(mae, "MultiAssayExperiment")
     experiments <- names(mae)
