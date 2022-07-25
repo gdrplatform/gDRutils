@@ -93,8 +93,6 @@ get_env_assay_names <-
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_env_assay_names}.
 #' 
-#' @inheritParams get_env_assay_names
-#'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 #' @export
