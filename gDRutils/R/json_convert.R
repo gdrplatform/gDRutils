@@ -41,6 +41,7 @@ convert_mae_to_json <- function(mae) {
 #'
 #' @export
 convert_se_to_json <- function(se) {
+  #browser()
   ml <- list(
     mjson = .convert_metadata_to_json(se),
     rjson = .convert_rowData_to_json(rowData(se), get_SE_identifiers(se)),
@@ -110,7 +111,7 @@ convert_se_to_json <- function(se) {
 .convert_rowData_to_json <-
   function(rdata,
            identifiers,
-           req_cols = c("drug", "drug_name", "drug_moa")) {
+           req_cols = c("drug", "drug_name", "drug_moa", "duration")) {
     
   json <- .standardize_and_convert_element_metadata_to_json(rdata, identifiers, req_cols)
   sprintf("%s, \"misc_rowdata\": %s", json$main, json$opt)
@@ -141,7 +142,7 @@ convert_se_to_json <- function(se) {
 .convert_colData_to_json <-
   function(cdata,
            identifiers,
-           req_cols = c("cellline", "cellline_name", "cellline_tissue")) {
+           req_cols = c("cellline", "cellline_name", "cellline_tissue", "cellline_ref_div_time")) {
     
   json <- .standardize_and_convert_element_metadata_to_json(cdata, identifiers, req_cols)
   sprintf("%s, \"misc_coldata\": %s", json$main, json$opt)
@@ -157,6 +158,7 @@ convert_se_to_json <- function(se) {
 
 #' @keywords internal
 .standardize_column_names <- function(mdata, identifiers) {
+  #browser()
   stopifnot(all(identifiers %in% names(mdata)))
   colnames(mdata)[match(identifiers, colnames(mdata))] <- names(identifiers)
   mdata

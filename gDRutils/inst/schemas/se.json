@@ -17,9 +17,8 @@
             "examples": ["eqlin"]
         },
         "duration": {
-            "type": "number",
             "description": "Number of days cells were treated with perturbation in days.",
-            "minimum": 0
+            "type": "array"
         },
         "cellline": {
             "description": "",
@@ -30,6 +29,10 @@
             "type": "array"
         },
         "cellline_tissue": {
+            "description": "",
+            "type": "array"
+        },
+        "cellline_ref_div_time": {
             "description": "",
             "type": "array"
         },
@@ -66,5 +69,5 @@
             }
         }
     },
-    "required": ["title", "description", "experimentalist", "duration", "sources", "cellline", "cellline_name", "cellline_tissue", "drug", "drug_name", "drug_moa"]
+    "required": ["title", "description", "experimentalist", "duration", "sources", "cellline", "cellline_name", "cellline_tissue", "cellline_ref_div_time", "drug", "drug_name", "drug_moa"]
 }
