@@ -41,7 +41,6 @@ convert_mae_to_json <- function(mae) {
 #'
 #' @export
 convert_se_to_json <- function(se) {
-  #browser()
   ml <- list(
     mjson = .convert_metadata_to_json(se),
     rjson = .convert_rowData_to_json(rowData(se), get_SE_identifiers(se)),
@@ -158,7 +157,6 @@ convert_se_to_json <- function(se) {
 
 #' @keywords internal
 .standardize_column_names <- function(mdata, identifiers) {
-  #browser()
   stopifnot(all(identifiers %in% names(mdata)))
   colnames(mdata)[match(identifiers, colnames(mdata))] <- names(identifiers)
   mdata
