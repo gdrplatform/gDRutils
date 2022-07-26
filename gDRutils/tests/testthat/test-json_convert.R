@@ -32,14 +32,28 @@ test_that(".convert_element_metadata_to_json works as expected", {
 
 test_that("convert_se_to_json works with diferent types of metadata", {
   
-  rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
-  cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters)
+  rdata <-
+    data.frame(
+      mydrug = letters,
+      mydrugname = letters,
+      mydrugmoa = letters,
+      Duration = 1
+    )
+  cdata <-
+    data.frame(
+      mycellline = letters,
+      mycelllinename = letters,
+      mycelllinetissue = letters,
+      cellline_ref_div_time = letters
+    )
   identifiers <- list(cellline = "mycellline",
                       cellline_name = "mycelllinename",
                       cellline_tissue = "mycelllinetissue",
+                      cellline_ref_div_time = "cellline_ref_div_time",
                       drug = "mydrug",
                       drug_name = "mydrugname",
-                      drug_moa = "mydrugmoa")
+                      drug_moa = "mydrugmoa",
+                      duration = "Duration")
   se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
                                                    colData = cdata)
   se <- gDRutils::set_SE_identifiers(se, identifiers)
