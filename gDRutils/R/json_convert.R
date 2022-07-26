@@ -9,12 +9,7 @@
 #'
 #' @export
 convert_mae_to_json <- function(mae) {
-  all_se_json <- vector("list", length(mae))
-  for (i in seq_along(mae)) {
-    se <- mae[[i]]
-    all_se_json[[i]] <- convert_se_to_json(se)
-  }
-  all_se_json
+  MAEpply(mae, convert_se_to_json)
 }
 
 
