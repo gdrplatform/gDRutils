@@ -53,11 +53,8 @@ validate_json <- function(json, schema_path) {
     }
   }
  
-  st <- if (stl$exit_code == 0) {
-    TRUE
-  } else {
-    FALSE
-  }
+  st <- stl$exit_code == 0
+
   attributes(st) <- stl
   st
 }
