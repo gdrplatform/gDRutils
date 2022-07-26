@@ -4,10 +4,18 @@
 \alias{.convert_colData_to_json}
 \title{Convert colData to JSON}
 \usage{
-.convert_colData_to_json(cdata, identifiers)
+.convert_colData_to_json(
+  cdata,
+  identifiers,
+  req_cols = c("cellline", "cellline_name", "cellline_tissue")
+)
 }
 \arguments{
 \item{cdata}{data.frame of \code{colData}.}
+
+\item{identifiers}{charvec with identifiers}
+
+\item{req_cols}{charvec required columns}
 }
 \value{
 JSON string capturing the \code{cdata}.

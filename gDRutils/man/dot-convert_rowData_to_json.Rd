@@ -4,10 +4,18 @@
 \alias{.convert_rowData_to_json}
 \title{Convert rowData to JSON}
 \usage{
-.convert_rowData_to_json(rdata, identifiers)
+.convert_rowData_to_json(
+  rdata,
+  identifiers,
+  req_cols = c("drug", "drug_name", "drug_moa")
+)
 }
 \arguments{
 \item{rdata}{data.frame of \code{rowData}.}
+
+\item{identifiers}{charvec with identifiers}
+
+\item{req_cols}{charvec required columns}
 }
 \value{
 JSON string capturing the \code{rdata}.
