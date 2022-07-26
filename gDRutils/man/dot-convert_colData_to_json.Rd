@@ -7,7 +7,7 @@
 .convert_colData_to_json(
   cdata,
   identifiers,
-  req_cols = c("cellline", "cellline_name", "cellline_tissue")
+  req_cols = c("cellline", "cellline_name", "cellline_tissue", "cellline_ref_div_time")
 )
 }
 \arguments{

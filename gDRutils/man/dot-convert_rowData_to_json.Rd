@@ -7,7 +7,7 @@
 .convert_rowData_to_json(
   rdata,
   identifiers,
-  req_cols = c("drug", "drug_name", "drug_moa")
+  req_cols = c("drug", "drug_name", "drug_moa", "duration")
 )
 }
 \arguments{
