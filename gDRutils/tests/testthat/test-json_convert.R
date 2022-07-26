@@ -78,5 +78,6 @@ test_that("convert_se_to_json works with diferent types of metadata", {
 
 test_that("strip_first_and_last_char works as expected", {
   expect_equal(strip_first_and_last_char("hello"), "ell")
+  expect_equal(strip_first_and_last_char("{}"), "")
 })
 
