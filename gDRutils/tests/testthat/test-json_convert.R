@@ -30,6 +30,53 @@ test_that(".convert_element_metadata_to_json works as expected", {
   expect_equal(obs_opt, req_exp)
 })
 
+test_that("convert_se_to_json works with diferent types of metadata", {
+  
+  rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
+  cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters)
+  identifiers <- list(cellline = "mycellline",
+                      cellline_name = "mycelllinename",
+                      cellline_tissue = "mycelllinetissue",
+                      drug = "mydrug",
+                      drug_name = "mydrugname",
+                      drug_moa = "mydrugmoa")
+  se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
+                                                   colData = cdata)
+  se <- gDRutils::set_SE_identifiers(se, identifiers)
+  
+  # list
+  md <- list(title = "my awesome experiment",
+             description = "description of experiment",
+             source = list(name = "GeneData_Screener", id = "QCS-12345"))
+  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  # check if there is no error
+  expect_error(convert_se_to_json(se), NA)
+  
+  # tibble
+  md <- tibble::tibble(title = "my awesome experiment",
+                       description = "description of experiment",
+                       source = "GeneData_Screener")
+  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  # check if there is no error
+  expect_error(convert_se_to_json(se), NA)
+  
+  # DataFrame
+  md <- S4Vectors::DataFrame(title = "my awesome experiment",
+                             description = "description of experiment",
+                             source = "GeneData_Screener")
+  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  # check if there is no error
+  expect_error(convert_se_to_json(se), NA)
+  
+  # error
+  md <- c(title = "my awesome experiment",
+          description = "description of experiment",
+          source = "GeneData_Screener")
+  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  expect_error(convert_se_to_json(se), "jsonlite::validate(json) is not TRUE", fixed = TRUE)
+})
+
 test_that("strip_first_and_last_char works as expected", {
   expect_equal(strip_first_and_last_char("hello"), "ell")
 })
+

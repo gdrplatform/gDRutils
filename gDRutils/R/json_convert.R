@@ -83,9 +83,11 @@ convert_se_to_json <- function(se) {
   
   md <- get_SE_experiment_metadata(se)
   
-  if (inherits(md, "DFrame")) {
-    md <- data.frame(md)
+  if (inherits(md, "DFrame") || inherits(md, "tbl")) {
+    # tibble after converting to JSON have strange format, which causing error in `jsonlite::validate`
+    md <- as.list(md)
   }
+
   mjson <- jsonlite::toJSON(md, auto_unbox = TRUE)
   strip_first_and_last_char(mjson)
 }
