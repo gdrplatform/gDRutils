@@ -1,3 +1,6 @@
+# Change to v.1.3.3
+- Move json validation/convertion logic from gDRelastic
+
 # Change to v.1.3.2
 - Standardize MAE using default gDR identifiers
 
