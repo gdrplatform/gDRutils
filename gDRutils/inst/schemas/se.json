@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "SummarizedExperiment",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string",
+            "description": "A free text description of the experiment performed."
+        },
+        "experimentalist": {
+            "type": "string",
+            "description": "Unix id of experimentalist.",
+            "examples": ["eqlin"]
+        },
+        "duration": {
+            "description": "Number of days cells were treated with perturbation in days.",
+            "type": "array"
+        },
+        "cellline": {
+            "description": "",
+            "type": "array"
+        },
+        "cellline_name": {
+            "description": "",
+            "type": "array"
+        },
+        "cellline_tissue": {
+            "description": "",
+            "type": "array"
+        },
+        "cellline_ref_div_time": {
+            "description": "",
+            "type": "array"
+        },
+        "drug": {
+            "description": "",
+            "type": "array"
+        },
+        "drug_name": {
+            "description": "",
+            "type": "array"
+        },
+        "drug_moa": {
+            "description": "",
+            "type": "array"
+        },
+        "sources": {
+            "type": "array",
+            "description": "",
+            "items": {
+                "type": "object",
+                "required": ["name", "id"],
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "examples": ["GeneData_Screener"]
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "An identifier for the source.",
+                        "examples": ["IDS-12345"]
+                    }
+                }
+            }
+        }
+    },
+    "required": ["title", "description", "experimentalist", "duration", "sources", "cellline", "cellline_name", "cellline_tissue", "cellline_ref_div_time", "drug", "drug_name", "drug_moa"]
+}
