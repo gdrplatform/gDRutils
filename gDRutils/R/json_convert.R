@@ -25,14 +25,17 @@ convert_mae_to_json <- function(mae) {
 #' md <- list(title = "my awesome experiment",
 #'   description = "description of experiment",
 #'   source = list(name = "GeneData_Screener", id = "QCS-12345"))
-#' rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
-#' cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters)
+#' rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+#' cdata <- data.frame(mycellline = letters, mycelllinename = letters,
+#'  mycelllinetissue = letters, cellline_ref_div_time = letters)
 #' identifiers <- list(cellline = "mycellline",
 #'                     cellline_name = "mycelllinename",
 #'                     cellline_tissue = "mycelllinetissue",
+#'                     cellline_ref_div_time = "cellline_ref_div_time",
 #'                     drug = "mydrug",
 #'                     drug_name = "mydrugname",
-#'                     drug_moa = "mydrugmoa")
+#'                     drug_moa = "mydrugmoa",
+#'                     duration = "Duration")
 #' se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
 #'                                                  colData = cdata)
 #' se <- gDRutils::set_SE_experiment_metadata(se, md)
@@ -99,8 +102,8 @@ convert_se_to_json <- function(se) {
 #' @return JSON string capturing the \code{rdata}.
 #'
 #' @examples
-#' rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
-#' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa")
+#' rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+#' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa", duration = "Duration")
 #' gDRutils:::.convert_rowData_to_json(rdata, identifiers) 
 #'
 #' @details Standardizes the \code{rdata} to common schema fields
@@ -128,9 +131,11 @@ convert_se_to_json <- function(se) {
 #' @return JSON string capturing the \code{cdata}.
 #'
 #' @examples
-#' cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters)
+#' cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters, 
+#'                    cellline_ref_div_time = "cellline_ref_div_time")
 #' identifiers <- list(cellline = "mycellline",
 #'                     cellline_name = "mycelllinename",
+#'                     cellline_ref_div_time = "cellline_ref_div_time",
 #'                     cellline_tissue = "mycelllinetissue")
 #' gDRutils:::.convert_colData_to_json(cdata, identifiers) 
 #'

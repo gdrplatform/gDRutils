@@ -29,8 +29,8 @@ and tidies formatting to be condusive to joining
 with other JSON responses.
 }
 \examples{
-rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters)
-identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa")
+rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa", duration = "Duration")
 gDRutils:::.convert_rowData_to_json(rdata, identifiers) 
 
 }
