@@ -22,11 +22,12 @@ jobs:
   on_push:
     if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-18.04
+
     steps:
       - name: Fail
-      run: |
-        echo 'on push'
-        exit 1
+        run: |
+          echo 'on push'
+          exit 1
 
   on_trigger:
     if: github.event_name == 'workflow_dispatch'
