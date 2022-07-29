@@ -1,0 +1,39 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+#
+# See https://github.com/r-lib/actions/tree/master/examples#readme for
+# additional example workflows available for the R community.
+
+name: main
+
+on: [push, pull_request, workflow_dispatch]
+    inputs:
+      testsResult:
+        description: 'Tests result'
+        required: true
+        default: 1
+
+jobs:
+  on_trigger:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Check tests
+        run: |
+          echo "Variable value:"
+          echo "${{ github.event.inputs.testsResult }}"
+          case "${{ github.event.inputs.testsResult }}" in
+            SUCCESSFUL)
+              echo 'Tests completed successfully'
+              exit 0
+            ;;
+            FAILED)
+              echo 'One or more tests failed'
+            ;;
+            *)
+              echo 'Unknown/unset TESTS_RESULT'
+              ;;
+          esac
+          exit 1
