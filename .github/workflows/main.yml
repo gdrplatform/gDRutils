@@ -19,14 +19,23 @@ on:
         default: 1
 
 jobs:
+  on_push:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Fail
+      run: |
+        echo 'on push'
+        exit 1
+
   on_trigger:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-18.04
 
     steps:
       - name: Check tests
         run: |
-          echo "Variable value:"
-          echo "${{ github.event.inputs.testsResult }}"
+          echo 'on trigger'
           case "${{ github.event.inputs.testsResult }}" in
             SUCCESSFUL)
               echo 'Tests completed successfully'
