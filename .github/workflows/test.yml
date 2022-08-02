@@ -6,16 +6,16 @@
 # See https://github.com/r-lib/actions/tree/master/examples#readme for
 # additional example workflows available for the R community.
 
-name: main
+name: test
 
 on:
   pull_request:
   workflow_dispatch:
     inputs:
-      testsResult:
+      test:
         description: 'Tests result'
         required: true
-        default: 1
+        type: string
 
 jobs:
   on_trigger:
