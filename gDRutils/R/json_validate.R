@@ -30,14 +30,12 @@ validate_json <- function(json, schema_path) {
          exit_code = 1,
          derror = derror)
   } else {
-    dvjson <-
-      jsonvalidate::json_validate(
-        json,
-        schema_path,
-        verbose = TRUE,
-        greedy = TRUE,
-        error = FALSE
-      )
+    v <- jsonvalidate::json_validator(schema_path, engine = "ajv")
+    dvjson <- v(json,
+                verbose = TRUE,
+                greedy = TRUE,
+                error = FALSE)
+    
     if (!isTRUE(dvjson)) {
       list(
         error = "JSON validation of data model failed",
@@ -65,7 +63,8 @@ validate_json <- function(json, schema_path) {
 #' TODO: add mae.json schema and validate full MAE object
 #'
 #' @param mae MultiAssayExperiment object
-#' @param schema_path path to the dir with JSON schema files
+#' @param schema_package string name of the package with JSON schema files
+#' @param schema_dir_path path to the dir with JSON schema files
 #' @param schema named charvec with filenames of schemas to validate against.
 #'
 #' @return Boolean of whether or not mae is valid
@@ -74,30 +73,40 @@ validate_json <- function(json, schema_path) {
 #' @export
 validate_mae_with_schema <-
   function(mae,
-           schema_path = system.file(package = "gDRutils", "schemas"),
+           schema_package = Sys.getenv("SCHEMA_PACKAGE", "gDRutils"),
+           schema_dir_path = Sys.getenv("SCHEMA_DIR_PATH", "schemas"),
            schema = c(se = "se.json", mae = "mae.json")) {
+    
     checkmate::assert_class(mae, "MultiAssayExperiment")
+    checkmate::assert_string(schema_package)
+    checkmate::assert_character(schema_dir_path)
+    checkmate::assert_character(schema, names = "unique")
+    
+    schema_dir_apath <- system.file(package = schema_package, schema_dir_path)
+    checkmate::assert_directory_exists(schema_dir_apath)
+    
     experiments <- names(mae)
-    checkmate::assert_subset(experiments,
-                             c(
-                               "single-agent",
-                               "co-dilution",
-                               "matrix",
-                               "cotreatment",
-                               "other"
-                             ))
-    se_schema_path <- file.path(schema_path, schema[["se"]])
-    v_se <- json_validator(se_schema_path)
+     
+    # firstly convert mae to json
+    ljson <- convert_mae_to_json(mae)
+    
+    # validate on the mae level
+   
+    mae_schema_path <- file.path(schema_dir_apath, schema[["mae"]])
+    mtl <-
+      list(mae = validate_json(ljson[["mae"]], mae_schema_path))
+    
+    # validate se experiments
+    se_schema_path <- file.path(schema_dir_apath, schema[["se"]])
     stl <- lapply(experiments, function(x) {
-      se_json <- convert_se_to_json(mae[[x]])
-      validate_json(se_json, se_schema_path)
+      validate_json(ljson[["se"]][[x]], se_schema_path)
     })
     names(stl) <- paste0("experiment:", experiments)
     
-    st <- if (all(vapply(stl, isTRUE, logical(1)))) {
+    st <- if (isTRUE(mtl) && all(vapply(stl, isTRUE, logical(1)))) {
       TRUE
     } else {
-      stl
+      c(mtl, stl)
     }
     st
   }
