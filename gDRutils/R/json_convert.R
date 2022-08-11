@@ -1,15 +1,46 @@
-# TODO: FUNCTION INCOMPLETE
 #' Create JSON document.
 #'
 #' Convert a MultiAssayExperiment object to a JSON document.
 #'
 #' @param mae SummarizedExperiment object.
+#' @param with_experiments logical convert experiment metadata as well?
 #'
 #' @return String representation of a JSON document.
 #'
 #' @export
-convert_mae_to_json <- function(mae) {
-  MAEpply(mae, convert_se_to_json)
+convert_mae_to_json <- function(mae, with_experiments = TRUE) {
+
+  ljson <- list()
+  
+  ljson[["mae"]] <- .convert_mae_summary_to_json(mae)
+  
+  if (with_experiments) {
+    
+    ljson[["se"]] <- MAEpply(mae, convert_se_to_json)
+  }
+  
+  ljson
+}
+
+#' Create JSON document with MAE summary
+#'
+#' Create JSON document with MAE summary,
+#'  currently only experiment names
+#'
+#' @param mae MultiAssayExperiment object.
+#'
+#' @return String representation of a JSON document.
+#'
+#' @export
+.convert_mae_summary_to_json <- function(mae) {
+  ml <- list()
+  ml[["experiment_names"]] <-
+    names(mae)
+  
+  # currently there is no colData and metadata on MAE level
+  # if data model changes one has to add validation of these properties below
+  
+  jsonlite::toJSON(ml)
 }
 
 
@@ -54,9 +85,12 @@ convert_se_to_json <- function(se) {
   # otherwise JSON data will be invalid
   # and we want be able to use it with jsonvalidate
   ml <- ml[vapply(ml, nchar, integer(1)) > 0]
- 
+
   json <- sprintf("{%s}", toString(ml))
   stopifnot(jsonlite::validate(json))
+  # minify is used here to get rid of all the backslashing that 
+  # happens when using paste0/paste/sprintf on json objects and or strings
+  json <- jsonlite::minify(json)
   json
 }
 
@@ -147,7 +181,7 @@ convert_se_to_json <- function(se) {
   function(cdata,
            identifiers,
            req_cols = c("cellline", "cellline_name", "cellline_tissue", "cellline_ref_div_time")) {
-    
+   
   json <- .standardize_and_convert_element_metadata_to_json(cdata, identifiers, req_cols)
   sprintf("%s, \"misc_coldata\": %s", json$main, json$opt)
 }
