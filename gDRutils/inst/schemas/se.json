@@ -18,39 +18,63 @@
         },
         "duration": {
             "description": "Number of days cells were treated with perturbation in days.",
-            "type": "array"
+            "type": "array",
+            "items": {
+                 "type": "integer"
+            }
         },
         "cellline": {
-            "description": "",
-            "type": "array"
+            "description": "Identifier of the given cell line",
+            "type": "array",
+            "items": {
+                 "type": "string"
+            }
         },
         "cellline_name": {
-            "description": "",
-            "type": "array"
+            "description": "Name of the given cell line",
+            "type": "array",
+            "items": {
+                 "type": "string"
+            }
         },
         "cellline_tissue": {
-            "description": "",
-            "type": "array"
+            "description": "Tissue origin of the given cell line",
+            "type": "array",
+            "items": {
+                 "type": "string"
+            }
         },
         "cellline_ref_div_time": {
-            "description": "",
-            "type": "array"
+            "description": "Reference division time of the given cell line",
+            "type": "array",
+            "items": {
+                 "type": "integer"
+            }
         },
         "drug": {
-            "description": "",
-            "type": "array"
+            "description": "Identifier of the given drug",
+            "type": "array",
+            "items": {
+                 "type": "string"
+            }
         },
         "drug_name": {
-            "description": "",
-            "type": "array"
+            "description": "Name of the given drug",
+            "type": "array",
+            "items": {
+                 "type": "string"
+            }
         },
         "drug_moa": {
-            "description": "",
-            "type": "array"
+            "description": "Mechanism of action of the given drug",
+            "type": "array",
+            "items": {
+                 "type": "string"
+            }
         },
         "sources": {
             "type": "array",
-            "description": "",
+            "description": "Data source",
             "items": {
                 "type": "object",
                 "required": ["name", "id"],
