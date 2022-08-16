@@ -31,7 +31,6 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'
 #' @return String representation of a JSON document.
 #'
-#' @export
 .convert_mae_summary_to_json <- function(mae) {
   ml <- list()
   ml[["experiment_names"]] <-
