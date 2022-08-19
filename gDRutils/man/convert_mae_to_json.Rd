@@ -4,10 +4,12 @@
 \alias{convert_mae_to_json}
 \title{Create JSON document.}
 \usage{
-convert_mae_to_json(mae)
+convert_mae_to_json(mae, with_experiments = TRUE)
 }
 \arguments{
 \item{mae}{SummarizedExperiment object.}
+
+\item{with_experiments}{logical convert experiment metadata as well?}
 }
 \value{
 String representation of a JSON document.
