@@ -29,7 +29,7 @@ jobs:
         id: checkUserMember
         with:
           username: ${{ github.actor }}
-          team: 'pr-reviewers'
+          team: 'PR reviewers'
           GITHUB_TOKEN: ${{ secrets.PRIVATE_ACCESS_TOKEN }}
 
       ##################
