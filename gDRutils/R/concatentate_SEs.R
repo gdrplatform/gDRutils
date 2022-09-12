@@ -1,3 +1,25 @@
+#' @param Named list
+#' @return A \code{SummarizedExperiment} object.
+#' @details Any metadata columns that exist in one experiment and not the other will be
+#' appended in a 'sparse' manner, and \code{NA}s filled where the values are missing.
+#' @export
+concatenate_SEs <- function(ses) {
+  checkmate::is_list(ses)
+  lapply(ses, function(x) is(x, "SummarizedExperiment"))
+  concatenate_assays
+}
+
+#' @param asy1
+#' @param asy2
+#' @export
+concatenate_assays <- function(asy1, asy2)  {
+  # TODO: Is there a chance we lose some values if they are all NA?
+}
+
+aggregate_SEs <- function(ses) {
+
+}
+
 #' Aggregate a \code{BumpyMatrix} assay by a given aggreation function.
 #' 
 #' Aggregation can only be performed on nested variables.
