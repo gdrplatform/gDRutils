@@ -2,3 +2,5 @@ plugins:
   "Hello World":
     package: HelloWorldPlugin
     help: "hello-world"
+  "Metric clustering":
+    package: metricClustering
