@@ -4,13 +4,17 @@
 \alias{aggregate_assay}
 \title{Aggregate a \code{BumpyMatrix} assay by a given aggreation function.}
 \usage{
-aggregate_assay(asy, aggregation_fxn, by)
+aggregate_assay(asy, by, FUN)
 }
 \arguments{
 \item{asy}{A \code{BumpyMatrix} object.}
+
+\item{by}{Character vector of the nested fields to aggregate by.}
+
+\item{FUN}{A function to use to aggregate the data.}
 }
 \value{
-A \code{BumpyMatrix} object aggregated by \code{aggregation_fxn}.
+A \code{BumpyMatrix} object aggregated by \code{FUN}.
 }
 \description{
 Aggregation can only be performed on nested variables.
