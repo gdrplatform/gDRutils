@@ -1,4 +1,4 @@
 plugins:
-  "Datasets input":
-    package: gDRinPlugin
-    help: "dataset-input"
+  "Hello World":
+    package: HelloWorldPlugin
+    help: "hello-world"
