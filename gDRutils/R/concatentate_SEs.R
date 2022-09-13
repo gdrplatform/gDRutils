@@ -3,6 +3,84 @@ has_nested_field <- function(asy, nested_field) {
   all(nested_field %in% colnames(df))
 }
 
+#' Demote a metadata field to be represented as a nested field of the \code{BumpyMatrix} assay.
+#'
+#' @param se \code{SummarizedExperiment} object.
+#' @param fields Character vector of nested fields to demote as nested columns.
+#'
+#' @return A \code{SummarizedExperiment} object with new dimensions resulting from demoting given \code{fields}.
+#'
+#' @seealso promote_fields
+#' @export
+demote_fields <- function(se, fields) {
+  rowmd <- colnames(rowData(se)) 
+  colmd <- colnames(colData(se))
+
+  if (any(nested_fields <- !fields %in% c(rowmd, colmd))) {
+    stop(sprintf("fields '%s' are already demoted fields, perhapy you intended to call 'promote_fields'?",
+      paste0(fields[nested_fields], collapse = ", ")))
+  }
+}
+
+#' Promote a nested field to be represented as a metadata field of the \code{SummarizedExperiment}
+#' as either the \code{rowData} or \code{colData}.
+#'
+#' @param se \code{SummarizedExperiment} object.
+#' @param fields Character vector of nested fields to promote.
+#' @param MARGIN Numeric of values \code{1} or \code{2} indicating whether to 
+#' promote fields to rows or columns respectively.
+#'
+#' @return A \code{SummarizedExperiment} object with new dimensions resulting from promoting given \code{fields}.
+#' @seealso demote_fields
+#' @export
+promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
+  MARGIN <- match.arg(MARGIN)
+
+  rowmd <- colnames(rowData(se)) 
+  colmd <- colnames(colData(se))
+
+  if (any(rfields <- fields %in% rowmd) || any(cfields <- fields %in% colmd)) {
+    stop(sprintf("fields '%s' are already promoted fields",
+      paste0(fields[rfields || cfields], collapse = ", ")))
+  }
+
+  if (MARGIN == 1) {
+    rowmd <- c(rowmd, fields)
+  } else if (MARGIN == 2) {
+    colmd <- c(colmd, fields)
+  }
+
+  final_assays <- list()
+  asynames <- SummarizedExperiment::assayNames(se)
+  for (asyname in asynames) {
+    asy <- SummarizedExperiment::assay(se, asyname)
+    if (!all(has_nested_field(asy, fields))) {
+      warning(sprintf("dropping assay '%s' from the final SE", asyname))
+    } else {
+      df <- S4Vectors::DataFrame(as.data.frame(convert_se_assay_to_dt(se, asyname, include_metadata = TRUE)))
+      final_assays[[asyname]] <- .transform_df_to_matrix(df = df,
+        row_fields = rowmd,
+        column_fields = colmd,
+        nested_fields = setdiff(colnames(df), c(rowmd, colmd))) 
+    }
+  }
+
+  if (length(final_SE) == 0L) {
+    stop(sprintf("unable to find nested fields: '%s', perhaps you intended to call 'demote_fields'?",
+      paste0(fields, collapse = ", "))) 
+  }
+
+  # Ensure order.
+  final_assays <- lapply(final_assays, function(x) {x[rownames(rowData), colnames(colData)]})
+  final_SE <- SummarizedExperiment::SummarizedExperiment(
+    assays = final_assays,
+    rowData = ,
+    colData = ,
+    metadata = S4Vectors::metadata(se)
+  )
+  final_SE
+}
+
 #' Transform a \code{DFrame} to a \code{BumpyMatrix}.
 #'
 #' This differs from the plain \code{BumpyMatrix::splitAsBumpyMatrix}
