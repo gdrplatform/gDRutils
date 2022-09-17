@@ -106,10 +106,11 @@ test_that("promote_fields works as expected", {
   )
   column_fields <- c("clids", "cellline_name")
   row_fields <- c("drugs", "drug_name")
+  nested_fields <- c("group", "GR_50", "IC_50")
   out <- gDRutils:::.transform_df_to_matrix(df,
     row_fields = row_fields,
     column_fields = column_fields,
-    nested_fields = c("group", "GR_50", "IC_50")
+    nested_fields = nested_fields
   )
   se <- SummarizedExperiment::SummarizedExperiment(
     assays = list("test" = out$mat),
@@ -119,13 +120,13 @@ test_that("promote_fields works as expected", {
   obs <- promote_fields(se, "group", 1)
   expect_equal(nrow(obs), nrow(unique(df[, c("group", row_fields)])))
   expect_equal(colnames(SummarizedExperiment::rowData(obs)), c(row_fields, "group"))
-  expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), nested_fields)
+  expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), setdiff(nested_fields, "group"))
   expect_equal(ncol(obs), ncol(se))
   
   obs <- promote_fields(se, "group", 2)
   expect_equal(colnames(SummarizedExperiment::colData(obs)), c(column_fields, "group"))
   expect_equal(ncol(obs), nrow(unique(df[, c("group", column_fields)])))
-  expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), nested_fields)
+  expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), setdiff(nested_fields, "group"))
   expect_equal(nrow(obs), nrow(se))
 
   expect_error(promote_fields(se, "cellline_name", 2))
@@ -144,10 +145,11 @@ test_that("promote_fields and demote_fields are reversible operations", {
   )
   column_fields <- c("clids", "cellline_name")
   row_fields <- c("drugs", "drug_name")
+  nested_fields <- c("group", "GR_50", "IC_50")
   out <- gDRutils:::.transform_df_to_matrix(df,
     row_fields = row_fields,
     column_fields = column_fields,
-    nested_fields = c("group", "GR_50", "IC_50")
+    nested_fields = nested_fields
   )
   se <- SummarizedExperiment::SummarizedExperiment(
     assays = list("test" = out$mat),
