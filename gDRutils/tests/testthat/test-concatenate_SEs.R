@@ -1,5 +1,3 @@
-#library(testthat); library(gDRutils)
-
 test_that("has_nested_field works as expected", {
   m <- 10
   n <- 5
@@ -49,8 +47,8 @@ test_that("demote_fields works as expected", {
   n <- 5
   df <- S4Vectors::DataFrame(clids = rep(LETTERS, each = m),
                    cellline_name = paste0(rep(LETTERS, each = m), "A"),
-                   drugs = rep(letters[1:n], length(LETTERS) * m/n),
-                   drug_name = paste0(rep(letters[1:n], length(LETTERS) * m/n), "A"),
+                   drugs = rep(letters[1:n], length(LETTERS) * m / n),
+                   drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                    group = rep(LETTERS, each = m),
                    GR_50 = rep(seq(length(LETTERS)), each = m),
                    IC_50 = rep(seq(m), length(LETTERS))
@@ -100,8 +98,8 @@ test_that("promote_fields works as expected", {
   n <- 5
   df <- S4Vectors::DataFrame(clids = rep(LETTERS, each = m),
                    cellline_name = paste0(rep(LETTERS, each = m), "A"),
-                   drugs = rep(letters[1:n], length(LETTERS) * m/n),
-                   drug_name = paste0(rep(letters[1:n], length(LETTERS) * m/n), "A"),
+                   drugs = rep(letters[1:n], length(LETTERS) * m / n),
+                   drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                    group = rep(LETTERS, each = m),
                    GR_50 = rep(seq(length(LETTERS)), each = m),
                    IC_50 = rep(seq(m), length(LETTERS))
@@ -138,8 +136,8 @@ test_that("promote_fields and demote_fields are reversible operations", {
   n <- 5
   df <- S4Vectors::DataFrame(clids = rep(LETTERS, each = m),
                    cellline_name = paste0(rep(LETTERS, each = m), "A"),
-                   drugs = rep(letters[1:n], length(LETTERS) * m/n),
-                   drug_name = paste0(rep(letters[1:n], length(LETTERS) * m/n), "A"),
+                   drugs = rep(letters[1:n], length(LETTERS) * m / n),
+                   drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                    group = rep(LETTERS, each = m),
                    GR_50 = rep(seq(length(LETTERS)), each = m),
                    IC_50 = rep(seq(m), length(LETTERS))
@@ -164,9 +162,6 @@ test_that("promote_fields and demote_fields are reversible operations", {
   expect_equal(ncol(obs_df), ncol(df))
   expect_true(all(colnames(obs_df) %in% colnames(df)))
   expect_equal(sort(obs_df[, colnames(df)]), sort(df))
-
-
-
 })
 
 test_that("aggregate_assay works as expected", {
