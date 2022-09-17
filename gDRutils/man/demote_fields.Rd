@@ -2,20 +2,26 @@
 % Please edit documentation in R/concatentate_SEs.R
 \name{demote_fields}
 \alias{demote_fields}
-\title{Demote a metadata field to be represented as a nested field of the \code{BumpyMatrix} assay.}
+\title{Demote a metadata field in the \code{rowData} or \code{colData} of a \code{SummarizedExperiment} object
+to a nested field of a \code{BumpyMatrix} assay.}
 \usage{
 demote_fields(se, fields)
 }
 \arguments{
-\item{se}{\code{SummarizedExperiment} object.}
+\item{se}{A \code{SummarizedExperiment} object.}
 
-\item{fields}{Character vector of nested fields to demote as nested columns.}
+\item{fields}{Character vector of metadata fields to demote as nested columns.}
 }
 \value{
-A \code{SummarizedExperiment} object with new dimensions resulting from demoting given \code{fields}.
+A \code{SummarizedExperiment} object with new dimensions resulting from demoting given \code{fields}
+to nested columns.
 }
 \description{
-Demote a metadata field to be represented as a nested field of the \code{BumpyMatrix} assay.
+Demote a metadata field in the \code{rowData} or \code{colData} of a \code{SummarizedExperiment} object
+to a nested field of a \code{BumpyMatrix} assay.
+}
+\details{
+Revert this operation using \code{promote_fields}.
 }
 \seealso{
 promote_fields
