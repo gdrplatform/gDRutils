@@ -17,14 +17,17 @@ has_nested_field <- function(asy, nested_field) {
   }
 }
 
-#' Demote a metadata field to be represented as a nested field of the \code{BumpyMatrix} assay.
+#' Demote a metadata field in the \code{rowData} or \code{colData} of a \code{SummarizedExperiment} object
+#' to a nested field of a \code{BumpyMatrix} assay.
 #'
-#' @param se \code{SummarizedExperiment} object.
-#' @param fields Character vector of nested fields to demote as nested columns.
+#' @param se A \code{SummarizedExperiment} object.
+#' @param fields Character vector of metadata fields to demote as nested columns.
 #'
-#' @return A \code{SummarizedExperiment} object with new dimensions resulting from demoting given \code{fields}.
+#' @return A \code{SummarizedExperiment} object with new dimensions resulting from demoting given \code{fields}
+#' to nested columns.
 #'
 #' @seealso promote_fields
+#' @details Revert this operation using \code{promote_fields}.
 #' @export
 demote_fields <- function(se, fields) {
   rowmd <- colnames(rowData(se)) 
@@ -73,6 +76,7 @@ demote_fields <- function(se, fields) {
 #' promote fields to rows or columns respectively.
 #'
 #' @return A \code{SummarizedExperiment} object with new dimensions resulting from promoting given \code{fields}.
+#' @details Revert this operation using \code{demote_fields}.
 #' @seealso demote_fields
 #' @export
 promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
