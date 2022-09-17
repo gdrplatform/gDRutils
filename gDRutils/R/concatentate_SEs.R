@@ -4,10 +4,7 @@ has_nested_field <- function(asy, nested_field) {
 }
 
 .validate_final_assays <- function(final_assays) {
-  if (length(final_assays) == 0L) {
-    stop(sprintf("unable to find nested fields: '%s', perhaps you intended to call 'demote_fields'?",
-      paste0(fields, collapse = ", "))) 
-  } else if (length(final_assays) > 1L) {
+  if (length(final_assays) > 1L) {
     exp <- final_assays[[1]]
     for (i in 2:length(final_assays)) {
       curr_assay <- final_assays[[i]]
@@ -46,6 +43,7 @@ demote_fields <- function(se, fields) {
   for (asyname in asynames) {
     asy <- SummarizedExperiment::assay(se, asyname)
     df <- S4Vectors::DataFrame(as.data.frame(convert_se_assay_to_dt(se, asyname, include_metadata = TRUE)))
+    df <- df[, setdiff(colnames(df), c("rId", "cId"))]
     final_assays[[asyname]] <- .transform_df_to_matrix(df = df,
       row_fields = rowmd,
       column_fields = colmd,
@@ -71,7 +69,8 @@ demote_fields <- function(se, fields) {
 #' as either the \code{rowData} or \code{colData}.
 #'
 #' @param se \code{SummarizedExperiment} object.
-#' @param fields Character vector of nested fields to promote.
+#' @param fields Character vector of nested fields in a \code{BumpyMatrix} object to promote to
+#' metadata fields of a \code{se}.
 #' @param MARGIN Numeric of values \code{1} or \code{2} indicating whether to 
 #' promote fields to rows or columns respectively.
 #'
@@ -108,6 +107,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
       warning(sprintf("dropping assay '%s' from the final SE", asyname))
     } else {
       df <- S4Vectors::DataFrame(as.data.frame(convert_se_assay_to_dt(se, asyname, include_metadata = TRUE)))
+      df <- df[, setdiff(colnames(df), c("rId", "cId"))]
       final_assays[[asyname]] <- .transform_df_to_matrix(df = df,
         row_fields = rowmd,
         column_fields = colmd,
@@ -115,6 +115,10 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
     }
   }
 
+  if (length(final_assays) == 0L) {
+    stop(sprintf("unable to find nested fields: '%s' in any assays, perhaps you intended to call 'demote_fields'?",
+      paste0(fields, collapse = ", "))) 
+  }
   .validate_final_assays(final_assays)
 
   assay_list <- lapply(final_assays, function(x) {
