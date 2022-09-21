@@ -1,3 +1,9 @@
+# Change to v.1.3.6
+- Bugfix in validate_SE
+
+# Change to v.1.3.5
+- Promote or demote fields in a BumpyMatrix object and perform summarization on assays.
+
 # Change to v.1.3.4
 - Major improvents in JSON validation/conversion logic 
   * provide info about JSON schemas via env variables
