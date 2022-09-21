@@ -1,9 +1,13 @@
 has_nested_field <- function(asy, nested_field) {
+  checkmate::assertClass(asy, "BumpyMatrix")
+  checkmate::assertCharacter(nested_field)
+
   df <- BumpyMatrix::unsplitAsDataFrame(asy)
   all(nested_field %in% colnames(df))
 }
 
 .validate_final_assays <- function(final_assays) {
+  checkmate::assert_list(final_assays, types = ("list"))
   if (length(final_assays) > 1L) {
     exp <- final_assays[[1]]
     for (i in 2:length(final_assays)) {
@@ -12,6 +16,7 @@ has_nested_field <- function(asy, nested_field) {
       stopifnot(rownames(exp$colData) == rownames(curr_assay$colData))
     }
   }
+  invisible(NULL)
 }
 
 #' Demote a metadata field in the \code{rowData} or \code{colData} of a \code{SummarizedExperiment} object
@@ -27,6 +32,9 @@ has_nested_field <- function(asy, nested_field) {
 #' @details Revert this operation using \code{promote_fields}.
 #' @export
 demote_fields <- function(se, fields) {
+  checkmate::assertClass(se, "SummarizedExperiment")
+  checkmate::assertCharacter(fields)
+
   rowmd <- colnames(rowData(se)) 
   colmd <- colnames(colData(se))
 
@@ -38,8 +46,9 @@ demote_fields <- function(se, fields) {
   rowmd <- setdiff(rowmd, fields)
   colmd <- setdiff(colmd, fields)
 
-  final_assays <- list()
   asynames <- SummarizedExperiment::assayNames(se)
+  final_assays <- vector("list", length(asynames))
+  names(final_assays) <- asynames
   for (asyname in asynames) {
     asy <- SummarizedExperiment::assay(se, asyname)
     df <- S4Vectors::DataFrame(as.data.frame(convert_se_assay_to_dt(se, asyname, include_metadata = TRUE)))
@@ -56,13 +65,12 @@ demote_fields <- function(se, fields) {
     x$mat
   })
 
-  final_SE <- SummarizedExperiment::SummarizedExperiment(
+  SummarizedExperiment::SummarizedExperiment(
     assays = assay_list,
     rowData = final_assays[[1]]$rowData,
     colData = final_assays[[1]]$colData,
     metadata = S4Vectors::metadata(se)
   )
-  final_SE
 }
 
 #' Promote a nested field to be represented as a metadata field of the \code{SummarizedExperiment}
@@ -79,6 +87,8 @@ demote_fields <- function(se, fields) {
 #' @seealso demote_fields
 #' @export
 promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
+  checkmate::assertClass(se, "SummarizedExperiment")
+  checkmate::assertCharacter(fields)
   if (length(MARGIN) != 1L || !MARGIN %in% c(1, 2)) {
     stop("invalid 'MARGIN' argument, must be either '1' or '2'")
   }
@@ -125,13 +135,12 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
     x$mat
   })
 
-  final_SE <- SummarizedExperiment::SummarizedExperiment(
+  SummarizedExperiment::SummarizedExperiment(
     assays = assay_list,
     rowData = final_assays[[1]]$rowData,
     colData = final_assays[[1]]$colData,
     metadata = S4Vectors::metadata(se)
   )
-  final_SE
 }
 
 
@@ -156,9 +165,13 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #'
 #' @details 
 #' @noRd
-#' @importFrom BumpyMatrix splitAsBumpyMatrix
 #' @keywords internal
 .transform_df_to_matrix <- function(df, row_fields, column_fields, nested_fields) {
+  checkmate::assertClass(df, "DFrame")
+  checkmate::assertCharacter(row_fields)
+  checkmate::assertCharacter(column_fields)
+  checkmate::assertCharacter(nested_fields)
+
   missing <- setdiff(colnames(df), c(row_fields, column_fields, nested_fields))
   if (length(missing) != 0L) {
     stop(sprintf("found columns in 'df' not specified as row, column, or nested fields",
@@ -193,13 +206,11 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #' @param FUN A function to use to aggregate the data.
 #' 
 #' @return A \code{BumpyMatrix} object aggregated by \code{FUN}.
-#' @importFrom stats aggregate
-#' @importFrom BumpyMatrix unsplitAsDataFrame splitAsBumpyMatrix
 #' @export
 aggregate_assay <- function(asy, by, FUN) {
   checkmate::assert_class(asy, "BumpyMatrix")
   checkmate::assert_class(FUN, "function")
-  checkmate::assert_class(by, "character")
+  checkmate::assertCharacter(by)
 
   row.field <- "row"
   column.field <- "column"
