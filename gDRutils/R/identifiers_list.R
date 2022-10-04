@@ -78,3 +78,8 @@ EXPECT_ONE_IDENTIFIERS <- c(
   "concentration3",
   "data_source"
 )
+
+SYNONYMS_LIST <- list(
+  duration = c("time"),
+  cellline = c("bioc")
+)
