@@ -72,3 +72,20 @@ test_that("get_identifiers_desc works as expected", {
                "Assertion on 'k' failed: Must be of type 'string' (or 'NULL'), not 'double'.",
                fixed = TRUE)
 })
+
+test_that("'get_synonyms works", {
+  expect_true(is.list(get_idfs_synonyms()))
+  expect_true(length(get_idfs_synonyms()) > 0)
+})
+
+test_that("'update_synonyms works", {
+  mdict <- list(duration = "time")
+  dval <- gDRutils::get_env_identifiers("duration")
+  iv <- c("Time", dval, "time")
+  out <- update_idfs_synonyms(iv, dict = mdict)
+  expect_identical(unique(out), dval)
+  
+  out <- update_idfs_synonyms(list(a = iv, b = iv), dict = mdict)
+  expect_true(length(out) == 2)
+  expect_identical(unique(out[[1]]), dval)
+})
