@@ -1,3 +1,6 @@
+# Change to v.1.3.6
+- add helper for dealing with idfs' synonyms
+
 # Change to v.1.3.4
 - Major improvents in JSON validation/conversion logic 
   * provide info about JSON schemas via env variables
