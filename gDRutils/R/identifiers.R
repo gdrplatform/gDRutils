@@ -93,6 +93,45 @@ get_default_identifiers <- function() {
   IDENTIFIERS_LIST
 }
 
+#' Get gDR synonyms for the identifiers
+#' 
+#' Get gDR synonyms for the identifiers
+#' 
+#' @export
+get_idfs_synonyms <- function() {
+  SYNONYMS_LIST
+}
+
+#' Update gDR synonyms for the identifier
+#' 
+#' Update gDR synonyms for the identifier
+#' 
+#' @param data list of charvec with identifiers data
+#' @param dict list with dictionary
+#' 
+#' @export
+update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
+  
+  if (!is.character(data) && !is.list(data)) {
+    stop("'data' must be a list of character vector")
+  }
+  checkmate::assert_list(dict)
+  
+  out <- if (is.list(data)) {
+    lapply(data, function(x) {
+      update_idfs_synonyms(x, dict)
+    })
+  } else {
+    for (idfs in names(dict)) {
+      idx <- which(toupper(data) %in% toupper(dict[[idfs]]))
+      if (length(idx) > 0) {
+        data[idx] <- gDRutils::get_env_identifiers(idfs)
+      }
+    }
+    data
+  }
+  out
+}
 
 #' Get identifiers that expect only one value for each identifier.
 #' @export
