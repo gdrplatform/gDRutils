@@ -16,12 +16,12 @@ ARG GITHUB_TOKEN
 #================= Install dependencies
 RUN mkdir -p /mnt/vol
 COPY rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol
-RUN Rscript -e "gDRgenesis::installAllDeps()"
+RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
 COPY gDRutils/ /tmp/gDRutils/
 COPY rplatform/install_repo.R /mnt/vol
-RUN Rscript -e "gDRgenesis::installLocalPackage('/tmp/gDRutils')"
+RUN Rscript -e "gDRstyle::installLocalPackage('/tmp/gDRutils')"
 
 #================= Clean up
 RUN sudo rm -rf /mnt/vol/* /tmp/gDRutils/
