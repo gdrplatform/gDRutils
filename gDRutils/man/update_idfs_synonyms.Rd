@@ -12,5 +12,5 @@ update_idfs_synonyms(data, dict = get_idfs_synonyms())
 \item{dict}{list with dictionary}
 }
 \description{
-Update gDR synonyms for the identifie
+Update gDR synonyms for the identifier
 }
