@@ -105,7 +105,7 @@ test_that("update_env_identifers_from_mae works as expected", {
   mae_idfs3[["second_SE"]] <- mae_idfs1[["first_SE"]]
 
   mae_idfs4 <- mae_idfs
-  mae_idfs4[["first_SE"]][["barcode"]] <- "my_barcode"
+  mae_idfs4[["second_SE"]] <- mae_idfs1[["first_SE"]]
 
   gDRutils::reset_env_identifiers()
   gDRutils::update_env_idfs_from_mae(mae_idfs)
@@ -122,5 +122,13 @@ test_that("update_env_identifers_from_mae works as expected", {
   gDRutils::reset_env_identifiers()
   gDRutils::update_env_idfs_from_mae(mae_idfs3)
   expect_equal(gDRutils::get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
+
+  gDRutils::reset_env_identifiers()
+  expect_error(gDRutils::update_env_idfs_from_mae(mae_idfs4),
+               "identical(mae_idfs[[1]], mae_idfs[[2]]) is not TRUE",
+               fixed = TRUE)
+  expect_error(gDRutils::update_env_idfs_from_mae("test"),
+               "Assertion on 'mae_idfs' failed: Must be of type 'list', not 'character'.",
+               fixed = TRUE)
 
 })

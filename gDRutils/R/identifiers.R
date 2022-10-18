@@ -171,38 +171,25 @@ get_identifers_desc <- function(k = NULL) {
   }
 }
 
-#' Update environment identifers from MAE object identifers
+#' Update environment identifiers from MAE object identifiers
 #'
 #' @param mae_idfs A list containing MAE identifiers
 #'
+#' @return NULL
 #' @export
 update_env_idfs_from_mae <- function(mae_idfs) {
-  mae_vs_env <- lapply(mae_idfs, function(x) {
-    lapply(names(x), function(i) {
-      x[[i]] %in% gDRutils::get_env_identifiers()[[i]]
-    })
-  })
-  for (x in names(mae_idfs)) {names(mae_vs_env[[x]]) <- names(mae_idfs[[x]])}
-  if (!all(unlist(mae_vs_env))) {
-    # finding the MAE idfs index which needs to be changed
-    changed_idfs_exp <- lapply(mae_vs_env, function(x) {
-      unlist(unname(lapply(names(x), function(i) {
-        if (length(x[[i]]) > 1 && !all(x[[i]])) {
-          i
-        } else if (length(x[[i]]) == 1 && !all(x[[i]])) {
-          i
-        }
-      })))
-    })
-    # setting the env identifiers to that of the SE object
-    if (length(changed_idfs_exp) > 1L) {
-      if (all(changed_idfs_exp[[1]] == changed_idfs_exp[[2]])) {
-        lapply(changed_idfs_exp[[1]], function(x) {gDRutils::set_env_identifier(x, mae_idfs[[1]][[x]])})
-      } else {
-        stop("Both SE objects should have the same identifiers")
-      }
-    } else {
-      lapply(changed_idfs_exp[[1]], function(x) {gDRutils::set_env_identifier(x, mae_idfs[[1]][[x]])})
+  checkmate::assert_list(mae_idfs)
+
+  if (length(mae_idfs) > 1L) {
+    stopifnot(identical(mae_idfs[[1]], mae_idfs[[2]]))
+  }
+
+  mae_idfs <- mae_idfs[[1]]
+  for (i in names(mae_idfs)) {
+    if (!identical(mae_idfs[[i]], gDRutils::get_env_identifiers(i))) {
+      gDRutils::set_env_identifier(i, mae_idfs[[i]])
     }
   }
+
+  return(invisible(NULL))
 }

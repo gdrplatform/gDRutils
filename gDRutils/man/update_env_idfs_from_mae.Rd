@@ -2,7 +2,7 @@
 % Please edit documentation in R/identifiers.R
 \name{update_env_idfs_from_mae}
 \alias{update_env_idfs_from_mae}
-\title{Update environment identifers from MAE object identifers}
+\title{Update environment identifiers from MAE object identifiers}
 \usage{
 update_env_idfs_from_mae(mae_idfs)
 }
@@ -10,5 +10,5 @@ update_env_idfs_from_mae(mae_idfs)
 \item{mae_idfs}{A list containing MAE identifiers}
 }
 \description{
-Update environment identifers from MAE object identifers
+Update environment identifiers from MAE object identifiers
 }
