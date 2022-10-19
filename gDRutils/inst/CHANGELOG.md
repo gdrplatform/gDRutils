@@ -1,3 +1,6 @@
+# Change to v.1.3.7
+- add update_env_idfs_from_mae function
+
 # Change to v.1.3.6
 - add helper for dealing with idfs' synonyms
 
