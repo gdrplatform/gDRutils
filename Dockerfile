@@ -20,7 +20,6 @@ RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
 COPY gDRutils/ /tmp/gDRutils/
-COPY rplatform/install_repo.R /mnt/vol
 RUN Rscript -e "gDRstyle::installLocalPackage('/tmp/gDRutils')"
 
 #================= Clean up
