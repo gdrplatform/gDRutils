@@ -6,14 +6,17 @@
 \usage{
 validate_mae_with_schema(
   mae,
-  schema_path = system.file(package = "gDRutils", "schemas"),
+  schema_package = Sys.getenv("SCHEMA_PACKAGE", "gDRutils"),
+  schema_dir_path = Sys.getenv("SCHEMA_DIR_PATH", "schemas"),
   schema = c(se = "se.json", mae = "mae.json")
 )
 }
 \arguments{
 \item{mae}{MultiAssayExperiment object}
 
-\item{schema_path}{path to the dir with JSON schema files}
+\item{schema_package}{string name of the package with JSON schema files}
+
+\item{schema_dir_path}{path to the dir with JSON schema files}
 
 \item{schema}{named charvec with filenames of schemas to validate against.}
 }

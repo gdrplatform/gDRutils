@@ -35,11 +35,12 @@ test_that("validate works as expected", {
   tmae1 <-
     readRDS(system.file(package = "gDRtestData", "testdata/finalMAE_small.RDS"))
   v_st <- validate_mae_with_schema(tmae1)
-  exp_names_v <- paste0("experiment:", names(MultiAssayExperiment::experiments(tmae1)))
+  exp_names_v <- c("mae", paste0("experiment:", names(MultiAssayExperiment::experiments(tmae1))))
   expect_true(all(exp_names_v %in% names(v_st)))
-  expect_false(v_st[[1]])
+  expect_true(v_st[["mae"]])
+  expect_false(v_st[[exp_names_v[2]]])
   
-  v_st_att <- attributes(v_st[[1]])
+  v_st_att <- attributes(v_st[[exp_names_v[2]]])
   expect_identical(v_st_att$exit_code, 2)
   expect_true(nchar(v_st_att$error) > 0)
   expect_true(inherits(v_st_att$derror, "data.frame"))
@@ -58,6 +59,6 @@ test_that("validate works as expected", {
       )
     )
   v_st <- validate_mae_with_schema(tmae1)
-  expect_true(v_st[[1]])
+  expect_true(v_st[[exp_names_v[2]]])
   
 })

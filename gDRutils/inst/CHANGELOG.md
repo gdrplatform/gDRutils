@@ -1,3 +1,14 @@
+# Change to v.1.3.7
+- add update_env_idfs_from_mae function
+
+# Change to v.1.3.6
+- add helper for dealing with idfs' synonyms
+
+# Change to v.1.3.4
+- Major improvents in JSON validation/conversion logic 
+  * provide info about JSON schemas via env variables
+  * convert and validate MAE summary next to the SE experiments
+
 # Change to v.1.3.3
 - Move json validation/convertion logic from gDRelastic
 

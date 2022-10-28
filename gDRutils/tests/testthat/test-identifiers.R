@@ -3,9 +3,9 @@ test_that("get_env_identifiers and set_env_identifier work", {
 
   expect_error(get_env_identifiers("BOGUS", simplify = TRUE))
   expect_equal(get_env_identifiers("duration", simplify = TRUE), "Duration")
-  expect_equal(get_env_identifiers(c("duration", "barcode"), simplify = FALSE), 
+  expect_equal(get_env_identifiers(c("duration", "barcode"), simplify = FALSE),
                list(duration = "Duration", barcode = c("Barcode", "Plate")))
-  
+
   set_env_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_env_identifiers("cellline", simplify = TRUE), "my_personal_cell_line_identifiers")
   vals <- gDRutils:::IDENTIFIERS_LIST
@@ -65,10 +65,70 @@ test_that("get_identifiers_desc works as expected", {
   descriptions <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
   expect_equal(get_identifers_desc(), descriptions)
   expect_equal(get_identifers_desc(k = "drug_name"), descriptions[["drug_name"]])
-  expect_error(get_identifers_desc(k = "some_drugs"), 
-               "Assertion on 'k %in% names(desc)' failed: Must be TRUE.", 
+  expect_error(get_identifers_desc(k = "some_drugs"),
+               "Assertion on 'k %in% names(desc)' failed: Must be TRUE.",
                fixed = TRUE)
   expect_error(get_identifers_desc(k = 2),
                "Assertion on 'k' failed: Must be of type 'string' (or 'NULL'), not 'double'.",
                fixed = TRUE)
+})
+
+test_that("'get_synonyms works", {
+  expect_true(is.list(get_idfs_synonyms()))
+  expect_true(length(get_idfs_synonyms()) > 0)
+})
+
+test_that("'update_synonyms works", {
+  mdict <- list(duration = "time")
+  dval <- gDRutils::get_env_identifiers("duration")
+  iv <- c("Time", dval, "time")
+  out <- update_idfs_synonyms(iv, dict = mdict)
+  expect_identical(unique(out), dval)
+
+  out <- update_idfs_synonyms(list(a = iv, b = iv), dict = mdict)
+  expect_true(length(out) == 2)
+  expect_identical(unique(out[[1]]), dval)
+})
+
+test_that("update_env_identifers_from_mae works as expected", {
+  mae_idfs <- list()
+  mae_idfs[["first_SE"]] <- gDRutils::get_env_identifiers()
+  mae_idfs[["first_SE"]][["barcode"]] <- "my_barcode"
+
+  mae_idfs1 <- mae_idfs
+  mae_idfs1[["first_SE"]][["barcode"]] <- c("my_barcode", "my_plate")
+
+  mae_idfs2 <- mae_idfs
+  mae_idfs2[["second_SE"]] <- mae_idfs[["first_SE"]]
+
+  mae_idfs3 <- mae_idfs1
+  mae_idfs3[["second_SE"]] <- mae_idfs1[["first_SE"]]
+
+  mae_idfs4 <- mae_idfs
+  mae_idfs4[["second_SE"]] <- mae_idfs1[["first_SE"]]
+
+  gDRutils::reset_env_identifiers()
+  gDRutils::update_env_idfs_from_mae(mae_idfs)
+  expect_equal(gDRutils::get_env_identifiers("barcode"), "my_barcode")
+
+  gDRutils::reset_env_identifiers()
+  gDRutils::update_env_idfs_from_mae(mae_idfs1)
+  expect_equal(gDRutils::get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
+
+  gDRutils::reset_env_identifiers()
+  gDRutils::update_env_idfs_from_mae(mae_idfs2)
+  expect_equal(gDRutils::get_env_identifiers("barcode"), "my_barcode")
+
+  gDRutils::reset_env_identifiers()
+  gDRutils::update_env_idfs_from_mae(mae_idfs3)
+  expect_equal(gDRutils::get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
+
+  gDRutils::reset_env_identifiers()
+  expect_error(gDRutils::update_env_idfs_from_mae(mae_idfs4),
+               "identical(mae_idfs[[1]], mae_idfs[[2]]) is not TRUE",
+               fixed = TRUE)
+  expect_error(gDRutils::update_env_idfs_from_mae("test"),
+               "Assertion on 'mae_idfs' failed: Must be of type 'list', not 'character'.",
+               fixed = TRUE)
+
 })

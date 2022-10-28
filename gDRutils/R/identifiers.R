@@ -2,7 +2,7 @@
 #'
 #' @description Get, set, or reset the expected identifier(s) for one or all identifier field(s).
 #' Identifiers are used by the gDR processing functions to identify which columns in a \code{data.frame}
-#' correspond to certain expected fields. Functions of the family \code{*et_identifier} will look for 
+#' correspond to certain expected fields. Functions of the family \code{*et_identifier} will look for
 #' identifiers from the environment while functions of the family \code{*et_SE_identifiers} will look for
 #' identifiers in the \code{metadata} slot of a \code{SummarizedExperiment} object.
 #' See details for expected identifiers and their definitions.
@@ -11,7 +11,7 @@
 #' @param v Character vector corresponding to the value for given identifier \code{k}.
 #' @param simplify Boolean indicating whether output should be simplified.
 #'
-#' @return 
+#' @return
 #' For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.
 #' For \code{get_env_identifiers} a character vector of identifiers for field \code{k}.
 #' For functions called with no arguments, the entire available identifier list is returned.
@@ -21,7 +21,7 @@
 #' get_env_identifiers("duration") # "Duration"
 #' set_env_identifier("duration", "Duration_Time")
 #' get_env_identifiers("duration") # "Duration_Time"
-#' reset_env_identifiers() 
+#' reset_env_identifiers()
 #' get_env_identifiers("duration") # "Duration"
 #'}
 #'
@@ -33,7 +33,7 @@
 #'  \item{"cellline_name": String of column name containing human-friendly cell line names}
 #'  \item{"cellline_tissue": String of column name containing metadata on cell line tissue type}
 #'  \item{"cellline_ref_div_time": String of column name containing reference division time for cell lines}
-#'  \item{"cellline_parental_identifier": String of column name containing unique, machine-readable 
+#'  \item{"cellline_parental_identifier": String of column name containing unique, machine-readable
 #'    parental cell line identifiers. Used in the case of derived or engineered cell lines.}
 #'  \item{"drug": String of column name containing unique, machine-readable drug identifiers}
 #'  \item{"drug_name": String of column name containing human-friendly drug names}
@@ -50,7 +50,7 @@ NULL
 
 #' @rdname identifiers
 #' @export
-#' 
+#'
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
   if (simplify) {
     if (length(k) > 1L) {
@@ -93,6 +93,45 @@ get_default_identifiers <- function() {
   IDENTIFIERS_LIST
 }
 
+#' Get gDR synonyms for the identifiers
+#'
+#' Get gDR synonyms for the identifiers
+#'
+#' @export
+get_idfs_synonyms <- function() {
+  SYNONYMS_LIST
+}
+
+#' Update gDR synonyms for the identifier
+#'
+#' Update gDR synonyms for the identifier
+#'
+#' @param data list of charvec with identifiers data
+#' @param dict list with dictionary
+#'
+#' @export
+update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
+
+  if (!is.character(data) && !is.list(data)) {
+    stop("'data' must be a list of character vector")
+  }
+  checkmate::assert_list(dict)
+
+  out <- if (is.list(data)) {
+    lapply(data, function(x) {
+      update_idfs_synonyms(x, dict)
+    })
+  } else {
+    for (idfs in names(dict)) {
+      idx <- which(toupper(data) %in% toupper(dict[[idfs]]))
+      if (length(idx) > 0) {
+        data[idx] <- gDRutils::get_env_identifiers(idfs)
+      }
+    }
+    data
+  }
+  out
+}
 
 #' Get identifiers that expect only one value for each identifier.
 #' @export
@@ -103,7 +142,7 @@ get_expect_one_identifiers <- function() {
 
 #' @rdname identifiers
 #' @export
-#' 
+#'
 set_env_identifier <- function(k, v) {
   .set_id(k, v)
 }
@@ -111,7 +150,7 @@ set_env_identifier <- function(k, v) {
 
 #' @rdname identifiers
 #' @export
-#' 
+#'
 reset_env_identifiers <- function() {
   .reset_ids()
 }
@@ -130,4 +169,27 @@ get_identifers_desc <- function(k = NULL) {
     checkmate::assert_true(k %in% names(desc))
     desc[[k]]
   }
+}
+
+#' Update environment identifiers from MAE object identifiers
+#'
+#' @param mae_idfs A list containing MAE identifiers
+#'
+#' @return NULL
+#' @export
+update_env_idfs_from_mae <- function(mae_idfs) {
+  checkmate::assert_list(mae_idfs)
+
+  if (length(mae_idfs) > 1L) {
+    stopifnot(identical(mae_idfs[[1]], mae_idfs[[2]]))
+  }
+
+  mae_idfs <- mae_idfs[[1]]
+  for (i in names(mae_idfs)) {
+    if (!identical(mae_idfs[[i]], gDRutils::get_env_identifiers(i))) {
+      gDRutils::set_env_identifier(i, mae_idfs[[i]])
+    }
+  }
+
+  return(invisible(NULL))
 }
