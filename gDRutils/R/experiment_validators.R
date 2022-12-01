@@ -114,7 +114,7 @@ validate_SE <- function(se,
       checkmate::assert_subset(rowdata[[drug_name2]], get_SE_identifiers(se, "untreated_tag", simplify = TRUE))
     }
     if (concentration2 %in% names(rowdata)) {
-      checkmate::assert_subset(rowdata[[concentrations2]], 0)
+      checkmate::assert_subset(rowdata[[concentration2]], 0)
     }
   }
   invisible(NULL)
