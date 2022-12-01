@@ -1,5 +1,11 @@
-# Change to v.1.3.6
+# Change to v.1.3.8
 - Bugfix in validate_SE
+
+# Change to v.1.3.7
+- add update_env_idfs_from_mae function
+
+# Change to v.1.3.6
+- add helper for dealing with idfs' synonyms
 
 # Change to v.1.3.5
 - Promote or demote fields in a BumpyMatrix object and perform summarization on assays.

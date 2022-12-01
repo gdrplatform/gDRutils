@@ -31,7 +31,7 @@ For functions called with no arguments, the entire available identifier list is 
 \description{
 Get, set, or reset the expected identifier(s) for one or all identifier field(s).
 Identifiers are used by the gDR processing functions to identify which columns in a \code{data.frame}
-correspond to certain expected fields. Functions of the family \code{*et_identifier} will look for 
+correspond to certain expected fields. Functions of the family \code{*et_identifier} will look for
 identifiers from the environment while functions of the family \code{*et_SE_identifiers} will look for
 identifiers in the \code{metadata} slot of a \code{SummarizedExperiment} object.
 See details for expected identifiers and their definitions.
@@ -44,7 +44,7 @@ Identifiers supported by the gDR suite include:
  \item{"cellline_name": String of column name containing human-friendly cell line names}
  \item{"cellline_tissue": String of column name containing metadata on cell line tissue type}
  \item{"cellline_ref_div_time": String of column name containing reference division time for cell lines}
- \item{"cellline_parental_identifier": String of column name containing unique, machine-readable 
+ \item{"cellline_parental_identifier": String of column name containing unique, machine-readable
    parental cell line identifiers. Used in the case of derived or engineered cell lines.}
  \item{"drug": String of column name containing unique, machine-readable drug identifiers}
  \item{"drug_name": String of column name containing human-friendly drug names}
@@ -60,7 +60,7 @@ Identifiers supported by the gDR suite include:
 get_env_identifiers("duration") # "Duration"
 set_env_identifier("duration", "Duration_Time")
 get_env_identifiers("duration") # "Duration_Time"
-reset_env_identifiers() 
+reset_env_identifiers()
 get_env_identifiers("duration") # "Duration"
 }
 
