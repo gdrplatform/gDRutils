@@ -13,7 +13,7 @@ on:
 
 jobs:
   trigger_tests:
-    uses: gdrplatform/gDRstyle/.github/workflows/main.yml@main
+    uses: gdrplatform/gDRstyle/.github/workflows/main.yml@GDR-1675
     with:
       USERNAME: ${{ github.actor }}
       PACKAGE_NAME: ${{ github.event.repository.name }}
