@@ -98,6 +98,66 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
+#' Lapply or bplapply.
+#'
+#' @export
+loop <- function(x, FUN, parallelize, ...) {
+  if (parallelize) {
+    BiocParallel::bplapply(x, FUN, ...)
+  } else {
+    lapply(x, FUN, ...)
+  }
+}
+
+#' Apply a function to every element of a bumpy matrix.
+#'
+#' Apply a user-specified function to every element of a bumpy matrix.
+#'
+#' @param se A \code{SummarizedExperiment} object with bumpy matrices.
+#' @param FUN A function that will be applied to each element of the matrix in assay \code{req_assay_name}.
+#' @param req_assay_name String of the assay name in the \code{se} that the \code{FUN} will act on.
+#' @param out_assay_name String of the assay name that will contain the results of the applied function.
+#' @param parallelize Logical indicating whether or not to parallelize the computation.
+#'
+#' @return The original \code{se} object with a new assay, \code{out_assay_name}.
+#' @export
+apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parallelize = FALSE) {
+  # Assertions:
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(req_assay)
+  checkmate::assert_string(out_assay)
+  gDRutils::validate_se_assay_name(se, req_assay)
+
+  asy <- SummarizedExperiment::assay(se, req_assay)
+  df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
+  iterator <- unique(df[, c("column", "row")])
+  out <- loop(seq_len(nrow(iterator)), function(elem), parallelize = parallelize) {
+    x <- iterator[elem, ]
+    i <- x[["row"]]
+    j <- x[["column"]]
+    elem_df <- asy[i, j][[1]]
+
+    store_df <- do.call(FUN, elem_df)
+    if (nrow(store_df) != 0L) {
+      store_df$row <- i
+      store_df$column <- j
+      store_df
+    } else {
+      NULL 
+    }
+  }
+
+  out <- S4Vectors::DataFrame(do.call("rbind", out))
+
+  out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
+    row = out$row,
+    col = out$column)
+  # TODO: Ensure rows and columns still align.
+  SummarizedExperiment::assays(se)[[out_assay_name]] <- out_assay
+  se
+}
+
+
 #' is_mae_empty
 #' 
 #' check if all mae experiments are empty
