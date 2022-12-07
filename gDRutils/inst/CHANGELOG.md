@@ -1,3 +1,6 @@
+# Change to v.1.3.9
+- add co-dilution to single-agent group
+
 # Change to v.1.3.8
 - Bugfix in validate_SE
 
