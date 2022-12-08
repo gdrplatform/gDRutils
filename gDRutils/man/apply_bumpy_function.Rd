@@ -15,7 +15,8 @@ apply_bumpy_function(
 \arguments{
 \item{se}{A \code{SummarizedExperiment} object with bumpy matrices.}
 
-\item{FUN}{A function that will be applied to each element of the matrix in assay \code{req_assay_name}.}
+\item{FUN}{A function that will be applied to each element of the matrix in assay \code{req_assay_name}.
+Output of the function must return a data.frame.}
 
 \item{req_assay_name}{String of the assay name in the \code{se} that the \code{FUN} will act on.}
 
