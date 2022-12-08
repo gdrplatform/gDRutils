@@ -131,20 +131,24 @@ test_that("apply_bumpy_function works as expected", {
     regex = "'nonexistent' is not on of the available assays: 'bumpy'")
 
   # Output is normal matrix.
-  FUN <- function(x) {mean(x$a + x$b)}
+  FUN <- function(x) {
+    mean(x$a + x$b)
+  }
   norm_out <- apply_bumpy_function(se, FUN = FUN, req_assay_name = "bumpy", out_assay_name = "normal_mtx")
   expect_true(is(norm_out, "matrix"))
   expect_true("bumpy_mtx" %in% SummarizedExperiment::assayNames(bumpy_out))
 
   # Output is bumpy matrix.
-  FUN <- function(x) {data.frame(y = x$a + x$b, z = x$a - x$b)}
+  FUN <- function(x) {
+    data.frame(y = x$a + x$b, z = x$a - x$b)
+  }
   bumpy_out <- apply_bumpy_function(se, FUN = FUN, req_assay_name = "bumpy", out_assay_name = "bumpy_mtx")
   expect_true(is(bumpy_out, "SummarizedExperiment"))
   expect_true("bumpy_mtx" %in% SummarizedExperiment::assayNames(bumpy_out))
 
   bumpy_in_df <- BumpyMatrix::unsplitAsDataFrame(SummarizedExperiment::assay(se, "bumpy"))
-  bumpy_in_df$y = bumpy_in_df$a + bumpy_in_df$b
-  bumpy_in_df$z = bumpy_in_df$a - bumpy_in_df$b
+  bumpy_in_df$y <- bumpy_in_df$a + bumpy_in_df$b
+  bumpy_in_df$z <- bumpy_in_df$a - bumpy_in_df$b
 
   bumpy_out_df <- BumpyMatrix::unsplitAsDataFrame(SummarizedExperiment::assay(bumpy_out, "bumpy_mtx"))
   keep_cols <- c("row", "column", "y", "z")
