@@ -115,6 +115,7 @@ loop <- function(x, FUN, parallelize, ...) {
 #'
 #' @param se A \code{SummarizedExperiment} object with bumpy matrices.
 #' @param FUN A function that will be applied to each element of the matrix in assay \code{req_assay_name}.
+#' Output of the function must return a data.frame.
 #' @param req_assay_name String of the assay name in the \code{se} that the \code{FUN} will act on.
 #' @param out_assay_name String of the assay name that will contain the results of the applied function.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
@@ -139,13 +140,16 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
     elem_df <- asy[i, j][[1]]
 
     store <- FUN(elem_df)
-    # TODO: How to support both numeric matrix and bumpymatrix? 
-    if (nrow(store) != 0L) {
-      store$row <- i
-      store$column <- j
-      store
+    if (is(store, data.frame) || is(store, "DFrame")) {
+      if (nrow(store) != 0L) {
+        store$row <- i
+        store$column <- j
+        store
+      } else {
+        NULL 
+      }
     } else {
-      NULL 
+      stop("only data.frame objects supported as return values from FUN for now")
     }
   }, parallelize = parallelize)
 
@@ -154,7 +158,6 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
     row = out$row,
     col = out$column)
-  # TODO: Ensure rows and columns still align.
   SummarizedExperiment::assays(se)[[out_assay_name]] <- out_assay
   se
 }
