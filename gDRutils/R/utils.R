@@ -140,7 +140,7 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
     elem_df <- asy[i, j][[1]]
 
     store <- FUN(elem_df)
-    if (is(store, data.frame) || is(store, "DFrame")) {
+    if (is(store, "data.frame") || is(store, "DFrame")) {
       if (nrow(store) != 0L) {
         store$row <- i
         store$column <- j
