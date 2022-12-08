@@ -124,28 +124,30 @@ loop <- function(x, FUN, parallelize, ...) {
 apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parallelize = FALSE) {
   # Assertions:
   checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assert_string(req_assay)
-  checkmate::assert_string(out_assay)
-  gDRutils::validate_se_assay_name(se, req_assay)
+  checkmate::assert_string(req_assay_name)
+  checkmate::assert_string(out_assay_name)
+  gDRutils::validate_se_assay_name(se, req_assay_name)
 
-  asy <- SummarizedExperiment::assay(se, req_assay)
+  asy <- SummarizedExperiment::assay(se, req_assay_name)
+  checkmate::assert_class(asy, "BumpyDataFrameMatrix")
   df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
   iterator <- unique(df[, c("column", "row")])
-  out <- loop(seq_len(nrow(iterator)), function(elem), parallelize = parallelize) {
+  out <- loop(seq_len(nrow(iterator)), FUN = function(elem) {
     x <- iterator[elem, ]
     i <- x[["row"]]
     j <- x[["column"]]
     elem_df <- asy[i, j][[1]]
 
-    store_df <- do.call(FUN, elem_df)
-    if (nrow(store_df) != 0L) {
-      store_df$row <- i
-      store_df$column <- j
-      store_df
+    store <- FUN(elem_df)
+    # TODO: How to support both numeric matrix and bumpymatrix? 
+    if (nrow(store) != 0L) {
+      store$row <- i
+      store$column <- j
+      store
     } else {
       NULL 
     }
-  }
+  }, parallelize = parallelize)
 
   out <- S4Vectors::DataFrame(do.call("rbind", out))
 
