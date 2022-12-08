@@ -64,7 +64,7 @@ test_that("assert_choices",  {
   expect_error(assert_choices(letters[5:8], letters[1:6]), err_msg)
 })
 
-test_that("MAEpply works as expectd", {
+test_that("MAEpply works as expected", {
   list1 <- MAEpply(maeReal, SummarizedExperiment::assayNames)
   expect_length(list1, 2)
   expect_true(inherits(list1, "list"))
@@ -77,28 +77,28 @@ test_that("MAEpply works as expectd", {
   expect_true(inherits(v2, "data.frame"))
 })
 
-test_that("is_mae_empty works as expectd", {
+test_that("is_mae_empty works as expected", {
   expect_false(is_mae_empty(maeReal))
   expect_true(is_mae_empty(empty_mae))
 })
 
-test_that("is_any_exp_empty works as expectd", {
+test_that("is_any_exp_empty works as expected", {
   expect_false(is_any_exp_empty(maeReal))
   expect_true(is_any_exp_empty(empty_mae))
   expect_true(is_any_exp_empty(partially_empty_mae))
 })
 
-test_that("is_exp_empty works as expectd", {
+test_that("is_exp_empty works as expected", {
   expect_false(is_exp_empty(maeReal[[1]]))
   expect_true(is_exp_empty(empty_mae[[1]]))
 })
 
-test_that("get_non_empty_assays works as expectd", {
+test_that("get_non_empty_assays works as expected", {
   expect_identical(get_non_empty_assays(maeReal), get_non_empty_assays(partially_empty_mae))
   expect_identical(get_non_empty_assays(empty_mae), character(0))
 })
 
-test_that("mrowData works as expectd", {
+test_that("mrowData works as expected", {
   mr <- mrowData(maeReal)
   expect_identical(vapply(dimnames(mr), length, numeric(1)), c(10, 8))
   checkmate::expect_class(mr, "data.frame")
@@ -107,11 +107,46 @@ test_that("mrowData works as expectd", {
   expect_identical(mr, data.frame())
 })
   
-test_that("mcolData works as expectd", {
+test_that("mcolData works as expected", {
   mc <- mcolData(maeReal)
   expect_identical(vapply(dimnames(mc), length, numeric(1)), c(6, 4))
   checkmate::expect_class(mc, "data.frame")
   
   mc <- mcolData(empty_mae)
   expect_identical(mc, data.frame())
+})
+
+test_that("apply_bumpy_function works as expected", {
+  n <- 1000
+  df <- data.frame(row = sample(LETTERS, n, replace = TRUE), 
+    column = sample(LETTERS, n, replace = TRUE),
+    a = runif(n),
+    b = runif(n))
+  bumpy <- BumpyMatrix::splitAsBumpyMatrix(df[, c("a", "b")], row = df$row, column = df$column)
+  se <- SummarizedExperiment::SummarizedExperiment(assays =
+    list(bumpy = bumpy))
+
+  # Assertions.
+  expect_error(apply_bumpy_function(se, req_assay_name = "nonexistent", out_assay_name = "misc"),
+    regex = "'nonexistent' is not on of the available assays: 'bumpy'")
+
+  # Output is normal matrix.
+  FUN <- function(x) {mean(x$a + x$b)}
+  norm_out <- apply_bumpy_function(se, FUN = FUN, req_assay_name = "bumpy", out_assay_name = "normal_mtx")
+  expect_true(is(norm_out, "matrix"))
+  expect_true("bumpy_mtx" %in% SummarizedExperiment::assayNames(bumpy_out))
+
+  # Output is bumpy matrix.
+  FUN <- function(x) {data.frame(y = x$a + x$b, z = x$a - x$b)}
+  bumpy_out <- apply_bumpy_function(se, FUN = FUN, req_assay_name = "bumpy", out_assay_name = "bumpy_mtx")
+  expect_true(is(bumpy_out, "SummarizedExperiment"))
+  expect_true("bumpy_mtx" %in% SummarizedExperiment::assayNames(bumpy_out))
+
+  bumpy_in_df <- BumpyMatrix::unsplitAsDataFrame(SummarizedExperiment::assay(se, "bumpy"))
+  bumpy_in_df$y = bumpy_in_df$a + bumpy_in_df$b
+  bumpy_in_df$z = bumpy_in_df$a - bumpy_in_df$b
+
+  bumpy_out_df <- BumpyMatrix::unsplitAsDataFrame(SummarizedExperiment::assay(bumpy_out, "bumpy_mtx"))
+  keep_cols <- c("row", "column", "y", "z")
+  expect_equal(sort(bumpy_in_df[, keep_cols]), sort(bumpy_out_df[, keep_cols]))
 })
