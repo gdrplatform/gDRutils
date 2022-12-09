@@ -6,6 +6,18 @@
 \usage{
 loop(x, FUN, parallelize, ...)
 }
+\arguments{
+\item{x}{Vector (atomic or list) or an ‘expression’ object.
+Other objects (including classed objects) will be coerced by
+‘base::as.list’.}
+
+\item{FUN}{A user-defined function.}
+
+\item{parallelize}{Logical indicating whether or not to parallelize the computation.}
+}
+\value{
+List containing output of \code{FUN} applied to every element in \code{x}.
+}
 \description{
 Lapply or bplapply.
 }

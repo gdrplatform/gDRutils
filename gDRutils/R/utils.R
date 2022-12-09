@@ -100,6 +100,13 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 
 #' Lapply or bplapply.
 #'
+#' @param x Vector (atomic or list) or an ‘expression’ object.
+#' Other objects (including classed objects) will be coerced by
+#' ‘base::as.list’.
+#' @param FUN A user-defined function.
+#' @param parallelize Logical indicating whether or not to parallelize the computation.
+#'
+#' @return List containing output of \code{FUN} applied to every element in \code{x}.
 #' @export
 loop <- function(x, FUN, parallelize, ...) {
   if (parallelize) {
