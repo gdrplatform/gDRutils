@@ -2,7 +2,7 @@
 EXPERIMENT_GROUPS <-
   list(`single-agent` = c(`single-agent` = "single-agent",
                           `cotreatment` = "cotreatment",
-			  `co-dilution` = "co-dilution"),
+                          `co-dilution` = "co-dilution"),
        matrix = "matrix")
 
 #' get_experiment_groups

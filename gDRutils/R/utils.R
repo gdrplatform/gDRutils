@@ -98,6 +98,78 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
+#' Lapply or bplapply.
+#'
+#' @param x Vector (atomic or list) or an ‘expression’ object.
+#' Other objects (including classed objects) will be coerced by
+#' ‘base::as.list’.
+#' @param FUN A user-defined function.
+#' @param parallelize Logical indicating whether or not to parallelize the computation.
+#'
+#' @return List containing output of \code{FUN} applied to every element in \code{x}.
+#' @export
+loop <- function(x, FUN, parallelize, ...) {
+  if (parallelize) {
+    BiocParallel::bplapply(x, FUN, ...)
+  } else {
+    lapply(x, FUN, ...)
+  }
+}
+
+#' Apply a function to every element of a bumpy matrix.
+#'
+#' Apply a user-specified function to every element of a bumpy matrix.
+#'
+#' @param se A \code{SummarizedExperiment} object with bumpy matrices.
+#' @param FUN A function that will be applied to each element of the matrix in assay \code{req_assay_name}.
+#' Output of the function must return a data.frame.
+#' @param req_assay_name String of the assay name in the \code{se} that the \code{FUN} will act on.
+#' @param out_assay_name String of the assay name that will contain the results of the applied function.
+#' @param parallelize Logical indicating whether or not to parallelize the computation.
+#'
+#' @return The original \code{se} object with a new assay, \code{out_assay_name}.
+#' @export
+apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parallelize = FALSE) {
+  # Assertions:
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(req_assay_name)
+  checkmate::assert_string(out_assay_name)
+  gDRutils::validate_se_assay_name(se, req_assay_name)
+
+  asy <- SummarizedExperiment::assay(se, req_assay_name)
+  checkmate::assert_class(asy, "BumpyDataFrameMatrix")
+  df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
+  iterator <- unique(df[, c("column", "row")])
+  out <- loop(seq_len(nrow(iterator)), FUN = function(elem) {
+    x <- iterator[elem, ]
+    i <- x[["row"]]
+    j <- x[["column"]]
+    elem_df <- asy[i, j][[1]]
+
+    store <- FUN(elem_df)
+    if (is(store, "data.frame") || is(store, "DFrame")) {
+      if (nrow(store) != 0L) {
+        store$row <- i
+        store$column <- j
+        store
+      } else {
+        NULL 
+      }
+    } else {
+      stop("only data.frame objects supported as return values from FUN for now")
+    }
+  }, parallelize = parallelize)
+
+  out <- S4Vectors::DataFrame(do.call("rbind", out))
+
+  out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
+    row = out$row,
+    col = out$column)
+  SummarizedExperiment::assays(se)[[out_assay_name]] <- out_assay
+  se
+}
+
+
 #' is_mae_empty
 #' 
 #' check if all mae experiments are empty

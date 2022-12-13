@@ -1,3 +1,6 @@
+# Change to v.1.3.10
+- add apply_bumpy_function support
+
 # Change to v.1.3.9
 - add co-dilution to single-agent group
 
