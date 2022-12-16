@@ -9,6 +9,9 @@ shorten_normalization_type_name(x)
 \arguments{
 \item{x}{string with normalization type}
 }
+\value{
+shortened string representing the normalization type
+}
 \description{
 shorten normalization type
 }
