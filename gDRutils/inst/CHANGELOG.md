@@ -1,3 +1,6 @@
+# Change to v.1.3.11
+- `R CMD check` returns `0 errors ✓ | 0 warnings ✓ | 0 notes ✓` 
+
 # Change to v.1.3.10
 - add apply_bumpy_function support
 
