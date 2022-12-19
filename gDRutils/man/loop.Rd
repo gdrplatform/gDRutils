@@ -14,6 +14,10 @@ Other objects (including classed objects) will be coerced by
 \item{FUN}{A user-defined function.}
 
 \item{parallelize}{Logical indicating whether or not to parallelize the computation.}
+
+\item{...}{optional argument passed to 
+\link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
+else to \link[base]{lapply}.}
 }
 \value{
 List containing output of \code{FUN} applied to every element in \code{x}.
