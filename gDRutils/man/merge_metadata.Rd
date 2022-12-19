@@ -7,7 +7,7 @@
 merge_metadata(SElist, metadata_fields)
 }
 \arguments{
-\item{SElist}{named list of Summarized Experiments}
+\item{SElist}{named list of \code{SummarizedExperiment}s}
 
 \item{metadata_fields}{vector of metadata names that will be merged}
 }
