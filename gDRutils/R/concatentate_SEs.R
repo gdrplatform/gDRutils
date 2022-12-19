@@ -163,7 +163,6 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #'
 #' @seealso promote_fields demote_fields 
 #'
-#' @details 
 #' @noRd
 #' @keywords internal
 .transform_df_to_matrix <- function(df, row_fields, column_fields, nested_fields) {
