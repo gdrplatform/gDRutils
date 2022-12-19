@@ -136,7 +136,8 @@ convert_se_to_json <- function(se) {
 #'
 #' @examples
 #' rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
-#' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa", duration = "Duration")
+#' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa", 
+#' duration = "Duration")
 #' gDRutils:::.convert_rowData_to_json(rdata, identifiers) 
 #'
 #' @details Standardizes the \code{rdata} to common schema fields
