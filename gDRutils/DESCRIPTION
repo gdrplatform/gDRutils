@@ -30,7 +30,9 @@ Imports:
     BumpyMatrix,
     MultiAssayExperiment,
     S4Vectors,
-    SummarizedExperiment
+    SummarizedExperiment,
+    tibble,
+    BiocParallel
 Suggests:
     futile.logger,
     gDRstyle (>= 0.0.8),
