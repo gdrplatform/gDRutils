@@ -111,7 +111,7 @@ df_to_assay <-
     # Assertions:
     stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
     .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
-    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse="|")
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
     drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
     drug_data[grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }
@@ -129,7 +129,7 @@ df_to_assay <-
     # Assertions:
     stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
     .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
-    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse="|")
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
     drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
     drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }
