@@ -104,9 +104,9 @@ merge_assay <- function(SElist,
 }
 
 
-#' Identify unique se metadata fields from a list of SEs
+#' Identify unique metadata fields from a list of \code{SummarizedExperiment}s
 #'
-#' @param SElist named list of Summarized Experiments
+#' @param SElist named list of \code{SummarizedExperiment}s
 #'
 #' @return character vector of unique names of metadata
 #' @export
@@ -122,7 +122,7 @@ identify_unique_se_metadata_fields <- function(SElist) {
 
 #' Merge metadata
 #'
-#' @param SElist named list of Summarized Experiments
+#' @param SElist named list of \code{SummarizedExperiment}s
 #' @param metadata_fields vector of metadata names that will be merged
 #'
 #' @return list of merged metadata

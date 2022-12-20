@@ -29,7 +29,8 @@ assert_equal_input_len <- function(outlier, ...) {
 #' shorten normalization type
 #' 
 #' @param x string with normalization type
-#' 
+#'
+#' @return shortened string representing the normalization type
 #' @export
 shorten_normalization_type_name <- function(x) {
   checkmate::assert_choice(x, c("RelativeViability", "GRvalue"))
