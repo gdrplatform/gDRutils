@@ -26,12 +26,10 @@ Imports:
     reshape2,
     stats,
     stringr,
-    BiocManager,
     BumpyMatrix,
     MultiAssayExperiment,
     S4Vectors,
     SummarizedExperiment,
-    tibble,
     BiocParallel
 Suggests:
     futile.logger,
@@ -43,7 +41,8 @@ Suggests:
     testthat,
     tools,
     IRanges,
-    yaml
+    yaml,
+    BiocManager
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.1.2
