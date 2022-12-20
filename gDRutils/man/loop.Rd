@@ -4,7 +4,7 @@
 \alias{loop}
 \title{Lapply or bplapply.}
 \usage{
-loop(x, FUN, parallelize, ...)
+loop(x, FUN, parallelize = TRUE, ...)
 }
 \arguments{
 \item{x}{Vector (atomic or list) or an ‘expression’ object.
@@ -13,7 +13,8 @@ Other objects (including classed objects) will be coerced by
 
 \item{FUN}{A user-defined function.}
 
-\item{parallelize}{Logical indicating whether or not to parallelize the computation.}
+\item{parallelize}{Logical indicating whether or not to parallelize the computation.
+Defaults to \code{TRUE}.}
 
 \item{...}{optional argument passed to 
 \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
