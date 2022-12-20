@@ -12,7 +12,6 @@
 #'
 #' @details This is most often used to validate JSON
 #' before passing it in as a document to an ElasticSearch index.
-#' @importFrom jsonvalidate json_validate
 #' @export
 validate_json <- function(json, schema_path) {
   # asserts that should be valid regardless user data
@@ -69,7 +68,6 @@ validate_json <- function(json, schema_path) {
 #'
 #' @return Boolean of whether or not mae is valid
 #'
-#' @importFrom jsonvalidate json_validator
 #' @export
 validate_mae_with_schema <-
   function(mae,

@@ -1,3 +1,6 @@
+# Change to v.1.3.12
+- `R CMD check` returns `0 errors ✓ | 0 warnings ✓ | 0 notes ✓` 
+
 # Change to v.1.3.11
 - default apply_bumpy_function parallelize to TRUE 
 

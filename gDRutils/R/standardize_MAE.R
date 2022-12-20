@@ -90,7 +90,7 @@ standardize_se <- function(se) {
   untreated_tag_mapping <- untreated_tag$x
   names(untreated_tag_mapping) <- untreated_tag$y
   S4Vectors::DataFrame(lapply(row_data, function(x) stringr::str_replace_all(x, untreated_tag_mapping)),
-                       row.names = rownames(row_data(se)))
+                       row.names = rownames(row_data))
 }
 
 #' Rename DFrame

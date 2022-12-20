@@ -98,3 +98,38 @@ df_to_assay <-
     }
   }
 
+#' .get_untreated_conditions
+#'
+#' Get untreated conditions
+#'
+#' @param drug_data data.frame or DataFrame with treatment information
+#'
+#' @return character vector with untreated conditions
+#'
+.get_untreated_conditions <-
+  function(drug_data) {
+    # Assertions:
+    stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
+    .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
+    drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
+    drug_data[grepl(.untreatedDrugNameRegex, drugnames), "name_"]
+  }
+
+#' .get_treated_conditions
+#'
+#' Get treated conditions
+#'
+#' @param drug_data data.frame or DataFrame with treatment information
+#'
+#' @return character vector with treated conditions
+#'
+.get_treated_conditions <-
+  function(drug_data) {
+    # Assertions:
+    stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
+    .untreated_tag_patterns <- vapply(get_identifier("untreated_tag"), sprintf, fmt = "^%s$", character(1))
+    .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
+    drugnames <- tolower(as.data.frame(drug_data)[, get_identifier("drugname")])
+    drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
+  }
