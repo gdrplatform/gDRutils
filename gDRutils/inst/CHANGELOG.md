@@ -1,3 +1,6 @@
+# Change to v.1.3.11
+- default apply_bumpy_function parallelize to TRUE 
+
 # Change to v.1.3.10
 - add apply_bumpy_function support
 

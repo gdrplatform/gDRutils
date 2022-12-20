@@ -146,3 +146,11 @@ test_that("apply_bumpy_function works as expected", {
   keep_cols <- c("row", "column", "y", "z")
   expect_equal(sort(bumpy_in_df[, keep_cols]), sort(bumpy_out_df[, keep_cols]))
 })
+
+test_that("loop works as expected", {
+  n <- 10
+  listRunif <- lapply(seq_len(n), runif)
+  sumOfList <- loop(listRunif, sum)
+  expect_true(is(sumOfList, "list"))
+  expect_length(unlist(sumOfList), n)
+})
