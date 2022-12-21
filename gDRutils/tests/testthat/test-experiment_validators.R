@@ -86,6 +86,16 @@ test_that("validate_mae works as expected", {
                                                            "Averaged" = BumpyMatrix::BumpyMatrix(x, c(10, 5)),
                                                            "Metrics" = BumpyMatrix::BumpyMatrix(x, c(10, 5))))
   
+  colData(se3) <- methods::new(
+    "DFrame",
+    rownames = c("A", "B", "C", "D", "E"),
+    nrows = 5L,
+    listData = list(Treatment = c("ChIP", "Input", "ChIP", "Input", "ChIP")),
+    elementType = "ANY",
+    elementMetadata = NULL,
+    metadata = list()
+  )
+  
   mae2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se3))
   
   maeReal <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
