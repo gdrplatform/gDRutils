@@ -58,7 +58,7 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   expect_equal(obs, exp[["cellline_name"]])
   
   # Invalid identifier.
-  exp <- list("drug" = "drug", "celllinename" = "CellLineName", "buggy_idfs" = "test")
+  exp <- list("drug" = "drug", "celllinename" = "CellLineName", "buggy_idfs" = "test", "masked_tag" = "masked")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
   expect_equal(get_SE_identifiers(se), exp, simplify = FALSE)
   expect_error(get_SE_identifiers(se, "buggy_idfs", simplify = TRUE), 
@@ -68,17 +68,19 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
 
   # Identifier does not exist on the SummarizedExperiment,
   # so get it from the environment.
-  expect_warning(obs <- get_SE_identifiers(se, "masked_tag", simplify = TRUE), 
-    regexp = "'se' was passed, but identifier 'masked_tag' not found on se's identifiers")
+  obs <- get_SE_identifiers(se, "masked_tag", simplify = TRUE)
   expect_equal(obs, "masked")
 
   # Set identifiers.
-  se <- set_SE_identifiers(se, list())
+  expect_warning(
+    se <- set_SE_identifiers(se, list()),
+    "overwriting existing metadata entry: 'identifiers'"
+  )
   obs2 <- get_SE_identifiers(se, simplify = TRUE)
   expect_equal(obs2, list())
 
   # Multiple identifiers.
-  exp <- list("drug_name" = "Drugs", "cellline_name" = "Cells")
+  exp <- list("drug_name" = "Drugs", "cellline_name" = "Cells", "duration" = "Duration")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
   expect_equal(get_SE_identifiers(se, c("drug_name", "duration"), simplify = FALSE), 
                list(drug_name = "Drugs", duration = "Duration")) # Env and se identifiers.
