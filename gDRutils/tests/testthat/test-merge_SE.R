@@ -28,12 +28,12 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
-  mergedSE <- merge_SE(listSE)
+  mergedSE <- merge_SE(listSE, discard_keys = c("normalization_type", "fit_source"))
   checkmate::expect_class(mergedSE, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE)
   additional_col_name <- "QCS"
-  mergedSE2 <- merge_SE(listSE, additional_col_name)
+  mergedSE2 <- merge_SE(listSE, additional_col_name, discard_keys = c("normalization_type", "fit_source"))
   assayNormalized <- convert_se_assay_to_dt(mergedSE2, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))

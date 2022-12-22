@@ -114,8 +114,11 @@ test_that("appropriate fit type is assigned for various use cases", {
   emax <- 0.8
   df_resp7$RelativeViability <- pmin(df_resp7$RelativeViability + noise, emax)
   df_resp7$GRvalue <- pmin(df_resp7$GRvalue + noise, emax)
-
-  df_result7 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE)
+  
+  expect_warning(
+    df_result7 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE),
+    ".*overriding original x_0 argument.*"
+  )
   expect_equal(unique(df_result7[, "fit_type"]), "DRCConstantFitResult")
   expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))),
     0.70781, tolerance = 1e-5)
@@ -125,7 +128,11 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(unique(df_result8[, "fit_type"]), "DRC3pHillFitModelFixS0")
 
   # Test that pcutoff argument works as expected.
-  df_result9 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE, pcutoff = 1)
+  expect_warning(
+    df_result9 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE, pcutoff = 1),
+    ".*overriding original x_0 argument.*"
+  )
+
   expect_equal(df_result9[, "fit_type"], c("DRC3pHillFitModelFixS0", "DRCConstantFitResult"))
   df_result10 <- fit_curves(df_resp7, series_identifiers = "Concentration", 
     force_fit = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
@@ -174,14 +181,16 @@ test_that("predict_efficacy_from_conc works as expected", {
   h <- 2
   EC50 <- 0.5
 
-  # Non-numeric values cause an error.
-  expect_error(predict_efficacy_from_conc(
-    c = "non-numeric_entry",
-    x_inf = Vinf,
-    x_0 = V0,
-    ec50 = EC50,
-    h = h
-  ))
+  # Non - numeric values cause an error.
+  expect_error(
+    predict_efficacy_from_conc(
+      c = "non-numeric_entry",
+      x_inf = Vinf,
+      x_0 = V0,
+      ec50 = EC50,
+      h = h
+    )
+  )
 
   # Normal fit.
   v <- predict_efficacy_from_conc(
