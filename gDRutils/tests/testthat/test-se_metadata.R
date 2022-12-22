@@ -19,7 +19,10 @@ test_that("get_SE_keys and set_SE_keys work as expected", {
 
   # Test for all keys.
   keys2 <- list("test" = "NEW")
-  se <- set_SE_keys(se, keys2)
+  expect_warning( # Bartek Czech confirmed this warning is expected
+    se <- set_SE_keys(se, keys2),
+    "overwriting existing metadata entry: 'Keys'"
+  )
   nkeys2 <- get_SE_keys(se)
   expect_equal(nkeys2$test, "NEW")
   expect_equal(length(nkeys2), 1)
