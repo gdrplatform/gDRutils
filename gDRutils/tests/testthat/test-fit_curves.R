@@ -181,14 +181,16 @@ test_that("predict_efficacy_from_conc works as expected", {
   h <- 2
   EC50 <- 0.5
 
-  # Non-numeric values cause an error.
-  expect_error(predict_efficacy_from_conc(
-    c = "non-numeric_entry",
-    x_inf = Vinf,
-    x_0 = V0,
-    ec50 = EC50,
-    h = h
-  ))
+  # Non - numeric values cause an error.
+  expect_error(
+    predict_efficacy_from_conc(
+      c = "non-numeric_entry",
+      x_inf = Vinf,
+      x_0 = V0,
+      ec50 = EC50,
+      h = h
+    )
+  )
 
   # Normal fit.
   v <- predict_efficacy_from_conc(

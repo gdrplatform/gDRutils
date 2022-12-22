@@ -6,13 +6,15 @@ test_that("logistic_4parameters works as expected", {
     EC50 <- 0.5
 
     # Non-numeric values cause an error.
-    expect_error(predict_efficacy_from_conc(
+    expect_error(
+      predict_efficacy_from_conc(
         c = "non-numeric_entry",
         Vinf = Vinf,
         V0 = V0,
         EC50 = EC50,
         h = h
-    ))
+      )
+    )
 
     # Normal fit.
     v <- predict_efficacy_from_conc(
