@@ -153,26 +153,3 @@ validate_MAE <- function(mae) {
   invisible(NULL)
 }
 
-#' Get Optional Experiment Field
-#'
-#' @return a list containing the names of the optional identifiers and the default value
-#' @export
-#'
-#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
-get_optional_experiment_field <- function() {
-  idfs <- get_env_identifiers()
-  optional_identifiers <- c(
-    idfs["cellline_tissue"],
-    idfs["cellline_ref_div_time"],
-    idfs["cellline_parental_identifier"],
-    idfs["cellline_subtype"],
-    idfs["drug_moa"],
-    idfs["drug_moa2"],
-    idfs["drug_moa3"]
-  )
-  default_value <- "Undefined"
-  list(
-    optional_identifiers = optional_identifiers,
-    default_value = default_value
-  )
-}
