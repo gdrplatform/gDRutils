@@ -1,5 +1,5 @@
 # Change to v.1.3.14
-- Add optional identifiers function
+- Add helpers for colData/rowData refinement
 
 # Change to v.1.3.13
 - Fixed warnings in unit tests
