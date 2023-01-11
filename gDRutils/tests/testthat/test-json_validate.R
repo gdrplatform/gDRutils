@@ -59,7 +59,6 @@ test_that("validate works as expected", {
       )
     )
   v_st <- validate_mae_with_schema(tmae1)
-  browser()
   expect_true(v_st[[exp_names_v[2]]])
   
 })
