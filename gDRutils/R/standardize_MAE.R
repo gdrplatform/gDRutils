@@ -1,19 +1,3 @@
-#' Standardize MAE by switching from custom identifiers into gDR-default
-#'
-#' @param mae a MultiAssayExperiment object with drug-response data generate by gDR pipeline
-#'
-#' @return mae a MultiAssayExperiment with default gDR identifiers
-#' @export
-#'
-standardize_mae <- function(mae) {
-  checkmate::assert_class(mae, "MultiAssayExperiment")
-  experiments <- names(mae)
-  for (experiment in experiments) {
-    mae[[experiment]] <- standardize_se(mae[[experiment]])
-  }
-  mae
-}
-
 #' Standardize SE by switching from custom identifiers into gDR-default
 #'
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
