@@ -7,11 +7,11 @@
 refine_rowdata(rd, se, default_v = "Undefined")
 }
 \arguments{
+\item{rd}{DataFrame with colData}
+
 \item{se}{a SummarizedExperiment object with drug-response data generate by gDR pipeline}
 
 \item{default_v}{string with default value for optional columns in rowData}
-
-\item{cd}{DataFrame with colData}
 }
 \value{
 refined rowData

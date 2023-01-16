@@ -132,14 +132,13 @@ refine_coldata <- function(cd, se, default_v = "Undefined") {
 #' current improvements done on the rowData as a standardization step:
 #' - set default value for optional rowData fields
 #'
-#' @param cd DataFrame with colData
+#' @param rd DataFrame with colData
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
 #' @param default_v string with default value for optional columns in rowData
 #' 
 #' @return refined rowData
 #' @export
 #'
-
 refine_rowdata <- function(rd, se, default_v = "Undefined") {
   
   checkmate::assert_class(se, "SummarizedExperiment")
