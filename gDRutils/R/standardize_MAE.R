@@ -193,7 +193,7 @@ refine_coldata <- function(cd, se, default_v = "Undefined") {
 #' current improvements done on the rowData as a standardization step:
 #' - set default value for optional rowData fields
 #'
-#' @param cd DataFrame with colData
+#' @param rd DataFrame with rowData
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
 #' @param default_v string with default value for optional columns in rowData
 #' 
