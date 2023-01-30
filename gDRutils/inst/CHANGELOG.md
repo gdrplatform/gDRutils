@@ -1,3 +1,6 @@
+# Change to v.1.3.15
+- Add support for splitting normalization data types
+
 # Change to v.1.3.14
 - Add helpers for colData/rowData refinement
 
