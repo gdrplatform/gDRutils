@@ -20,7 +20,7 @@
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' Defaults to \code{0.1}.
 #' @param normalization_type character vector of types of curves to fit.
-#' Defaults to \code{c("GRvalue", "RelativeViability")}.
+#' Defaults to \code{c("GR", "RV")}.
 #'
 #' @return data.frame of fit parameters as specified by the \code{normalization_type}.
 #'
@@ -46,14 +46,14 @@ fit_curves <- function(df_,
                        force_fit = FALSE,
                        pcutoff = 0.05,
                        cap = 0.1, 
-                       normalization_type = c("GRvalue", "RelativeViability")) {
+                       normalization_type = c("GR", "RV")) {
   
   
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
-  if (any(bad_normalization_type <- ! normalization_type %in% c("GRvalue", "RelativeViability"))) {
+  if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'", 
       paste0(normalization_type[bad_normalization_type], collapse = ", ")))
   } 
@@ -61,32 +61,28 @@ fit_curves <- function(df_,
   req_fields <- series_identifiers
   opt_fields <- NULL
   
-  for (nt in normalization_type) {
-    req_fields <- c(req_fields, nt)
-    opt_fields <- c(opt_fields, paste0("std_", nt))
-  }
+  req_fields <- c(req_fields, "x")
+  opt_fields <- "x_std"
   
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
 
-  for (opt_f in setdiff(opt_fields, colnames(df_))) {
-    df_[, opt_f] <- NA
-  }
+  df_[, setdiff(opt_fields, colnames(df_))] <- NA
 
   df_metrics <- NULL
-  concs <- df_[[series_identifiers]]
+  concs <- unique(df_[[series_identifiers]])
   med_concs <- stats::median(concs)
   min_concs <- min(concs)
 
   concsNA <- all(is.na(concs))
   if (concsNA) concs[] <- 0
 
-  if ("RelativeViability" %in% normalization_type) {
+  if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
       concs,
-      df_$RelativeViability, 
-      df_$std_RelativeViability, 
+      df_$x[df_$normalization_type == "RV"], 
+      df_$x_std[df_$normalization_type == "RV"], 
       priors = c(2, 0.4, 1, med_concs),
       lower = c(0.1, 0, 0, min_concs / 10),
       x_0 = e_0, 
@@ -99,11 +95,11 @@ fit_curves <- function(df_,
     df_metrics$normalization_type <- "RV"
   }
 
-  if ("GRvalue" %in% normalization_type) {
+  if ("GR" %in% normalization_type) {
     df_gr <- logisticFit(
       concs,
-      df_$GRvalue, 
-      df_$std_GRvalue, 
+      df_$x[df_$normalization_type == "GR"], 
+      df_$x_std[df_$normalization_type == "GR"], 
       priors = c(2, 0.1, 1, med_concs),
       lower = c(0.1, -1, -1, min_concs / 10),
       x_0 = GR_0, 
