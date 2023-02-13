@@ -154,3 +154,54 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
 })
+
+test_that("convert_se_ref_assay_to_dt/convert_mae_ref_assay_to_dt works as expected", {
+  m <- 20
+  n <- 10
+  rnames <- LETTERS[1:m]
+  cnames <- letters[1:n]
+  
+  # Normal matrix.
+  ref_gr_value <- matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
+  ref_rv_value <- matrix(runif(n * m), nrow = m, ncol = n, dimnames = list(rnames, cnames))
+  se <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value,
+                                                                 RefRelativeViability = ref_rv_value),
+                                                   rowData = S4Vectors::DataFrame(rnames),
+                                                   colData = S4Vectors::DataFrame(cnames))
+  S4Vectors::metadata(se)$identifiers <- get_env_identifiers(k = NULL, simplify = TRUE)
+  mae <- MultiAssayExperiment::MultiAssayExperiment(list(se = se))
+  
+  result <- convert_mae_ref_assay_to_dt(mae)
+  # Check output format
+  expect_equal(dim(result), c(m * n, 12))
+  # Check the presence of the required columns
+  expect_true(all(
+    c("RelativeViability", "std_RelativeViability", "GRvalue", "std_GRvalue") %in% colnames(result)
+  ))
+  expect_true(all(
+    S4Vectors::metadata(se)$identifiers[c("drug", "drug_name", "drug_moa")] %in% colnames(result)
+  ))
+  
+  # Check asserts
+  expect_error(convert_mae_ref_assay_to_dt(mae, "test"))
+  expect_error(convert_mae_ref_assay_to_dt(mae, "se", "test"))
+  expect_error(convert_mae_ref_assay_to_dt(mae, "se", "RefGRvalue", "test"))
+  expect_error(convert_mae_ref_assay_to_dt(mae, "se", "test", "RefRelativeViability"))
+  
+  # Check warnings
+  mae_missing_identifiers <- mae
+  S4Vectors::metadata(mae_missing_identifiers[[1]]) <- list()
+  expect_warning(convert_mae_ref_assay_to_dt(mae_missing_identifiers))
+  
+  # Check SE
+  se <- mae[[1]]
+  results <- convert_se_ref_assay_to_dt(se)
+  expect_equal(dim(result), c(m * n, 12))
+  
+  # Check SE - asserts
+  expect_error(convert_se_ref_assay_to_dt(mae))
+  expect_error(convert_se_ref_assay_to_dt(se, "test"))
+  expect_error(convert_se_ref_assay_to_dt(se, "RefGRvalue", "test"))
+  expect_error(convert_se_ref_assay_to_dt(se, "test", "RefRelativeViability"))
+  
+})
