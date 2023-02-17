@@ -16,11 +16,10 @@ ARG GITHUB_TOKEN
 
 #================= Install dependencies
 RUN mkdir -p /mnt/vol
-RUN if [ ! -f "rplatform/.github_access_token.txt" ] ; then \
-       echo "$GITHUB_TOKEN" > rplatform/.github_access_token.txt; \
-    fi
-#RUN if [ ! -f "rplatform/.github_access_token.txt" ] ; then echo "$GITHUB_TOKEN" > rplatform/.github_access_token.txt ; fi
 COPY rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol
+RUN if [ ! -f "/mnt/vol/.github_access_token.txt" ] ; then \
+       echo "$GITHUB_TOKEN" > /mnt/vol/.github_access_token.txt; \
+    fi
 RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
