@@ -4,10 +4,12 @@ pkgs:
     url: gdrplatform/gDRtestData
     ref: master
     subdir: gDRtestData
+    host: 'api.github.com'
     source: GITHUB
   gDRstyle:
     ver: '>=0.0.8'
     url: gdrplatform/gDRstyle
     ref: main
     subdir: gDRstyle
+    host: 'api.github.com'
     source: GITHUB
