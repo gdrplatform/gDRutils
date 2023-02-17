@@ -18,7 +18,7 @@ ARG GITHUB_TOKEN
 RUN mkdir -p /mnt/vol
 COPY rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol
 RUN if [ ! -f "/mnt/vol/.github_access_token.txt" ] ; then \
-       echo "$GITHUB_TOKEN" > /mnt/vol/.github_access_token.txt; \
+       echo "${GITHUB_TOKEN}" > /mnt/vol/.github_access_token.txt; \
     fi
 RUN Rscript -e "gDRstyle::installAllDeps()"
 
