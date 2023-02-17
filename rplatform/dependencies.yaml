@@ -9,5 +9,5 @@ pkgs:
     ver: '>=0.0.8'
     url: gdrplatform/gDRstyle
     ref: main
-    subdir: ~
+    subdir: gDRstyle
     source: GITHUB
