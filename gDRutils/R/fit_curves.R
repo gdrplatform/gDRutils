@@ -236,11 +236,11 @@ logisticFit <-
 
     out <- tryCatch({
       non_na_avg_norm <- !is.na(df_$norm_values)
+      if (sum(non_na_avg_norm) < n_point_cutoff) {
+        stop(fitting_handler("too_few_fit", message = sprintf("not enough data points (%i < %i) to perform fitting", sum(non_na_avg_norm), n_point_cutoff)))
+      }
       if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
         stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
-      }
-      if (sum(non_na_avg_norm) < n_point_cutoff) {
-        stop(fitting_handler("too_few_fit", message = "not enough data to perform fitting"))
       }
 
       if (!is.na(x_0)) {
@@ -294,7 +294,7 @@ logisticFit <-
 
       f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
       if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
-        stop(fitting_handler("constant_fit", message = "fit is not statistically significant, setting constant fit"))
+        stop(fitting_handler("constant_fit", message = sprintf("fit is not statistically significant (p=%.2f), setting constant fit", f_pval)))
       }
 
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
@@ -303,11 +303,12 @@ logisticFit <-
       }
       out
     }, too_few_fit = function(e) {
+      warning(e$message)
       out <- .set_too_few_fit_params(out, df_$norm_values)
 
     }, constant_fit = function(e) {
       if (!is.na(x_0)) {
-        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
+        warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
       }
       out <- .set_constant_fit_params(out, mean_norm_value)
 
