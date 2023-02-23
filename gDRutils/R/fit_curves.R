@@ -215,6 +215,7 @@ logisticFit <-
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
     df_ <- data.frame(concs = concs, norm_values = norm_values)
 
+    
     if (has_dups(df_$concs)) {
       warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
