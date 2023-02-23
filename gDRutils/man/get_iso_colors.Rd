@@ -2,8 +2,7 @@
 % Please edit documentation in R/combo.R
 \name{get_iso_colors}
 \alias{get_iso_colors}
-\title{get_iso_colors
-#'}
+\title{get_iso_colors}
 \usage{
 get_iso_colors(normalization_type = c("RelativeViability", "GRvalue"))
 }
@@ -15,5 +14,4 @@ named charvec with iso colors
 }
 \description{
 get_iso_colors
-#'
 }

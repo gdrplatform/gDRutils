@@ -9,7 +9,7 @@ get_combo_col_settings(g_metric, assay_type)
 \arguments{
 \item{g_metric}{growth metric}
 
-\item{assay_type}{assay_type}
+\item{assay_type}{assay type}
 }
 \value{
 list with colors, breaks and limits
