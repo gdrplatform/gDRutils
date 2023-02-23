@@ -159,5 +159,5 @@ get_combo_col_settings <-
       colors = colors,
       breaks = breaks,
       limits = limits
-    ))
+    )
   }
