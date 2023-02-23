@@ -70,7 +70,10 @@ test_that("convert_se_to_json works with diferent types of metadata", {
   md <- tibble::tibble(title = "my awesome experiment",
                        description = "description of experiment",
                        source = "GeneData_Screener")
-  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  expect_warning(
+    se <- gDRutils::set_SE_experiment_metadata(se, md),
+    "overwriting existing metadata entry: 'experiment_metadata'"
+  )
   # check if there is no error
   expect_error(convert_se_to_json(se), NA)
   
@@ -78,7 +81,10 @@ test_that("convert_se_to_json works with diferent types of metadata", {
   md <- S4Vectors::DataFrame(title = "my awesome experiment",
                              description = "description of experiment",
                              source = "GeneData_Screener")
-  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  expect_warning(
+    se <- gDRutils::set_SE_experiment_metadata(se, md),
+    "overwriting existing metadata entry: 'experiment_metadata'"
+  )
   # check if there is no error
   expect_error(convert_se_to_json(se), NA)
   
@@ -86,7 +92,10 @@ test_that("convert_se_to_json works with diferent types of metadata", {
   md <- c(title = "my awesome experiment",
           description = "description of experiment",
           source = "GeneData_Screener")
-  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  expect_warning(
+    se <- gDRutils::set_SE_experiment_metadata(se, md),
+    "overwriting existing metadata entry: 'experiment_metadata'"
+  )
   expect_error(convert_se_to_json(se), "jsonlite::validate(json) is not TRUE", fixed = TRUE)
 })
 

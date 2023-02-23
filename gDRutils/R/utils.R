@@ -107,6 +107,9 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' @param FUN A user-defined function.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
 #' Defaults to \code{TRUE}.
+#' @param ... optional argument passed to 
+#' \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
+#' else to \link[base]{lapply}.
 #'
 #' @return List containing output of \code{FUN} applied to every element in \code{x}.
 #' @export

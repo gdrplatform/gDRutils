@@ -1,3 +1,15 @@
+# Change to v.1.3.15
+- Add tests for convert_se_ref_assay_to_dt
+
+# Change to v.1.3.14
+- Add helpers for colData/rowData refinement
+
+# Change to v.1.3.13
+- Fixed warnings in unit tests
+
+# Change to v.1.3.12
+- `R CMD check` returns `0 errors ✓ | 0 warnings ✓ | 0 notes ✓` 
+
 # Change to v.1.3.11
 - default apply_bumpy_function parallelize to TRUE 
 

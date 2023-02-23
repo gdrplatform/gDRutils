@@ -45,7 +45,10 @@ test_that("get_env_identifier works with untreated_tag", {
 
 test_that("get_SE_identifier works with untreated_tag", {
   se <- SummarizedExperiment()
-  obs <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)
+  expect_warning(
+    obs <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE),
+    "'se' was passed, but identifier 'untreated_tag' not found on se's identifiers"
+  )
   expect_length(obs, 2)
   expect_equal(obs, c("untreated", "vehicle"))
 })

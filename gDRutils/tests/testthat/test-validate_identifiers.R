@@ -1,4 +1,5 @@
-library(testthat); library(gDRutils)
+library(testthat)
+library(gDRutils)
 
 test_that(".check_required_identifiers works as expected", {
   # Set up.
