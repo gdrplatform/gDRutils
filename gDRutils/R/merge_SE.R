@@ -58,7 +58,6 @@ merge_SE <- function(SElist,
       metadata = metadata,
       checkDimnames = FALSE
     )
-  browser()
   av_pnames <-
     names(formals(SummarizedExperiment::SummarizedExperiment))
   f_list <- p_list[intersect(names(p_list), av_pnames)]
