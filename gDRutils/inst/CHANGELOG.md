@@ -1,5 +1,8 @@
-# Change to v.1.3.16
+# Change to v.1.3.17
 - Add support for splitting normalization data types
+
+# Change to v.1.3.16
+- Tidy code
 
 # Change to v.1.3.15
 - Add tests for convert_se_ref_assay_to_dt

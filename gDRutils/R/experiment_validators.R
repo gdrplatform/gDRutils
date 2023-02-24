@@ -12,7 +12,6 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
   dn1 <- dimnames(obj)
   dn2 <- dimnames(obj2)
 
-  # let's start with assuring that dimnames have the same length
   checkmate::assert_true(identical(length(dn1), length(dn2)))
 
   for (idx in seq_along(dn1)) {
@@ -145,10 +144,11 @@ validate_MAE <- function(mae) {
                                            "matrix", "cotreatment", "other"))
   for (experiment in experiments) {
     if (experiment %in% get_experiment_groups("single-agent")[["single-agent"]]) {
-      validate_SE(mae[[experiment]], expect_single_agent = TRUE)
+      expect_single_agent <- TRUE
     } else {
-      validate_SE(mae[[experiment]])
+      expect_single_agent <- FALSE
     }
+    validate_SE(mae[[experiment]], expect_single_agent = expect_single_agent)
   }
   invisible(NULL)
 }

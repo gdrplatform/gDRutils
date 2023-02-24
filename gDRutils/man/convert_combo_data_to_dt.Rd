@@ -12,13 +12,13 @@ convert_combo_data_to_dt(
 )
 }
 \arguments{
-\item{se}{sumamrized experiment with dose-response data}
+\item{se}{\code{SummarizedExperiment} object with dose-response data}
 
-\item{c_assays}{charvec combo assays to be used}
+\item{c_assays}{charvec of combo assays to be used}
 
-\item{normalization_type}{charvec normalization_types expected in the data}
+\item{normalization_type}{charvec of normalization_types expected in the data}
 
-\item{prettify}{logic flag prettify the colnames od the returned list of data.tables?}
+\item{prettify}{boolean flag indicating whether or not to prettify the colnames of the returned data}
 }
 \value{
 list of data.table(s) with combo data
