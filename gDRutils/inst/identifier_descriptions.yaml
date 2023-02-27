@@ -1,50 +1,77 @@
 duration:
-  "Duration of treatment"
+  description: "Duration of treatment"
+  example: "168"
 clid:
-  "Cell Line identifier"
+  description: "Cell Line identifier"
+  example: "CL00011"
 cellline_name:
-  "Cell Line common name"
+  description: "Cell Line common name"
+  example: "G123"
 cellline_tissue:
-  "Tissue name"
+  description: "Tissue name"
+  example: "Lung"
 cellline_ref_div_time:
-  "Cell Line reference division time"
+  description: "Cell Line reference division time"
+  example:
 cellline_parental_identifier:
-  "Cell Line parental identifier"
+  description: "Cell Line parental identifier"
+  example:
 cellline_subtype:
-  "Cell Line subtype"
+  description: "Cell Line subtype"
+  example:
 drug:
-  "Drug identifier"
+  description: "Drug identifier"
+  example:
 drug_name:
-  "Drug common name"
+  description: "Drug common name"
+  example: "Erastin"
 drug_moa:
-  "Drug mechanism of action"
+  description: "Drug mechanism of action"
+  example: "VDAC"
 untreated_tag:
-  "Tags for untreated cellines"
+  description: "Tags for untreated cellines"
+  example: "Untreated"
 masked_tag:
-  "Tag for masked celllines"
+  description: "Tag for masked celllines"
+  example:
 well_position:
-  "Position in the wells"
+  description: "Position in the wells"
+  example:
+    well_row: "A"
+    well_column: "1"
 concentration:
-  "Concentration of the drug used"
+  description: "Concentration of the drug used"
+  exammple: "3.14159"
 template:
-  "Treatment layout template"
+  description: "Treatment layout template"
+  example: "Template_untreated.xlsx"
 barcode:
-  "Plate identifier"
+  description: "Plate identifier"
+  example: "1234C65465876_001"
 drug_2:
-  "Drug 2 identifier"
+  description: "Drug 2 identifier"
+  example:
 drug_name2:
-  "Drug 2 common name"
+  description: "Drug 2 common name"
+  example: "gD-9671"
 drug_moa2:
-  "Drug 2 mechanism of action"
+  description: "Drug 2 mechanism of action"
+  example: "DLK"
 concentration2:
-  "Concentration of Drug 2 used"
+  description: "Concentration of Drug 2 used"
+  example: "2.71828"
 drug_3:
-  "Drug 3 identifier"
+  description: "Drug 3 identifier"
+  example:
 drug_name3:
-  "Drug 3 common name"
+  description: "Drug 3 common name"
+  example: "G0123456"
 drug_moa3:
-  "Drug 3 mechanism of action"
+  description: "Drug 3 mechanism of action"
+  example: "IRA"
 concentration3:
-  "Concentration of Drug 3 used"
+  description: "Concentration of Drug 3 used"
+  example: "299792458"
 data_source:
-  "Source of the data"
+  description: "Source of the data"
+  example: "gDR"
