@@ -74,8 +74,17 @@ convert_se_assay_to_dt <- function(se,
     dt[[id_col]] <- NULL
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
     dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
-    dt <- data.table::dcast(dt, dcast_formula, value.var = "x")
+    new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
+                                paste, sep = "_"))
+    
+    new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
+      x[1] <- x[length(x)]
+      val <- x[seq_len(length(x) - 1)]
+      paste(val, collapse = "_")
+      }))
+    dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols)
     dt$id <- NULL 
+    data.table::setnames(dt, new_cols, new_cols_rename, skip_absent = TRUE)
   }
   dt
 }
