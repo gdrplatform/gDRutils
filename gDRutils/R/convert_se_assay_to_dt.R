@@ -12,6 +12,8 @@
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
+#' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
+#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE`.
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
@@ -25,7 +27,8 @@
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
                                    include_metadata = TRUE,
-                                   retain_nested_rownames = FALSE) {
+                                   retain_nested_rownames = FALSE,
+                                   wide_structure = FALSE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
@@ -35,6 +38,10 @@ convert_se_assay_to_dt <- function(se,
   
   validate_se_assay_name(se, assay_name)
 
+  if (wide_structure) {
+    retain_nested_rownames <- TRUE
+  }
+  
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
 
   if (nrow(dt) == 0L) {
@@ -57,8 +64,20 @@ convert_se_assay_to_dt <- function(se,
 
     dt <- merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
   }
-
-  data.table::as.data.table(dt)
+  dt <- data.table::as.data.table(dt)
+  
+  
+  if (wide_structure) {
+    normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
+    id_col <- paste0(assay_name, "_rownames")
+    dt$id <- gsub("_.*" , "", dt[[id_col]])
+    dt[[id_col]] <- NULL
+    rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
+    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
+    dt <- data.table::dcast(dt, dcast_formula, value.var = "x")
+    dt$id <- NULL 
+  }
+  dt
 }
 
 
