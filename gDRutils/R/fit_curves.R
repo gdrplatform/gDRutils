@@ -246,6 +246,11 @@ logisticFit <-
           )
         ))
       }
+      # the condition on n_point_cutoff should come before 'length(unique(ReadoutValue))==1' to handle
+      # specific cases when multiple ReadoutValue are equal resulting outputting a constant fit
+      # This is important for the new matrix format for co-treatment when 
+      # some results with <3 concentration may be fitted if the order of tests is different
+
       if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
         stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
       }
@@ -321,6 +326,7 @@ logisticFit <-
 
     }, constant_fit = function(e) {
       if (!is.na(x_0)) {
+        # provide a more explicit warning message with the outcome of the fitting
         warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
       }
       out <- .set_constant_fit_params(out, mean_norm_value)
