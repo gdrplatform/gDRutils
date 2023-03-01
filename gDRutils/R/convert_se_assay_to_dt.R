@@ -38,10 +38,16 @@ convert_se_assay_to_dt <- function(se,
   
   validate_se_assay_name(se, assay_name)
 
-  if (wide_structure) {
-    retain_nested_rownames <- TRUE
-  }
   
+  if (wide_structure) {
+    # wide_structure works only with `normalization_type` column in the assay
+    if ("normalization_type" %in%
+        BumpyMatrix::commonColnames(SummarizedExperiment::assay(se,assay_name))) {
+      retain_nested_rownames <- TRUE
+    } else {
+      wide_structure <- FALSE
+    }
+  }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
 
   if (nrow(dt) == 0L) {
@@ -78,12 +84,14 @@ convert_se_assay_to_dt <- function(se,
                                 paste, sep = "_"))
     
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
-      x[1] <- x[length(x)]
-      val <- x[seq_len(length(x) - 1)]
-      paste(val, collapse = "_")
+      x[length(x)] <- gDRutils::extend_normalization_type_name(x[length(x)])
+      paste(x[-1], collapse = "_")
       }))
-    dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols)
+    dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols, sep = "_1")
     dt$id <- NULL 
+    if (!all(new_cols %in% names(dt))) {
+      new_cols <- gsub("x_", "", new_cols)
+    }
     data.table::setnames(dt, new_cols, new_cols_rename, skip_absent = TRUE)
   }
   dt
