@@ -70,7 +70,7 @@ convert_se_assay_to_dt <- function(se,
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
     id_col <- paste0(assay_name, "_rownames")
-    dt$id <- gsub("_.*" , "", dt[[id_col]])
+    dt$id <- gsub("_.*", "", dt[[id_col]])
     dt[[id_col]] <- NULL
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
     dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
