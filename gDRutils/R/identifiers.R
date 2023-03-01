@@ -157,17 +157,45 @@ reset_env_identifiers <- function() {
 
 #' Get descriptions for identifiers
 #'
-#' @param k identifier key
+#' @param k identifier key, string
+#' @param get_description return descriptions only, boolean
+#' @param get_example return examples only, boolean
 #'
 #' @export
-get_identifers_desc <- function(k = NULL) {
+get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = FALSE) {
   checkmate::assert_string(k, null.ok = TRUE)
-  desc <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+  checkmate::assert_logical(get_description)
+  checkmate::assert_logical(get_example)
+  dt <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+  description <- lapply(dt, function(i) {i[["description"]]})
+  example <- lapply(dt, function(i) {i[["example"]]})
   if (is.null(k)) {
-    desc
+    if (get_description & !get_example) {
+      description
+    } else if (!get_description & get_example) {
+      example
+    } else if (get_description & get_example) {
+      list(
+        description = description,
+        example = example
+      )
+    } else {
+      dt
+    }
   } else {
-    checkmate::assert_true(k %in% names(desc))
-    desc[[k]]
+    checkmate::assert_true(k %in% names(dt))
+    if (get_description & !get_example) {
+      description[[k]]
+    } else if (!get_description & get_example) {
+      example[[k]]
+    } else if (get_description & get_example) {
+      list(
+        description = description[[k]],
+        example = example[[k]]
+      )
+    } else {
+      dt[[k]]
+    }
   }
 }
 
