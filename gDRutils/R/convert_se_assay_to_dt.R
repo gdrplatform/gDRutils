@@ -42,7 +42,7 @@ convert_se_assay_to_dt <- function(se,
   if (wide_structure) {
     # wide_structure works only with `normalization_type` column in the assay
     if ("normalization_type" %in%
-        BumpyMatrix::commonColnames(SummarizedExperiment::assay(se,assay_name))) {
+        BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
       retain_nested_rownames <- TRUE
     } else {
       wide_structure <- FALSE
