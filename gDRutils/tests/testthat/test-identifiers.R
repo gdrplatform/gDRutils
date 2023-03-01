@@ -64,14 +64,22 @@ test_that("get_required_identifiers works as expected", {
   expect_true(all(get_required_identifiers() %in% get_expect_one_identifiers()))
 })
 
-test_that("get_identifiers_desc works as expected", {
-  descriptions <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
-  expect_equal(get_identifers_desc(), descriptions)
-  expect_equal(get_identifers_desc(k = "drug_name"), descriptions[["drug_name"]])
-  expect_error(get_identifers_desc(k = "some_drugs"),
-               "Assertion on 'k %in% names(desc)' failed: Must be TRUE.",
+test_that("get_identifiers_dt works as expected", {
+  dt <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
+  expect_equal(get_identifiers_dt(), dt)
+  expect_equal(get_identifiers_dt(k = "drug_name"), dt[["drug_name"]])
+  expect_equal(get_identifiers_dt(get_description = TRUE),
+               lapply(dt, function(i) {i[["description"]]}))
+  expect_equal(get_identifiers_dt(get_example = TRUE),
+               lapply(dt, function(i) {i[["example"]]}))
+  expect_equal(get_identifiers_dt(k = "drug_name", get_description = TRUE),
+               dt$drug_name$description)
+  expect_equal(get_identifiers_dt(k = "drug_name", get_example = TRUE),
+               dt$drug_name$example)
+  expect_error(get_identifiers_dt(k = "some_drugs"),
+               "Assertion on 'k %in% names(dt)' failed: Must be TRUE.",
                fixed = TRUE)
-  expect_error(get_identifers_desc(k = 2),
+  expect_error(get_identifiers_dt(k = 2),
                "Assertion on 'k' failed: Must be of type 'string' (or 'NULL'), not 'double'.",
                fixed = TRUE)
 })
