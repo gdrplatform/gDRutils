@@ -31,16 +31,11 @@ convert_combo_data_to_dt <-
 
     my_l <-
       lapply(names(c_assays), function(x) {
-        wide_structure <- if (x %in% c("Normalized", "Averaged")) {
-          TRUE
-        } else {
-          FALSE
-        }
         if (x %in% names(get_combo_base_assay_names())) {
           if (x == names(get_combo_assay_names(group = "combo_base_mx"))) {
             dt <- convert_se_assay_to_dt(se, c_assays[[x]])
             for (n in names(ntype_dict)) {
-              data.table::setnames(dt, n, ntype_dict[n])
+              data.table::setnames(dt, n, ntype_dict[n], skip_absent = TRUE)
             }
             dt <- data.table::melt(
               dt,
@@ -49,11 +44,11 @@ convert_combo_data_to_dt <-
               value.name = "base-value"
             )
           } else {
-            dt <- convert_se_assay_to_dt(se, c_assays[[x]], wide_structure = wide_structure)
+            dt <- convert_se_assay_to_dt(se, c_assays[[x]])
             dt[["base-value"]] <- dt[["excess"]]
           }
         } else {
-          dt <- convert_se_assay_to_dt(se, c_assays[[x]], wide_structure = wide_structure)
+          dt <- convert_se_assay_to_dt(se, c_assays[[x]])
         }
         # TODO: let's discuss how to handle names in isobologram assay (pos_x, iso_level)
         if (prettify) {
