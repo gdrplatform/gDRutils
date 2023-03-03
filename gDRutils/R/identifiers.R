@@ -167,8 +167,12 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
   checkmate::assert_logical(get_description)
   checkmate::assert_logical(get_example)
   dt <- yaml::read_yaml(system.file(package = "gDRutils", "identifier_descriptions.yaml"))
-  description <- lapply(dt, function(i) {i[["description"]]})
-  example <- lapply(dt, function(i) {i[["example"]]})
+  description <- lapply(dt, function(i) {
+    i[["description"]]
+  })
+  example <- lapply(dt, function(i) {
+    i[["example"]]
+  })
   if (is.null(k)) {
     if (get_description & !get_example) {
       description

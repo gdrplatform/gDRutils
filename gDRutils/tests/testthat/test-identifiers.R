@@ -69,9 +69,13 @@ test_that("get_identifiers_dt works as expected", {
   expect_equal(get_identifiers_dt(), dt)
   expect_equal(get_identifiers_dt(k = "drug_name"), dt[["drug_name"]])
   expect_equal(get_identifiers_dt(get_description = TRUE),
-               lapply(dt, function(i) {i[["description"]]}))
+               lapply(dt, function(i) {
+                 i[["description"]]
+                 }))
   expect_equal(get_identifiers_dt(get_example = TRUE),
-               lapply(dt, function(i) {i[["example"]]}))
+               lapply(dt, function(i) {
+                 i[["example"]]
+                 }))
   expect_equal(get_identifiers_dt(k = "drug_name", get_description = TRUE),
                dt$drug_name$description)
   expect_equal(get_identifiers_dt(k = "drug_name", get_example = TRUE),
