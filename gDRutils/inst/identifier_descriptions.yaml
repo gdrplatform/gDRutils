@@ -33,7 +33,7 @@ untreated_tag:
   example: "Untreated"
 masked_tag:
   description: "Tag for masked celllines"
-  example: "TRUE"
+  example: TRUE
 well_position:
   description: "Position in the wells"
   example: "[A, 1]"
