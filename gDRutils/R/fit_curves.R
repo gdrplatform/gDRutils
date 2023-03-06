@@ -607,10 +607,10 @@ average_dups <- function(df, col) {
 
   upper_cap <- max_conc * capping_fold
   lower_cap <- ifelse(!is.na(min_conc), min_conc / capping_fold, max_conc / (capping_fold * 1e5))
-  xc50 <- if (xc50 > upper_cap) {
-    Inf
+  if (xc50 > upper_cap) {
+    xc50 <- Inf
   } else if (xc50 < lower_cap) {
-    -Inf
+    xc50 <- -Inf
   }
   xc50
 } 
