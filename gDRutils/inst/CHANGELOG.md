@@ -1,5 +1,8 @@
-# Change to v.1.3.17
+# Change to v.1.3.18
 - Add examples of identifiers
+
+# Change to v.1.3.17
+- Remove obsolete code
 
 # Change to v.1.3.16
 - Tidy code
