@@ -302,7 +302,7 @@ logisticFit <-
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
       if (is.na(out$xc50)) {
         out$xc50 <- .estimate_xc50(out$x_inf)
-      } else { 
+      } else {
         # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
         # max/min tested concenrations (default)
         out$xc50 <- .cap_xc50(
