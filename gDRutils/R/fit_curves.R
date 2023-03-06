@@ -303,7 +303,7 @@ logisticFit <-
       if (is.na(out$xc50)) {
         out$xc50 <- .estimate_xc50(out$x_inf)
       } else { # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the max/min tested concenrations (default)
-        out$xc50 = .cap_xc50(out$xc50, max_conc = 10**out$maxlog10Concentration, min_conc = min(concs[concs>0]), capping_fold = capping_fold)
+        out$xc50 <- .cap_xc50(out$xc50, max_conc = 10**out$maxlog10Concentration, min_conc = min(concs[concs>0]), capping_fold = capping_fold)
       }
       out
     }, too_few_fit = function(e) {
