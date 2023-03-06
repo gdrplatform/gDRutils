@@ -583,15 +583,15 @@ average_dups <- function(df, col) {
   1 - x
 }
 
-#' Cap IC50 value.
+#' Cap XC50 value.
 #' 
-#' Set \code{Inf} or \code{-Inf} if IC50/GR50 value by upper and lower limits.
+#' Set IC50/GR50 value to \code{Inf} or \code{-Inf} based on upper and lower limits.
 #'
-#' @param xc50 Numeric value of the IC50/G50 to cap. 
+#' @param xc50 Numeric value of the IC50/GR50 to cap. 
 #' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{xc50}.
 #' @param min_conc Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
-#' if \code{NA} (default), using \code{max_conc/1e5} instead
-#' @param capping_fold Integer value of the fold number to use for capping. Default if \code{5}.
+#' If \code{NA} (default), using \code{max_conc/1e5} instead.
+#' @param capping_fold Integer value of the fold number to use for capping. Defaults to \code{5}.
 #'
 #' @return Capped IC50/GR50 value.
 #'
@@ -611,8 +611,6 @@ average_dups <- function(df, col) {
     Inf
   } else if (xc50 < lower_cap) {
     -Inf
-  } else {
-    xc50
   }
   xc50
 } 
