@@ -101,51 +101,6 @@ convert_se_assay_to_dt <- function(se,
 # Convenience functions
 ########################
 
-#' Convert the reference values from a SummarizedExperiment assay to a long data.table
-#'
-#' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
-#' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
-#'
-#' @param se A \linkS4class{SummarizedExperiment} object holding reference data in its assays.
-#' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 
-#' holding the reference relative viability data.
-#' @param ref_gr_value_assay String of the name of the assay in the \code{se} holding the reference GR value data.
-#'
-#' @return data.table representation of the reference data.
-#'
-#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
-#' assay data.
-#'
-#' @export
-#'
-convert_se_ref_assay_to_dt <- function(se,
-                                       ref_relative_viability_assay = "RefRelativeViability",
-                                       ref_gr_value_assay = "RefGRvalue") {
-
-  checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assert_string(ref_relative_viability_assay)
-  checkmate::assert_string(ref_gr_value_assay)
-
-  rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
-  colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
-  rv$std_RelativeViability <- NA
-
-  gr <- convert_se_assay_to_dt(se, ref_gr_value_assay)
-  colnames(gr)[colnames(gr) == ref_gr_value_assay] <- "GRvalue"
-  gr$std_GRvalue <- NA
-
-  dt <- merge(rv, gr, all = TRUE, by = intersect(names(rv), names(gr)))
-
-  # Fill primary drug with 'untreated_tag'.
-  dt$Concentration <- 0
-  untreated <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)[1]
-  dt[, get_SE_identifiers(se, "drug", simplify = TRUE)] <- untreated
-  dt[, get_SE_identifiers(se, "drug_name", simplify = TRUE)] <- untreated
-  dt[, get_SE_identifiers(se, "drug_moa", simplify = TRUE)] <- untreated
-
-  data.table::as.data.table(dt)
-}
-
 #' Convert a MultiAssayExperiment assay to a long data.table
 #'
 #' Convert an assay within a \linkS4class{SummarizedExperiment} object in a MultiAssayExperiment
@@ -201,48 +156,6 @@ convert_mae_assay_to_dt <- function(mae,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames)
   })
-  dt <- plyr::rbind.fill(dtList)
-  dt
-}
-
-#' Convert the reference values from a MultiAssayExperiment assay to a long data.table
-#'
-#' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{MultiAssayExperiment} object to a long data.table.
-#' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
-#'
-#' @param mae A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.
-#' @param experiment_name String of name of the experiment in `mae` whose `assay_name` should be converted.
-#' Default to `NULL` that all the experiment should be converted into one data.table object.
-#' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 
-#' holding the reference relative viability data.
-#' @param ref_gr_value_assay String of the name of the assay in the \code{se} holding the reference GR value data.
-#'
-#' @return data.table representation of the reference data.
-#'
-#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
-#' assay data.
-#'
-#' @export
-#'
-#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
-convert_mae_ref_assay_to_dt <- function(mae,
-                                        experiment_name = NULL,
-                                        ref_relative_viability_assay = "RefRelativeViability",
-                                        ref_gr_value_assay = "RefGRvalue") {
-  
-  checkmate::assert_class(mae, "MultiAssayExperiment")
-  checkmate::assert_choice(experiment_name, names(mae), null.ok = TRUE)
-  checkmate::assert_string(ref_relative_viability_assay)
-  checkmate::assert_string(ref_gr_value_assay)
-  
-  if (is.null(experiment_name)) {
-    experiment_name <- names(mae)
-  }
-  
-  dtList <- lapply(experiment_name,
-                   function(x) convert_se_ref_assay_to_dt(mae[[x]],
-                                                          ref_relative_viability_assay = ref_relative_viability_assay,
-                                                          ref_gr_value_assay = ref_gr_value_assay))
   dt <- plyr::rbind.fill(dtList)
   dt
 }
