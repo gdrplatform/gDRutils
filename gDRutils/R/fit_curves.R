@@ -148,6 +148,7 @@ fit_curves <- function(df_,
 #' @param pcutoff numeric of pvalue significance threshold above or equal to which to use a constant fit.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
+#' @param capping_fold Integer value of the fold number to use for capping IC50/GR50. Default if \code{5}.
 #'
 #' @return data.frame with metrics and fit parameters.
 #'
@@ -199,7 +200,8 @@ logisticFit <-
            force_fit = FALSE,
            pcutoff = 0.05,
            cap = 0.1,
-           n_point_cutoff = 4) {
+           n_point_cutoff = 4,
+           capping_fold = 5) {
 
     if (length(concs) != length(norm_values)) {
       stop("unequal vector lengths for 'conc' and 'norm_values'")
@@ -300,6 +302,8 @@ logisticFit <-
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
       if (is.na(out$xc50)) {
         out$xc50 <- .estimate_xc50(out$x_inf)
+      } else { # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the max/min tested concenrations (default)
+        out$xc50 = .cap_xc50(out$xc50, max_conc = 10**out$maxlog10Concentration, min_conc = min(concs[concs>0]), capping_fold = capping_fold)
       }
       out
     }, too_few_fit = function(e) {
@@ -571,6 +575,40 @@ average_dups <- function(df, col) {
 .calculate_complement <- function(x) {
   1 - x
 }
+
+#' Cap IC50 value.
+#' 
+#' Set \code{Inf} or \code{-Inf} if IC50/GR50 value by upper and lower limits.
+#'
+#' @param xc50 Numeric value of the IC50/G50 to cap. 
+#' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{xc50}.
+#' @param min_conc Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
+#' if \code{NA} (default), using \code{max_conc/1e5} instead
+#' @param capping_fold Integer value of the fold number to use for capping. Default if \code{5}.
+#'
+#' @return Capped IC50/GR50 value.
+#'
+#' @details 
+#' Note: \code{xc50} and \code{max_conc} should share the same units.
+#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
+#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
+#' @keywords internal
+.cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
+  checkmate::assert_numeric(capping_fold)
+  checkmate::assert_number(xc50)
+  checkmate::assert_number(max_conc)
+
+  upper_cap <- max_conc * capping_fold
+  lower_cap <- ifelse(!is.na(min_conc), min_conc / capping_fold, max_conc / (capping_fold * 1e5))
+  xc50 <- if (xc50 > upper_cap) {
+    Inf
+  } else if (xc50 < lower_cap) {
+    -Inf
+  } else {
+    xc50
+  }
+  xc50
+} 
 
 #################
 # Error handling
