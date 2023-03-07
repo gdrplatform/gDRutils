@@ -2,25 +2,25 @@
 % Please edit documentation in R/fit_curves.R
 \name{.cap_xc50}
 \alias{.cap_xc50}
-\title{Cap IC50 value.}
+\title{Cap XC50 value.}
 \usage{
 .cap_xc50(xc50, max_conc, min_conc = NA, capping_fold = 5)
 }
 \arguments{
-\item{xc50}{Numeric value of the IC50/G50 to cap.}
+\item{xc50}{Numeric value of the IC50/GR50 to cap.}
 
 \item{max_conc}{Numeric value of the highest concentration in a dose series used to calculate the \code{xc50}.}
 
 \item{min_conc}{Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
-if \code{NA} (default), using \code{max_conc/1e5} instead}
+If \code{NA} (default), using \code{max_conc/1e5} instead.}
 
-\item{capping_fold}{Integer value of the fold number to use for capping. Default if \code{5}.}
+\item{capping_fold}{Integer value of the fold number to use for capping. Defaults to \code{5}.}
 }
 \value{
 Capped IC50/GR50 value.
 }
 \description{
-Set \code{Inf} or \code{-Inf} if IC50/GR50 value by upper and lower limits.
+Set IC50/GR50 value to \code{Inf} or \code{-Inf} based on upper and lower limits.
 }
 \details{
 Note: \code{xc50} and \code{max_conc} should share the same units.
