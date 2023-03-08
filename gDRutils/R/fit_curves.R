@@ -569,38 +569,6 @@ average_dups <- function(df, col) {
   1 - x
 }
 
-#' Cap IC50 value.
-#' 
-#' Cap IC50 value by upper and lower limits.
-#'
-#' @param ic50 Numeric value of the IC50 to cap. 
-#' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{ic50}.
-#' @param capping_fold Integer value of the fold number to use for capping.
-#'
-#' @return Capped IC50 value.
-#'
-#' @details 
-#' Note: \code{ic50} and \code{max_conc} should share the same units.
-#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
-#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
-#' @export
-cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
-  checkmate::assert_int(capping_fold)
-  checkmate::assert_number(ic50)
-  checkmate::assert_number(max_conc)
-
-  upper_cap <- max_conc * capping_fold
-  lower_cap <- max_conc / (capping_fold * 1e5)
-  ic50 <- if (ic50 > upper_cap) {
-    Inf
-  } else if (ic50 < lower_cap) {
-    -Inf
-  } else {
-    ic50
-  }
-  ic50
-} 
-
 #################
 # Error handling
 #################

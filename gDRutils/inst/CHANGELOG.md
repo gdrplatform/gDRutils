@@ -1,5 +1,11 @@
-# Change to v.1.3.17
+# Change to v.1.3.19
 - Add support for splitting normalization data types
+
+# Change to v.1.3.18
+- Add examples of identifiers
+
+# Change to v.1.3.17
+- Remove obsolete code
 
 # Change to v.1.3.16
 - Tidy code

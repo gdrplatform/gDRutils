@@ -71,22 +71,6 @@ set_SE_experiment_raw_data <- function(se, value) {
 #' @rdname SE_metadata
 #' @export
 #'
-get_SE_fit_parameters <- function(se) {
-  .get_SE_metadata(se, name = "fit_parameters")
-}
-
-
-#' @rdname SE_metadata
-#' @export
-#'
-get_SE_processing_metadata <- function(se) {
-  .get_SE_metadata(se, name = ".internal")
-}
-
-
-#' @rdname SE_metadata
-#' @export
-#'
 get_SE_experiment_raw_data <- function(se) {
   .get_SE_metadata(se, name = "experiment_raw_data")
 }
