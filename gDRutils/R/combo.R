@@ -1,9 +1,9 @@
 #' convert combo assays from SummarizedExperiments to the list of data.tables
 #'
-#' @param  se sumamrized experiment with dose-response data
-#' @param  c_assays charvec combo assays to be used
-#' @param  normalization_type charvec normalization_types expected in the data
-#' @param prettify logic flag prettify the colnames od the returned list of data.tables?
+#' @param se \code{SummarizedExperiment} object with dose-response data
+#' @param c_assays charvec of combo assays to be used
+#' @param normalization_type charvec of normalization_types expected in the data
+#' @param prettify boolean flag indicating whether or not to prettify the colnames of the returned data 
 #' @examples
 #' \dontrun{
 #' combo_data_l <- convert_combo_data_to_dt(se)
@@ -62,9 +62,13 @@ convert_combo_data_to_dt <-
     names(my_l) <- as.character(c_assays)
     my_l
   }
+
+
 #' get_iso_colors
-#' #' 
+#' 
+#' 
 #' @param  normalization_type charvec normalization_types expected in the data
+#'
 #' @return named charvec with iso colors
 #' @export
 get_iso_colors <-
@@ -102,7 +106,7 @@ assert_RGB_format <- function(x) {
 #' Get colorscale data for given combo assay and growth metric
 #'
 #' @param g_metric growth metric
-#' @param assay_type assay_type
+#' @param assay_type assay type
 #'
 #' @return list with colors, breaks and limits
 #' 
@@ -130,33 +134,30 @@ get_combo_col_settings <-
       } else {
         breaks <- c(-0.3, -0.15, 0, 0.15, 0.3)
       }
-      limits <- c(min(breaks), max(breaks))
     } else if (assay_type %in% names(get_combo_assay_names(group = "combo_score_mx"))) {
       colors <- c("#003355", "#4488dd", "#eeeedd", "#CC8844", "#662200")
       breaks <- c(-4, -2, 0, 2, 4)
-      limits <- c(min(breaks), max(breaks))
     } else if (assay_type %in% names(get_combo_assay_names(group = "combo_base_mx"))) {
       if (g_metric == "GRvalue") {
         colors <- c("#001155", "#1122AA", "#AA4400", "#FF7711", "#ffffee")
         breaks <- c(-0.6, -0.2, 0.2, 0.6, 1)
-        limits <- c(min(breaks), max(breaks))
       } else {
         colors <- c("#330033", "#770033", "#BB6633", "#ffaa11", "#ffffee")
         breaks <- c(0, 0.25, 0.5, 0.75, 1)
-        limits <- c(min(breaks), max(breaks))
       }
     } else {
-      stop(sprintf("sth is wrong - no logic found for the assay_type:%s"),
-           assay_type)
+      stop(sprintf("sth is wrong - no logic found for the assay_type:%s",
+           assay_type))
+    }
+    limits <- c(min(breaks), max(breaks))
+
+    if (is.null(colors) || is.null(breaks)) {
+      stop("unexpected error when determining combo color settings - either 'colors' or 'breaks' is NULL")
     }
 
-    res <- (list(
+    list(
       colors = colors,
       breaks = breaks,
       limits = limits
-    ))
-    if (is.null(res[["colors"]]) || is.null(res[["breaks"]])) {
-      stop("sth is wrong - 'colors' and 'breaks' can't be null")
-    }
-    res
+    )
   }

@@ -1,5 +1,14 @@
-# Change to v.1.3.16
+# Change to v.1.3.19
 - Better handling of corner cases for the single-agent fitting
+
+# Change to v.1.3.18
+- Add examples of identifiers
+
+# Change to v.1.3.17
+- Remove obsolete code
+
+# Change to v.1.3.16
+- Tidy code
 
 # Change to v.1.3.15
 - Add tests for convert_se_ref_assay_to_dt

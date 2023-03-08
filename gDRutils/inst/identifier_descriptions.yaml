@@ -1,50 +1,75 @@
 duration:
-  "Duration of treatment"
+  description: "Duration of treatment (in h)"
+  example: "120"
 clid:
-  "Cell Line identifier"
+  description: "Cell Line identifier"
+  example: "CL00011"
 cellline_name:
-  "Cell Line common name"
+  description: "Cell Line common name"
+  example: "MCF-10A"
 cellline_tissue:
-  "Tissue name"
+  description: "Tissue name"
+  example: "Lung"
 cellline_ref_div_time:
-  "Cell Line reference division time"
+  description: "Cell Line reference division time (in h)"
+  example: "50"
 cellline_parental_identifier:
-  "Cell Line parental identifier"
+  description: "Cell Line parental identifier"
+  example: "MCF-10A"
 cellline_subtype:
-  "Cell Line subtype"
+  description: "Cell Line subtype"
+  example: "TNBC"
 drug:
-  "Drug identifier"
+  description: "Drug identifier"
+  example: "G012345"
 drug_name:
-  "Drug common name"
+  description: "Drug common name"
+  example: "Paclitaxel"
 drug_moa:
-  "Drug mechanism of action"
+  description: "Drug mechanism of action"
+  example: "Tubulin"
 untreated_tag:
-  "Tags for untreated cellines"
+  description: "Tags for untreated cellines"
+  example: "Untreated"
 masked_tag:
-  "Tag for masked celllines"
+  description: "Tag for masked celllines"
+  example: TRUE
 well_position:
-  "Position in the wells"
+  description: "Position in the wells"
+  example: "[A, 1]"
 concentration:
-  "Concentration of the drug used"
+  description: "Concentration of the drug used (uM)"
+  exammple: "3.333"
 template:
-  "Treatment layout template"
+  description: "Treatment layout template"
+  example: "Template_untreated.xlsx"
 barcode:
-  "Plate identifier"
+  description: "Plate identifier"
+  example: "1234C65465876_001"
 drug_2:
-  "Drug 2 identifier"
+  description: "Drug 2 identifier"
+  example: "G123456"
 drug_name2:
-  "Drug 2 common name"
+  description: "Drug 2 common name"
+  example: "Erlotinib"
 drug_moa2:
-  "Drug 2 mechanism of action"
+  description: "Drug 2 mechanism of action"
+  example: "EGFR"
 concentration2:
-  "Concentration of Drug 2 used"
+  description: "Concentration of Drug 2 used (uM)"
+  example: "1.111"
 drug_3:
-  "Drug 3 identifier"
+  description: "Drug 3 identifier"
+  example: "G345678"
 drug_name3:
-  "Drug 3 common name"
+  description: "Drug 3 common name"
+  example: "Lapatinib"
 drug_moa3:
-  "Drug 3 mechanism of action"
+  description: "Drug 3 mechanism of action"
+  example: "HER2"
 concentration3:
-  "Concentration of Drug 3 used"
+  description: "Concentration of Drug 3 used"
+  example: "10.0"
 data_source:
-  "Source of the data"
+  description: "Source of the data"
+  example: "gDR"
