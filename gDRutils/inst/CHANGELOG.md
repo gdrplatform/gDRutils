@@ -1,3 +1,6 @@
+# Change to v.1.3.20
+- Add support for splitting normalization data types
+
 # Change to v.1.3.19
 - Restore necessary functions
 
