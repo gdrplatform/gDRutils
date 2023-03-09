@@ -29,6 +29,20 @@ test_that("get_SE_keys and set_SE_keys work as expected", {
   expect_equal(length(nkeys2), 1)
 })
 
+test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
+  params <- list(n_point_cutoff = 10,
+                 range_conc = c(1, 100),
+                 force_fit = TRUE,
+                 pcutoff = 1,
+                 cap = 0.2)
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
+  fit_params <- get_SE_fit_parameters(se)
+  
+  expect_equal(fit_params, NULL)
+  
+  se <- set_SE_fit_parameters(se, params)
+  expect_equal(get_SE_fit_parameters(se), params)
+})
 
 test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   exp <- list("drug" = "gDrug", "cellline_name" = "gCell")
@@ -71,6 +85,18 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
                list(drug_name = "Drugs", duration = "Duration")) # Env and se identifiers.
   expect_equal(get_SE_identifiers(se, c("cellline_name", "drug_name"), simplify = FALSE), 
                list(cellline_name = "Cells", drug_name = "Drugs")) # Order.
+})
+
+test_that("get_SE_processing_metadata and set_SE_processing_metadata work as expected", {
+  params <- list(date_processed = Sys.Date(),
+                 session_info = sessionInfo())
+  se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
+  processing_metadata <- get_SE_processing_metadata(se)
+  
+  expect_equal(processing_metadata, NULL)
+  
+  se <- set_SE_processing_metadata(se, params)
+  expect_equal(get_SE_processing_metadata(se), params)
 })
 
 test_that("get_SE_experiment_raw_data and set_SE_experiment_raw_data work as expected", {

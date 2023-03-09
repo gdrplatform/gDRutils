@@ -1,3 +1,6 @@
+# Change to v.1.3.19
+- Restore necessary functions
+
 # Change to v.1.3.18
 - Add examples of identifiers
 
