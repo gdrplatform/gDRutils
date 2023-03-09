@@ -35,7 +35,18 @@ assert_equal_input_len <- function(outlier, ...) {
 shorten_normalization_type_name <- function(x) {
   checkmate::assert_choice(x, c("RelativeViability", "GRvalue"))
   dict <- c("RelativeViability" = "RV", "GRvalue" = "GR")
-  dict[[x]]
+  unname(dict[match(x, names(dict))])
+}
+
+#' extend abbreviated normalization type
+#' 
+#' @param x string with normalization type
+#' 
+#' @export
+extend_normalization_type_name <- function(x) {
+  checkmate::assert_choice(x, c("RV", "GR"))
+  dict <- c("RV" = "RelativeViability", "GR" = "GRvalue")
+  unname(dict[match(x, names(dict))])
 }
 
 #' extend abbreviated normalization type
