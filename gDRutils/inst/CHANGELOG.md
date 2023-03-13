@@ -1,3 +1,6 @@
+# Change to v.1.3.21
+- Tidy code
+
 # Change to v.1.3.20
 - Add support for splitting normalization data types
 
