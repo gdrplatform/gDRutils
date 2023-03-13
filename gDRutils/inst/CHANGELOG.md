@@ -1,3 +1,6 @@
+# Change to v.1.3.21
+- Restore function for capping ic50 values
+
 # Change to v.1.3.20
 - Add support for splitting normalization data types
 
