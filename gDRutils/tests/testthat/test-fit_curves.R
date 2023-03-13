@@ -367,3 +367,12 @@ test_that(".calculate_xc50 works as expected", {
   obs <- gDRutils:::.calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
   expect_equal(obs, 0.559017)
 })
+
+test_that("cap_ic50 works as expected", {
+  expect_error(cap_ic50(ic50 = c(1, 2), max_conc = c(10, 10), capping_fold = 5))
+  
+  expect_equal(cap_ic50(ic50 = 26, max_conc = 5, capping_fold = 5), Inf)
+  expect_equal(cap_ic50(ic50 = 1e-6, max_conc = 5, capping_fold = 5), -Inf)
+  expect_equal(cap_ic50(ic50 = 1, max_conc = 5, capping_fold = 5), 1)
+})
+
