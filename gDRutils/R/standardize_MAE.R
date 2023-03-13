@@ -53,8 +53,8 @@ standardize_se <- function(se) {
   rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
   colData(se) <- rename_DFrame(colData(se), mapping_vector)
   assayList <- lapply(assays(se), function(x) {
-      rename_bumpy(x, mapping_vector)
-    })
+    rename_bumpy(x, mapping_vector)
+  })
   assays(se) <- assayList
   se <- set_SE_identifiers(se, idfs)
   se
@@ -127,7 +127,6 @@ rename_bumpy <- function(bumpy, mapping_vector) {
   BumpyMatrix::commonColnames(bumpy) <- mapping
   bumpy
 }
-
 
 #' get optional colData fields
 #' 

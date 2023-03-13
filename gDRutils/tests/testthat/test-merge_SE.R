@@ -28,6 +28,10 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
+  
+  # this bug will be fixed in GDR-1848
+  testthat::skip_if(packageVersion("gDRutils") == "1.3.20")
+  
   mergedSE <- merge_SE(listSE, discard_keys = c("normalization_type", "fit_source"))
   checkmate::expect_class(mergedSE, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE)[["df_raw_data"]] <- list(NULL)

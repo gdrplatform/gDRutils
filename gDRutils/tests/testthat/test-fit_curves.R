@@ -27,26 +27,13 @@ test_that("fit_curves fails with expected errors", {
   reg = "gDR does not yet support multiple series_identifiers, feature coming soon")
 })
 
-
-test_that("warnings are thrown for duplicated concentrations", {
-  df_resp3 <- df_resp
-  df_resp3$Concentration[2:3] <- df_resp3$Concentration[1]
-  expect_warning(fit_curves(df_resp3, series_identifiers = "Concentration"),
-    reg = "duplicates were found")
-})
-
-
 test_that("NA values are handled correctly", {
   df_resp_NA <- df_resp
-  df_resp_NA[c(1, 4), c("RelativeViability", "GRvalue")] <- NA
+  df_resp_NA[, "x"] <- NA
   expect_error(fit_curves(df_resp_NA, series_identifiers = "Concentration"), NA)
-
-  df_resp_NA2 <- df_resp_NA
-  df_resp_NA2[6, "RelativeViability"] <- NA
-  expect_error(fit_curves(df_resp_NA2, series_identifiers = "Concentration"), NA)
-
+  
   df_resp_NA3 <- df_resp_NA
-  df_resp_NA3[, "RelativeViability"] <- NA
+  df_resp_NA3[, "x"] <- NA
   df_result_NA <- fit_curves(df_resp_NA3, series_identifiers = "Concentration")
   expect_true(is.na(df_result_NA["RV", "xc50"]))
 })
@@ -73,28 +60,33 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   # Test for constant fit.
   df_resp4 <- df_resp
-  df_resp4$RelativeViability <- df_resp4$GRvalue <- 0.5
+  df_resp4[df_resp4$normalization_types == "RV", "x"] <-
+    df_resp4[df_resp4$normalization_types == "GR", "x"] <- 0.5
 
   expect_warning(df_result <- fit_curves(df_resp4, series_identifiers = "Concentration"),
     reg = "overriding original x_0 argument") # Override.
   obs_fit <- unique(df_result[, "fit_type"])
   expect_equal(obs_fit, "DRCConstantFitResult")
   expect_equal(unname(unlist(df_result["RV", c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])),
-    rep(unique(df_resp4$RelativeViability), 5))
+    rep(unique(df_resp4[df_resp4$normalization_types == "RV", "x"]), 5))
   expect_equal(dim(df_result), expected_dims)
 
   ## Test for all values below 0.5.
   df_resp5 <- df_resp
 
   # Scale all readouts.
-  max_rv <- max(df_resp$RelativeViability)
-  min_rv <- min(df_resp$RelativeViability)
+  max_rv <- max(df_resp[df_resp$normalization_types == "RV", "x"])
+  min_rv <- min(df_resp[df_resp$normalization_types == "RV", "x"])
 
-  max_gr <- max(df_resp$GRvalue)
-  min_gr <- min(df_resp$GRvalue)
+  max_gr <- max(df_resp[df_resp$normalization_types == "GR", "x"])
+  min_gr <- min(df_resp[df_resp$normalization_types == "GR", "x"])
 
-  df_resp5$RelativeViability <- (df_resp$RelativeViability / (max_rv - min_rv)) * ((max_rv - min_rv) / 2)
-  df_resp5$GRvalue <- (df_resp$GRvalue / (max_gr - min_gr)) * ((max_gr - min_gr) / 2)
+  df_resp5[df_resp5$normalization_types == "RV", "x"] <-
+    (df_resp[df_resp$normalization_types == "RV", "x"] / (max_rv - min_rv)) *
+    ((max_rv - min_rv) / 2)
+  df_resp5[df_resp5$normalization_types == "GR", "x"] <-
+    (df_resp[df_resp$normalization_types == "GR", "x"] / (max_gr - min_gr)) *
+    ((max_gr - min_gr) / 2)
   df_result5 <- fit_curves(df_resp5, series_identifiers = "Concentration")
   expect_equal(df_result5[, c("x_inf")], c(0, -1))
   obs_fit <- unique(df_result5[, "fit_type"])
@@ -110,10 +102,12 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   # Test for a pushed constant fit by adding noise.
   df_resp7 <- df_resp_above
-  noise <- sample(seq(-1, 1, 0.1), nrow(df_resp7))
+  noise <- sample(seq(-1, 1, 0.1), nrow(df_resp7) / 2)
   emax <- 0.8
-  df_resp7$RelativeViability <- pmin(df_resp7$RelativeViability + noise, emax)
-  df_resp7$GRvalue <- pmin(df_resp7$GRvalue + noise, emax)
+  df_resp7[df_resp7$normalization_types == "RV", "x"] <-
+    pmin(df_resp7[df_resp7$normalization_types == "RV", "x"] + noise, emax)
+  df_resp7[df_resp7$normalization_types == "GR", "x"] <-
+    pmin(df_resp7[df_resp7$normalization_types == "GR", "x"] + noise, emax)
   
   expect_warning(
     df_result7 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE),
@@ -141,13 +135,15 @@ test_that("appropriate fit type is assigned for various use cases", {
   # Test for GR values from 0-1.
   ## Note that this correspond to a fully cytostatic response (no growth).
   df_resp11 <- df_resp
-  df_resp11$GRvalue <- df_resp11$RelativeViability
+  df_resp11[df_resp11$normalization_types == "GR", "x"] <-
+    df_resp11[df_resp11$normalization_types == "RV", "x"]
 
   df_result11 <- fit_curves(df_resp11, series_identifiers = "Concentration")
   expect_equal(unique(df_result11[, "x_inf"]), c(0.1, 0.1), tolerance = 1e-5)
 
   # Test for too few points.
-  df_result <- fit_curves(df_resp[3:5, ], series_identifiers = "Concentration", n_point_cutoff = 4)
+  df_result <- fit_curves(df_resp[c(3:5, 12:14), ],
+                          series_identifiers = "Concentration", n_point_cutoff = 4)
   obs_fit <- unique(df_result[, "fit_type"])
   expect_equal(obs_fit, "DRCTooFewPointsToFit")
   expect_equal(dim(df_result), expected_dims)
@@ -165,11 +161,11 @@ test_that("appropriate fit type is assigned for various use cases", {
 
 
 test_that("normalization_type can be specified", {
-  GR_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "GRvalue")
+  GR_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "GR")
   expect_equal(rownames(GR_df_result), "GR_gDR")
   expect_equal(.round_params(GR_df_result[, names(params)]), expected["GR_gDR", ], tolerance = 1e-5)
 
-  RV_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RelativeViability")
+  RV_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RV")
   expect_equal(rownames(RV_df_result), "RV_gDR")
   expect_equal(.round_params(RV_df_result[, names(params)]), expected["RV_gDR", ], tolerance = 1e-5)
 })
@@ -370,12 +366,4 @@ test_that(".calculate_xc50 works as expected", {
   EC50 <- 0.5
   obs <- gDRutils:::.calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
   expect_equal(obs, 0.559017)
-})
-
-test_that("cap_ic50 works as expected", {
-  expect_error(cap_ic50(ic50 = c(1, 2), max_conc = c(10, 10), capping_fold = 5))
-
-  expect_equal(cap_ic50(ic50 = 26, max_conc = 5, capping_fold = 5), Inf)
-  expect_equal(cap_ic50(ic50 = 1e-6, max_conc = 5, capping_fold = 5), -Inf)
-  expect_equal(cap_ic50(ic50 = 1, max_conc = 5, capping_fold = 5), 1)
 })

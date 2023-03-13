@@ -12,6 +12,8 @@
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
+#' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
+#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE`.
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
@@ -25,7 +27,8 @@
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
                                    include_metadata = TRUE,
-                                   retain_nested_rownames = FALSE) {
+                                   retain_nested_rownames = FALSE,
+                                   wide_structure = FALSE) {
 
   # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
@@ -35,6 +38,16 @@ convert_se_assay_to_dt <- function(se,
   
   validate_se_assay_name(se, assay_name)
 
+  
+  if (wide_structure) {
+    # wide_structure works only with `normalization_type` column in the assay
+    if ("normalization_type" %in%
+        BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
+      retain_nested_rownames <- TRUE
+    } else {
+      wide_structure <- FALSE
+    }
+  }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
 
   if (nrow(dt) == 0L) {
@@ -57,8 +70,31 @@ convert_se_assay_to_dt <- function(se,
 
     dt <- merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
   }
-
-  data.table::as.data.table(dt)
+  dt <- data.table::as.data.table(dt)
+  
+  
+  if (wide_structure) {
+    normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
+    id_col <- paste0(assay_name, "_rownames")
+    dt$id <- gsub("_.*", "", dt[[id_col]])
+    dt[[id_col]] <- NULL
+    rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
+    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
+    new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
+                                paste, sep = "_"))
+    
+    new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
+      x[length(x)] <- gDRutils::extend_normalization_type_name(x[length(x)])
+      paste(x[-1], collapse = "_")
+      }))
+    dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols, sep = "_1")
+    dt$id <- NULL 
+    if (!all(new_cols %in% names(dt))) {
+      new_cols <- gsub("x_", "", new_cols)
+    }
+    data.table::setnames(dt, new_cols, new_cols_rename, skip_absent = TRUE)
+  }
+  dt
 }
 
 
@@ -100,51 +136,6 @@ convert_se_assay_to_dt <- function(se,
 ########################
 # Convenience functions
 ########################
-
-#' Convert the reference values from a SummarizedExperiment assay to a long data.table
-#'
-#' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{SummarizedExperiment} object to a long data.table.
-#' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
-#'
-#' @param se A \linkS4class{SummarizedExperiment} object holding reference data in its assays.
-#' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 
-#' holding the reference relative viability data.
-#' @param ref_gr_value_assay String of the name of the assay in the \code{se} holding the reference GR value data.
-#'
-#' @return data.table representation of the reference data.
-#'
-#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
-#' assay data.
-#'
-#' @export
-#'
-convert_se_ref_assay_to_dt <- function(se,
-                                       ref_relative_viability_assay = "RefRelativeViability",
-                                       ref_gr_value_assay = "RefGRvalue") {
-
-  checkmate::assert_class(se, "SummarizedExperiment")
-  checkmate::assert_string(ref_relative_viability_assay)
-  checkmate::assert_string(ref_gr_value_assay)
-
-  rv <- convert_se_assay_to_dt(se, ref_relative_viability_assay, include_metadata = TRUE)
-  colnames(rv)[colnames(rv) == ref_relative_viability_assay] <- "RelativeViability"
-  rv$std_RelativeViability <- NA
-
-  gr <- convert_se_assay_to_dt(se, ref_gr_value_assay)
-  colnames(gr)[colnames(gr) == ref_gr_value_assay] <- "GRvalue"
-  gr$std_GRvalue <- NA
-
-  dt <- merge(rv, gr, all = TRUE, by = intersect(names(rv), names(gr)))
-
-  # Fill primary drug with 'untreated_tag'.
-  dt$Concentration <- 0
-  untreated <- get_SE_identifiers(se, "untreated_tag", simplify = TRUE)[1]
-  dt[, get_SE_identifiers(se, "drug", simplify = TRUE)] <- untreated
-  dt[, get_SE_identifiers(se, "drug_name", simplify = TRUE)] <- untreated
-  dt[, get_SE_identifiers(se, "drug_moa", simplify = TRUE)] <- untreated
-
-  data.table::as.data.table(dt)
-}
 
 #' Convert a MultiAssayExperiment assay to a long data.table
 #'
@@ -201,48 +192,6 @@ convert_mae_assay_to_dt <- function(mae,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames)
   })
-  dt <- plyr::rbind.fill(dtList)
-  dt
-}
-
-#' Convert the reference values from a MultiAssayExperiment assay to a long data.table
-#'
-#' Transform the Ref[RelativeViability/GRvalue] within a \linkS4class{MultiAssayExperiment} object to a long data.table.
-#' Clean up the column names and add columns to match the format of the data.table from the \code{'Averaged'} assay.
-#'
-#' @param mae A \linkS4class{MultiAssayExperiment} object holding reference data in its assays.
-#' @param experiment_name String of name of the experiment in `mae` whose `assay_name` should be converted.
-#' Default to `NULL` that all the experiment should be converted into one data.table object.
-#' @param ref_relative_viability_assay String of the name of the assay in the \code{se} 
-#' holding the reference relative viability data.
-#' @param ref_gr_value_assay String of the name of the assay in the \code{se} holding the reference GR value data.
-#'
-#' @return data.table representation of the reference data.
-#'
-#' @details This is a convenience function to massage the reference data into the same format as the \code{"Averaged"}
-#' assay data.
-#'
-#' @export
-#'
-#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
-convert_mae_ref_assay_to_dt <- function(mae,
-                                        experiment_name = NULL,
-                                        ref_relative_viability_assay = "RefRelativeViability",
-                                        ref_gr_value_assay = "RefGRvalue") {
-  
-  checkmate::assert_class(mae, "MultiAssayExperiment")
-  checkmate::assert_choice(experiment_name, names(mae), null.ok = TRUE)
-  checkmate::assert_string(ref_relative_viability_assay)
-  checkmate::assert_string(ref_gr_value_assay)
-  
-  if (is.null(experiment_name)) {
-    experiment_name <- names(mae)
-  }
-  
-  dtList <- lapply(experiment_name,
-                   function(x) convert_se_ref_assay_to_dt(mae[[x]],
-                                                          ref_relative_viability_assay = ref_relative_viability_assay,
-                                                          ref_gr_value_assay = ref_gr_value_assay))
   dt <- plyr::rbind.fill(dtList)
   dt
 }

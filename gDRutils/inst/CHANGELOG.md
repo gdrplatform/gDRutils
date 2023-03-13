@@ -1,3 +1,15 @@
+# Change to v.1.3.20
+- Add support for splitting normalization data types
+
+# Change to v.1.3.19
+- Restore necessary functions
+
+# Change to v.1.3.18
+- Add examples of identifiers
+
+# Change to v.1.3.17
+- Remove obsolete code
+
 # Change to v.1.3.16
 - Tidy code
 

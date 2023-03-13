@@ -1,6 +1,5 @@
 context("standardize_MAE")
 
-
 mapping_vector <- as.character(seq_len(5))
 names(mapping_vector) <- names(iris)
 
@@ -86,4 +85,3 @@ test_that("colData/rowData refinement functions work as expected",  {
   expect_error(refine_rowdata(mae, mae), "Assertion on 'se' failed:")
   
 })
-

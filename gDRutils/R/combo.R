@@ -35,7 +35,7 @@ convert_combo_data_to_dt <-
           if (x == names(get_combo_assay_names(group = "combo_base_mx"))) {
             dt <- convert_se_assay_to_dt(se, c_assays[[x]])
             for (n in names(ntype_dict)) {
-              data.table::setnames(dt, n, ntype_dict[n])
+              data.table::setnames(dt, n, ntype_dict[n], skip_absent = TRUE)
             }
             dt <- data.table::melt(
               dt,
@@ -57,7 +57,7 @@ convert_combo_data_to_dt <-
         }
         dt
       })
-
+    
     # TODO: discuss what should be returned: assay_name or maybe assay_type?
     names(my_l) <- as.character(c_assays)
     my_l

@@ -29,7 +29,6 @@ test_that("get_SE_keys and set_SE_keys work as expected", {
   expect_equal(length(nkeys2), 1)
 })
 
-
 test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
   params <- list(n_point_cutoff = 10,
                  range_conc = c(1, 100),
@@ -40,11 +39,10 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
   fit_params <- get_SE_fit_parameters(se)
   
   expect_equal(fit_params, NULL)
-
+  
   se <- set_SE_fit_parameters(se, params)
   expect_equal(get_SE_fit_parameters(se), params)
 })
-
 
 test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   exp <- list("drug" = "gDrug", "cellline_name" = "gCell")
