@@ -3,9 +3,9 @@
 .create_data <- function(conc, params, params_GR) {
   data.frame(
     Concentration = conc,
-    x_std = c(0.1, 0.1),
-    normalization_types = rep(c("RV", "GR"), each = length(conc)),
-    x = c(
+    std_RelativeViability = 0.1,
+    std_GRvalue = 0.1,
+    RelativeViability =
       predict_efficacy_from_conc(
         conc, 
         params$x_inf, 
@@ -13,13 +13,14 @@
         params$ec50, 
         params$h
       ),
+    GRvalue =
       predict_efficacy_from_conc(
         conc,
         params_GR$x_inf,
         params_GR$x_0,
         params_GR$ec50,
         params_GR$h
-      ))
+      )
   )
 }
 

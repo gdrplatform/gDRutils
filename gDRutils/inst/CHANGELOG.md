@@ -1,14 +1,5 @@
-# Change to v.1.3.22
-- Restore cap_ic50
-
-# Change to v.1.3.21
-- Better handling of corner cases for the single-agent fitting
-
-# Change to v.1.3.20
-- Add support for splitting normalization data types
-
 # Change to v.1.3.19
-- Restore necessary functions
+- Restore function for capping ic50 values
 
 # Change to v.1.3.18
 - Add examples of identifiers

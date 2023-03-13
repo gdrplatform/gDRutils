@@ -20,7 +20,7 @@
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' Defaults to \code{0.1}.
 #' @param normalization_type character vector of types of curves to fit.
-#' Defaults to \code{c("GR", "RV")}.
+#' Defaults to \code{c("GRvalue", "RelativeViability")}.
 #'
 #' @return data.frame of fit parameters as specified by the \code{normalization_type}.
 #'
@@ -46,14 +46,14 @@ fit_curves <- function(df_,
                        force_fit = FALSE,
                        pcutoff = 0.05,
                        cap = 0.1, 
-                       normalization_type = c("GR", "RV")) {
+                       normalization_type = c("GRvalue", "RelativeViability")) {
   
   
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
-  if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
+  if (any(bad_normalization_type <- ! normalization_type %in% c("GRvalue", "RelativeViability"))) {
     stop(sprintf("unknown curve type: '%s'", 
       paste0(normalization_type[bad_normalization_type], collapse = ", ")))
   } 
@@ -61,28 +61,32 @@ fit_curves <- function(df_,
   req_fields <- series_identifiers
   opt_fields <- NULL
   
-  req_fields <- c(req_fields, "x")
-  opt_fields <- "x_std"
+  for (nt in normalization_type) {
+    req_fields <- c(req_fields, nt)
+    opt_fields <- c(opt_fields, paste0("std_", nt))
+  }
   
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
 
-  df_[, setdiff(opt_fields, colnames(df_))] <- NA
+  for (opt_f in setdiff(opt_fields, colnames(df_))) {
+    df_[, opt_f] <- NA
+  }
 
   df_metrics <- NULL
-  concs <- unique(df_[[series_identifiers]])
+  concs <- df_[[series_identifiers]]
   med_concs <- stats::median(concs)
   min_concs <- min(concs)
 
   concsNA <- all(is.na(concs))
   if (concsNA) concs[] <- 0
 
-  if ("RV" %in% normalization_type) {
+  if ("RelativeViability" %in% normalization_type) {
     df_metrics <- logisticFit(
       concs,
-      df_$x[df_$normalization_type == "RV"], 
-      df_$x_std[df_$normalization_type == "RV"], 
+      df_$RelativeViability, 
+      df_$std_RelativeViability, 
       priors = c(2, 0.4, 1, med_concs),
       lower = c(0.1, 0, 0, min_concs / 10),
       x_0 = e_0, 
@@ -95,11 +99,11 @@ fit_curves <- function(df_,
     df_metrics$normalization_type <- "RV"
   }
 
-  if ("GR" %in% normalization_type) {
+  if ("GRvalue" %in% normalization_type) {
     df_gr <- logisticFit(
       concs,
-      df_$x[df_$normalization_type == "GR"], 
-      df_$x_std[df_$normalization_type == "GR"], 
+      df_$GRvalue, 
+      df_$std_GRvalue, 
       priors = c(2, 0.1, 1, med_concs),
       lower = c(0.1, -1, -1, min_concs / 10),
       x_0 = GR_0, 
@@ -215,7 +219,6 @@ logisticFit <-
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
     df_ <- data.frame(concs = concs, norm_values = norm_values)
 
-    
     if (has_dups(df_$concs)) {
       warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
@@ -233,23 +236,11 @@ logisticFit <-
 
     out <- tryCatch({
       non_na_avg_norm <- !is.na(df_$norm_values)
-      if (sum(non_na_avg_norm) < n_point_cutoff) {
-        stop(fitting_handler(
-          "too_few_fit",
-          message = sprintf(
-            "not enough data points (%i < %i) to perform fitting",
-            sum(non_na_avg_norm),
-            n_point_cutoff
-          )
-        ))
-      }
-      # the condition on n_point_cutoff should come before 'length(unique(ReadoutValue))==1' to handle
-      # specific cases when multiple ReadoutValue are equal resulting outputting a constant fit
-      # This is important for the new matrix format for co-treatment when 
-      # some results with <3 concentration may be fitted if the order of tests is different
-
       if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
         stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
+      }
+      if (sum(non_na_avg_norm) < n_point_cutoff) {
+        stop(fitting_handler("too_few_fit", message = "not enough data to perform fitting"))
       }
 
       if (!is.na(x_0)) {
@@ -303,13 +294,7 @@ logisticFit <-
 
       f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
       if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
-        stop(fitting_handler(
-          "constant_fit",
-          message = sprintf(
-            "fit is not statistically significant (p=%.2f), setting constant fit",
-            f_pval
-          )
-        ))
+        stop(fitting_handler("constant_fit", message = "fit is not statistically significant, setting constant fit"))
       }
 
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
@@ -318,13 +303,11 @@ logisticFit <-
       }
       out
     }, too_few_fit = function(e) {
-      warning(e$message)
       out <- .set_too_few_fit_params(out, df_$norm_values)
 
     }, constant_fit = function(e) {
       if (!is.na(x_0)) {
-        # provide a more explicit warning message with the outcome of the fitting
-        warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
+        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
       }
       out <- .set_constant_fit_params(out, mean_norm_value)
 
@@ -421,38 +404,6 @@ logistic_metrics <- function(c, x_metrics) {
 }
 
 
-#' Cap IC50 value.
-#' 
-#' Cap IC50 value by upper and lower limits.
-#'
-#' @param ic50 Numeric value of the IC50 to cap. 
-#' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{ic50}.
-#' @param capping_fold Integer value of the fold number to use for capping.
-#'
-#' @return Capped IC50 value.
-#'
-#' @details 
-#' Note: \code{ic50} and \code{max_conc} should share the same units.
-#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
-#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
-#' @export
-cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
-  checkmate::assert_int(capping_fold)
-  checkmate::assert_number(ic50)
-  checkmate::assert_number(max_conc)
-  
-  upper_cap <- max_conc * capping_fold
-  lower_cap <- max_conc / (capping_fold * 1e5)
-  ic50 <- if (ic50 > upper_cap) {
-    Inf
-  } else if (ic50 < lower_cap) {
-    -Inf
-  } else {
-    ic50
-  }
-  ic50
-}
-
 ##################
 # Helper functions
 ##################
@@ -498,6 +449,38 @@ average_dups <- function(df, col) {
       mean(x, na.rm = TRUE)
     }
   )
+}
+
+#' Cap IC50 value.
+#' 
+#' Cap IC50 value by upper and lower limits.
+#'
+#' @param ic50 Numeric value of the IC50 to cap. 
+#' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{ic50}.
+#' @param capping_fold Integer value of the fold number to use for capping.
+#'
+#' @return Capped IC50 value.
+#'
+#' @details 
+#' Note: \code{ic50} and \code{max_conc} should share the same units.
+#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
+#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
+#' @export
+cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
+  checkmate::assert_int(capping_fold)
+  checkmate::assert_number(ic50)
+  checkmate::assert_number(max_conc)
+  
+  upper_cap <- max_conc * capping_fold
+  lower_cap <- max_conc / (capping_fold * 1e5)
+  ic50 <- if (ic50 > upper_cap) {
+    Inf
+  } else if (ic50 < lower_cap) {
+    -Inf
+  } else {
+    ic50
+  }
+  ic50
 }
 
 ############
