@@ -14,7 +14,7 @@ fit_curves(
   force_fit = FALSE,
   pcutoff = 0.05,
   cap = 0.1,
-  normalization_type = c("GRvalue", "RelativeViability")
+  normalization_type = c("GR", "RV")
 )
 }
 \arguments{
@@ -45,7 +45,7 @@ Defaults to \code{0.05}.}
 Defaults to \code{0.1}.}
 
 \item{normalization_type}{character vector of types of curves to fit.
-Defaults to \code{c("GRvalue", "RelativeViability")}.}
+Defaults to \code{c("GR", "RV")}.}
 }
 \value{
 data.frame of fit parameters as specified by the \code{normalization_type}.
