@@ -20,14 +20,14 @@ df_to_bm_assay <-
            data_type = c("all", "treated", "untreated"),
            discard_keys = NULL) {
     # Assertions:
-    stopifnot(any(inherits(data, "data.frame"), checkmate::test_character(data), inherits(data, "DataFrame")))
+    stopifnot(any(inherits(data, "data.table"), checkmate::test_character(data), inherits(data, "DataFrame")))
     checkmate::assert_character(data_type)
     data_type <- match.arg(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
-    
+
     data <- methods::as(data, "DataFrame")
     allMetadata <- split_SE_components(data, nested_keys = discard_keys)
-    
+
     seColData <- allMetadata$condition_md
     seColData$col_id <- seq_along(rownames(seColData))
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
@@ -36,7 +36,7 @@ df_to_bm_assay <-
 
     cond_entries <-
       setdiff(colnames(seRowData), c("row_id", "name_"))
-    
+
     complete <-
       S4Vectors::DataFrame(
         expand.grid(
@@ -48,11 +48,11 @@ df_to_bm_assay <-
     complete$factor_id <- seq_len(nrow(complete))
     completeMerged <- merge(merge(complete, seColData, by = "col_id"),
                             seRowData, by = "row_id")
-    
+
     data_assigned <-
       merge(data, completeMerged, by = c(cond_entries, cl_entries))
     data_assigned <- data_assigned[order(data_assigned$factor_id), ]
-    
+
     bm <-
       BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE],
                                       row = data_assigned$row_id,
@@ -61,7 +61,7 @@ df_to_bm_assay <-
     # Check if the orderd of rows/cols are correct
     stopifnot(!is.unsorted(as.numeric(rownames(bm))))
     stopifnot(!is.unsorted(as.numeric(colnames(bm))))
-    
+
     if (data_type == "untreated") {
       untreatedConds <-
         .get_untreated_conditions(seRowData)
