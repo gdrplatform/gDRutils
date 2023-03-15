@@ -44,7 +44,7 @@
     ),
 
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
-    add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue", "cellline_ref_div_time", "cellline_subtype"), simplify = FALSE)
+    add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue", "cellline_ref_div_time"), simplify = FALSE)
   )
 
   metrics_names <- rbind(
