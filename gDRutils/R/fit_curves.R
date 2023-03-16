@@ -1,9 +1,9 @@
 #' Fit curves
 #'
-#' Fit GR and RV curves from a data.frame.
+#' Fit GR and RV curves from a data.table.
 #'
-#' @param df_ data.frame containing data to fit. See details.
-#' @param series_identifiers character vector of the column names in \code{data.frame}
+#' @param df_ data.table containing data to fit. See details.
+#' @param series_identifiers character vector of the column names in \code{data.table}
 #' whose combination represents a unique series for which to fit curves.
 #' @param e_0 numeric value representing the \code{x_0} value for the RV curve.
 #' Defaults to \code{1}.
@@ -22,7 +22,7 @@
 #' @param normalization_type character vector of types of curves to fit.
 #' Defaults to \code{c("GR", "RV")}.
 #'
-#' @return data.frame of fit parameters as specified by the \code{normalization_type}.
+#' @return data.table of fit parameters as specified by the \code{normalization_type}.
 #'
 #' @details
 #' The \code{df_} expects the following columns:
@@ -52,7 +52,7 @@ fit_curves <- function(df_,
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
-  stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
+  stopifnot(any(inherits(df_, "data.table")))
   if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'",
       paste0(normalization_type[bad_normalization_type], collapse = ", ")))
@@ -145,7 +145,7 @@ fit_curves <- function(df_,
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
 #'
-#' @return data.frame with metrics and fit parameters.
+#' @return data.table with metrics and fit parameters.
 #'
 #' @details
 #' Implementation of the genedata approach for curve fit:
@@ -213,7 +213,7 @@ logisticFit <-
 
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
-     df_ <- data.table::setDT(list(concs = concs, norm_values = norm_values))
+     df_ <- data.table::data.table(concs = concs, norm_values = norm_values)
 
 
     if (has_dups(df_$concs)) {
@@ -523,7 +523,7 @@ average_dups <- function(df, col) {
 .predict_mean_from_model <- function(model, min, max, intervals = 100) {
   lg_min_con <- log10(min)
   lg_max_con <- log10(max)
-  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
+  inputs <- data.table::data.table(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
   mean(stats::predict(model, inputs), na.rm = TRUE)
 }
 

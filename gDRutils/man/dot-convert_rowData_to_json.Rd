@@ -11,7 +11,7 @@
 )
 }
 \arguments{
-\item{rdata}{data.frame of \code{rowData}.}
+\item{rdata}{data.table of \code{rowData}.}
 
 \item{identifiers}{charvec with identifiers}
 
@@ -25,14 +25,14 @@ Convert rowData to JSON format for elasticsearch indexing.
 }
 \details{
 Standardizes the \code{rdata} to common schema fields
-and tidies formatting to be condusive to joining 
+and tidies formatting to be condusive to joining
 with other JSON responses.
 }
 \examples{
-rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
-identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa", 
+rdata <- data.table::setDT(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa",
 duration = "Duration")
-gDRutils:::.convert_rowData_to_json(rdata, identifiers) 
+gDRutils:::.convert_rowData_to_json(rdata, identifiers)
 
 }
 \keyword{internal}

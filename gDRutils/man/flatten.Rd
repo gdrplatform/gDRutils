@@ -26,7 +26,7 @@ Flatten a stacked table into a wide format.
 flattened columns will be named with original column names prefixed by \code{wide_cols} columns,
 concatenated together and separated by \code{sep}.
 
-A common use case for this function is 
+A common use case for this function is
 when a flattened version of the \code{"Metrics"} assay is desired.
 }
 \examples{

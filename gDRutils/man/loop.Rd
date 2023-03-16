@@ -16,7 +16,7 @@ Other objects (including classed objects) will be coerced by
 \item{parallelize}{Logical indicating whether or not to parallelize the computation.
 Defaults to \code{TRUE}.}
 
-\item{...}{optional argument passed to 
+\item{...}{optional argument passed to
 \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
 else to \link[base]{lapply}.}
 }

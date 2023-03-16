@@ -30,7 +30,7 @@ For functions called with no arguments, the entire available identifier list is 
 }
 \description{
 Get, set, or reset the expected identifier(s) for one or all identifier field(s).
-Identifiers are used by the gDR processing functions to identify which columns in a \code{data.frame}
+Identifiers are used by the gDR processing functions to identify which columns in a \code{data.table}
 correspond to certain expected fields. Functions of the family \code{*et_identifier} will look for
 identifiers from the environment while functions of the family \code{*et_SE_identifiers} will look for
 identifiers in the \code{metadata} slot of a \code{SummarizedExperiment} object.

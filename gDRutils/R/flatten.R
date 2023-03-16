@@ -13,7 +13,7 @@
 #' @details flattened columns will be named with original column names prefixed by \code{wide_cols} columns,
 #' concatenated together and separated by \code{sep}.
 #'
-#' A common use case for this function is 
+#' A common use case for this function is
 #' when a flattened version of the \code{"Metrics"} assay is desired.
 #'
 #' @examples
@@ -38,13 +38,13 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   checkmate::assert_character(groups)
   checkmate::assert_character(wide_cols)
   checkmate::assert_string(sep)
-  checkmate::assert_multi_class(tbl, c("data.frame", "DFrame"))
+  checkmate::assert_class(tbl, "data.table")
 
   if (!all(groups %in% colnames(tbl))) {
     stop(sprintf("missing expected uniquifying groups: '%s'",
       paste0(setdiff(groups, colnames(tbl)), collapse = ", ")))
-  }	
-  
+  }
+
   idx <- which(colnames(tbl) %in% groups)
   uniquifying <- subset(tbl, select = idx)
   uniquifying <- unique(uniquifying)
@@ -55,7 +55,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
     warning(sprintf("missing listed wide_cols columns: '%s'", paste0(missing, collapse = ", ")))
   }
 
-  rename <- colnames(out[[1]]) %in% wide_cols 
+  rename <- colnames(out[[1]]) %in% wide_cols
   for (grp in names(out)) {
     group <- out[[grp]]
     colnames(group)[rename] <- paste0(grp, sep, colnames(group)[rename])
@@ -65,6 +65,6 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   ## Drop empty elements for successful merge.
   filtered <- out[lapply(out, nrow) > 0L]
   reduced <- Reduce(function(x, y) merge(x, y, by = intersect(names(x), names(y))), filtered)
-  
+
   reduced
 }

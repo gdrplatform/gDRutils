@@ -7,7 +7,7 @@
 .get_treated_conditions(drug_data)
 }
 \arguments{
-\item{drug_data}{data.frame or DataFrame with treatment information}
+\item{drug_data}{data.table with treatment information}
 }
 \value{
 character vector with treated conditions

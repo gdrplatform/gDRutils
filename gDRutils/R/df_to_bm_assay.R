@@ -1,13 +1,13 @@
 
 #' df_to_bm_assay
 #'
-#' Convert data.frame with dose-reponse data into a BumpyMatrix assay.
+#' Convert data.table with dose-reponse data into a BumpyMatrix assay.
 #'
 #' The 'assay' is simply a BumpyMatrix object with rownames being the treatment ids,
 #' colnames being the ids of the cell lines and values with
 #' dose-response data for given cell lines under given conditions.
 #'
-#' @param data tibble or data.frame with drug-response data
+#' @param data data.table with drug-response data
 #' @param data_type string type of data to be returned: all, for untreated conditions only ('untreated')
 #' or for treated conditions only ('treated')
 #' @param discard_keys a vector of keys that should be discarded
@@ -80,17 +80,17 @@ df_to_bm_assay <-
 #'
 #' Get untreated conditions
 #'
-#' @param drug_data data.frame or DataFrame with treatment information
+#' @param drug_data data.table or DataFrame with treatment information
 #'
 #' @return character vector with untreated conditions
 #'
 .get_untreated_conditions <-
   function(drug_data) {
     # Assertions:
-    stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
+    stopifnot(any(inherits(drug_data, "data.table")))
     .untreated_tag_patterns <- vapply(get_env_identifiers("untreated_tag"), sprintf, fmt = "^%s$", character(1))
     .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
-    drugnames <- tolower(as.data.frame(drug_data)[, get_env_identifiers("drugname")])
+    drugnames <- tolower(data.table::setDT(drug_data)[, get_env_identifiers("drugname")])
     drug_data[grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }
 
@@ -98,16 +98,16 @@ df_to_bm_assay <-
 #'
 #' Get treated conditions
 #'
-#' @param drug_data data.frame or DataFrame with treatment information
+#' @param drug_data data.table with treatment information
 #'
 #' @return character vector with treated conditions
 #'
 .get_treated_conditions <-
   function(drug_data) {
     # Assertions:
-    stopifnot(any(inherits(drug_data, "data.frame"), inherits(drug_data, "DataFrame")))
+    stopifnot(any(inherits(drug_data, "data.table")))
     .untreated_tag_patterns <- vapply(get_env_identifiers("untreated_tag"), sprintf, fmt = "^%s$", character(1))
     .untreatedDrugNameRegex <- paste(.untreated_tag_patterns, collapse = "|")
-    drugnames <- tolower(as.data.frame(drug_data)[, get_env_identifiers("drugname")])
+    drugnames <- tolower(data.table::setDT(drug_data)[, get_env_identifiers("drugname")])
     drug_data[!grepl(.untreatedDrugNameRegex, drugnames), "name_"]
   }

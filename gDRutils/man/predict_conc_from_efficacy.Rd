@@ -12,7 +12,7 @@ predict_conc_from_efficacy(efficacy, x_inf, x_0, ec50, h)
 \item{x_inf}{Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
 data as concentration goes to infinity.}
 
-\item{x_0}{Numeric vector representing the asymptotic metric value corresponding to a concentration of 0 
+\item{x_0}{Numeric vector representing the asymptotic metric value corresponding to a concentration of 0
 for the primary drug.}
 
 \item{ec50}{Numeric vector representing the drug concentration at half-maximal effect.}

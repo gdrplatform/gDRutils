@@ -163,7 +163,6 @@ test_that("appropriate fit type is assigned for various use cases", {
 test_that("normalization_type can be specified", {
   GR_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "GR")
   expect_equal(rownames(GR_df_result), "GR_gDR")
-  browser()
   expect_equal(round(GR_df_result[, names(params), with = FALSE], 4), expected[2, ], tolerance = 1e-5)
 
   RV_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RV")

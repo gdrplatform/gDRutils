@@ -16,15 +16,15 @@
 validate_json <- function(json, schema_path) {
   # asserts that should be valid regardless user data
   stopifnot(file.exists(schema_path))
-  
+
   # status list returned by function
-  
+
   # errors/issues dependent on the user data
   # let's start with the basic JSON validation
   vjson <- jsonlite::validate(json)
   stl <- if (!isTRUE(vjson)) {
     derror <-
-      data.frame(field = "-", message = attributes(vjson)[["err"]])
+      data.table::setDT(field = "-", message = attributes(vjson)[["err"]])
     list(error = "global JSON validation failed",
          exit_code = 1,
          derror = derror)
@@ -34,7 +34,7 @@ validate_json <- function(json, schema_path) {
                 verbose = TRUE,
                 greedy = TRUE,
                 error = FALSE)
-    
+
     if (!isTRUE(dvjson)) {
       list(
         error = "JSON validation of data model failed",
@@ -48,7 +48,7 @@ validate_json <- function(json, schema_path) {
            derror = NULL)
     }
   }
- 
+
   st <- stl$exit_code == 0
 
   attributes(st) <- stl
@@ -74,33 +74,33 @@ validate_mae_with_schema <-
            schema_package = Sys.getenv("SCHEMA_PACKAGE", "gDRutils"),
            schema_dir_path = Sys.getenv("SCHEMA_DIR_PATH", "schemas"),
            schema = c(se = "se.json", mae = "mae.json")) {
-    
+
     checkmate::assert_class(mae, "MultiAssayExperiment")
     checkmate::assert_string(schema_package)
     checkmate::assert_character(schema_dir_path)
     checkmate::assert_character(schema, names = "unique")
-    
+
     schema_dir_apath <- system.file(package = schema_package, schema_dir_path)
     checkmate::assert_directory_exists(schema_dir_apath)
-    
+
     experiments <- names(mae)
-     
+
     # firstly convert mae to json
     ljson <- convert_mae_to_json(mae)
-    
+
     # validate on the mae level
-   
+
     mae_schema_path <- file.path(schema_dir_apath, schema[["mae"]])
     mtl <-
       list(mae = validate_json(ljson[["mae"]], mae_schema_path))
-    
+
     # validate se experiments
     se_schema_path <- file.path(schema_dir_apath, schema[["se"]])
     stl <- lapply(experiments, function(x) {
       validate_json(ljson[["se"]][[x]], se_schema_path)
     })
     names(stl) <- paste0("experiment:", experiments)
-    
+
     st <- if (isTRUE(mtl) && all(vapply(stl, isTRUE, logical(1)))) {
       TRUE
     } else {

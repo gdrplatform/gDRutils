@@ -19,8 +19,8 @@ Convert a SummarizedExperiment object to a JSON document.
 md <- list(title = "my awesome experiment",
   description = "description of experiment",
   source = list(name = "GeneData_Screener", id = "QCS-12345"))
-rdata <- data.frame(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
-cdata <- data.frame(mycellline = letters, mycelllinename = letters,
+rdata <- data.table::setDT(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+cdata <- data.table::setDT(mycellline = letters, mycelllinename = letters,
  mycelllinetissue = letters, cellline_ref_div_time = letters)
 identifiers <- list(cellline = "mycellline",
                     cellline_name = "mycelllinename",
