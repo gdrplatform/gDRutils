@@ -68,7 +68,9 @@ fit_curves <- function(df_,
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
 
-  df_[, setdiff(opt_fields, colnames(df_))] <- NA
+  if (length(setdiff(opt_fields, colnames(df_))) > 0L) {
+    df_[, setdiff(opt_fields, colnames(df_))] <- NA
+  }
 
   df_metrics <- NULL
   concs <- unique(df_[[series_identifiers]])
