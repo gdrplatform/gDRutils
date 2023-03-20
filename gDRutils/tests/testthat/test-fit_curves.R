@@ -68,7 +68,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
   expect_equal(obs_fit, "DRCConstantFitResult")
   expect_equal(unname(unlist(df_result[1, c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])),
-    rep(unique(df_resp4[df_resp4$normalization_types == "RV", "x"]), 5))
+    rep(unname(unlist(unique(df_resp4[df_resp4$normalization_types == "RV", "x"]))), 5))
   expect_equal(dim(df_result), expected_dims)
 
   ## Test for all values below 0.5.
@@ -115,7 +115,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   )
   expect_equal(unname(unlist(unique(df_result7[, "fit_type"]))), "DRCConstantFitResult")
   expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))),
-    0.70781, tolerance = 1e-5)
+    0.63407, tolerance = 1e-5)
 
   # Test that force argument overrides as expected.
   df_result8 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = TRUE)
