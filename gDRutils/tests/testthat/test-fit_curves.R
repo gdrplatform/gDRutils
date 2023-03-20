@@ -105,9 +105,9 @@ test_that("appropriate fit type is assigned for various use cases", {
   noise <- sample(seq(-1, 1, 0.1), nrow(df_resp7) / 2)
   emax <- 0.8
   df_resp7[df_resp7$normalization_types == "RV", "x"] <-
-    pmin(df_resp7[df_resp7$normalization_types == "RV", "x"] + noise, emax)
+    pmin(unname(unlist(df_resp7[df_resp7$normalization_types == "RV", "x"])) + noise, emax)
   df_resp7[df_resp7$normalization_types == "GR", "x"] <-
-    pmin(df_resp7[df_resp7$normalization_types == "GR", "x"] + noise, emax)
+    pmin(unname(unlist(df_resp7[df_resp7$normalization_types == "GR", "x"])) + noise, emax)
 
   expect_warning(
     df_result7 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE),
@@ -115,7 +115,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   )
   expect_equal(unname(unlist(unique(df_result7[, "fit_type"]))), "DRCConstantFitResult")
   expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))),
-    0.63407, tolerance = 1e-5)
+    0.70781, tolerance = 1e-5)
 
   # Test that force argument overrides as expected.
   df_result8 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = TRUE)
