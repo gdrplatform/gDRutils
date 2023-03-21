@@ -20,8 +20,10 @@ merge_SE <- function(SElist,
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   
-  normalized <- merge_assay(SElist = SElist, assay_name = "Normalized", additional_col_name = additional_col_name)
-  averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name)
+  normalized <- merge_assay(SElist = SElist, assay_name = "Normalized", additional_col_name = additional_col_name,
+                            discard_keys = discard_keys)
+  averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name,
+                          discard_keys = discard_keys)
   metrics <- merge_assay(SElist = SElist, assay_name = "Metrics", additional_col_name = additional_col_name,
                          discard_keys = discard_keys)
 
@@ -90,12 +92,13 @@ merge_assay <- function(SElist,
   checkmate::assert_character(discard_keys, null.ok = TRUE)
 
   DT <- if (is.null(additional_col_name)) {
-    data.table::rbindlist(lapply(names(SElist), function(x)
-      convert_se_assay_to_dt(SElist[[x]], assay_name)), fill = TRUE)
+    data.table::rbindlist(lapply(names(SElist), function(y)
+      convert_se_assay_to_dt(SElist[[y]], assay_name)), fill = TRUE)
   } else {
-    data.table::rbindlist(lapply(names(SElist), function(x)
-      convert_se_assay_to_dt(SElist[[x]], assay_name)[, eval(additional_col_name) := rep_len(x, .N)]), fill = TRUE)
+    data.table::rbindlist(lapply(names(SElist), function(y)
+      convert_se_assay_to_dt(SElist[[y]], assay_name)[, eval(additional_col_name) := rep_len(y, .N)]), fill = TRUE)
   }
+  
 
   DT$rId <- DT$cId <- NULL
   BM <- df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))

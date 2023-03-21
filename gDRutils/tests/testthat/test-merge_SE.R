@@ -1,6 +1,6 @@
 listMAE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
                              "final", full.names = TRUE)[1:2], readRDS)
-listSE <- lapply(listMAE, function(x) x[[1]])
+listSE <- lapply(listMAE, function(x) x[[2]])
 names(listSE) <- c("combo1", "combo2")
 
 
