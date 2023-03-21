@@ -114,8 +114,8 @@ convert_se_to_json <- function(se) {
 
   md <- get_SE_experiment_metadata(se)
 
-  if (inherits(md, "DFrame") || inherits(md, "tbl")) {
-    # tibble after converting to JSON have strange format, which causing error in `jsonlite::validate`
+  if (inherits(md, "data.table") || inherits(md, "DataFrame")) {
+    # data.table after converting to JSON have strange format, which causing error in `jsonlite::validate`
     md <- as.list(md)
   }
 
@@ -206,15 +206,15 @@ convert_se_to_json <- function(se) {
 .convert_element_metadata_to_json <- function(mdata, req_cols) {
   stopifnot(all(req_cols %in% names(mdata)))
 
-  mdata <- data.table::setDT(mdata)
+  mdata <- data.table::setDT(data.frame(data.matrix(mdata)))
   rownames(mdata) <- NULL
 
-  main_mdata <- mdata[req_cols]
+  main_mdata <- mdata[, ..req_cols]
   mjson <- jsonlite::toJSON(main_mdata, "columns")
   mjson <- strip_first_and_last_char(mjson)
 
   opt_cols <- setdiff(colnames(mdata), req_cols)
-  opt_mdata <- mdata[opt_cols]
+  opt_mdata <- mdata[, ..opt_cols]
   ojson <- jsonlite::toJSON(opt_mdata, "columns")
 
   list(main = mjson, opt = ojson)

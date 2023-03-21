@@ -3,7 +3,7 @@ library(testthat)
 test_that(".standardize_column_names works as expected", {
   ids <- letters
   names(ids) <- LETTERS
-  df <- S4Vectors::DataFrame(b = seq(100), 
+  df <- data.table::data.table(b = seq(100),
                              m = seq(100),
                              a = seq(100),
                              aa = seq(100))
@@ -14,7 +14,7 @@ test_that(".standardize_column_names works as expected", {
 test_that(".convert_element_metadata_to_json works as expected", {
   m <- 100
   n <- 26
-  data <-  as.data.frame(matrix(rep(seq(m), n), nrow = m))
+  data <- data.table::setDT(as.data.frame(matrix(rep(seq(m), n), nrow = m)))
   shuffle <- sample(1:n, n)
   names(data) <- LETTERS[shuffle]
 
@@ -31,16 +31,16 @@ test_that(".convert_element_metadata_to_json works as expected", {
 })
 
 test_that("convert_se_to_json works with diferent types of metadata", {
-  
+
   rdata <-
-    data.frame(
+    data.table::data.table(
       mydrug = letters,
       mydrugname = letters,
       mydrugmoa = letters,
       Duration = 1
     )
   cdata <-
-    data.frame(
+    data.table::data.table(
       mycellline = letters,
       mycelllinename = letters,
       mycelllinetissue = letters,
@@ -57,7 +57,7 @@ test_that("convert_se_to_json works with diferent types of metadata", {
   se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
                                                    colData = cdata)
   se <- gDRutils::set_SE_identifiers(se, identifiers)
-  
+
   # list
   md <- list(title = "my awesome experiment",
              description = "description of experiment",
@@ -65,29 +65,19 @@ test_that("convert_se_to_json works with diferent types of metadata", {
   se <- gDRutils::set_SE_experiment_metadata(se, md)
   # check if there is no error
   expect_error(convert_se_to_json(se), NA)
-  
-  # tibble
-  md <- tibble::tibble(title = "my awesome experiment",
+
+  # data.table
+  md <- data.table::data.table(title = "my awesome experiment",
                        description = "description of experiment",
                        source = "GeneData_Screener")
   expect_warning(
     se <- gDRutils::set_SE_experiment_metadata(se, md),
     "overwriting existing metadata entry: 'experiment_metadata'"
   )
+
   # check if there is no error
   expect_error(convert_se_to_json(se), NA)
-  
-  # DataFrame
-  md <- S4Vectors::DataFrame(title = "my awesome experiment",
-                             description = "description of experiment",
-                             source = "GeneData_Screener")
-  expect_warning(
-    se <- gDRutils::set_SE_experiment_metadata(se, md),
-    "overwriting existing metadata entry: 'experiment_metadata'"
-  )
-  # check if there is no error
-  expect_error(convert_se_to_json(se), NA)
-  
+
   # error
   md <- c(title = "my awesome experiment",
           description = "description of experiment",
