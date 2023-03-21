@@ -28,7 +28,8 @@ merge_SE <- function(SElist,
                          discard_keys = discard_keys)
 
   if (!is.null(additional_col_name)) {
-    averaged$DT[[additional_col_name]] <- NULL
+    data.table::set(averaged$DT, , intersect(names(averaged$DT),
+                                             c(additional_col_name, discard_keys)), NULL)
   }
   data <- split_SE_components(averaged$DT)
   
