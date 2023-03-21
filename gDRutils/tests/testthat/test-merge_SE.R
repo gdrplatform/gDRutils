@@ -34,7 +34,8 @@ test_that("merge_SE works as expected", {
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
   additional_col_name <- "QCS"
-  mergedSE2 <- purrr::quietly(merge_SE)(listSE, additional_col_name, discard_keys = c("normalization_type", "fit_source"))
+  mergedSE2 <- purrr::quietly(merge_SE)(listSE, additional_col_name,
+                                        discard_keys = c("normalization_type", "fit_source"))
   expect_length(mergedSE2$warnings, 2)
   assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
