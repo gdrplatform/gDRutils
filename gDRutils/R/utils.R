@@ -91,7 +91,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     if (all(vapply(out, is.atomic, logical(1)))) {
       unlist(out, use.names = FALSE)
     } else {
-      plyr::rbind.fill(lapply(out, data.table::setDT))
+      plyr::rbind.fill(lapply(out, dataframe_to_datatable))
     }
 
   } else {
@@ -274,4 +274,16 @@ mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
 
   MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
+}
+
+#' Convert object to data.table using \code{data.table::setDT}
+#'
+#' @param obj
+#'
+#' @return a data.table object
+#' @export
+#'
+#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
+dataframe_to_datatable <- function(obj) {
+  data.table::setDT(data.frame(obj))
 }

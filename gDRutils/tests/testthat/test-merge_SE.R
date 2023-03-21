@@ -17,7 +17,7 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
   mergedMetadata <- merge_metadata(listSE, metadata_fields)
   expect_identical(names(mergedMetadata), metadata_fields)
   expect_identical(names(mergedMetadata$experiment_metadata), names(listSE))
-  
+
   listSE2 <- listSE
   newMetaName <- "dummy_meta"
   S4Vectors::metadata(listSE2$combo1)[[newMetaName]] <- list()
@@ -28,17 +28,17 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
-  
+
   # this bug will be fixed in GDR-1848
   testthat::skip_if(packageVersion("gDRutils") == "1.3.20")
-  
+
   mergedSE <- merge_SE(listSE, discard_keys = c("normalization_type", "fit_source"))
   checkmate::expect_class(mergedSE, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE)
   additional_col_name <- "QCS"
   mergedSE2 <- merge_SE(listSE, additional_col_name, discard_keys = c("normalization_type", "fit_source"))
-  assayNormalized <- convert_se_assay_to_dt(mergedSE2, "Metrics") 
+  assayNormalized <- convert_se_assay_to_dt(mergedSE2, "Metrics")
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
   })

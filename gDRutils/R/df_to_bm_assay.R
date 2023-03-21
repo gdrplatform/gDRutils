@@ -20,12 +20,11 @@ df_to_bm_assay <-
            data_type = c("all", "treated", "untreated"),
            discard_keys = NULL) {
     # Assertions:
-    stopifnot(any(inherits(data, "data.table"), checkmate::test_character(data), inherits(data, "DataFrame")))
+    stopifnot(any(inherits(data, "data.table"), checkmate::test_character(data)))
     checkmate::assert_character(data_type)
     data_type <- match.arg(data_type)
     checkmate::assert_character(discard_keys, null.ok = TRUE)
 
-    data <- methods::as(data, "DataFrame")
     allMetadata <- split_SE_components(data, nested_keys = discard_keys)
 
     seColData <- allMetadata$condition_md

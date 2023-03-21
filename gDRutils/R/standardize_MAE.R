@@ -44,8 +44,8 @@ standardize_se <- function(se) {
   mapping_df <- do.call(rbind,
                         lapply(seq_along(diff_names),
                                function(x)
-                                 data.table::setDT(x = unlist(diff_identifiers$default[x]),
-                                            y = unlist(diff_identifiers$se[x]))))
+                                 data.table::setDT(data.frame(x = unlist(diff_identifiers$default[x]),
+                                            y = unlist(diff_identifiers$se[x])))))
   mapping_vector <- mapping_df$x
   names(mapping_vector) <- mapping_df$y
 

@@ -58,8 +58,8 @@ set_SE_identifiers(se, value)
 Set metadata for the fitting parameters that define the Metrics assay in SummarizedExperiment object metadata.
 }
 \details{
-For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines 
+For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines
 the date_processed and packages versions in SummarizedExperiment object metadata.
-For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters 
+For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters
 used to construct the Metrics assay in a SummarizedExperiment object.
 }
