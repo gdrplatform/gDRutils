@@ -15,7 +15,8 @@ logisticFit(
   force_fit = FALSE,
   pcutoff = 0.05,
   cap = 0.1,
-  n_point_cutoff = 4
+  n_point_cutoff = 4,
+  capping_fold = 5
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ mean parameters in the model. Overrules any self starter function.}
 \item{cap}{numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).}
 
 \item{n_point_cutoff}{integer indicating number of unique concentrations required to fit curve.}
+
+\item{capping_fold}{Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.}
 }
 \value{
 data.frame with metrics and fit parameters.

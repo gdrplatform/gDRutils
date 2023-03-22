@@ -69,11 +69,11 @@ test_that("MAEpply works as expected", {
   expect_length(list1, 2)
   expect_true(inherits(list1, "list"))
   v1 <- unique(MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE))
-  expect_length(v1, 5)
+  expect_length(v1, 14)
   expect_true(inherits(v1, "character"))
   
   v2 <- unique(MAEpply(maeReal, SummarizedExperiment::rowData, unify = TRUE))
-  expect_identical(vapply(dimnames(v2), length, numeric(1)), c(10, 8))
+  expect_identical(vapply(dimnames(v2), length, numeric(1)), c(7, 7))
   expect_true(inherits(v2, "data.frame"))
 })
 
@@ -100,7 +100,7 @@ test_that("get_non_empty_assays works as expected", {
 
 test_that("mrowData works as expected", {
   mr <- mrowData(maeReal)
-  expect_identical(vapply(dimnames(mr), length, numeric(1)), c(10, 8))
+  expect_identical(vapply(dimnames(mr), length, numeric(1)), c(7, 7))
   checkmate::expect_class(mr, "data.frame")
   
   mr <- mrowData(empty_mae)
