@@ -30,10 +30,11 @@ test_that("fit_curves fails with expected errors", {
 test_that("NA values are handled correctly", {
   df_resp_NA <- df_resp
   df_resp_NA[, "x"] <- NA
-  fit_curves(df_resp_NA, series_identifiers = "Concentration")
+  expect_warning(fit_curves(df_resp_NA, series_identifiers = "Concentration"))
   
-  df_result_NA <- fit_curves(df_resp_NA, series_identifiers = "Concentration")
-  expect_true(is.na(df_result_NA["RV", "xc50"]))
+  df_result_NA <- purrr::quietly(fit_curves)(df_resp_NA, series_identifiers = "Concentration")
+  expect_length(df_result_NA$warnings, 2)
+  expect_true(is.na(df_result_NA$result["RV", "xc50"]))
 })
 
 
