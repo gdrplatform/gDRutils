@@ -320,7 +320,7 @@ logisticFit <-
       } else {
         # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
         # max/min tested concenrations (default)
-        out$xc50 <- .cap_xc50(
+        out$xc50 <- cap_xc50(
           out$xc50, 
           max_conc = 10 ^ out$maxlog10Concentration, 
           min_conc = min(concs[concs > 0]), 
@@ -616,8 +616,8 @@ average_dups <- function(df, col) {
 #' Note: \code{xc50} and \code{max_conc} should share the same units.
 #' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
 #' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
-#' @keywords internal
-.cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
+#' @export
+cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
   checkmate::assert_numeric(capping_fold)
   checkmate::assert_number(xc50)
   checkmate::assert_number(max_conc)
