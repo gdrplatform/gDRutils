@@ -144,7 +144,7 @@ fit_curves <- function(df_,
 #' @param pcutoff numeric of pvalue significance threshold above or equal to which to use a constant fit.
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
-#' @param capping_fold Integer value of the fold number to use for capping IC50/GR50. Default if \code{5}.
+#' @param capping_fold Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.
 #'
 #' @return data.frame with metrics and fit parameters.
 #'
@@ -319,7 +319,7 @@ logisticFit <-
         out$xc50 <- .estimate_xc50(out$x_inf)
       } else {
         # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
-        # max/min tested concenrations (default)
+        # max/min tested concentrations (default)
         out$xc50 <- cap_xc50(
           out$xc50, 
           max_conc = 10 ^ out$maxlog10Concentration, 
@@ -621,7 +621,8 @@ cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
   checkmate::assert_numeric(capping_fold)
   checkmate::assert_number(xc50)
   checkmate::assert_number(max_conc)
-
+  checkmate::assert_number(min_conc, na.ok = TRUE)
+  
   upper_cap <- max_conc * capping_fold
   lower_cap <- ifelse(!is.na(min_conc), min_conc / capping_fold, max_conc / (capping_fold * 1e5))
   if (xc50 > upper_cap) {

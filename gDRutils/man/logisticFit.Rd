@@ -44,7 +44,7 @@ mean parameters in the model. Overrules any self starter function.}
 
 \item{n_point_cutoff}{integer indicating number of unique concentrations required to fit curve.}
 
-\item{capping_fold}{Integer value of the fold number to use for capping IC50/GR50. Default if \code{5}.}
+\item{capping_fold}{Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.}
 }
 \value{
 data.frame with metrics and fit parameters.
