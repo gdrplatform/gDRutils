@@ -233,11 +233,23 @@ logisticFit <-
 
     out <- tryCatch({
       non_na_avg_norm <- !is.na(df_$norm_values)
+      if (sum(non_na_avg_norm) < n_point_cutoff) {
+        stop(fitting_handler(
+          "too_few_fit",
+          message = sprintf(
+            "not enough data points (%i < %i) to perform fitting",
+            sum(non_na_avg_norm),
+            n_point_cutoff
+          )
+        ))
+      }
+      # the condition on n_point_cutoff should come before 'length(unique(ReadoutValue))==1' to handle
+      # specific cases when multiple ReadoutValue are equal resulting outputting a constant fit
+      # This is important for the new matrix format for co-treatment when 
+      # some results with <3 concentration may be fitted if the order of tests is different
+
       if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
         stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
-      }
-      if (sum(non_na_avg_norm) < n_point_cutoff) {
-        stop(fitting_handler("too_few_fit", message = "not enough data to perform fitting"))
       }
 
       if (!is.na(x_0)) {
@@ -291,7 +303,13 @@ logisticFit <-
 
       f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
       if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
-        stop(fitting_handler("constant_fit", message = "fit is not statistically significant, setting constant fit"))
+        stop(fitting_handler(
+          "constant_fit",
+          message = sprintf(
+            "fit is not statistically significant (p=%.2f), setting constant fit",
+            f_pval
+          )
+        ))
       }
 
       # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
@@ -300,11 +318,13 @@ logisticFit <-
       }
       out
     }, too_few_fit = function(e) {
+      warning(e$message)
       out <- .set_too_few_fit_params(out, df_$norm_values)
 
     }, constant_fit = function(e) {
       if (!is.na(x_0)) {
-        warning(sprintf("overriding original x_0 argument '%s' with '%s'", x_0, mean_norm_value))
+        # provide a more explicit warning message with the outcome of the fitting
+        warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
       }
       out <- .set_constant_fit_params(out, mean_norm_value)
 
@@ -401,6 +421,39 @@ logistic_metrics <- function(c, x_metrics) {
 }
 
 
+#' Cap IC50 value.
+#' 
+#' Cap IC50 value by upper and lower limits.
+#'
+#' @param ic50 Numeric value of the IC50 to cap. 
+#' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{ic50}.
+#' @param capping_fold Integer value of the fold number to use for capping.
+#'
+#' @return Capped IC50 value.
+#'
+#' @details 
+#' Note: \code{ic50} and \code{max_conc} should share the same units.
+#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
+#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
+#' @export
+cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
+  checkmate::assert_int(capping_fold)
+  checkmate::assert_number(ic50)
+  checkmate::assert_number(max_conc)
+  
+  upper_cap <- max_conc * capping_fold
+  lower_cap <- max_conc / (capping_fold * 1e5)
+  ic50 <- if (ic50 > upper_cap) {
+    Inf
+  } else if (ic50 < lower_cap) {
+    -Inf
+  } else {
+    ic50
+  }
+  ic50
+}
+
+
 ##################
 # Helper functions
 ##################
@@ -446,38 +499,6 @@ average_dups <- function(df, col) {
       mean(x, na.rm = TRUE)
     }
   )
-}
-
-#' Cap IC50 value.
-#' 
-#' Cap IC50 value by upper and lower limits.
-#'
-#' @param ic50 Numeric value of the IC50 to cap. 
-#' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{ic50}.
-#' @param capping_fold Integer value of the fold number to use for capping.
-#'
-#' @return Capped IC50 value.
-#'
-#' @details 
-#' Note: \code{ic50} and \code{max_conc} should share the same units.
-#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
-#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
-#' @export
-cap_ic50 <- function(ic50, max_conc, capping_fold = 5) {
-  checkmate::assert_int(capping_fold)
-  checkmate::assert_number(ic50)
-  checkmate::assert_number(max_conc)
-  
-  upper_cap <- max_conc * capping_fold
-  lower_cap <- max_conc / (capping_fold * 1e5)
-  ic50 <- if (ic50 > upper_cap) {
-    Inf
-  } else if (ic50 < lower_cap) {
-    -Inf
-  } else {
-    ic50
-  }
-  ic50
 }
 
 ############
