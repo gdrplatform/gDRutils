@@ -15,6 +15,7 @@
     ),
 
     normalized_results = c(
+      "x",
       "CorrectedReadout",
       "GRvalue",
       "RelativeViability",
@@ -25,7 +26,8 @@
 
     averaged_results = c(
       "std_GRvalue", 
-      "std_RelativeViability"
+      "std_RelativeViability",
+      "x_std"
     ),
 
     response_metrics = c(
