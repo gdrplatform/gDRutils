@@ -1,3 +1,6 @@
+# Change to v.1.3.22
+- Update authors
+
 # Change to v.1.3.21
 - Better handling of corner cases for the single-agent fitting
 
