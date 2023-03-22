@@ -322,7 +322,7 @@ logisticFit <-
         # max/min tested concenrations (default)
         out$xc50 <- .cap_xc50(
           out$xc50, 
-          max_conc = 10**out$maxlog10Concentration, 
+          max_conc = 10 ^ out$maxlog10Concentration, 
           min_conc = min(concs[concs > 0]), 
           capping_fold = capping_fold
         )
