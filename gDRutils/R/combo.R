@@ -78,7 +78,7 @@ get_iso_colors <-
     breaks <- iso_cutoff
     if (normalization_type == "GRvalue") {
       colors <- vapply(iso_cutoff, function(x) {
-        color_vector <- c(70, round((.85 - x * .7) * 170), round((1.1 - x * .7) * 200))
+        color_vector <- c(70, round((0.85 - x * 0.7) * 170), round((1.1 - x * 0.7) * 200))
         assert_RGB_format(color_vector)
         sprintf("#%s", paste(as.hexmode(color_vector), collapse = ""))
       },
@@ -127,12 +127,13 @@ get_combo_col_settings <-
       breaks <- names(myv)
     } else if (assay_type %in% c(names(get_combo_assay_names(group = "combo_score_excess")),
                                  names(get_combo_assay_names(group = "combo_base_excess")))) {
-      colors <-
-        c("#003355", "#4488dd", "#eeeedd", "#CC8844", "#662200")
+      colors <- c("#003355", "#4488dd", "#eeeedd", "#CC8844", "#662200")
       if (g_metric == "GRvalue") {
         breaks <- c(-0.5, -0.25, 0, 0.25, 0.5)
-      } else {
+      } else if (g_metric == "RelativeViability") {
         breaks <- c(-0.3, -0.15, 0, 0.15, 0.3)
+      } else {
+        stop(sprintf("unexpected 'g_metric' type: '%s'", g_metric))
       }
     } else if (assay_type %in% names(get_combo_assay_names(group = "combo_score_mx"))) {
       colors <- c("#003355", "#4488dd", "#eeeedd", "#CC8844", "#662200")
@@ -141,15 +142,15 @@ get_combo_col_settings <-
       if (g_metric == "GRvalue") {
         colors <- c("#001155", "#1122AA", "#AA4400", "#FF7711", "#ffffee")
         breaks <- c(-0.6, -0.2, 0.2, 0.6, 1)
-      } else {
+      } else if (g_metric == "RelativeViability") {
         colors <- c("#330033", "#770033", "#BB6633", "#ffaa11", "#ffffee")
         breaks <- c(0, 0.25, 0.5, 0.75, 1)
+      } else {
+        stop(sprintf("unexpected 'g_metric' type: '%s'", g_metric))
       }
     } else {
-      stop(sprintf("sth is wrong - no logic found for the assay_type:%s",
-           assay_type))
+      stop(sprintf("no logic found for the assay_type: '%s'", assay_type))
     }
-    limits <- c(min(breaks), max(breaks))
 
     if (is.null(colors) || is.null(breaks)) {
       stop("unexpected error when determining combo color settings - either 'colors' or 'breaks' is NULL")
@@ -158,6 +159,6 @@ get_combo_col_settings <-
     list(
       colors = colors,
       breaks = breaks,
-      limits = limits
+      limits = c(min(breaks), max(breaks))
     )
   }
