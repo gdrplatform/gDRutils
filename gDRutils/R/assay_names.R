@@ -23,13 +23,13 @@ ASSAY_INFO_TBL <- data.table::setDT(
 #' for the specified filters,
 #' i.e. set of assay types, assay groups and assay data types
 #'
-#' @param type charvec assay types
-#' @param group charvec assay grups
-#' @param data_type charvec assay data types
+#' @param type charvec of assay types
+#' @param group charvec of assay groups
+#' @param data_type charvec assay of data types
 #' @param prettify logical flag, prettify the assay name?
 #' @param simplify logical flag, simplify the output?
 #'    will return single string instead of named vector with single element
-#'    useful when function is expect to return single element/assay only
+#'    useful when function is expected to return single element/assay only
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
@@ -46,8 +46,6 @@ get_env_assay_names <-
                    null.ok = TRUE)
     checkmate::assert_flag(prettify)
 
-    # to prettify or not to prettify
-    # this is the question
     fname <- if (prettify) {
       "pname"
     } else {
@@ -77,16 +75,14 @@ get_env_assay_names <-
               v_filters,
               sep = "=",
               collapse = "&")
-      msg <- sprintf("Assay name not found for '%s'", v_filters_str)
-      stop(msg)
+      stop(sprintf("Assay name not found for '%s'", v_filters_str))
     }
 
     res <- structure(df[[fname]], names = df$type)
-    if (length(res) == 1 && simplify == TRUE) {
-      as.character(res)
-    } else {
-      res
+    if (length(res) == 1L && simplify) {
+      res <- as.character(res)
     }
+    res
   }
 
 #' get assay names of the given se/dataset

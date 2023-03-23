@@ -30,12 +30,11 @@ test_that("fit_curves fails with expected errors", {
 test_that("NA values are handled correctly", {
   df_resp_NA <- df_resp
   df_resp_NA[, "x"] <- NA
-  expect_error(fit_curves(df_resp_NA, series_identifiers = "Concentration"), NA)
-
-  df_resp_NA3 <- df_resp_NA
-  df_resp_NA3[, "x"] <- NA
-  df_result_NA <- fit_curves(df_resp_NA3, series_identifiers = "Concentration")
-  expect_true(is.na(df_result_NA[1, "xc50"]))
+  expect_warning(fit_curves(df_resp_NA, series_identifiers = "Concentration"))
+  
+  df_result_NA <- purrr::quietly(fit_curves)(df_resp_NA, series_identifiers = "Concentration")
+  expect_length(df_result_NA$warnings, 2)
+  expect_true(is.na(df_result_NA$result["RV", "xc50"]))
 })
 
 
@@ -142,11 +141,12 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(unname(unlist(unique(df_result11[, "x_inf"]))), c(0.1, 0.1), tolerance = 1e-5)
 
   # Test for too few points.
-  df_result <- fit_curves(df_resp[c(3:5, 12:14), ],
+  df_result <- purrr::quietly(fit_curves)(df_resp[c(3:5, 12:14), ],
                           series_identifiers = "Concentration", n_point_cutoff = 4)
-  obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
+  expect_length(df_result$warnings, 2)
+  obs_fit <- unique(df_result$result[, "fit_type"])
   expect_equal(obs_fit, "DRCTooFewPointsToFit")
-  expect_equal(dim(df_result), expected_dims)
+  expect_equal(dim(df_result$result), expected_dims)
 
   #nolint start
     # TODO: Test for invalid fit. Maybe try a bunch of noise.
@@ -366,4 +366,13 @@ test_that(".calculate_xc50 works as expected", {
   EC50 <- 0.5
   obs <- gDRutils:::.calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
   expect_equal(obs, 0.559017)
+})
+
+
+test_that("cap_xc50 works as expected", {
+  expect_error(cap_xc50(xc50 = c(1, 2), max_conc = c(10, 10), capping_fold = 5))
+  
+  expect_equal(cap_xc50(xc50 = 26, max_conc = 5, capping_fold = 5), Inf)
+  expect_equal(cap_xc50(xc50 = 1e-6, max_conc = 5, capping_fold = 5), -Inf)
+  expect_equal(cap_xc50(xc50 = 1, max_conc = 5, capping_fold = 5), 1)
 })

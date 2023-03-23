@@ -1,3 +1,9 @@
+# Change to v.1.3.22
+- Tidy code
+
+# Change to v.1.3.21
+- Better handling of corner cases for the single-agent fitting
+
 # Change to v.1.3.20
 - Add support for splitting normalization data types
 

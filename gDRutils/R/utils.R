@@ -49,6 +49,17 @@ extend_normalization_type_name <- function(x) {
   unname(dict[match(x, names(dict))])
 }
 
+#' extend abbreviated normalization type
+#' 
+#' @param x string with normalization type
+#' 
+#' @export
+extend_normalization_type_name <- function(x) {
+  checkmate::assert_choice(x, c("RV", "GR"))
+  dict <- c("RV" = "RelativeViability", "GR" = "GRvalue")
+  dict[[x]]
+}
+
 #' assert choices
 #'
 #' @param x charvec expected subset

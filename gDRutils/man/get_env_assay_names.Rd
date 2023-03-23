@@ -15,17 +15,17 @@ get_env_assay_names(
 )
 }
 \arguments{
-\item{type}{charvec assay types}
+\item{type}{charvec of assay types}
 
-\item{group}{charvec assay grups}
+\item{group}{charvec of assay groups}
 
-\item{data_type}{charvec assay data types}
+\item{data_type}{charvec assay of data types}
 
 \item{prettify}{logical flag, prettify the assay name?}
 
 \item{simplify}{logical flag, simplify the output?
 will return single string instead of named vector with single element
-useful when function is expect to return single element/assay only}
+useful when function is expected to return single element/assay only}
 }
 \description{
 get default assay names
