@@ -99,7 +99,6 @@ test_that("get_non_empty_assays works as expected", {
 })
 
 test_that("mrowData works as expected", {
-  browser()
   mr <- mrowData(maeReal)
   expect_identical(vapply(dimnames(mr), length, numeric(1)), c(7, 7))
   checkmate::expect_class(mr, "data.frame")

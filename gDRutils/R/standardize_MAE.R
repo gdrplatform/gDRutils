@@ -44,8 +44,8 @@ standardize_se <- function(se) {
   mapping_df <- do.call(rbind,
                         lapply(seq_along(diff_names),
                                function(x)
-                                 data.table::setDT(data.frame(x = unlist(diff_identifiers$default[x]),
-                                            y = unlist(diff_identifiers$se[x])))))
+                                 data.table::data.table(x = unlist(diff_identifiers$default[x]),
+                                            y = unlist(diff_identifiers$se[x]))))
   mapping_vector <- mapping_df$x
   names(mapping_vector) <- mapping_df$y
 
@@ -85,7 +85,7 @@ standardize_se <- function(se) {
 .replace_untreated_tag <- function(row_data,
                                    default,
                                    se_identifiers) {
-  untreated_tag <- data.table::setDT(x = default[["untreated_tag"]],
+  untreated_tag <- data.table::data.table(x = default[["untreated_tag"]],
                               y = se_identifiers[["untreated_tag"]])
   untreated_tag_mapping <- untreated_tag$x
   names(untreated_tag_mapping) <- untreated_tag$y

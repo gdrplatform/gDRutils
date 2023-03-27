@@ -24,7 +24,7 @@ validate_json <- function(json, schema_path) {
   vjson <- jsonlite::validate(json)
   stl <- if (!isTRUE(vjson)) {
     derror <-
-      data.table::setDT(data.frame(field = "-", message = attributes(vjson)[["err"]]))
+      data.table::data.table(field = "-", message = attributes(vjson)[["err"]])
     list(error = "global JSON validation failed",
          exit_code = 1,
          derror = derror)

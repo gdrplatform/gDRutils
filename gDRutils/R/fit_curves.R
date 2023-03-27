@@ -217,7 +217,7 @@ logisticFit <-
 
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
-     df_ <- data.table::data.table(concs = concs, norm_values = norm_values)
+    df_ <- data.table::data.table(concs = concs, norm_values = norm_values)
 
 
     if (has_dups(df_$concs)) {

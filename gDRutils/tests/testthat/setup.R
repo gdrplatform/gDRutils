@@ -1,7 +1,7 @@
 # Set up synthetic data for testing.
 
 .create_data <- function(conc, params, params_GR) {
-  data.table::setDT(data.frame(
+  data.table::data.table(
     Concentration = conc,
     x_std = c(0.1, 0.1),
     normalization_types = rep(c("RV", "GR"), each = length(conc)),
@@ -20,14 +20,14 @@
         params_GR$ec50,
         params_GR$h
       ))
-  ))
+  )
 }
 
-params <- data.table::setDT(data.frame(h = 2, x_inf = 0.1, x_0 = 1, ec50 = 0.5))
+params <- data.table::data.table(h = 2, x_inf = 0.1, x_0 = 1, ec50 = 0.5)
 params_GR <- params
 params_GR$x_inf <- -0.4
 
-expected <- data.table::setDT(data.frame(rbind(params, params_GR)))
+expected <- data.table::data.table(rbind(params, params_GR))
 rownames(expected) <- c("RV_gDR", "GR_gDR")
 expected_dims <- c(2, 16)
 
@@ -37,7 +37,7 @@ conc <- 10 ^ (seq(-3, 1, 0.5))
 df_resp <- .create_data(conc, params, params_GR)
 
 # Above 0.5 curve.
-params_above <- data.table::setDT(data.frame(h = 2, x_inf = 0.5, x_0 = 1, ec50 = 0.75))
+params_above <- data.table::data.table(h = 2, x_inf = 0.5, x_0 = 1, ec50 = 0.75)
 df_resp_above <- .create_data(conc, params_above, params_above)
 
 # Below 0.5 curve.
