@@ -25,3 +25,8 @@ Function validates correctness of SE by checking multiple cases:
 - detection of mismatch of CLIDs inside colData and colnames (different order),
 - correctness of metadata names.
 }
+\examples{
+se <- get_synthetic_data("finalSE_small.RDS") 
+validate_SE(se)
+
+}

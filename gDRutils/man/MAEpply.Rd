@@ -16,8 +16,16 @@ values across all the experiments}
 
 \item{...}{Additional args to be passed to teh \code{FUN}.}
 }
+\value{
+list or vector depends on unify param
+}
 \description{
 Lapply through all the experiments in MultiAssayExperiment object
+}
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+MAEpply(mae, SummarizedExperiment::assayNames)
+
 }
 \author{
 Bartosz Czech <bartosz.czech@contractors.roche.com>

@@ -8,6 +8,7 @@
 #' @importFrom data.table ":=" .N
 #' @importFrom methods is
 #' @importFrom tibble tribble
+#' @return \code{NULL}
 
 .datatable.aware <- TRUE
 NULL

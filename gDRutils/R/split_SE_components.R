@@ -38,7 +38,7 @@
 #' Next, any cell line metadata will be heuristically extracted.
 #' Finally, all remaining columns will be combined on either the rows or columns as specified by 
 #' \code{combine_on}.
-#'
+#' 
 #' @export
 #'
 split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {

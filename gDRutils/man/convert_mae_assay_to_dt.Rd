@@ -43,6 +43,11 @@ NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
 To extract the reference data in to same format as 'Averaged' use \code{convert_mae_ref_assay_to_dt}.
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+convert_mae_assay_to_dt(mae, "Metrics")
+
+}
 \seealso{
 flatten
 }

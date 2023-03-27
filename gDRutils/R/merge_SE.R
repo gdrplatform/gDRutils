@@ -113,8 +113,12 @@ merge_assay <- function(SElist,
 #' @param SElist named list of \code{SummarizedExperiment}s
 #'
 #' @return character vector of unique names of metadata
+#' 
+#' @examples 
+#' SElist <- list(get_synthetic_data("finalSE_small.RDS"), get_synthetic_data("finalSE_small_no_noise.RDS"))
+#' identify_unique_se_metadata_fields(SElist)
+#' 
 #' @export
-#'
 identify_unique_se_metadata_fields <- function(SElist) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   

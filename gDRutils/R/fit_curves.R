@@ -340,6 +340,7 @@ logisticFit <-
       out <- .set_constant_fit_params(out, mean_norm_value)
 
     }, invalid_fit = function(e) {
+      NULL
       warning(sprintf("fitting failed with error: '%s'", e))
       out <- .set_invalid_fit_params(out, df_$norm_values)
 
@@ -367,6 +368,10 @@ logisticFit <-
 #'
 #' @details The inverse of this function is \code{predict_conc_from_efficacy}.
 #' @seealso predict_conc_from_efficacy
+#' 
+#' @examples 
+#' predict_efficacy_from_conc(c = 1, x_inf = 0.1, x_0 = 1, ec50 = 0.5, h = 2)
+#' 
 #' @export
 predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
   checkmate::assert_numeric(c)
@@ -384,6 +389,8 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #'
 #' Predict a concentration for a given efficacy with fit parameters.
 #'
+#' @details The inverse of this function is \code{predict_efficacy_from_conc}.
+#' 
 #' @param efficacy Numeric vector representing efficacies to predict concentrations for.
 #' @param x_inf Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
 #'  data as concentration goes to infinity.
@@ -394,7 +401,9 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #'
 #' @return Numeric vector representing predicted concentrations from given efficacies and fit parameters.
 #'
-#' @details The inverse of this function is \code{predict_efficacy_from_conc}.
+#' @examples 
+#' predict_conc_from_efficacy(efficacy = c(1, 1.5), x_inf = 0.1, x_0 = 1, ec50 = 0.5, h = 2)
+#' 
 #' @seealso predict_efficacy_from_conc .calculate_x50
 #' @export
 predict_conc_from_efficacy <- function(efficacy, x_inf, x_0, ec50, h) {
@@ -522,6 +531,11 @@ average_dups <- function(df, col) {
 #' @param mean_norm_value Numeric value that be used to set all parameters
 #' that can be calculated from the mean.
 #' @return Modified named list of fit parameters.
+#' 
+#' @examples 
+#' na <- list(x_0 = NA)
+#' gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
+#' 
 #' @export
 .set_constant_fit_params <- function(out, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
@@ -538,6 +552,10 @@ average_dups <- function(df, col) {
 #' @param out Named list of fit parameters.
 #' @param norm_values Numeric vector used to estimate an \code{xc50} value.
 #' @return Modified named list of fit parameters.
+#' 
+#' @examples 
+#' .set_invalid_fit_params(out, norm_values = rep(0.3, 6))
+#' 
 #' @export
 .set_invalid_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCInvalidFitResult"
@@ -604,6 +622,11 @@ average_dups <- function(df, col) {
 #' 
 #' Set IC50/GR50 value to \code{Inf} or \code{-Inf} based on upper and lower limits.
 #'
+#' @details 
+#' Note: \code{xc50} and \code{max_conc} should share the same units.
+#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
+#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
+#' 
 #' @param xc50 Numeric value of the IC50/GR50 to cap. 
 #' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{xc50}.
 #' @param min_conc Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
@@ -612,10 +635,11 @@ average_dups <- function(df, col) {
 #'
 #' @return Capped IC50/GR50 value.
 #'
-#' @details 
-#' Note: \code{xc50} and \code{max_conc} should share the same units.
-#' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
-#' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
+#' @examples 
+#' cap_xc50(xc50 = 1, max_conc = 2)
+#' cap_xc50(xc50 = 2, max_conc = 5, min_conc = 1)
+#' cap_xc50(xc50 = 26, max_conc = 5, capping_fold = 5)
+#'
 #' @export
 cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
   checkmate::assert_numeric(capping_fold)

@@ -17,13 +17,7 @@
 #' For functions called with no arguments, the entire available identifier list is returned.
 #'
 #' @examples
-#' \dontrun{
 #' get_env_identifiers("duration") # "Duration"
-#' set_env_identifier("duration", "Duration_Time")
-#' get_env_identifiers("duration") # "Duration_Time"
-#' reset_env_identifiers()
-#' get_env_identifiers("duration") # "Duration"
-#'}
 #'
 #' @details
 #' Identifiers supported by the gDR suite include:
@@ -49,8 +43,10 @@ NULL
 
 
 #' @rdname identifiers
+#' 
+#' @return  charvec
+#' 
 #' @export
-#'
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
   if (simplify) {
     if (length(k) > 1L) {
@@ -66,7 +62,11 @@ get_env_identifiers <- function(k = NULL, simplify = TRUE) {
 
 
 #' @rdname identifiers
+#' 
+#' @return  charvec
+#' 
 #' @export
+#' 
 get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
   idfs <- get_env_identifiers(k, simplify = simplify)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
@@ -82,12 +82,22 @@ get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
 
 
 #' Get identifiers required for downstream analysis.
+#' @return  charvec
+#' 
+#' @examples 
+#' get_required_identifiers()
+#' 
 #' @export
 get_required_identifiers <- function() {
   REQ_COL_IDENTIFIERS
 }
 
 #' Get gDR default identifiers required for downstream analysis.
+#' @return  charvec
+#' 
+#' @examples 
+#' get_default_identifiers()
+#' 
 #' @export
 get_default_identifiers <- function() {
   IDENTIFIERS_LIST
@@ -97,6 +107,11 @@ get_default_identifiers <- function() {
 #'
 #' Get gDR synonyms for the identifiers
 #'
+#' @return  charvec
+#' 
+#' @examples 
+#' get_idfs_synonyms()
+#' 
 #' @export
 get_idfs_synonyms <- function() {
   SYNONYMS_LIST
@@ -109,6 +124,13 @@ get_idfs_synonyms <- function() {
 #' @param data list of charvec with identifiers data
 #' @param dict list with dictionary
 #'
+#' @return list
+#' 
+#' @examples 
+#' mdict <- list(duration = "time")
+#' iv <- c("Time", Duration, "time")
+#' update_idfs_synonyms(iv, dict = mdict)
+#' 
 #' @export
 update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
 
@@ -135,6 +157,11 @@ update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
 
 #' Get identifiers that expect only one value for each identifier.
 #' @export
+#' 
+#' @examples 
+#' get_expect_one_identifiers()
+#' 
+#' @return charvec
 get_expect_one_identifiers <- function() {
   EXPECT_ONE_IDENTIFIERS
 }
@@ -143,6 +170,8 @@ get_expect_one_identifiers <- function() {
 #' @rdname identifiers
 #' @export
 #'
+#' @return charvec
+#' 
 set_env_identifier <- function(k, v) {
   .set_id(k, v)
 }
@@ -151,6 +180,8 @@ set_env_identifier <- function(k, v) {
 #' @rdname identifiers
 #' @export
 #'
+#' @return charvec
+#' 
 reset_env_identifiers <- function() {
   .reset_ids()
 }
@@ -160,7 +191,12 @@ reset_env_identifiers <- function() {
 #' @param k identifier key, string
 #' @param get_description return descriptions only, boolean
 #' @param get_example return examples only, boolean
-#'
+#' 
+#' @examples 
+#' get_identifiers_dt()
+#' 
+#' @return charvec
+#' 
 #' @export
 get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = FALSE) {
   checkmate::assert_string(k, null.ok = TRUE)
@@ -207,7 +243,8 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 #'
 #' @param mae_idfs A list containing MAE identifiers
 #'
-#' @return NULL
+#' @return \code{NULL}
+#' 
 #' @export
 update_env_idfs_from_mae <- function(mae_idfs) {
   checkmate::assert_list(mae_idfs)

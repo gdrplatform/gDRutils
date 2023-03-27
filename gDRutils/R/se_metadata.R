@@ -68,31 +68,46 @@ set_SE_experiment_raw_data <- function(se, value) {
 # Getters
 ############
 #' @rdname SE_metadata
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' get_SE_fit_parameters(se)
+#' 
 #' @export
-#'
 get_SE_fit_parameters <- function(se) {
   .get_SE_metadata(se, name = "fit_parameters")
 }
 
 
 #' @rdname SE_metadata
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' get_SE_processing_metadata(se)
+#' 
 #' @export
-#'
 get_SE_processing_metadata <- function(se) {
   .get_SE_metadata(se, name = ".internal")
 }
 
 #' @rdname SE_metadata
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' get_SE_experiment_raw_data(se)
+#' 
 #' @export
-#'
 get_SE_experiment_raw_data <- function(se) {
   .get_SE_metadata(se, name = "experiment_raw_data")
 }
 
 #' @rdname SE_metadata
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' get_SE_experiment_metadata(se)
+#' 
 #' @export
-#'
-#'
 get_SE_experiment_metadata <- function(se) {
   .get_SE_metadata(se, name = "experiment_metadata")
 }
@@ -110,8 +125,12 @@ get_SE_keys <- function(se, key_type = NULL) {
 ##############
 
 #' @rdname SE_metadata
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' get_SE_identifiers(se)
+#' 
 #' @export
-#'
 get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
   ## `strict = FALSE` is present for backwards compatibility.
   if (simplify) {
@@ -136,9 +155,12 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
 #' @param mae MultiAssayExperiment
 #'
 #' @return named list with identifiers for each SE
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' get_MAE_identifiers(mae)
+#' 
 #' @export
-#'
-#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
 get_MAE_identifiers <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   

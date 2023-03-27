@@ -15,6 +15,11 @@ charvec with non-empty experiments
 \description{
 get non empty assays
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+get_non_empty_assays(mae)
+
+}
 \author{
 Arkadiusz Gladki <arkadiusz.gladki@contractors.roche.com>
 }

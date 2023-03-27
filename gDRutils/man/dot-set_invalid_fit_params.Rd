@@ -17,3 +17,7 @@ Modified named list of fit parameters.
 \description{
 Set fit parameters for an invalid fit.
 }
+\examples{
+.set_invalid_fit_params(out, norm_values = rep(0.3, 6))
+
+}

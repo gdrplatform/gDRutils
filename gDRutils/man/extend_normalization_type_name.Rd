@@ -11,8 +11,17 @@ extend_normalization_type_name(x)
 \arguments{
 \item{x}{string with normalization type}
 }
+\value{
+string
+
+string
+}
 \description{
 extend abbreviated normalization type
 
 extend abbreviated normalization type
+}
+\examples{
+extend_normalization_type_name("GR")
+
 }

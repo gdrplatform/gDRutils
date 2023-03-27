@@ -27,10 +27,17 @@ get_env_assay_names(
 will return single string instead of named vector with single element
 useful when function is expected to return single element/assay only}
 }
+\value{
+charvec
+}
 \description{
 get default assay names
 for the specified filters,
 i.e. set of assay types, assay groups and assay data types
+}
+\examples{
+get_env_assay_names()
+
 }
 \author{
 Arkadiusz Gładki \email{arkadiusz.gladki@contractors.roche.com}

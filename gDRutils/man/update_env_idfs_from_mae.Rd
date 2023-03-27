@@ -9,6 +9,9 @@ update_env_idfs_from_mae(mae_idfs)
 \arguments{
 \item{mae_idfs}{A list containing MAE identifiers}
 }
+\value{
+\code{NULL}
+}
 \description{
 Update environment identifiers from MAE object identifiers
 }

@@ -15,3 +15,7 @@ shortened string representing the normalization type
 \description{
 shorten normalization type
 }
+\examples{
+shorten_normalization_type_name("GRvalue")
+
+}

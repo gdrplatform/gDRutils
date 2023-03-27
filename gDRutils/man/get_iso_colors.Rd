@@ -15,3 +15,7 @@ named charvec with iso colors
 \description{
 get_iso_colors
 }
+\examples{
+get_iso_colors()
+
+}

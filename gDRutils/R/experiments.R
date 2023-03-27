@@ -13,6 +13,9 @@ EXPERIMENT_GROUPS <-
 #'
 #' @return list with experiment groups or string (if type not NULL)
 #'
+#' @examples 
+#' get_experiment_groups()
+#' 
 #' @export
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 get_experiment_groups <- function(type = NULL) {

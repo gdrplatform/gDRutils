@@ -11,6 +11,15 @@ update_idfs_synonyms(data, dict = get_idfs_synonyms())
 
 \item{dict}{list with dictionary}
 }
+\value{
+list
+}
 \description{
 Update gDR synonyms for the identifier
+}
+\examples{
+mdict <- list(duration = "time")
+iv <- c("Time", Duration, "time")
+update_idfs_synonyms(iv, dict = mdict)
+
 }

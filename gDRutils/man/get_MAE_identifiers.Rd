@@ -15,6 +15,8 @@ named list with identifiers for each SE
 \description{
 get the identifiers of all SE's in the MAE
 }
-\author{
-Sergiu Mocanu <sergiu.mocanu@contractors.roche.com>
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+get_MAE_identifiers(mae)
+
 }

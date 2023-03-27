@@ -15,6 +15,11 @@ logical
 \description{
 check if any experiment is empty
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+is_any_exp_empty(mae)
+
+}
 \author{
 Arkadiusz Gladki <arkadiusz.gladki@contractors.roche.com>
 }

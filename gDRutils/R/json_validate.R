@@ -2,6 +2,9 @@
 #'
 #' Validate JSON describing an object against a schema.
 #'
+#' @details This is most often used to validate JSON
+#' before passing it in as a document to an ElasticSearch index.
+#' 
 #' @param json String of JSON in memory.
 #' @param schema_path String of the schema to validate against.
 #'
@@ -10,8 +13,6 @@
 #' @examples
 #' json <- '{}'
 #'
-#' @details This is most often used to validate JSON
-#' before passing it in as a document to an ElasticSearch index.
 #' @export
 validate_json <- function(json, schema_path) {
   # asserts that should be valid regardless user data
@@ -68,6 +69,10 @@ validate_json <- function(json, schema_path) {
 #'
 #' @return Boolean of whether or not mae is valid
 #'
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' validate_mae_with_schema(mae)
+#' 
 #' @export
 validate_mae_with_schema <-
   function(mae,

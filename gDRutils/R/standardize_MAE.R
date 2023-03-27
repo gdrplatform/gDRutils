@@ -3,8 +3,12 @@
 #' @param mae a MultiAssayExperiment object with drug-response data generate by gDR pipeline
 #'
 #' @return mae a MultiAssayExperiment with default gDR identifiers
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' standardize_mae(mae)
+#' 
 #' @export
-#'
 standardize_mae <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   experiments <- names(mae)
@@ -19,8 +23,12 @@ standardize_mae <- function(mae) {
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
 #'
 #' @return se a SummarizedExperiment with default gDR identifiers
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' standardize_se(se)
+#' 
 #' @export
-#'
 standardize_se <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
   idfs <- get_default_identifiers()
@@ -171,6 +179,11 @@ get_optional_rowdata_fields <- function(se) {
 #' @param default_v string with default value for optional columns in colData
 #'
 #' @return refined colData
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' refine_coldata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
+#' 
 #' @export
 #'
 refine_coldata <- function(cd, se, default_v = "Undefined") {
@@ -197,9 +210,13 @@ refine_coldata <- function(cd, se, default_v = "Undefined") {
 #' @param default_v string with default value for optional columns in rowData
 #' 
 #' @return refined rowData
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' refine_rowdata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
+#' 
 #' @export
 #'
-
 refine_rowdata <- function(rd, se, default_v = "Undefined") {
   
   checkmate::assert_class(se, "SummarizedExperiment")

@@ -20,3 +20,8 @@ refined rowData
 current improvements done on the rowData as a standardization step:
 - set default value for optional rowData fields
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+refine_rowdata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
+
+}

@@ -17,6 +17,10 @@ charvec
 \description{
 get names of combo score assays
 }
+\examples{
+get_combo_score_assay_names()
+
+}
 \author{
 Arkadiusz Gładki \email{arkadiusz.gladki@contractors.roche.com}
 }

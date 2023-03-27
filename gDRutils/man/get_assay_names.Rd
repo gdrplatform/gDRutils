@@ -13,10 +13,17 @@ get_assay_names(se = NULL, ...)
 
 \item{...}{Additional arguments to pass to \code{get_env_assay_names}.}
 }
+\value{
+charvec
+}
 \description{
 get assay names of the given se/dataset
 fetch the data from the se if provided as metadata
 use predefined values from `get_env_assay_names` otherwise
+}
+\examples{
+get_assay_names()
+
 }
 \author{
 Arkadiusz Gładki \email{arkadiusz.gladki@contractors.roche.com}

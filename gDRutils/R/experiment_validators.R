@@ -6,6 +6,7 @@
 #' @param obj2 second object with dimnames to compare
 #' @param skip_empty a logical indicating whether to skip comparison
 #'        if a given dimname is empty in the case of both objects
+#' @return \code{NULL}
 #'
 validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 
@@ -33,6 +34,10 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 #' Throws an error if the assay is not valid.
 #'
 #' @export
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalMAE_small.RDS") 
+#' validate_se_assay_name(se, "RawTreated")
 #'
 validate_se_assay_name <- function(se, name) {
   if (!name %in% assayNames(se)) {
@@ -60,6 +65,10 @@ validate_se_assay_name <- function(se, name) {
 #' @return \code{NULL} invisibly if the SummarizedExperiment is valid.
 #' Throws an error if the SummarizedExperiment is not valid.
 #' @export
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS") 
+#' validate_SE(se)
 #'
 validate_SE <- function(se,
                         expect_single_agent = FALSE) {
@@ -89,9 +98,9 @@ validate_SE <- function(se,
   # Validate the correctness of rowData and colData
   # building gsub expression by finding location between _x_ for drug identifier
   #nolint start
-  pattern = paste0("^(?:[^_]+_){",
-                   as.character(which(names(rowdata) == get_env_identifiers("drug")) - 1),
-                   "}([^_]+).*")
+  pattern <- paste0("^(?:[^_]+_){",
+                    as.character(which(names(rowdata) == get_env_identifiers("drug")) - 1),
+                    "}([^_]+).*")
   #checkmate::assert_true(all(gsub(pattern, "\\1",
   #                                rownames(se)) == rowdata[[gDRutils::get_env_identifiers("drug")]]))
   #nolint end
@@ -135,6 +144,10 @@ validate_SE <- function(se,
 #' Throws an error if the MultiAssayExperiment is not valid.
 #' @export
 #'
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' validate_MAE(mae)
+#' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
 validate_MAE <- function(mae) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays

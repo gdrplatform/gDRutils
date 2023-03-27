@@ -6,6 +6,13 @@
 \usage{
 get_expect_one_identifiers()
 }
+\value{
+charvec
+}
 \description{
 Get identifiers that expect only one value for each identifier.
+}
+\examples{
+get_expect_one_identifiers()
+
 }

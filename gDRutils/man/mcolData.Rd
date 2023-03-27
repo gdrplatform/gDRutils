@@ -15,6 +15,11 @@ tibble with all-experiments colData
 \description{
 get colData of all experiments
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+mcolData(mae)
+
+}
 \author{
 Arkadiusz Gladki <arkadiusz.gladki@contractors.roche.com>
 }

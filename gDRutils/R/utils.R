@@ -13,7 +13,7 @@
 #' @keywords internal
 assert_equal_input_len <- function(outlier, ...) {
   first <- list(...)[[1]]
-  h <- all(sapply(list(...), length) == length(first))
+  h <- all(vapply(list(...), length, FUN.VALUE = 1) == length(first))
   if (!h) {
     stop("unequal length objects provided as input")
   }
@@ -31,6 +31,10 @@ assert_equal_input_len <- function(outlier, ...) {
 #' @param x string with normalization type
 #'
 #' @return shortened string representing the normalization type
+#' 
+#' @examples 
+#' shorten_normalization_type_name("GRvalue")
+#' 
 #' @export
 shorten_normalization_type_name <- function(x) {
   checkmate::assert_choice(x, c("RelativeViability", "GRvalue"))
@@ -42,6 +46,11 @@ shorten_normalization_type_name <- function(x) {
 #' 
 #' @param x string with normalization type
 #' 
+#' @return string
+#' 
+#' @examples 
+#' extend_normalization_type_name("GR")
+#' 
 #' @export
 extend_normalization_type_name <- function(x) {
   checkmate::assert_choice(x, c("RV", "GR"))
@@ -52,6 +61,8 @@ extend_normalization_type_name <- function(x) {
 #' extend abbreviated normalization type
 #' 
 #' @param x string with normalization type
+#' 
+#' @return string
 #' 
 #' @export
 extend_normalization_type_name <- function(x) {
@@ -65,6 +76,12 @@ extend_normalization_type_name <- function(x) {
 #' @param x charvec expected subset
 #' @param choices charvec reference set
 #' @param ... Additional arguments to pass to \code{checkmate::test_choice}
+#' 
+#' @return \code{NULL}
+#' 
+#' @examples 
+#' assert_choices("x", c("x","y"))
+#' 
 #' @export
 assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
@@ -89,9 +106,16 @@ assert_choices <- function(x, choices, ...) {
 #' @param unify logical indicating if the output should be a unlisted object of unique
 #' values across all the experiments 
 #' @param ... Additional args to be passed to teh \code{FUN}.
-#' @export
 #' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+#' 
+#' @return list or vector depends on unify param
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' MAEpply(mae, SummarizedExperiment::assayNames)
+#' 
+#' @export
 MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   checkmate::assert_function(FUN)
@@ -123,6 +147,10 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' else to \link[base]{lapply}.
 #'
 #' @return List containing output of \code{FUN} applied to every element in \code{x}.
+#' 
+#' @examples 
+#' loop(list(c(1,2), c(2,3)), sum, parallelize = FALSE)
+#' 
 #' @export
 loop <- function(x, FUN, parallelize = TRUE, ...) {
   if (parallelize) {
@@ -144,6 +172,12 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
 #'
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS") 
+#' FUN <- function(x) data.frame(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
+#' apply_bumpy_function(se, FUN = FUN, req_assay_name = "RawTreated", out_assay_name = "CorrectedReadout")
+#' 
 #' @export
 apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parallelize = FALSE) {
   # Assertions:
@@ -190,11 +224,16 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
 #' 
 #' check if all mae experiments are empty
 #' @param mae MultiAssayExperiment object
-#' @export
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @return logical
 #' 
-#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' is_mae_empty(mae)
+#' 
+#' @export
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
@@ -205,11 +244,16 @@ is_mae_empty <- function(mae) {
 #' 
 #' check if any experiment is empty
 #' @param mae MultiAssayExperiment object
-#' @export
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @return logical
 #' 
-#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' is_any_exp_empty(mae)
+#' 
+#' @export
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
@@ -220,11 +264,16 @@ is_any_exp_empty <- function(mae) {
 #' 
 #' check if experiment (SE) is empty
 #' @param exp \linkS4class{SummarizedExperiment} object.
-#' @export
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @return logical
 #' 
-#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' is_exp_empty(se)
+#' 
+#' @export
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
   
@@ -245,11 +294,16 @@ is_exp_empty <- function(exp) {
 #' 
 #' get non empty assays
 #' @param mae MultiAssayExperiment object
-#' @export
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @return charvec with non-empty experiments
 #' 
-#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' get_non_empty_assays(mae)
+#' 
+#' @export
 get_non_empty_assays <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
@@ -261,11 +315,16 @@ get_non_empty_assays <- function(mae) {
 #'
 #' get colData of all experiments
 #' @param mae MultiAssayExperiment object
-#' @export
+#' 
+#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+#' 
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mcolData(mae)
 #'
 #' @return tibble with all-experiments colData
 #'
-#' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
+#' @export
 mcolData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
@@ -280,9 +339,30 @@ mcolData <- function(mae) {
 #'
 #' @return tibble with all-experiments rowData
 #'
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mrowData(mae)
+#'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   
   MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
+}
+
+loadTestDataSet <- function() {
+  
+}
+
+#' Get synthetic data from gDRtestData package
+#'
+#' @param rds RDS filename
+#' 
+#' @examples 
+#' get_synthetic_data("finalMAE_small.RDS") 
+#'
+#' @return loaded data
+#' 
+get_synthetic_data <- function(rds) {
+  readRDS(system.file("testdata", rds, package = "gDRtestData"))
 }

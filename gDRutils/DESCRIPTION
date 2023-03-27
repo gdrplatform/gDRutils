@@ -1,17 +1,19 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.3.22
-Date: 2023-03-13
-Author: c(person("Bartosz", "Czech", role=c("cre", "aut"), email="bartosz.czech@contractors.roche.com"),
+Version: 0.99.0
+Date: 2023-03-24
+Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("aut")),
              person("Aleksander", "Chlebowski", role=c("aut")),
              person("Marc", "Hafner", role=c("aut")),
              person("Pawel", "Piatkowski", role=c("aut")),
              person("Dariusz", "Scigocki", role=c("aut")),
-             person("Allison", "Vuong", role=c("aut")))
-Maintainer: gDR team <gdr-support-d@gene.com>
+             person("Allison", "Vuong", role=c("aut")),
+             person("gDR", "Support team", role=c("cre"), email="gdr-support-d@gene.com"))
 Description: This package contains utility functions used throughout the gDR platform. 
+    Contaion many helper functions for maniplating data, including e.g. converting and 
+    validating. This package also has the necessary default constants for gDR platform.
 License: file LICENSE
 LazyLoad: yes
 Imports:
@@ -33,6 +35,7 @@ Imports:
     BiocParallel,
     tibble
 Suggests:
+    BiocStyle,
     futile.logger,
     gDRstyle (>= 0.0.8),
     gDRtestData (>= 1.0.11),
@@ -43,7 +46,9 @@ Suggests:
     tools,
     IRanges,
     yaml,
-    BiocManager
+    BiocManager,
+    rmarkdown
+biocViews: Software, Infrastructure
 VignetteBuilder: knitr
 ByteCompile: TRUE
 RoxygenNote: 7.2.3

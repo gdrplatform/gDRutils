@@ -41,6 +41,11 @@ NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
 To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
 }
+\examples{
+se <- get_synthetic_data("finalSE_small.RDS")
+convert_se_assay_to_dt(se, "Metrics")
+
+}
 \seealso{
 flatten
 }

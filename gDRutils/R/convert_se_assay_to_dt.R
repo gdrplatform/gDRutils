@@ -2,6 +2,10 @@
 #'
 #' Convert an assay within a \linkS4class{SummarizedExperiment} object to a long data.table.
 #'
+#' @details NOTE: to extract information about 'Control' data, simply call the
+#' function with the name of the assay holding data on controls.
+#' To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
+#'
 #' @param se A \linkS4class{SummarizedExperiment} object holding raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
@@ -17,13 +21,12 @@
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @details NOTE: to extract information about 'Control' data, simply call the
-#' function with the name of the assay holding data on controls.
-#' To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
-#'
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS")
+#' convert_se_assay_to_dt(se, "Metrics")
+#' 
 #' @seealso flatten
 #' @export
-#'
 convert_se_assay_to_dt <- function(se,
                                    assay_name,
                                    include_metadata = TRUE,
@@ -142,6 +145,10 @@ convert_se_assay_to_dt <- function(se,
 #' Convert an assay within a \linkS4class{SummarizedExperiment} object in a MultiAssayExperiment
 #' to a long data.table.
 #'
+#' @details NOTE: to extract information about 'Control' data, simply call the
+#' function with the name of the assay holding data on controls.
+#' To extract the reference data in to same format as 'Averaged' use \code{convert_mae_ref_assay_to_dt}.
+#'
 #' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with 
 #' raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
@@ -156,16 +163,17 @@ convert_se_assay_to_dt <- function(se,
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #'
+#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+#' 
 #' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @details NOTE: to extract information about 'Control' data, simply call the
-#' function with the name of the assay holding data on controls.
-#' To extract the reference data in to same format as 'Averaged' use \code{convert_mae_ref_assay_to_dt}.
-#'
 #' @seealso flatten
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' convert_mae_assay_to_dt(mae, "Metrics")
+#' 
 #' @export
-#'
-#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
 convert_mae_assay_to_dt <- function(mae,
                                     assay_name,
                                     experiment_name = NULL,

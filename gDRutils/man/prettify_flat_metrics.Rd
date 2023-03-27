@@ -32,3 +32,8 @@ Mode \code{"human_readable" = TRUE} is often used for prettification in the cont
 of front-end applications, whereas \code{"human_readable" = FALSE} is often used for
 prettification in the context of the command line.
 }
+\examples{
+x <- c("CellLineName", "Tissue", "Primary Tissue", "GR_gDR_x_mean", "GR_gDR_xc50", "RV_GDS_x_mean")
+prettify_flat_metrics(x, human_readable = FALSE)
+
+}

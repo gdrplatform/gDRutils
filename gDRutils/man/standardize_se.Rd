@@ -15,3 +15,8 @@ se a SummarizedExperiment with default gDR identifiers
 \description{
 Standardize SE by switching from custom identifiers into gDR-default
 }
+\examples{
+se <- get_synthetic_data("finalSE_small.RDS")
+standardize_se(se)
+
+}

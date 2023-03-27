@@ -205,6 +205,12 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #' @param FUN A function to use to aggregate the data.
 #' 
 #' @return A \code{BumpyMatrix} object aggregated by \code{FUN}.
+#' 
+#' @examples 
+#' se <- get_synthetic_data("finalSE_small.RDS") 
+#' assay <- SummarizedExperiment::assay(se)
+#' aggregate_assay(assay, FUN = sum, by = c("Barcode"))
+#' 
 #' @export
 aggregate_assay <- function(asy, by, FUN) {
   checkmate::assert_class(asy, "BumpyMatrix")

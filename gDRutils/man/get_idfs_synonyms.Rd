@@ -6,6 +6,13 @@
 \usage{
 get_idfs_synonyms()
 }
+\value{
+charvec
+}
 \description{
 Get gDR synonyms for the identifiers
+}
+\examples{
+get_idfs_synonyms()
+
 }

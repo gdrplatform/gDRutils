@@ -15,6 +15,11 @@ tibble with all-experiments rowData
 \description{
 get rowData of all experiments
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS") 
+mrowData(mae)
+
+}
 \author{
 Arkadiusz Gladki <arkadiusz.gladki@contractors.roche.com>
 }

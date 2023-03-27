@@ -26,3 +26,7 @@ List containing output of \code{FUN} applied to every element in \code{x}.
 \description{
 Lapply or bplapply.
 }
+\examples{
+loop(list(c(1,2), c(2,3)), sum, parallelize = FALSE)
+
+}

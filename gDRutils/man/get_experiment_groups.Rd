@@ -16,6 +16,10 @@ list with experiment groups or string (if type not NULL)
 \description{
 get experiment groups
 }
+\examples{
+get_experiment_groups()
+
+}
 \author{
 Arkadiusz Gladki <arkadiusz.gladki@contractors.roche.com>
 }

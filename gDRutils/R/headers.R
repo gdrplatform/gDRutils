@@ -6,11 +6,7 @@
 #' For \code{get_header} a character vector of headers for field \code{k}.
 #'
 #' @examples
-#' \dontrun{
 #' get_header(k = NULL)
-#' set_identifier("duration", "X_TIME")
-#' get_header(k = NULL)
-#' }
 #' @name headers
 NULL
 
@@ -19,9 +15,7 @@ NULL
 #' @details
 #' If \code{get_header} is called with no values, the entire available header list is returned.
 #' @examples
-#' \dontrun{
 #' get_header("manifest")
-#' }
 #' @rdname headers
 #' @export
 #' 

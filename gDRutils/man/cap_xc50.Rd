@@ -27,3 +27,9 @@ Note: \code{xc50} and \code{max_conc} should share the same units.
 Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
 However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
 }
+\examples{
+cap_xc50(xc50 = 1, max_conc = 2)
+cap_xc50(xc50 = 2, max_conc = 5, min_conc = 1)
+cap_xc50(xc50 = 26, max_conc = 5, capping_fold = 5)
+
+}

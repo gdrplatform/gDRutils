@@ -18,3 +18,8 @@ Modified named list of fit parameters.
 \description{
 Replace values for flat fits: ec50 = 0, h = 0.0001 and xc50 = +/- Inf
 }
+\examples{
+na <- list(x_0 = NA)
+gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
+
+}

@@ -27,6 +27,14 @@ reset_env_identifiers()
 For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.
 For \code{get_env_identifiers} a character vector of identifiers for field \code{k}.
 For functions called with no arguments, the entire available identifier list is returned.
+
+charvec
+
+charvec
+
+charvec
+
+charvec
 }
 \description{
 Get, set, or reset the expected identifier(s) for one or all identifier field(s).
@@ -56,12 +64,6 @@ Identifiers supported by the gDR suite include:
 }
 }
 \examples{
-\dontrun{
 get_env_identifiers("duration") # "Duration"
-set_env_identifier("duration", "Duration_Time")
-get_env_identifiers("duration") # "Duration_Time"
-reset_env_identifiers()
-get_env_identifiers("duration") # "Duration"
-}
 
 }

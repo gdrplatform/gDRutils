@@ -13,6 +13,13 @@ assert_choices(x, choices, ...)
 
 \item{...}{Additional arguments to pass to \code{checkmate::test_choice}}
 }
+\value{
+\code{NULL}
+}
 \description{
 assert choices
+}
+\examples{
+assert_choices("x", c("x","y"))
+
 }

@@ -27,6 +27,11 @@ ASSAY_INFO_TBL <- tibble::tribble(
 #' @param simplify logical flag, simplify the output?
 #'    will return single string instead of named vector with single element
 #'    useful when function is expected to return single element/assay only
+#'    
+#' @return charvec
+#' 
+#' @examples 
+#' get_env_assay_names()
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
@@ -91,6 +96,11 @@ get_env_assay_names <-
 #' 
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
+#' @return  charvec
+#'
+#' @examples 
+#' get_assay_names()
+#' 
 #' @export
 get_assay_names <- function(se = NULL, ...) {
   if (!is.null(se) &&
@@ -110,7 +120,9 @@ get_assay_names <- function(se = NULL, ...) {
 #' @param ... Additional arguments to pass to \code{get_assay_names}.
 #' @return charvec of combo assay names.
 #' @export
-#'
+#' @examples 
+#' get_combo_assay_names()
+#' 
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_assay_names <- function(se = NULL, ...) {
@@ -125,6 +137,9 @@ get_combo_assay_names <- function(se = NULL, ...) {
 #' @return  charvec
 #' @export
 #'
+#' @examples 
+#' get_combo_base_assay_names(
+#' )
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_base_assay_names <- function(se = NULL, ...) {
@@ -139,7 +154,10 @@ get_combo_base_assay_names <- function(se = NULL, ...) {
 #' @return  charvec
 #' 
 #' @export
-#'
+#' 
+#' @examples 
+#' get_combo_score_assay_names()
+#' 
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_score_assay_names <- function(se = NULL, ...) {

@@ -17,6 +17,10 @@ charvec of combo assay names.
 \description{
 get names of combo assays
 }
+\examples{
+get_combo_assay_names()
+
+}
 \author{
 Arkadiusz Gładki \email{arkadiusz.gladki@contractors.roche.com}
 }

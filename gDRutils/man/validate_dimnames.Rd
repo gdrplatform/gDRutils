@@ -14,6 +14,9 @@ validate_dimnames(obj, obj2, skip_empty = TRUE)
 \item{skip_empty}{a logical indicating whether to skip comparison
 if a given dimname is empty in the case of both objects}
 }
+\value{
+\code{NULL}
+}
 \description{
 Assure that dimnames of two objects are the same
 }

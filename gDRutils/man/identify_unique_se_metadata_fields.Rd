@@ -15,3 +15,8 @@ character vector of unique names of metadata
 \description{
 Identify unique metadata fields from a list of \code{SummarizedExperiment}s
 }
+\examples{
+SElist <- list(get_synthetic_data("finalSE_small.RDS"), get_synthetic_data("finalSE_small_no_noise.RDS"))
+identify_unique_se_metadata_fields(SElist)
+
+}

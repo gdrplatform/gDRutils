@@ -29,6 +29,10 @@ Predict efficacy values given fit parameters and a concentration.
 \details{
 The inverse of this function is \code{predict_conc_from_efficacy}.
 }
+\examples{
+predict_efficacy_from_conc(c = 1, x_inf = 0.1, x_0 = 1, ec50 = 0.5, h = 2)
+
+}
 \seealso{
 predict_conc_from_efficacy
 }

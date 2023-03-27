@@ -6,6 +6,13 @@
 \usage{
 get_required_identifiers()
 }
+\value{
+charvec
+}
 \description{
 Get identifiers required for downstream analysis.
+}
+\examples{
+get_required_identifiers()
+
 }

@@ -6,6 +6,13 @@
 \usage{
 get_default_identifiers()
 }
+\value{
+charvec
+}
 \description{
 Get gDR default identifiers required for downstream analysis.
+}
+\examples{
+get_default_identifiers()
+
 }

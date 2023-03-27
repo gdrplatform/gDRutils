@@ -18,3 +18,8 @@ Throws an error if the assay is not valid.
 \description{
 Check for the presence of an assay in a SummarizedExperiment object.
 }
+\examples{
+se <- get_synthetic_data("finalMAE_small.RDS") 
+validate_se_assay_name(se, "RawTreated")
+
+}

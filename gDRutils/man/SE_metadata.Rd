@@ -63,3 +63,20 @@ the date_processed and packages versions in SummarizedExperiment object metadata
 For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters 
 used to construct the Metrics assay in a SummarizedExperiment object.
 }
+\examples{
+se <- get_synthetic_data("finalSE_small.RDS")
+get_SE_fit_parameters(se)
+
+se <- get_synthetic_data("finalSE_small.RDS")
+get_SE_processing_metadata(se)
+
+se <- get_synthetic_data("finalSE_small.RDS")
+get_SE_experiment_raw_data(se)
+
+se <- get_synthetic_data("finalSE_small.RDS")
+get_SE_experiment_metadata(se)
+
+se <- get_synthetic_data("finalSE_small.RDS")
+get_SE_identifiers(se)
+
+}

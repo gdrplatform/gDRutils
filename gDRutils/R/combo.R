@@ -4,14 +4,14 @@
 #' @param c_assays charvec of combo assays to be used
 #' @param normalization_type charvec of normalization_types expected in the data
 #' @param prettify boolean flag indicating whether or not to prettify the colnames of the returned data 
-#' @examples
-#' \dontrun{
-#' combo_data_l <- convert_combo_data_to_dt(se)
-#' }
+#' 
+#' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 #' @return list of data.table(s) with combo data
 #'
-#' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_combo_matrix_small.RDS")
+#' convert_combo_data_to_dt(mae[[1]])
 #'
 #' @export
 convert_combo_data_to_dt <-
@@ -70,6 +70,10 @@ convert_combo_data_to_dt <-
 #' @param  normalization_type charvec normalization_types expected in the data
 #'
 #' @return named charvec with iso colors
+#' 
+#' @examples 
+#' get_iso_colors()
+#' 
 #' @export
 get_iso_colors <-
   function(normalization_type = c("RelativeViability", "GRvalue")) {
@@ -109,6 +113,8 @@ assert_RGB_format <- function(x) {
 #' @param assay_type assay type
 #'
 #' @return list with colors, breaks and limits
+#' @examples 
+#' get_combo_col_settings("GRvalue", "smooth")
 #' 
 #' @export
 get_combo_col_settings <-
@@ -153,6 +159,7 @@ get_combo_col_settings <-
     }
 
     if (is.null(colors) || is.null(breaks)) {
+      NULL
       stop("unexpected error when determining combo color settings - either 'colors' or 'breaks' is NULL")
     }
 

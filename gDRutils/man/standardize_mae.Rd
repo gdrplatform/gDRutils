@@ -15,3 +15,8 @@ mae a MultiAssayExperiment with default gDR identifiers
 \description{
 Standardize MAE by switching from custom identifiers into gDR-default
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+standardize_mae(mae)
+
+}

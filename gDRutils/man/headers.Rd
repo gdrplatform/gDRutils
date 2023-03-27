@@ -20,12 +20,6 @@ Get the expected header(s) for one field or reset all header fields
 If \code{get_header} is called with no values, the entire available header list is returned.
 }
 \examples{
-\dontrun{
 get_header(k = NULL)
-set_identifier("duration", "X_TIME")
-get_header(k = NULL)
-}
-\dontrun{
 get_header("manifest")
-}
 }

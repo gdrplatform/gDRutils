@@ -20,3 +20,8 @@ refined colData
 current improvements done on the colData as a standardization step:
 - set default value for optional colData fields
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+refine_coldata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
+
+}
