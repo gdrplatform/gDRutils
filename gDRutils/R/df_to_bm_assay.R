@@ -33,30 +33,19 @@ df_to_bm_assay <-
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
     seRowData <- allMetadata$treatment_md
     seRowData$row_id <- seq_along(rownames(seRowData))
-
-    cond_entries <-
-      setdiff(colnames(seRowData), c("row_id", "name_"))
+    cond_entries <- setdiff(colnames(seRowData), c("row_id", "name_"))
     
-    complete <-
-      S4Vectors::DataFrame(
-        expand.grid(
-          col_id = seColData$col_id,
-          row_id = seRowData$row_id,
-          stringsAsFactors = FALSE
-        )
-      )
+    complete <- S4Vectors::DataFrame(
+      expand.grid(col_id = seColData$col_id, row_id = seRowData$row_id, stringsAsFactors = FALSE)
+    )
     complete$factor_id <- seq_len(nrow(complete))
-    completeMerged <- merge(merge(complete, seColData, by = "col_id"),
-                            seRowData, by = "row_id")
+    completeMerged <- merge(merge(complete, seColData, by = "col_id"), seRowData, by = "row_id")
     
-    data_assigned <-
-      merge(data, completeMerged, by = c(cond_entries, cl_entries))
+    data_assigned <- merge(data, completeMerged, by = c(cond_entries, cl_entries))
     data_assigned <- data_assigned[order(data_assigned$factor_id), ]
-    
-    bm <-
-      BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE],
-                                      row = data_assigned$row_id,
-                                      column = data_assigned$col_id)
+    bm <- BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE], 
+                                          row = data_assigned$row_id,
+                                          column = data_assigned$col_id)
 
     # Check if the orderd of rows/cols are correct
     stopifnot(!is.unsorted(as.numeric(rownames(bm))))

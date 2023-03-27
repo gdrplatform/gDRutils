@@ -366,3 +366,32 @@ loadTestDataSet <- function() {
 get_synthetic_data <- function(rds) {
   readRDS(system.file("testdata", rds, package = "gDRtestData"))
 }
+
+
+#' @noRd
+#' @keywords internal
+getFunctionsLength <- function(dir = getwd(), limit = 0) {
+  pc <- BiocCheck:::parseFiles(dir)
+  dt <- data.table::data.table()
+  for (i in (seq(pc))) {
+    file_name <- names(pc)[i]
+    if (tools::file_ext(file_name) != "R") {
+      break
+    }
+    functions_list <- BiocCheck:::getFunctionLengths(pc[[i]])
+    for (j in (seq(functions_list))) {
+      function_name <- names(functions_list)[j]
+      dt <- rbind(
+        dt,
+        list(
+          file_name = file_name,
+          function_name = function_name,
+          length = functions_list[[j]][[1]],
+          startLine = functions_list[[j]][[2]],
+          endLine = functions_list[[j]][[3]]
+        )
+      )
+    }
+  }
+  dt[dt$length > limit]
+}

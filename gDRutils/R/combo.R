@@ -126,7 +126,6 @@ get_combo_col_settings <-
     checkmate::assert_choice(assay_type, assay_types)
 
     colors <- breaks <- limits <- NULL
-
     if (assay_type %in% names(get_combo_assay_names(group = "combo_iso"))) {
       myv <- get_iso_colors(g_metric)
       colors <- as.character(myv)
@@ -157,12 +156,10 @@ get_combo_col_settings <-
     } else {
       stop(sprintf("no logic found for the assay_type: '%s'", assay_type))
     }
-
     if (is.null(colors) || is.null(breaks)) {
       NULL
       stop("unexpected error when determining combo color settings - either 'colors' or 'breaks' is NULL")
     }
-
     list(
       colors = colors,
       breaks = breaks,

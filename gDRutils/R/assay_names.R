@@ -65,7 +65,6 @@ get_env_assay_names <-
     if (all(are_null)) {
       return(structure(ASSAY_INFO_TBL[[fname]], names = ASSAY_INFO_TBL$type))
     }
-      
     df <- ASSAY_INFO_TBL
     for (filter in names(v_filters)) {
       df <- df[df[[eval(filter)]] %in% v_filters[[filter]], ]
@@ -79,7 +78,6 @@ get_env_assay_names <-
               collapse = "&")
       stop(sprintf("Assay name not found for '%s'", v_filters_str))
     }
-
     res <- structure(df[[fname]], names = df$type)
     if (length(res) == 1L && simplify) {
       res <- as.character(res)

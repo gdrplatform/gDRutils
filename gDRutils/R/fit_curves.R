@@ -198,158 +198,159 @@ logisticFit <-
            cap = 0.1,
            n_point_cutoff = 4,
            capping_fold = 5) {
-
     if (length(concs) != length(norm_values)) {
       stop("unequal vector lengths for 'conc' and 'norm_values'")
     }
-
     # Check that values have not been logged yet. 
     if (any(concs < 0)) {
       stop("logisticFit accepts only unlogged concentrations, negative concentrations are detected")
     }
-
     out <- .setup_metric_output()
     out$maxlog10Concentration <- log10(max(concs))
     out$N_conc <- length(unique(concs))
     out$x_sd_avg <- mean(std_norm_values, na.rm = TRUE)
-
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
     df_ <- data.frame(concs = concs, norm_values = norm_values)
-
-    
     if (has_dups(df_$concs)) {
       warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
     }
-
+    
     mean_norm_value <- mean(df_$norm_values, na.rm = TRUE)
     out$x_mean <- mean_norm_value
     out$x_AOC <- .calculate_complement(mean_norm_value)
     out$x_max <- .calculate_x_max(df_)
-
+    
     ## Perform a 3-param or 4-param fit. 
     ## Fit type is determined based on number of free variables available.
     fit_param <- c("h", "x_inf", "x_0", "ec50")
     controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
-
-    out <- tryCatch({
-      non_na_avg_norm <- !is.na(df_$norm_values)
-      if (sum(non_na_avg_norm) < n_point_cutoff) {
-        stop(fitting_handler(
-          "too_few_fit",
-          message = sprintf(
-            "not enough data points (%i < %i) to perform fitting",
-            sum(non_na_avg_norm),
-            n_point_cutoff
-          )
-        ))
-      }
-      # the condition on n_point_cutoff should come before 'length(unique(ReadoutValue))==1' to handle
-      # specific cases when multiple ReadoutValue are equal resulting outputting a constant fit
-      # This is important for the new matrix format for co-treatment when 
-      # some results with <3 concentration may be fitted if the order of tests is different
-
-      if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
-        stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
-      }
-
-      if (!is.na(x_0)) {
-        # Override existing params for removal of x_0 parameter (i.e. cotreatments).
-        fit_param <- fit_param[-3]
-        priors <- priors[-3]
-        lower <- lower[-3]
-
-        fct <- drc::LL.3u(upper = x_0, names = fit_param)
-        upperl <- c(5, min(x_0 + cap, 1), max(concs) * 10)
-
-        out$fit_type <- "DRC3pHillFitModelFixS0"
-        out$x_0 <- x_0
-      } else {
-        fct <- drc::LL.4(names = fit_param)
-        upperl <- c(5, 1, 1 + cap, max(concs) * 10)
-
-        out$fit_type <- "DRC4pHillFitModel"
-      }
-
-      fit_model <- drc::drm(
-        norm_values ~ concs,
-        data = df_,
-        logDose = NULL,
-        fct = fct,
-        start = priors,
-        lowerl = lower,
-        upperl = upperl,
-        control = controls,
-        na.action = stats::na.omit
-      )
-
-      out <- .set_model_fit_params(out, fit_model, fit_param)
-
-      out$x_mean <- .predict_mean_from_model(fit_model, min(df_$concs), max(df_$concs))
-      out$x_AOC <- 1 - out$x_mean
-
-      out$x_AOC_range <- 1 - .predict_mean_from_model(fit_model, range_conc[1], range_conc[2])
-
-      # F-test for the significance of the sigmoidal fit.
-      RSS2 <- sum(stats::residuals(fit_model) ^ 2, na.rm = TRUE)
-      RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
-      
-      out$r2 <- 1 - RSS2 / RSS1
-      out$xc50 <- .calculate_xc50(ec50 = out$ec50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
-
-      # Test the significance of the fit and replace with flat function if required.
-      nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
-      df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
-      df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
-
-      f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
-      if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
-        stop(fitting_handler(
-          "constant_fit",
-          message = sprintf(
-            "fit is not statistically significant (p=%.2f), setting constant fit",
-            f_pval
-          )
-        ))
-      }
-
-      # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
-      if (is.na(out$xc50)) {
-        out$xc50 <- .estimate_xc50(out$x_inf)
-      } else {
-        # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
-        # max/min tested concentrations (default)
-        out$xc50 <- cap_xc50(
-          out$xc50, 
-          max_conc = 10 ^ out$maxlog10Concentration, 
-          min_conc = min(concs[concs > 0]), 
-          capping_fold = capping_fold
-        )
-      }
-      out
-    }, too_few_fit = function(e) {
-      warning(e$message)
-      out <- .set_too_few_fit_params(out, df_$norm_values)
-
-    }, constant_fit = function(e) {
-      if (!is.na(x_0)) {
-        # provide a more explicit warning message with the outcome of the fitting
-        warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
-      }
-      out <- .set_constant_fit_params(out, mean_norm_value)
-
-    }, invalid_fit = function(e) {
-      NULL
-      warning(sprintf("fitting failed with error: '%s'", e))
-      out <- .set_invalid_fit_params(out, df_$norm_values)
-
-    }, error = function(e) {
-      stop(e)
-    })
-  data.frame(out)
+    
+    out <-
+      .setLogisticFit(out = out, df_ = df_, n_point_cutoff = n_point_cutoff, fit_param = fit_param,
+                      priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, concs = concs, controls = controls,
+                      range_conc = range_conc, pcutoff = pcutoff, capping_fold = capping_fold, mean_norm_value = mean_norm_value)
+    
+    data.frame(out)
   }
 
+.checkNonNaAvgNorm <- function(df_, n_point_cutoff) {
+  non_na_avg_norm <- !is.na(df_$norm_values)
+  if (sum(non_na_avg_norm) < n_point_cutoff) {
+    stop(fitting_handler(
+      "too_few_fit",
+      message = sprintf(
+        "not enough data points (%i < %i) to perform fitting",
+        sum(non_na_avg_norm),
+        n_point_cutoff
+      )
+    ))
+  }
+  if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
+    stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
+  }
+}
+
+.extendWithXc50 <- function(x, concs, capping_fold) {
+  # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
+  if (is.na(x$xc50)) {
+    x$xc50 <- .estimate_xc50(x$x_inf)
+  } else {
+    # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
+    # max/min tested concentrations (default)
+    x$xc50 <- cap_xc50(
+      x$xc50, 
+      max_conc = 10 ^ x$maxlog10Concentration, 
+      min_conc = min(concs[concs > 0]), 
+      capping_fold = capping_fold
+    )
+  }
+  x
+}
+
+.prepareFitModel <- function(x, df_, x_0, fit_param, priors, lower, cap, concs, controls) {
+  if (!is.na(x_0)) {
+    # Override existing params for removal of x_0 parameter (i.e. cotreatments).
+    fit_param <- fit_param[-3]
+    priors <- priors[-3]
+    lower <- lower[-3]
+    
+    fct <- drc::LL.3u(upper = x_0, names = fit_param)
+    upperl <- c(5, min(x_0 + cap, 1), max(concs) * 10)
+    
+    x$fit_type <- "DRC3pHillFitModelFixS0"
+    x$x_0 <- x_0
+  } else {
+    fct <- drc::LL.4(names = fit_param)
+    upperl <- c(5, 1, 1 + cap, max(concs) * 10)
+    
+    x$fit_type <- "DRC4pHillFitModel"
+  }
+  
+  drc::drm(
+    norm_values ~ concs,
+    data = df_,
+    logDose = NULL,
+    fct = fct,
+    start = priors,
+    lowerl = lower,
+    upperl = upperl,
+    control = controls,
+    na.action = stats::na.omit
+  )
+}
+
+.setLogisticFit <- function (out, df_, n_point_cutoff, fit_param, priors, lower, force_fit, x_0, cap, concs, controls,
+                             range_conc, pcutoff, capping_fold, mean_norm_value) {
+  out <- tryCatch({
+    .checkNonNaAvgNorm(df_ = df_, n_point_cutoff = n_point_cutoff)
+    fit_model <- .prepareFitModel(out, df_, x_0, fit_param, priors, lower, cap, concs, controls)
+    out$fit_type <- "DRC4pHillFitModel"
+    if (!is.na(x_0)) {
+      fit_param <- fit_param[-3]
+      priors <- priors[-3]
+      lower <- lower[-3]
+      out$fit_type <- "DRC3pHillFitModelFixS0"
+      out$x_0 <- x_0
+    }
+    out <- .set_model_fit_params(out, fit_model, fit_param)
+    out$x_mean <- .predict_mean_from_model(fit_model, min(df_$concs), max(df_$concs))
+    out$x_AOC <- 1 - out$x_mean
+    out$x_AOC_range <- 1 - .predict_mean_from_model(fit_model, range_conc[1], range_conc[2])
+    # F-test for the significance of the sigmoidal fit.
+    RSS2 <- sum(stats::residuals(fit_model) ^ 2, na.rm = TRUE)
+    RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
+    out$r2 <- 1 - RSS2 / RSS1
+    out$xc50 <- .calculate_xc50(ec50 = out$ec50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
+    # Test the significance of the fit and replace with flat function if required.
+    nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
+    df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
+    df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
+    f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
+    if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
+      stop(fitting_handler(
+        "constant_fit",
+        message = sprintf("fit is not statistically significant (p=%.2f), setting constant fit", f_pval)
+      ))
+    }
+    .extendWithXc50(x = out, concs = concs, capping_fold = capping_fold)
+  }, too_few_fit = function(e) {
+    warning(e$message)
+    out <- .set_too_few_fit_params(out, df_$norm_values)
+  }, constant_fit = function(e) {
+    if (!is.na(x_0)) {
+      warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
+    }
+    out <- .set_constant_fit_params(out, mean_norm_value)
+  }, invalid_fit = function(e) {
+    warning(sprintf("fitting failed with error: '%s'", e))
+    out <- .set_invalid_fit_params(out, df_$norm_values)
+  }, error = function(e) {
+    stop(e)
+  })
+  out
+}
 
 #' Predict efficacy values given fit parameters and a concentration.
 #'

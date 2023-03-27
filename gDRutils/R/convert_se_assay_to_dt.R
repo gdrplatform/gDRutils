@@ -32,50 +32,27 @@ convert_se_assay_to_dt <- function(se,
                                    include_metadata = TRUE,
                                    retain_nested_rownames = FALSE,
                                    wide_structure = FALSE) {
-
-  # Assertions.
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
-  
   validate_se_assay_name(se, assay_name)
-
-  
-  if (wide_structure) {
-    # wide_structure works only with `normalization_type` column in the assay
-    if ("normalization_type" %in%
+  if (wide_structure) { 
+    if ("normalization_type" %in% # wide_structure works only with `normalization_type` column in the assay
         BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
-      retain_nested_rownames <- TRUE
+      retain_nested_rownames <- TRUE 
     } else {
       wide_structure <- FALSE
     }
   }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
-
   if (nrow(dt) == 0L) {
     return(dt) # TODO: Should this return something else?
   }
-
   if (include_metadata) {
-    rData <- rowData(se)
-    rData$rId <- rownames(rData)
-
-    cData <- colData(se)
-    cData$cId <- rownames(cData)
-
-    ids <- expand.grid(rData$rId, cData$cId)
-    colnames(ids) <- c("rId", "cId")
-    ids[] <- lapply(ids, as.character)
-
-    annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
-    annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
-
-    dt <- merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
+    dt <- .extract__and_merge_metadata(se, dt)
   }
   dt <- data.table::as.data.table(dt)
-  
-  
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
     id_col <- paste0(assay_name, "_rownames")
@@ -85,7 +62,6 @@ convert_se_assay_to_dt <- function(se,
     dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
                                 paste, sep = "_"))
-    
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
       x[length(x)] <- gDRutils::extend_normalization_type_name(x[length(x)])
       paste(x[-1], collapse = "_")
@@ -100,6 +76,19 @@ convert_se_assay_to_dt <- function(se,
   dt
 }
 
+#' @keywords internal
+.extract__and_merge_metadata <- function(se, dt) {
+  rData <- rowData(se)
+  rData$rId <- rownames(rData)
+  cData <- colData(se)
+  cData$cId <- rownames(cData)
+  ids <- expand.grid(rData$rId, cData$cId)
+  colnames(ids) <- c("rId", "cId")
+  ids[] <- lapply(ids, as.character)
+  annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
+  annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
+  merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
+}
 
 #' Convert assay data into data.table.
 #' @return data.table of assay data.

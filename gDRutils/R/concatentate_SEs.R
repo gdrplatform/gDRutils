@@ -92,15 +92,12 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   if (length(MARGIN) != 1L || !MARGIN %in% c(1, 2)) {
     stop("invalid 'MARGIN' argument, must be either '1' or '2'")
   }
-  
   rowmd <- colnames(rowData(se)) 
   colmd <- colnames(colData(se))
-  
   if (any(rfields <- fields %in% rowmd) || any(cfields <- fields %in% colmd)) {
     stop(sprintf("fields '%s' are already promoted fields",
                  paste0(fields[rfields || cfields], collapse = ", ")))
   }
-  
   if (MARGIN == 1) {
     rowmd <- c(rowmd, fields)
   } else if (MARGIN == 2) {
@@ -108,7 +105,6 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   } else {
     stop("invalid input for argument 'MARGIN'")
   }
-  
   final_assays <- list()
   asynames <- SummarizedExperiment::assayNames(se)
   for (asyname in asynames) {
@@ -124,17 +120,14 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
                                                          nested_fields = setdiff(colnames(df), c(rowmd, colmd))) 
     }
   }
-  
   if (length(final_assays) == 0L) {
     stop(sprintf("unable to find nested fields: '%s' in any assays, perhaps you intended to call 'demote_fields'?",
                  paste0(fields, collapse = ", "))) 
   }
   .validate_final_assays(final_assays)
-  
   assay_list <- lapply(final_assays, function(x) {
     x$mat
   })
-  
   SummarizedExperiment::SummarizedExperiment(
     assays = assay_list,
     rowData = final_assays[[1]]$rowData,

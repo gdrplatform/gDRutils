@@ -42,7 +42,6 @@
 #' @export
 #'
 split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
-  # Assertions.
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DataFrame")))
   checkmate::assert_character(nested_keys, null.ok = TRUE)
   checkmate::assert_choice(combine_on, c(1, 2))

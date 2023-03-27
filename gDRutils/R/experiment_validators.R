@@ -74,38 +74,30 @@ validate_SE <- function(se,
                         expect_single_agent = FALSE) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
-
   exp_assay_names <- c("Normalized", "Averaged")
   if (expect_single_agent) {
     exp_assay_names <- c(exp_assay_names, "Metrics")
   }
   checkmate::assert_subset(exp_assay_names, assayNames(se))
-
   exp_metadata_names <- c("experiment_metadata", "Keys")
   checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
   validate_dimnames(se, assay(se, "Normalized"))
   validate_dimnames(se, assay(se, "Averaged"))
-
   if (expect_single_agent) {
     validate_dimnames(se, assay(se, "Metrics"))
     checkmate::assert_true(all(c("normalization_type", "fit_source") %in%
                                  names(convert_se_assay_to_dt(se, "Metrics"))))
   }
-
   coldata <- colData(se)
   rowdata <- rowData(se)
-
   # Validate the correctness of rowData and colData
   # building gsub expression by finding location between _x_ for drug identifier
   #nolint start
   pattern <- paste0("^(?:[^_]+_){",
                     as.character(which(names(rowdata) == get_env_identifiers("drug")) - 1),
                     "}([^_]+).*")
-  #checkmate::assert_true(all(gsub(pattern, "\\1",
-  #                                rownames(se)) == rowdata[[gDRutils::get_env_identifiers("drug")]]))
   #nolint end
   checkmate::assert_true(all(gsub("_.*", "", colnames(se)) == coldata[[gDRutils::get_env_identifiers("cellline")]]))
-
   checkmate::assert_true(nrow(coldata) == nrow(unique(coldata)))
   checkmate::assert_true(nrow(rowdata) == nrow(unique(rowdata)))
 
