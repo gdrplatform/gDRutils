@@ -62,8 +62,8 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   md <- unique(df_[, md_cols]) 
   colnames_list <- .extract_colnames(identifiers_md, md_cols)
   remaining_cols <- colnames_list$remaining_cols
-  cell_cols <- remaining_cols$cell_cols
-  drug_cols <- remaining_cols$drug_cols
+  cell_cols <- colnames_list$cell_cols
+  drug_cols <- colnames_list$drug_cols
 
   singletons <- vapply(remaining_cols,
     function(x) {
@@ -75,11 +75,11 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   exp_md <- unique(md[, constant_cols, drop = FALSE])
   remaining_cols <- remaining_cols[!singletons]
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
-  cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], cell_id)
+  cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], identifiers_md$cellline)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   if (!all(present <- cell_cols %in% cl_entries)) {
     warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
-      paste(cell_cols[!present], collapse = ", "), cell_id))
+      paste(cell_cols[!present], collapse = ", "), identifiers_md$cellline))
   }
   md_list <- .combine_drug_and_trt_cols(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols)
   out <- list(

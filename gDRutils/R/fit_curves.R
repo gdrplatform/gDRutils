@@ -47,7 +47,6 @@ fit_curves <- function(df_,
                        pcutoff = 0.05,
                        cap = 0.1, 
                        normalization_type = c("GR", "RV")) {
-  
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
@@ -69,8 +68,8 @@ fit_curves <- function(df_,
 
   df_[, setdiff(opt_fields, colnames(df_))] <- NA
 
-  df_metrics <- .setLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
-                                pcutoff, cap, n_point_cutoff)
+  df_metrics <- .apllyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
+                                  pcutoff, cap, n_point_cutoff)
 
   is_unique_normalization_type_and_fit_source <- 
     nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
