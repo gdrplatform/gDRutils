@@ -45,51 +45,35 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DataFrame")))
   checkmate::assert_character(nested_keys, null.ok = TRUE)
   checkmate::assert_choice(combine_on, c(1, 2))
-
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
   identifiers_md <- get_env_identifiers(simplify = TRUE)
   identifiers_md$nested_keys <- nested_keys
 
   df_ <- S4Vectors::DataFrame(df_)
   all_cols <- colnames(df_)
-
   # Identify known data fields.
-  data_fields <- c(get_header("raw_data"),
-    get_header("normalized_results"),
-    get_header("averaged_results"),
-    get_header("metrics_results"),
-    get_env_identifiers("concentration", simplify = TRUE),
-    identifiers_md$well_position,
-    identifiers_md$template,
-    nested_keys
-  )
+  data_fields <- c(get_header("raw_data"), get_header("normalized_results"), get_header("averaged_results"),
+    get_header("metrics_results"), get_env_identifiers("concentration", simplify = TRUE),
+    identifiers_md$well_position, identifiers_md$template, nested_keys)
   data_fields <- unique(data_fields)
   data_cols <- data_fields[data_fields %in% all_cols]
 
   md_cols <- setdiff(all_cols, data_cols) 
   md <- unique(df_[, md_cols]) 
+  colnames_list <- .extract_colnames(identifiers_md, md_cols)
+  remaining_cols <- colnames_list$remaining_cols
+  cell_cols <- remaining_cols$cell_cols
+  drug_cols <- remaining_cols$drug_cols
 
-  req_identifier_names <- c("drug", "drug_name", "drug_moa", "duration")
-  req_identifiers_idx <- unique(unlist(lapply(req_identifier_names, function(x) grep(x, names(identifiers_md)))))
-  drug_md <- identifiers_md[req_identifiers_idx]
-  drug_cols <- intersect(drug_md, md_cols)
-  cell_id <- identifiers_md$cellline
-  cell_fields <- c(cell_id, get_header("add_clid"))
-  cell_cols <- cell_fields[cell_fields %in% md_cols]
-
-  remaining_cols <- setdiff(md_cols, c(drug_cols, cell_cols))
   singletons <- vapply(remaining_cols,
     function(x) {
       nrow(unique(md[, x, drop = FALSE])) == 1L
       },
     logical(1))
-
   # Get experiment columns.
   constant_cols <- remaining_cols[singletons]
   exp_md <- unique(md[, constant_cols, drop = FALSE])
-
   remaining_cols <- remaining_cols[!singletons]
-
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
   cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], cell_id)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
@@ -97,7 +81,38 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
       paste(cell_cols[!present], collapse = ", "), cell_id))
   }
+  md_list <- .combine_drug_and_trt_cols(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols)
+  out <- list(
+    condition_md = md_list$condition_md,
+    treatment_md = md_list$treatment_md,
+    data_fields = data_cols,
+    experiment_md = exp_md,
+    identifiers_md = identifiers_md
+  )
+  out
+}
 
+
+#' @keywords internal
+.extract_colnames <- function(identifiers_md, md_cols) {
+  req_identifier_names <- c("drug", "drug_name", "drug_moa", "duration")
+  req_identifiers_idx <- unique(unlist(lapply(req_identifier_names, function(x) grep(x, names(identifiers_md)))))
+  drug_md <- identifiers_md[req_identifiers_idx]
+  drug_cols <- intersect(drug_md, md_cols)
+  cell_id <- identifiers_md$cellline
+  cell_fields <- c(cell_id, get_header("add_clid"))
+  cell_cols <- cell_fields[cell_fields %in% md_cols]
+  
+  remaining_cols <- setdiff(md_cols, c(drug_cols, cell_cols))
+  list(
+    remaining_cols = remaining_cols,
+    cell_cols = cell_cols,
+    drug_cols = drug_cols
+  )
+}
+
+#' @keywords internal
+.combine_drug_and_trt_cols <- function(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols) {
   trt_cols <- drug_cols
   cell_cols <- unique(c(cell_cols, cl_entries))
   if (combine_on == 1L) {
@@ -106,20 +121,13 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     cell_cols <- c(cell_cols, remaining_cols)
   } else {
     stop(sprintf("combine_on input: '%s' of class: '%s' is not supported",
-      combine_on, class(combine_on)))
+                 combine_on, class(combine_on)))
   }
-
-  condition_md <- add_rownames_to_metadata(md, cell_cols)
-  treatment_md <- add_rownames_to_metadata(md, trt_cols)
-
-  out <- list(
-    condition_md = condition_md,
-    treatment_md = treatment_md,
-    data_fields = data_cols,
-    experiment_md = exp_md,
-    identifiers_md = identifiers_md
+  
+  list(
+    condition_md = add_rownames_to_metadata(md, cell_cols),
+    treatment_md = add_rownames_to_metadata(md, trt_cols)
   )
-  out
 }
 
 
