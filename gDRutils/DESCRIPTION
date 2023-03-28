@@ -1,7 +1,7 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.0
+Version: 1.3.22
 Date: 2023-03-28
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("aut")),
