@@ -156,10 +156,10 @@ get_combo_col_settings <-
     } else {
       stop(sprintf("no logic found for the assay_type: '%s'", assay_type))
     }
-    if (is.null(colors) || is.null(breaks)) {
-      NULL
-      stop("unexpected error when determining combo color settings - either 'colors' or 'breaks' is NULL")
-    }
+    stopifnot(
+      "unexpected error when determining combo color settings - either 'colors' or 'breaks' is NULL" = 
+        !(is.null(colors) || is.null(breaks))
+    )
     list(
       colors = colors,
       breaks = breaks,

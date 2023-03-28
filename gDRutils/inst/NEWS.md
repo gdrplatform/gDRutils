@@ -1,3 +1,6 @@
+# Change to v.0.99.0
+- Downgrade version to make it Bioconductor compatible
+
 # Change to v.1.3.22
 - Tidy code
 

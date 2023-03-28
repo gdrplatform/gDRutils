@@ -229,80 +229,15 @@ logisticFit <-
     
     out <-
       .setLogisticFit(out = out, df_ = df_, n_point_cutoff = n_point_cutoff, fit_param = fit_param,
-                      priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, concs = concs, controls = controls,
-                      range_conc = range_conc, pcutoff = pcutoff, capping_fold = capping_fold, mean_norm_value = mean_norm_value)
-    
+                      priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, 
+                      concs = concs, controls = controls, range_conc = range_conc, pcutoff = pcutoff, 
+                      capping_fold = capping_fold, mean_norm_value = mean_norm_value)
     data.frame(out)
   }
 
-.checkNonNaAvgNorm <- function(df_, n_point_cutoff) {
-  non_na_avg_norm <- !is.na(df_$norm_values)
-  if (sum(non_na_avg_norm) < n_point_cutoff) {
-    stop(fitting_handler(
-      "too_few_fit",
-      message = sprintf(
-        "not enough data points (%i < %i) to perform fitting",
-        sum(non_na_avg_norm),
-        n_point_cutoff
-      )
-    ))
-  }
-  if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
-    stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
-  }
-}
-
-.extendWithXc50 <- function(x, concs, capping_fold) {
-  # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
-  if (is.na(x$xc50)) {
-    x$xc50 <- .estimate_xc50(x$x_inf)
-  } else {
-    # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
-    # max/min tested concentrations (default)
-    x$xc50 <- cap_xc50(
-      x$xc50, 
-      max_conc = 10 ^ x$maxlog10Concentration, 
-      min_conc = min(concs[concs > 0]), 
-      capping_fold = capping_fold
-    )
-  }
-  x
-}
-
-.prepareFitModel <- function(x, df_, x_0, fit_param, priors, lower, cap, concs, controls) {
-  if (!is.na(x_0)) {
-    # Override existing params for removal of x_0 parameter (i.e. cotreatments).
-    fit_param <- fit_param[-3]
-    priors <- priors[-3]
-    lower <- lower[-3]
-    
-    fct <- drc::LL.3u(upper = x_0, names = fit_param)
-    upperl <- c(5, min(x_0 + cap, 1), max(concs) * 10)
-    
-    x$fit_type <- "DRC3pHillFitModelFixS0"
-    x$x_0 <- x_0
-  } else {
-    fct <- drc::LL.4(names = fit_param)
-    upperl <- c(5, 1, 1 + cap, max(concs) * 10)
-    
-    x$fit_type <- "DRC4pHillFitModel"
-  }
-  
-  drc::drm(
-    norm_values ~ concs,
-    data = df_,
-    logDose = NULL,
-    fct = fct,
-    start = priors,
-    lowerl = lower,
-    upperl = upperl,
-    control = controls,
-    na.action = stats::na.omit
-  )
-}
-
-.setLogisticFit <- function (out, df_, n_point_cutoff, fit_param, priors, lower, force_fit, x_0, cap, concs, controls,
-                             range_conc, pcutoff, capping_fold, mean_norm_value) {
+#' @keywords internal
+.setLogisticFit <- function(out, df_, n_point_cutoff, fit_param, priors, lower, force_fit, x_0, cap, concs, controls,
+                            range_conc, pcutoff, capping_fold, mean_norm_value) {
   out <- tryCatch({
     .checkNonNaAvgNorm(df_ = df_, n_point_cutoff = n_point_cutoff)
     fit_model <- .prepareFitModel(out, df_, x_0, fit_param, priors, lower, cap, concs, controls)
@@ -350,6 +285,75 @@ logisticFit <-
     stop(e)
   })
   out
+}
+
+#' @keywords internal
+.checkNonNaAvgNorm <- function(df_, n_point_cutoff) {
+  non_na_avg_norm <- !is.na(df_$norm_values)
+  if (sum(non_na_avg_norm) < n_point_cutoff) {
+    stop(fitting_handler(
+      "too_few_fit",
+      message = sprintf(
+        "not enough data points (%i < %i) to perform fitting",
+        sum(non_na_avg_norm),
+        n_point_cutoff
+      )
+    ))
+  }
+  if (length(unique(df_$norm_values[non_na_avg_norm])) == 1L) {
+    stop(fitting_handler("constant_fit", message = "only 1 normalized value detected, setting constant fit"))
+  }
+}
+
+#' @keywords internal
+.extendWithXc50 <- function(x, concs, capping_fold) {
+  # Add xc50 = +/-Inf for any curves that do not reach RV/GR = 0.5.
+  if (is.na(x$xc50)) {
+    x$xc50 <- .estimate_xc50(x$x_inf)
+  } else {
+    # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
+    # max/min tested concentrations (default)
+    x$xc50 <- cap_xc50(
+      x$xc50, 
+      max_conc = 10 ^ x$maxlog10Concentration, 
+      min_conc = min(concs[concs > 0]), 
+      capping_fold = capping_fold
+    )
+  }
+  x
+}
+
+#' @keywords internal
+.prepareFitModel <- function(x, df_, x_0, fit_param, priors, lower, cap, concs, controls) {
+  if (!is.na(x_0)) {
+    # Override existing params for removal of x_0 parameter (i.e. cotreatments).
+    fit_param <- fit_param[-3]
+    priors <- priors[-3]
+    lower <- lower[-3]
+    
+    fct <- drc::LL.3u(upper = x_0, names = fit_param)
+    upperl <- c(5, min(x_0 + cap, 1), max(concs) * 10)
+    
+    x$fit_type <- "DRC3pHillFitModelFixS0"
+    x$x_0 <- x_0
+  } else {
+    fct <- drc::LL.4(names = fit_param)
+    upperl <- c(5, 1, 1 + cap, max(concs) * 10)
+    
+    x$fit_type <- "DRC4pHillFitModel"
+  }
+  
+  drc::drm(
+    norm_values ~ concs,
+    data = df_,
+    logDose = NULL,
+    fct = fct,
+    start = priors,
+    lowerl = lower,
+    upperl = upperl,
+    control = controls,
+    na.action = stats::na.omit
+  )
 }
 
 #' Predict efficacy values given fit parameters and a concentration.

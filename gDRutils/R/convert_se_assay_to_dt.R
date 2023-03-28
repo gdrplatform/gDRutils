@@ -37,8 +37,9 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
   validate_se_assay_name(se, assay_name)
-  if (wide_structure) { 
-    if ("normalization_type" %in% # wide_structure works only with `normalization_type` column in the assay
+  if (wide_structure) {
+    # wide_structure works only with `normalization_type` column in the assay
+    if ("normalization_type" %in%
         BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
       retain_nested_rownames <- TRUE 
     } else {
