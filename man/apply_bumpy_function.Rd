@@ -31,7 +31,8 @@ The original \code{se} object with a new assay, \code{out_assay_name}.
 Apply a user-specified function to every element of a bumpy matrix.
 }
 \examples{
-se <- get_synthetic_data("finalSE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
 FUN <- function(x) {
   data.frame(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
 } 

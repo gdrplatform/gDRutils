@@ -6,7 +6,7 @@
 #' 
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
-#' mae[[1]]@metadata$identifiers$drug <- "druug"
+#' S4Vectors::metadata(mae[[1]])$identifiers$drug <- "druug"
 #' standardize_mae(mae)
 #' 
 #' @export
@@ -28,7 +28,7 @@ standardize_mae <- function(mae) {
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
 #' se <- mae[[1]]
-#' se@metadata$identifiers$drug <- "druug"
+#' S4Vectors::metadata(se)$identifiers$drug <- "druug"
 #' standardize_se(se)
 #' 
 #' @export

@@ -68,7 +68,8 @@ validate_se_assay_name <- function(se, name) {
 #' @export
 #' 
 #' @examples 
-#' se <- get_synthetic_data("finalSE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
 #' validate_SE(se)
 #'
 validate_SE <- function(se,

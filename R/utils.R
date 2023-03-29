@@ -174,7 +174,8 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
-#' se <- get_synthetic_data("finalSE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
 #' FUN <- function(x) {
 #'   data.frame(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
 #' } 
@@ -277,7 +278,8 @@ is_any_exp_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' se <- get_synthetic_data("finalSE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
 #' is_exp_empty(se)
 #' 
 #' @export

@@ -17,7 +17,7 @@ Standardize MAE by switching from custom identifiers into gDR-default
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small.RDS")
-mae[[1]]@metadata$identifiers$drug <- "druug"
+S4Vectors::metadata(mae[[1]])$identifiers$drug <- "druug"
 standardize_mae(mae)
 
 }

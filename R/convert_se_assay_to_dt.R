@@ -22,7 +22,8 @@
 #' @return data.table representation of the data in \code{assay_name}.
 #'
 #' @examples 
-#' se <- get_synthetic_data("finalSE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
 #' convert_se_assay_to_dt(se, "Metrics")
 #' 
 #' @seealso flatten

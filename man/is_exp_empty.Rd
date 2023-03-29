@@ -16,7 +16,8 @@ logical
 check if experiment (SE) is empty
 }
 \examples{
-se <- get_synthetic_data("finalSE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
 is_exp_empty(se)
 
 }

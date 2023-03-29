@@ -26,7 +26,8 @@ Function validates correctness of SE by checking multiple cases:
 - correctness of metadata names.
 }
 \examples{
-se <- get_synthetic_data("finalSE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
 validate_SE(se)
 
 }
