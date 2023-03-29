@@ -68,16 +68,20 @@ mae <- get_synthetic_data("finalMAE_small.RDS")
 se <- mae[[1]]
 get_SE_fit_parameters(se)
 
-se <- get_synthetic_data("finalSE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.RDS") 
+se <- mae[[1]]
 get_SE_processing_metadata(se)
 
-se <- get_synthetic_data("finalSE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.RDS") 
+se <- mae[[1]]
 get_SE_experiment_raw_data(se)
 
-se <- get_synthetic_data("finalSE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.RDS") 
+se <- mae[[1]]
 get_SE_experiment_metadata(se)
 
-se <- get_synthetic_data("finalSE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.RDS") 
+se <- mae[[1]]
 get_SE_identifiers(se)
 
 }
