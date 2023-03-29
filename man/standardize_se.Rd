@@ -16,7 +16,9 @@ se a SummarizedExperiment with default gDR identifiers
 Standardize SE by switching from custom identifiers into gDR-default
 }
 \examples{
-se <- get_synthetic_data("finalSE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
+se@metadata$identifiers$drug <- "druug"
 standardize_se(se)
 
 }

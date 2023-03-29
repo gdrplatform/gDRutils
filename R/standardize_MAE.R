@@ -6,6 +6,7 @@
 #' 
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae[[1]]@metadata$identifiers$drug <- "druug"
 #' standardize_mae(mae)
 #' 
 #' @export
@@ -25,7 +26,9 @@ standardize_mae <- function(mae) {
 #' @return se a SummarizedExperiment with default gDR identifiers
 #' 
 #' @examples 
-#' se <- get_synthetic_data("finalSE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
+#' se@metadata$identifiers$drug <- "druug"
 #' standardize_se(se)
 #' 
 #' @export

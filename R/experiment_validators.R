@@ -36,7 +36,8 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 #' @export
 #' 
 #' @examples 
-#' se <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' se <- mae[[1]]
 #' validate_se_assay_name(se, "RawTreated")
 #'
 validate_se_assay_name <- function(se, name) {

@@ -111,7 +111,10 @@ merge_assay <- function(SElist,
 #' @return character vector of unique names of metadata
 #' 
 #' @examples 
-#' SElist <- list(get_synthetic_data("finalSE_small.RDS"), get_synthetic_data("finalSE_small_no_noise.RDS"))
+#' SElist <- list(
+#'   get_synthetic_data("finalSE_small.RDS"), 
+#'   get_synthetic_data("finalSE_small_no_noise.RDS")
+#' )
 #' identify_unique_se_metadata_fields(SElist)
 #' 
 #' @export

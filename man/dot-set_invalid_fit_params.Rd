@@ -18,6 +18,6 @@ Modified named list of fit parameters.
 Set fit parameters for an invalid fit.
 }
 \examples{
-.set_invalid_fit_params(out, norm_values = rep(0.3, 6))
+.set_invalid_fit_params(list(), norm_values = rep(0.3, 6))
 
 }

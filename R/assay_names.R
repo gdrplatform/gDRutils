@@ -35,6 +35,7 @@ ASSAY_INFO_TBL <- tibble::tribble(
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
+#' @export
 get_env_assay_names <-
   function(type = NULL,
            group = NULL,
