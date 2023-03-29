@@ -14,7 +14,7 @@ get_identifiers_dt(k = NULL, get_description = FALSE, get_example = FALSE)
 \item{get_example}{return examples only, boolean}
 }
 \value{
-charvec
+named list
 }
 \description{
 Get descriptions for identifiers

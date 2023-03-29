@@ -44,7 +44,7 @@ NULL
 
 #' @rdname identifiers
 #' 
-#' @return  charvec
+#' @return list or charvec depends on unify param
 #' 
 #' @export
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
@@ -63,7 +63,7 @@ get_env_identifiers <- function(k = NULL, simplify = TRUE) {
 
 #' @rdname identifiers
 #' 
-#' @return  charvec
+#' @return list or charvec depends on unify param
 #' 
 #' @export
 #' 
@@ -128,7 +128,7 @@ get_idfs_synonyms <- function() {
 #' 
 #' @examples 
 #' mdict <- list(duration = "time")
-#' iv <- c("Time", Duration, "time")
+#' iv <- c("Time", "Duration", "time")
 #' update_idfs_synonyms(iv, dict = mdict)
 #' 
 #' @export
@@ -170,7 +170,7 @@ get_expect_one_identifiers <- function() {
 #' @rdname identifiers
 #' @export
 #'
-#' @return charvec
+#' @return \code{NULL}
 #' 
 set_env_identifier <- function(k, v) {
   .set_id(k, v)
@@ -180,7 +180,7 @@ set_env_identifier <- function(k, v) {
 #' @rdname identifiers
 #' @export
 #'
-#' @return charvec
+#' @return \code{NULL}
 #' 
 reset_env_identifiers <- function() {
   .reset_ids()
@@ -195,7 +195,7 @@ reset_env_identifiers <- function() {
 #' @examples 
 #' get_identifiers_dt()
 #' 
-#' @return charvec
+#' @return named list
 #' 
 #' @export
 get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = FALSE) {

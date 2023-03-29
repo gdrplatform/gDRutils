@@ -136,8 +136,7 @@ get_combo_assay_names <- function(se = NULL, ...) {
 #' @export
 #'
 #' @examples 
-#' get_combo_base_assay_names(
-#' )
+#' get_combo_base_assay_names()
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_base_assay_names <- function(se = NULL, ...) {

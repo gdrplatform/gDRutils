@@ -358,6 +358,8 @@ loadTestDataSet <- function() {
 #'
 #' @param rds RDS filename
 #' 
+#' @export
+#' 
 #' @examples 
 #' get_synthetic_data("finalMAE_small.RDS") 
 #'

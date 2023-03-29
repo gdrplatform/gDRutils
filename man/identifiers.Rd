@@ -28,13 +28,13 @@ For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibl
 For \code{get_env_identifiers} a character vector of identifiers for field \code{k}.
 For functions called with no arguments, the entire available identifier list is returned.
 
-charvec
+list or charvec depends on unify param
 
-charvec
+list or charvec depends on unify param
 
-charvec
+\code{NULL}
 
-charvec
+\code{NULL}
 }
 \description{
 Get, set, or reset the expected identifier(s) for one or all identifier field(s).

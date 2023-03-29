@@ -19,7 +19,7 @@ Update gDR synonyms for the identifier
 }
 \examples{
 mdict <- list(duration = "time")
-iv <- c("Time", Duration, "time")
+iv <- c("Time", "Duration", "time")
 update_idfs_synonyms(iv, dict = mdict)
 
 }

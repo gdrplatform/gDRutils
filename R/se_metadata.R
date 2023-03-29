@@ -70,7 +70,8 @@ set_SE_experiment_raw_data <- function(se, value) {
 #' @rdname SE_metadata
 #' 
 #' @examples 
-#' se <- get_synthetic_data("finalSE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' se <- mae[[1]]
 #' get_SE_fit_parameters(se)
 #' 
 #' @export
