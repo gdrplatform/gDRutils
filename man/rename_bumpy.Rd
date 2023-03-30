@@ -19,3 +19,10 @@ a renamed BumpyMatrix object
 \description{
 Rename BumpyMatrix
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
+assay <- SummarizedExperiment::assay(se)
+rename_bumpy(assay, c("Concentration" = "conc"))
+
+}

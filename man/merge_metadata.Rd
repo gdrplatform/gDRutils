@@ -17,3 +17,14 @@ list of merged metadata
 \description{
 Merge metadata
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
+SElist <- list(
+  se, 
+  se
+)
+metadata_fields <- identify_unique_se_metadata_fields(listSE)
+merge_metadata(listSE, metadata_fields)
+
+}

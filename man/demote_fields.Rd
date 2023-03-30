@@ -23,6 +23,13 @@ to a nested field of a \code{BumpyMatrix} assay.
 \details{
 Revert this operation using \code{promote_fields}.
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
+se <- promote_fields(se, "ReadoutValue", 2)
+demote_fields(se, "ReadoutValue")
+
+}
 \seealso{
 promote_fields
 }
