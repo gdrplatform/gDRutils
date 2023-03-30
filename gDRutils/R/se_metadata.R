@@ -3,15 +3,15 @@
 #' Set metadata for the fitting parameters that define the Metrics assay in SummarizedExperiment object metadata.
 #'
 #' @param se a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.
-#' @param value named list of metadata for fit parameters. 
-#' @param key_type string of a specific key type (i.e. 'nested_keys', etc.). 
-#' @param id_type string of a specific id type (i.e. 'duration', 'cellline_name', etc.). 
+#' @param value named list of metadata for fit parameters.
+#' @param key_type string of a specific key type (i.e. 'nested_keys', etc.).
+#' @param id_type string of a specific id type (i.e. 'duration', 'cellline_name', etc.).
 #' @param simplify Boolean indicating whether output should be simplified.
 #'
 #' @details
-#' For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines 
+#' For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines
 #' the date_processed and packages versions in SummarizedExperiment object metadata.
-#' For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters 
+#' For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters
 #' used to construct the Metrics assay in a SummarizedExperiment object.
 #'
 #' @return \code{se} with added metadata.
@@ -145,12 +145,12 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
       out <- .get_SE_identifier(se, id_type)
     }
   } else {
-    id_vector <- Vectorize(function(i) 
+    id_vector <- Vectorize(function(i)
       unlist(unname(lapply(i, function(x) .get_SE_identifier(se, x)))),
       SIMPLIFY = FALSE)
     out <- id_vector(id_type)
   }
-  
+
   out
 }
 
@@ -168,7 +168,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
 #' @export
 get_MAE_identifiers <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   MAEpply(mae, get_SE_identifiers)
 }
 

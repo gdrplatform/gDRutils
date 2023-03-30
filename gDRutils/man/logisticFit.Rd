@@ -47,30 +47,30 @@ mean parameters in the model. Overrules any self starter function.}
 \item{capping_fold}{Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.}
 }
 \value{
-data.frame with metrics and fit parameters.
+data.table with metrics and fit parameters.
 }
 \description{
 Fit a logistic curve to drug response data.
 }
 \details{
-Implementation of the genedata approach for curve fit: 
+Implementation of the genedata approach for curve fit:
 https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity #nolint
 
 The output parameter names correspond to the following definitions:
 \describe{
  \item{x_mean}{The mean of a given dose-response metric}
  \item{x_AOC_range}{The range of the area over the curve}
- \item{x_AOC}{The area over the GR curve or, respectively, under the relative 
+ \item{x_AOC}{The area over the GR curve or, respectively, under the relative
  cell count curve, averaged over the range of concentration values}
- \item{xc50}{The concentration at which the effect reaches a value of 0.5 based 
+ \item{xc50}{The concentration at which the effect reaches a value of 0.5 based
  on interpolation of the fitted curve}
  \item{x_max}{The maximum effect of the drug}
  \item{ec50}{The drug concentration at half-maximal effect}
- \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response 
+ \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response
  data as concentration goes to infinity}
- \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 
+ \item{x_0}{The asymptotic metric value corresponding to a concentration of 0
  for the primary drug}
- \item{h}{The hill coefficient of the fitted curve, which reflects how steep 
+ \item{h}{The hill coefficient of the fitted curve, which reflects how steep
  the dose-response curve is}
  \item{r2}{The goodness of the fit}
  \item{x_sd_avg}{The standard deviation of GR/IC}

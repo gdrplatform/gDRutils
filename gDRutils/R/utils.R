@@ -2,7 +2,7 @@
 .clean_key_inputs <- function(keys, cols) {
   dropped <- setdiff(keys, cols)
   if (length(dropped) != 0L) {
-    warning(sprintf("ignoring input keys: '%s' which are not present in data.frame",
+    warning(sprintf("ignoring input keys: '%s' which are not present in data.table",
       paste0(dropped, collapse = ", ")))
   }
   intersect(keys, cols)
@@ -27,7 +27,7 @@ assert_equal_input_len <- function(outlier, ...) {
 }
 
 #' shorten normalization type
-#' 
+#'
 #' @param x string with normalization type
 #'
 #' @return shortened string representing the normalization type
@@ -43,7 +43,7 @@ shorten_normalization_type_name <- function(x) {
 }
 
 #' extend abbreviated normalization type
-#' 
+#'
 #' @param x string with normalization type
 #' 
 #' @return string
@@ -72,7 +72,7 @@ extend_normalization_type_name <- function(x) {
 }
 
 #' assert choices
-#' 
+#'
 #' @param x charvec expected subset
 #' @param choices charvec reference set
 #' @param ... Additional arguments to pass to \code{checkmate::test_choice}
@@ -100,13 +100,14 @@ assert_choices <- function(x, choices, ...) {
 }
 
 #' Lapply through all the experiments in MultiAssayExperiment object
-#' 
+#'
 #' @param mae MultiAssayExperiment object
 #' @param FUN function that should be applied on each experiment of MultiAssayExperiment object
 #' @param unify logical indicating if the output should be a unlisted object of unique
-#' values across all the experiments 
+#' values across all the experiments
 #' @param ... Additional args to be passed to teh \code{FUN}.
-#' 
+#' @export
+#'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
 #' 
 #' @return list or vector depends on unify param
@@ -126,9 +127,9 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     if (all(vapply(out, is.atomic, logical(1)))) {
       unlist(out, use.names = FALSE)
     } else {
-      plyr::rbind.fill(lapply(out, data.frame))
+      plyr::rbind.fill(lapply(out, dataframe_to_datatable))
     }
-    
+
   } else {
     out
   }
@@ -142,7 +143,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' @param FUN A user-defined function.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
 #' Defaults to \code{TRUE}.
-#' @param ... optional argument passed to 
+#' @param ... optional argument passed to
 #' \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
 #' else to \link[base]{lapply}.
 #'
@@ -166,7 +167,7 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #'
 #' @param se A \code{SummarizedExperiment} object with bumpy matrices.
 #' @param FUN A function that will be applied to each element of the matrix in assay \code{req_assay_name}.
-#' Output of the function must return a data.frame.
+#' Output of the function must return a data.table.
 #' @param req_assay_name String of the assay name in the \code{se} that the \code{FUN} will act on.
 #' @param out_assay_name String of the assay name that will contain the results of the applied function.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
@@ -205,16 +206,16 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
     elem_df <- asy[i, j][[1]]
 
     store <- FUN(elem_df)
-    if (is(store, "data.frame") || is(store, "DFrame")) {
+    if (is(store, "data.table") || is(store, "DFrame")) {
       if (nrow(store) != 0L) {
         store$row <- i
         store$column <- j
         store
       } else {
-        NULL 
+        NULL
       }
     } else {
-      stop("only data.frame objects supported as return values from FUN for now")
+      stop("only data.table objects supported as return values from FUN for now")
     }
   }, parallelize = parallelize)
 
@@ -229,7 +230,7 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
 
 
 #' is_mae_empty
-#' 
+#'
 #' check if all mae experiments are empty
 #' @param mae MultiAssayExperiment object
 #' 
@@ -244,12 +245,12 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
 #' @export
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   all(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
 #' is_any_exp_empty
-#' 
+#'
 #' check if any experiment is empty
 #' @param mae MultiAssayExperiment object
 #' 
@@ -264,12 +265,12 @@ is_mae_empty <- function(mae) {
 #' @export
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   any(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
 #' is_exp_empty
-#' 
+#'
 #' check if experiment (SE) is empty
 #' @param exp \linkS4class{SummarizedExperiment} object.
 #' 
@@ -285,14 +286,14 @@ is_any_exp_empty <- function(mae) {
 #' @export
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
-  
+
   names <- SummarizedExperiment::assayNames(exp)
   dt <- `if`(
     is.null(names),
     data.table::data.table(),
     convert_se_assay_to_dt(exp, names[[1]])
   )
-  
+
   any(
     nrow(SummarizedExperiment::assay(exp)) == 0,
     nrow(dt) == 0
@@ -300,7 +301,7 @@ is_exp_empty <- function(exp) {
 }
 
 #' get_non_empty_assays
-#' 
+#'
 #' get non empty assays
 #' @param mae MultiAssayExperiment object
 #' 
@@ -315,7 +316,7 @@ is_exp_empty <- function(exp) {
 #' @export
 get_non_empty_assays <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   ne_info <- MAEpply(mae, is_exp_empty) == FALSE
   names(ne_info[ne_info == TRUE])
 }
@@ -336,7 +337,7 @@ get_non_empty_assays <- function(mae) {
 #' @export
 mcolData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
 }
 
@@ -355,12 +356,8 @@ mcolData <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
-  MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
-}
 
-loadTestDataSet <- function() {
-  
+  MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }
 
 #' Get synthetic data from gDRtestData package
@@ -376,4 +373,16 @@ loadTestDataSet <- function() {
 #' 
 get_synthetic_data <- function(rds) {
   readRDS(system.file("testdata", rds, package = "gDRtestData"))
+}
+  
+#' Convert object to data.table using \code{data.table::setDT}
+#'
+#' @param obj
+#'
+#' @return a data.table object
+#' @export
+#'
+#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
+dataframe_to_datatable <- function(obj) {
+  data.table::setDT(data.frame(obj))
 }
