@@ -106,7 +106,7 @@ or `validate_SE`.
 validate_SE(se)
 ```
 
-```{r}
+```{r, error=TRUE}
 assay(se, "Normalized") <- NULL
 validate_SE(se)
 ```
