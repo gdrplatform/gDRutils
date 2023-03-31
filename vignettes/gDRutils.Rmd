@@ -17,6 +17,101 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(gDRutils)
 ```
+# Overview
+`gDRutils` is the part of `gDR` suite. This package provides bunch of tools for, among others:
+* data manipulation, especially output of the `gDRcore` package (`MultiAssayExperiments` and `SummarizedExperiment`),
+* data extraction,
+* managing identifiers used for creating `gDR` experiments,
+* data validation.
+
+# Use cases
+
+### Data manipulation
+
+The basic output of `gDRcore` package is the `MultiAssayExperiment` object. Function `MAEpply` allows for the data manipulation of this object, and can be used in a similar way as a basic function `lapply`.
+
+
+```{r}
+mae <- gDRutils::get_synthetic_data("finalMAE_combo_matrix_small.RDS")
+MAEpply(mae, dim)
+```
+```{r}
+MAEpply(mae, rowData)
+```
+This function allows also for extraction of unified data across all the `SummarizedExperiment`s inside `MultiAssayExperiment`, e.g.
+
+```{r}
+MAEpply(mae, rowData, unify = TRUE)
+```
+
+### Data extraction
+
+All the metrics data are stored inside `assays` of `SummarizedExperiment`. For the downstream analyses we provide tools allowing for the extraction of the data into user-friendly `data.table` style.
+
+There are two functions working on `MultiAssayExperiment` object (`convert_mae_assay_to_dt`) and for `SummarizedExperiment` (`convert_se_assay_to_dt`).
+
+```{r}
+convert_mae_assay_to_dt(mae, "Metrics")
+```
+or alternatively for `SummarizedExperiment` object:
+
+```{r}
+se <- mae[[1]]
+convert_se_assay_to_dt(se, "Metrics")
+```
+
+### Managing gDR identifiers
+
+In `gDR` we require standard identifiers that should be visible in the input data, such as e.g. `Gnumber`, `CLID`, `Concentration`. However, user can define their own custom identifiers.
+
+To display gDR default identifier they can use `get_env_identifiers` function:
+
+```{r}
+get_env_identifiers()
+```
+
+To change any of these identifiers user can use `set_env_identifier`, e.g.
+
+```{r}
+set_env_identifier("concentration", "Dose")
+```
+
+and confirm, by displaying:
+
+```{r}
+get_env_identifiers("concentration")
+```
+
+To restore default identifiers user can use `reset_env_identifiers`.
+
+```{r}
+reset_env_identifiers()
+```
+
+```{r}
+get_env_identifiers("concentration")
+```
+
+### Data validation
+
+Applied custom changes in the gDR output can upset internal functions operation. Custom changes can be validated using `validate_MAE`
+
+```{r}
+validate_MAE(mae)
+```
+
+or `validate_SE`.
+
+```{r}
+validate_SE(se)
+```
+
+```{r}
+assay(se, "Normalized") <- NULL
+validate_SE(se)
+```
+
+
 
 # SessionInfo {-}
 
