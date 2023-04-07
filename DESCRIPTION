@@ -4,7 +4,7 @@ Title: A package with helper functions for processing drug response data
 Version: 0.99.1
 Date: 2023-04-07
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
-             person("Arkadiusz", "Gladki", role=c("cre", "ctb"), email="gladki.arkadiusz@gmail.com"),
+             person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
              person("Aleksander", "Chlebowski", role=c("aut")),
              person("Marc", "Hafner", role=c("aut")),
              person("Pawel", "Piatkowski", role=c("aut")),
