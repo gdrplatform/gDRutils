@@ -29,7 +29,11 @@ and tidies formatting to be condusive to joining
 with other JSON responses.
 }
 \examples{
-rdata <- data.table::setDT(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+rdata <- data.table::data.table(
+  mydrug = letters, 
+  mydrugname = letters, 
+  mydrugmoa = letters, 
+  Duration = 1)
 identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa",
 duration = "Duration")
 gDRutils:::.convert_rowData_to_json(rdata, identifiers)

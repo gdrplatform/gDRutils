@@ -21,7 +21,7 @@
 #' m <- 5
 #' grid <- expand.grid(normalization_type = c("GR", "RV"),
 #'   source = c("GDS", "GDR"))
-#' repgrid <- do.call("rbind", rep(list(grid), m))
+#' repgrid <- data.table::rbindlist(rep(list(grid), m))
 #' repgrid$wide <- seq(m * n)
 #' repgrid$id <- rep(LETTERS[1:m], each = n)
 #'

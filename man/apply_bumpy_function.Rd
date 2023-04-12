@@ -34,7 +34,7 @@ Apply a user-specified function to every element of a bumpy matrix.
 mae <- get_synthetic_data("finalMAE_small.RDS")
 se <- mae[[1]]
 FUN <- function(x) {
-  data.frame(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
+  data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
 } 
 apply_bumpy_function(
   se, 

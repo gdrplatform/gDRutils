@@ -7,7 +7,7 @@
 dataframe_to_datatable(obj)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{any object}
 }
 \value{
 a data.table object

@@ -78,9 +78,9 @@ merge_SE <- function(SElist,
 #' 
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
-#' SElist <- list(
-#'   combo1 = se, 
-#'   combo2 = se
+#' listSE <- list(
+#'   combo1 = mae[[1]], 
+#'   sa = mae[[2]]
 #' )
 #' merge_assay(listSE, "Normalized")
 #' 
@@ -148,7 +148,7 @@ identify_unique_se_metadata_fields <- function(SElist) {
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
 #' se <- mae[[1]]
-#' SElist <- list(
+#' listSE <- list(
 #'   se, 
 #'   se
 #' )

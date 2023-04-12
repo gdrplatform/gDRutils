@@ -29,8 +29,11 @@ and tidies formatting to be condusive to joining
 with other JSON responses.
 }
 \examples{
-cdata <- data.table::setDT(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters,
-                   cellline_ref_div_time = "cellline_ref_div_time")
+cdata <- data.table::data.table(
+  mycellline = letters, 
+  mycelllinename = letters, 
+  mycelllinetissue = letters,
+  cellline_ref_div_time = "cellline_ref_div_time")
 identifiers <- list(cellline = "mycellline",
                     cellline_name = "mycelllinename",
                     cellline_ref_div_time = "cellline_ref_div_time",

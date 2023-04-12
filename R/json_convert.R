@@ -60,8 +60,12 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #' md <- list(title = "my awesome experiment",
 #'   description = "description of experiment",
 #'   source = list(name = "GeneData_Screener", id = "QCS-12345"))
-#' rdata <- data.table::setDT(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
-#' cdata <- data.table::setDT(mycellline = letters, mycelllinename = letters,
+#' rdata <- data.table::data.table(
+#'  mydrug = letters, 
+#'   mydrugname = letters, 
+#'   mydrugmoa = letters, 
+#'   Duration = 1)
+#' cdata <- data.table::data.table(mycellline = letters, mycelllinename = letters,
 #'  mycelllinetissue = letters, cellline_ref_div_time = letters)
 #' identifiers <- list(cellline = "mycellline",
 #'                     cellline_name = "mycelllinename",
@@ -141,7 +145,11 @@ convert_se_to_json <- function(se) {
 #' @return JSON string capturing the \code{rdata}.
 #'
 #' @examples
-#' rdata <- data.table::setDT(mydrug = letters, mydrugname = letters, mydrugmoa = letters, Duration = 1)
+#' rdata <- data.table::data.table(
+#'   mydrug = letters, 
+#'   mydrugname = letters, 
+#'   mydrugmoa = letters, 
+#'   Duration = 1)
 #' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa",
 #' duration = "Duration")
 #' gDRutils:::.convert_rowData_to_json(rdata, identifiers)
@@ -171,8 +179,11 @@ convert_se_to_json <- function(se) {
 #' @return JSON string capturing the \code{cdata}.
 #'
 #' @examples
-#' cdata <- data.table::setDT(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters,
-#'                    cellline_ref_div_time = "cellline_ref_div_time")
+#' cdata <- data.table::data.table(
+#'   mycellline = letters, 
+#'   mycelllinename = letters, 
+#'   mycelllinetissue = letters,
+#'   cellline_ref_div_time = "cellline_ref_div_time")
 #' identifiers <- list(cellline = "mycellline",
 #'                     cellline_name = "mycelllinename",
 #'                     cellline_ref_div_time = "cellline_ref_div_time",

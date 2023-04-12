@@ -178,7 +178,7 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
 #' se <- mae[[1]]
 #' FUN <- function(x) {
-#'   data.frame(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
+#'   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
 #' } 
 #' apply_bumpy_function(
 #'   se, 
@@ -204,7 +204,7 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
     i <- x[["row"]]
     j <- x[["column"]]
     elem_df <- asy[i, j][[1]]
-
+    
     store <- FUN(elem_df)
     if (is(store, "data.table") || is(store, "DFrame")) {
       if (nrow(store) != 0L) {
@@ -377,7 +377,7 @@ get_synthetic_data <- function(rds) {
   
 #' Convert object to data.table using \code{data.table::setDT}
 #'
-#' @param obj
+#' @param obj any object
 #'
 #' @return a data.table object
 #' @export
