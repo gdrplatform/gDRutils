@@ -26,6 +26,12 @@ as either the \code{rowData} or \code{colData}.
 \details{
 Revert this operation using \code{demote_fields}.
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+se <- mae[[1]]
+se <- promote_fields(se, "ReadoutValue", 2)
+
+}
 \seealso{
 demote_fields
 }

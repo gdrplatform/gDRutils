@@ -288,7 +288,7 @@ logisticFit <-
     }
     out <- .set_constant_fit_params(out, mean_norm_value)
   }, invalid_fit = function(e) {
-    warning(sprintf("fitting failed with error: '%s'", e))
+    warning(sprintf("fitting failed with: '%s'", e))
     out <- .set_invalid_fit_params(out, df_$norm_values)
   }, error = function(e) {
     stop(e)

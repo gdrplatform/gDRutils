@@ -75,6 +75,15 @@ merge_SE <- function(SElist,
 #' during creating BumpyMatrix object
 #'
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
+#' SElist <- list(
+#'   combo1 = se, 
+#'   combo2 = se
+#' )
+#' merge_assay(listSE, "Normalized")
+#' 
 #' @export
 #'
 merge_assay <- function(SElist,
@@ -135,6 +144,17 @@ identify_unique_se_metadata_fields <- function(SElist) {
 #' @param metadata_fields vector of metadata names that will be merged
 #'
 #' @return list of merged metadata
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
+#' SElist <- list(
+#'   se, 
+#'   se
+#' )
+#' metadata_fields <- identify_unique_se_metadata_fields(listSE)
+#' merge_metadata(listSE, metadata_fields)
+#' 
 #' @export
 #'
 merge_metadata <- function(SElist,

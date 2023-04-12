@@ -1,3 +1,6 @@
+# Change to v.0.99.1
+- Update maintainer
+
 # Change to v.0.99.0
 - Downgrade version to make it Bioconductor compatible
 

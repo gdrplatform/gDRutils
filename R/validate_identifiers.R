@@ -16,6 +16,13 @@
 #' @details
 #' Note that this does NOT set the identifiers anywhere (i.e. environment or \code{SummarizedExperiment} object).
 #' If identifiers do not validate, will throw error as side effect.
+#' 
+#' @examples 
+#' validate_identifiers(
+#'   DataFrame("Barcode" = NA, "Duration" = NA, "Template" = NA, "clid" = NA), 
+#'   req_ids = "barcode"
+#' )
+#' 
 #' @export
 validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one_ids = NULL) {
   if (is.null(identifiers)) {

@@ -112,6 +112,11 @@ standardize_se <- function(se) {
 #' corresponding values the destination names.
 #'
 #' @return a renamed DFrame object
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' rename_DFrame(SummarizedExperiment::rowData(mae[[1]]), c("Gnumber" = "Gnumber1"))
+#' 
 #' @export
 #'
 rename_DFrame <- function(df, mapping_vector) {
@@ -129,6 +134,13 @@ rename_DFrame <- function(df, mapping_vector) {
 #' corresponding values the destination names.
 #'
 #' @return a renamed BumpyMatrix object
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
+#' assay <- SummarizedExperiment::assay(se)
+#' rename_bumpy(assay, c("Concentration" = "conc"))
+#' 
 #' @export
 rename_bumpy <- function(bumpy, mapping_vector) {
   checkmate::assert_class(bumpy, "BumpyMatrix")
