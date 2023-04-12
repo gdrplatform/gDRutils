@@ -30,6 +30,13 @@ has_nested_field <- function(asy, nested_field) {
 #'
 #' @seealso promote_fields
 #' @details Revert this operation using \code{promote_fields}.
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
+#' se <- promote_fields(se, "ReadoutValue", 2)
+#' demote_fields(se, "ReadoutValue")
+#' 
 #' @export
 demote_fields <- function(se, fields) {
   checkmate::assertClass(se, "SummarizedExperiment")
@@ -85,6 +92,12 @@ demote_fields <- function(se, fields) {
 #' @return A \code{SummarizedExperiment} object with new dimensions resulting from promoting given \code{fields}.
 #' @details Revert this operation using \code{demote_fields}.
 #' @seealso demote_fields
+#' 
+#' @examples 
+#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' se <- mae[[1]]
+#' se <- promote_fields(se, "ReadoutValue", 2)
+#' 
 #' @export
 promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   checkmate::assertClass(se, "SummarizedExperiment")

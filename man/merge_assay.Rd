@@ -29,3 +29,12 @@ BumpyMatrix or list with data.table + BumpyMatrix
 \description{
 Merge assay data
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
+SElist <- list(
+  combo1 = se, 
+  combo2 = se
+)
+merge_assay(listSE, "Normalized")
+
+}

@@ -19,3 +19,8 @@ a renamed DFrame object
 \description{
 Rename DFrame
 }
+\examples{
+mae <- get_synthetic_data("finalMAE_small.RDS")
+rename_DFrame(SummarizedExperiment::rowData(mae[[1]]), c("Gnumber" = "Gnumber1"))
+
+}
