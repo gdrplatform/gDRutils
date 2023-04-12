@@ -79,6 +79,7 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'
 #' @export
 convert_se_to_json <- function(se) {
+  
   ml <- list(
     mjson = .convert_metadata_to_json(se),
     rjson = .convert_rowData_to_json(rowData(se), get_SE_identifiers(se)),
@@ -211,9 +212,8 @@ convert_se_to_json <- function(se) {
 .convert_element_metadata_to_json <- function(mdata, req_cols) {
   stopifnot(all(req_cols %in% names(mdata)))
 
-  mdata <- data.table::setDT(data.frame(data.matrix(mdata)))
-  rownames(mdata) <- NULL
-
+  mdata <- data.table::setDT(as.list(mdata))
+  
   main_mdata <- mdata[, ..req_cols]
   mjson <- jsonlite::toJSON(main_mdata, "columns")
   mjson <- strip_first_and_last_char(mjson)

@@ -79,7 +79,7 @@ fit_curves <- function(df_,
     stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
   }
   rownames(df_metrics) <- paste0(df_metrics$normalization_type, "_", df_metrics$fit_source)
-
+  
   concsNA <- all(is.na(unique(df_[[series_identifiers]])))
   if (concsNA) df_metrics[] <- NA
   df_metrics
@@ -88,7 +88,7 @@ fit_curves <- function(df_,
 #' @keywords internal
 .apllyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
                             pcutoff, cap, n_point_cutoff) {
-  
+
   df_metrics <- NULL
   concs <- unique(df_[[series_identifiers]])
   med_concs <- stats::median(concs)
@@ -215,6 +215,7 @@ logisticFit <-
     if (any(concs < 0)) {
       stop("logisticFit accepts only unlogged concentrations, negative concentrations are detected")
     }
+    
     out <- .setup_metric_output()
     out$maxlog10Concentration <- log10(max(concs))
     out$N_conc <- length(unique(concs))
@@ -241,7 +242,7 @@ logisticFit <-
                       priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, 
                       concs = concs, controls = controls, range_conc = range_conc, pcutoff = pcutoff, 
                       capping_fold = capping_fold, mean_norm_value = mean_norm_value)
-    data.frame(out)
+    data.table::data.table(data.frame(out))
   }
 
 #' @keywords internal

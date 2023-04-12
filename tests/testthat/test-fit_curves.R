@@ -34,7 +34,7 @@ test_that("NA values are handled correctly", {
   
   df_result_NA <- purrr::quietly(fit_curves)(df_resp_NA, series_identifiers = "Concentration")
   expect_length(df_result_NA$warnings, 2)
-  expect_true(is.na(df_result_NA$result["RV", "xc50"]))
+  expect_true(all(is.na(df_result_NA$result[, "xc50"])))
 })
 
 
@@ -44,7 +44,8 @@ test_that("appropriate fit type is assigned for various use cases", {
   # Test a 3P fit.
   ## Note that this should correspond to a cytotoxic response.
   df_result <- fit_curves(df_resp, series_identifiers = "Concentration")
-  expect_equal(round(df_result[, names(params), with = FALSE], 4), expected, tolerance = 1e-5)
+  test_colnames <- names(params)
+  expect_equal(round(df_result[, ..test_colnames], 4), expected, tolerance = 1e-5)
 
   obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
@@ -144,7 +145,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_result <- purrr::quietly(fit_curves)(df_resp[c(3:5, 12:14), ],
                           series_identifiers = "Concentration", n_point_cutoff = 4)
   expect_length(df_result$warnings, 2)
-  obs_fit <- unique(df_result$result[, "fit_type"])
+  obs_fit <- unique(unlist(df_result$result[, "fit_type"]))
   expect_equal(obs_fit, "DRCTooFewPointsToFit")
   expect_equal(dim(df_result$result), expected_dims)
 
