@@ -210,11 +210,11 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
     i[["example"]]
   })
   if (is.null(k)) {
-    if (get_description && !get_example) {
+    if (get_description & !get_example) { # nolint
       description
-    } else if (!get_description && get_example) {
+    } else if (!get_description & get_example) { # nolint
       example
-    } else if (get_description && get_example) {
+    } else if (get_description & get_example) { # nolint
       list(
         description = description,
         example = example
@@ -224,11 +224,11 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
     }
   } else {
     checkmate::assert_true(k %in% names(dt))
-    if (get_description && !get_example) {
+    if (get_description & !get_example) { # nolint
       description[[k]]
-    } else if (!get_description && get_example) {
+    } else if (!get_description & get_example) { # nolint
       example[[k]]
-    } else if (get_description && get_example) {
+    } else if (get_description & get_example) { # nolint
       list(
         description = description[[k]],
         example = example[[k]]
