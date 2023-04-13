@@ -25,7 +25,7 @@ Convert colData to JSON format for elasticsearch indexing.
 }
 \details{
 Standardizes the \code{cdata} to common schema fields
-and tidies formatting to be condusive to joining 
+and tidies formatting to be condusive to joining
 with other JSON responses.
 }
 \examples{

@@ -18,7 +18,9 @@ refined colData
 }
 \description{
 current improvements done on the colData as a standardization step:
-- set default value for optional colData fields
+\itemize{
+\item set default value for optional colData fields
+}
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small.RDS")

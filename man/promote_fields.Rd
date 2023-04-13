@@ -13,7 +13,7 @@ promote_fields(se, fields, MARGIN = c(1, 2))
 \item{fields}{Character vector of nested fields in a \code{BumpyMatrix} object to promote to
 metadata fields of a \code{se}.}
 
-\item{MARGIN}{Numeric of values \code{1} or \code{2} indicating whether to 
+\item{MARGIN}{Numeric of values \code{1} or \code{2} indicating whether to
 promote fields to rows or columns respectively.}
 }
 \value{

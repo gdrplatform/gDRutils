@@ -28,5 +28,5 @@ MAEpply(mae, SummarizedExperiment::assayNames)
 
 }
 \author{
-Bartosz Czech <bartosz.czech@contractors.roche.com>
+Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
 }

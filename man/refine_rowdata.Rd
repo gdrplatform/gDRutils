@@ -18,7 +18,9 @@ refined rowData
 }
 \description{
 current improvements done on the rowData as a standardization step:
-- set default value for optional rowData fields
+\itemize{
+\item set default value for optional rowData fields
+}
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small.RDS")

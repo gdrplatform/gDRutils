@@ -21,5 +21,5 @@ mcolData(mae)
 
 }
 \author{
-Arkadiusz Gladki <arkadiusz.gladki@contractors.roche.com>
+Arkadiusz Gladki \href{mailto:arkadiusz.gladki@contractors.roche.com}{arkadiusz.gladki@contractors.roche.com}
 }
