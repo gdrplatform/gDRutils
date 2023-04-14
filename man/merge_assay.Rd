@@ -31,7 +31,8 @@ Merge assay data
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
-SElist <- list(
+se <- mae[[1]]
+listSE <- list(
   combo1 = se, 
   combo2 = se
 )

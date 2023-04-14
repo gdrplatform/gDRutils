@@ -36,7 +36,7 @@ If identifiers do not validate, will throw error as side effect.
 }
 \examples{
 validate_identifiers(
-  DataFrame("Barcode" = NA, "Duration" = NA, "Template" = NA, "clid" = NA), 
+  S4Vectors::DataFrame("Barcode" = NA, "Duration" = NA, "Template" = NA, "clid" = NA), 
   req_ids = "barcode"
 )
 
