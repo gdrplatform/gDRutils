@@ -16,11 +16,13 @@ Throws an error if the MultiAssayExperiment is not valid.
 }
 \description{
 Function validates correctness of SE included in MAE by checking multiple cases:
-- detection of duplicated rowData/colData,
-- incompatibility of rownames/colnames,
-- occurrence of necessary assays,
-- detection of mismatch of CLIDs inside colData and colnames (different order),
-- correctness of metadata names.
+\itemize{
+\item detection of duplicated rowData/colData,
+\item incompatibility of rownames/colnames,
+\item occurrence of necessary assays,
+\item detection of mismatch of CLIDs inside colData and colnames (different order),
+\item correctness of metadata names.
+}
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small.RDS") 
@@ -28,5 +30,5 @@ validate_MAE(mae)
 
 }
 \author{
-Bartosz Czech <bartosz.czech@contractors.roche.com>
+Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
 }

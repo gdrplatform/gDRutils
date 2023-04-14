@@ -20,7 +20,7 @@ If not passed, defaults to \code{get_env_identifiers()}.}
 \item{req_ids}{Character vector of standardized identifier names required to pass identifier validation.}
 
 \item{exp_one_ids}{Character vector of standardized identifiers names
-where only one identifier value is expected. 
+where only one identifier value is expected.
 If not passed, defaults to \code{get_expect_one_identifiers()}.}
 }
 \value{

@@ -47,20 +47,20 @@ See details for expected identifiers and their definitions.
 \details{
 Identifiers supported by the gDR suite include:
 \itemize{
- \item{"barcode": String of column name containing barcode metadata}
- \item{"cellline": String of column name containing unique, machine-readable cell line identifiers}
- \item{"cellline_name": String of column name containing human-friendly cell line names}
- \item{"cellline_tissue": String of column name containing metadata on cell line tissue type}
- \item{"cellline_ref_div_time": String of column name containing reference division time for cell lines}
- \item{"cellline_parental_identifier": String of column name containing unique, machine-readable
-   parental cell line identifiers. Used in the case of derived or engineered cell lines.}
- \item{"drug": String of column name containing unique, machine-readable drug identifiers}
- \item{"drug_name": String of column name containing human-friendly drug names}
- \item{"drug_moa": String of column name containing metadata for drug mode of action}
- \item{"duration": String of column name containing metadata on duration that cells were treated (in hours)}
- \item{"template": String of collumn name containing template metadata}
- \item{"untreated_tag": Character vector of entries that identify control, untreated wells}
- \item{"well_position": Character vector of column names containing metadata on well positions on a plate}
+\item{"barcode": String of column name containing barcode metadata}
+\item{"cellline": String of column name containing unique, machine-readable cell line identifiers}
+\item{"cellline_name": String of column name containing human-friendly cell line names}
+\item{"cellline_tissue": String of column name containing metadata on cell line tissue type}
+\item{"cellline_ref_div_time": String of column name containing reference division time for cell lines}
+\item{"cellline_parental_identifier": String of column name containing unique, machine-readable
+parental cell line identifiers. Used in the case of derived or engineered cell lines.}
+\item{"drug": String of column name containing unique, machine-readable drug identifiers}
+\item{"drug_name": String of column name containing human-friendly drug names}
+\item{"drug_moa": String of column name containing metadata for drug mode of action}
+\item{"duration": String of column name containing metadata on duration that cells were treated (in hours)}
+\item{"template": String of collumn name containing template metadata}
+\item{"untreated_tag": Character vector of entries that identify control, untreated wells}
+\item{"well_position": Character vector of column names containing metadata on well positions on a plate}
 }
 }
 \examples{
