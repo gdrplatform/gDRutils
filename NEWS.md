@@ -1,3 +1,6 @@
+# Change to v.0.99.5
+- Changed data.frame to data.table.
+
 # Change to v.0.99.4
 - Fixed examples
 
