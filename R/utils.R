@@ -187,7 +187,12 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' )
 #' 
 #' @export
-apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parallelize = FALSE) {
+apply_bumpy_function <- function(se,
+                                 FUN,
+                                 req_assay_name,
+                                 out_assay_name,
+                                 parallelize = FALSE,
+                                 ...) {
   # Assertions:
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(req_assay_name)
@@ -204,7 +209,7 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
     j <- x[["column"]]
     elem_df <- asy[i, j][[1]]
 
-    store <- FUN(elem_df)
+    store <- FUN(elem_df, ...)
     if (is(store, "data.frame") || is(store, "DFrame")) {
       if (nrow(store) != 0L) {
         store$row <- i
