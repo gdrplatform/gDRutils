@@ -1,4 +1,7 @@
 # Change to v.0.99.4
+- Extend the logic of `apply_bumpy_function`
+
+# Change to v.0.99.4
 - Fixed examples
 
 # Change to v.0.99.3
