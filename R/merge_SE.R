@@ -78,6 +78,7 @@ merge_SE <- function(SElist,
 #' 
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
+
 #' listSE <- list(
 #'   combo1 = mae[[1]], 
 #'   sa = mae[[2]]
@@ -98,11 +99,11 @@ merge_assay <- function(SElist,
   checkmate::assert_character(discard_keys, null.ok = TRUE)
 
   DT <- if (is.null(additional_col_name)) {
-    data.table::rbindlist(lapply(names(SElist), function(y)
-      convert_se_assay_to_dt(SElist[[y]], assay_name)), fill = TRUE)
+    data.table::rbindlist(lapply(names(SElist), function(y) {
+      convert_se_assay_to_dt(SElist[[y]], assay_name)}), fill = TRUE)
   } else {
-    data.table::rbindlist(lapply(names(SElist), function(y)
-      convert_se_assay_to_dt(SElist[[y]], assay_name)[, eval(additional_col_name) := rep_len(y, .N)]), fill = TRUE)
+    data.table::rbindlist(lapply(names(SElist), function(y) {
+      convert_se_assay_to_dt(SElist[[y]], assay_name)[, eval(additional_col_name) := rep_len(y, .N)]}), fill = TRUE)
   }
   
 

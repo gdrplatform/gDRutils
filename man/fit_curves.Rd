@@ -55,10 +55,10 @@ Fit GR and RV curves from a data.table.
 }
 \details{
 The \code{df_} expects the following columns:
- \itemize{
-  \item{RelativeViability} normalized relative viability values (if \code{normalization_type} includes \code{"RV"})
-  \item{GRvalue} normalized GR values (if \code{normalization_type} includes \code{"GR"})
- }
+\itemize{
+\item{RelativeViability} normalized relative viability values (if \code{normalization_type} includes \code{"RV"})
+\item{GRvalue} normalized GR values (if \code{normalization_type} includes \code{"GR"})
+}
 
 The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
 The purpose of this statistic is to enable comparison across different experiments with slightly

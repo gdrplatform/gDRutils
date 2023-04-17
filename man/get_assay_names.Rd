@@ -4,7 +4,7 @@
 \alias{get_assay_names}
 \title{get assay names of the given se/dataset
 fetch the data from the se if provided as metadata
-use predefined values from `get_env_assay_names` otherwise}
+use predefined values from \code{get_env_assay_names} otherwise}
 \usage{
 get_assay_names(se = NULL, ...)
 }
@@ -19,7 +19,7 @@ charvec
 \description{
 get assay names of the given se/dataset
 fetch the data from the se if provided as metadata
-use predefined values from `get_env_assay_names` otherwise
+use predefined values from \code{get_env_assay_names} otherwise
 }
 \examples{
 get_assay_names()

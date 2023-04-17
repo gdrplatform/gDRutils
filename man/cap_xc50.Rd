@@ -11,7 +11,7 @@ cap_xc50(xc50, max_conc, min_conc = NA, capping_fold = 5)
 
 \item{max_conc}{Numeric value of the highest concentration in a dose series used to calculate the \code{xc50}.}
 
-\item{min_conc}{Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
+\item{min_conc}{Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}.
 If \code{NA} (default), using \code{max_conc/1e5} instead.}
 
 \item{capping_fold}{Integer value of the fold number to use for capping. Defaults to \code{5}.}

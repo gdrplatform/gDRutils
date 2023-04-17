@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.2
-Date: 2023-04-12
+Version: 0.99.4
+Date: 2023-04-14
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -37,8 +37,8 @@ Imports:
 Suggests:
     BiocStyle,
     futile.logger,
-    gDRstyle (>= 0.99.7),
-    gDRtestData (>= 0.99.1),
+    gDRstyle (>= 0.99.8),
+    gDRtestData (>= 0.99.3),
     knitr,
     lintr,
     purrr,
@@ -52,6 +52,7 @@ Suggests:
 biocViews: Software, Infrastructure
 VignetteBuilder: knitr
 ByteCompile: TRUE
+Roxygen: list(markdown = TRUE) 
 RoxygenNote: 7.2.3
 SwitchrLibrary: gDRutils
 DeploySubPath: gDRutils

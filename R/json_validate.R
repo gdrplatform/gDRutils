@@ -37,13 +37,10 @@ validate_json <- function(json, schema_path) {
                 error = FALSE)
 
     if (!isTRUE(dvjson)) {
-      list(
-        error = "JSON validation of data model failed",
-        exit_code = 2,
-        derror = attributes(dvjson)[["errors"]]
-      )
-    }
-    else {
+      list(error = "JSON validation of data model failed",
+           exit_code = 2,
+           derror = attributes(dvjson)[["errors"]])
+    } else {
       list(error = NULL,
            exit_code = 0,
            derror = NULL)

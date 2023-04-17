@@ -14,5 +14,5 @@ String representation of a JSON document.
 }
 \description{
 Create JSON document with MAE summary,
- currently only experiment names
+currently only experiment names
 }

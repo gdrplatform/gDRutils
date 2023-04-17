@@ -13,19 +13,19 @@ convert_mae_assay_to_dt(
 )
 }
 \arguments{
-\item{mae}{A \linkS4class{MultiAssayExperiment} object holding experiments with 
+\item{mae}{A \linkS4class{MultiAssayExperiment} object holding experiments with
 raw and/or processed dose-response data in its assays.}
 
 \item{assay_name}{String of name of the assay to transform within the \code{se}.}
 
-\item{experiment_name}{String of name of the experiment in `mae` whose `assay_name` should be converted.
-Default to `NULL` that all the experiment should be converted into one data.table object.}
+\item{experiment_name}{String of name of the experiment in \code{mae} whose \code{assay_name} should be converted.
+Default to \code{NULL} that all the experiment should be converted into one data.table object.}
 
 \item{include_metadata}{Boolean indicating whether or not to include \code{rowData(se)}
 and \code{colData(se)} in the returned data.table.
 Defaults to \code{TRUE}.}
 
-\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames 
+\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames
 nested within a \code{BumpyMatrix} assay.
 Defaults to \code{FALSE}.
 If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
@@ -52,5 +52,5 @@ convert_mae_assay_to_dt(mae, "Metrics")
 flatten
 }
 \author{
-Bartosz Czech <bartosz.czech@contractors.roche.com>
+Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
 }

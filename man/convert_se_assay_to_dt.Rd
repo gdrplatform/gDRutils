@@ -21,14 +21,14 @@ convert_se_assay_to_dt(
 and \code{colData(se)} in the returned data.table.
 Defaults to \code{TRUE}.}
 
-\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames 
+\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames
 nested within a \code{BumpyMatrix} assay.
 Defaults to \code{FALSE}.
 If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.}
 
 \item{wide_structure}{Boolean indicating whether or not to transform data.table into wide format.
-`wide_structure = TRUE` requires `retain_nested_rownames = TRUE`.}
+\code{wide_structure = TRUE} requires \code{retain_nested_rownames = TRUE}.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.
