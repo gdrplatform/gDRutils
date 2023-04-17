@@ -1,3 +1,6 @@
+# Change to v.0.99.5
+- Add R 4.2 as a dependency
+
 # Change to v.0.99.4
 - Fixed examples
 
