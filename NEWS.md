@@ -1,5 +1,8 @@
-# Change to v.0.99.5
+# Change to v.0.99.6
 - Extend the logic of `apply_bumpy_function`
+
+# Change to v.0.99.5
+- Add R 4.2 as a dependency
 
 # Change to v.0.99.4
 - Fixed examples

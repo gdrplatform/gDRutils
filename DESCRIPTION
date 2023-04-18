@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.5
-Date: 2023-04-17
+Version: 0.99.6
+Date: 2023-04-18
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -16,6 +16,8 @@ Description: This package contains utility functions used throughout the gDR pla
     validating. This package also has the necessary default constants for gDR platform.
 License: file LICENSE
 LazyLoad: yes
+Depends:
+    R (>= 4.2)
 Imports:
     checkmate,
     data.table,
