@@ -39,8 +39,8 @@ Imports:
 Suggests:
     BiocStyle,
     futile.logger,
-    gDRstyle (>= 0.99.8),
-    gDRtestData (>= 0.99.3),
+    gDRstyle (>= 0.99.11),
+    gDRtestData (>= 0.99.7),
     knitr,
     lintr,
     purrr,
