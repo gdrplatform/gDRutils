@@ -9,7 +9,8 @@ apply_bumpy_function(
   FUN,
   req_assay_name,
   out_assay_name,
-  parallelize = FALSE
+  parallelize = FALSE,
+  ...
 )
 }
 \arguments{
