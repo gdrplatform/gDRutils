@@ -1,3 +1,6 @@
+# Change to v.0.99.7
+- Move gDRtestData from Suggests to Imports
+
 # Change to v.0.99.6
 - Extend the logic of `apply_bumpy_function`
 

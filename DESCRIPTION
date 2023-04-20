@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.6
-Date: 2023-04-18
+Version: 0.99.7
+Date: 2023-04-20
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -22,6 +22,7 @@ Imports:
     checkmate,
     data.table,
     drc,
+    gDRtestData (>= 0.99.7),
     jsonlite,
     jsonvalidate,
     magrittr,
@@ -40,7 +41,6 @@ Suggests:
     BiocStyle,
     futile.logger,
     gDRstyle (>= 0.99.11),
-    gDRtestData (>= 0.99.7),
     knitr,
     lintr,
     purrr,
