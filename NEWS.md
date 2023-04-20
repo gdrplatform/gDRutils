@@ -1,3 +1,6 @@
+# Change to v.0.99.7
+- Clean-up vignette
+
 # Change to v.0.99.6
 - Extend the logic of `apply_bumpy_function`
 
