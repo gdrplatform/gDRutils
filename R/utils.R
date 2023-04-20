@@ -170,7 +170,7 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' @param req_assay_name String of the assay name in the \code{se} that the \code{FUN} will act on.
 #' @param out_assay_name String of the assay name that will contain the results of the applied function.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
-#'
+#' @param ... Additional args to be passed to teh \code{FUN}.
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
