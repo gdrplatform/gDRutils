@@ -1,3 +1,6 @@
+# Change to v.0.99.8
+- Switch to OSI license
+
 # Change to v.0.99.7
 - Clean-up vignette
 
