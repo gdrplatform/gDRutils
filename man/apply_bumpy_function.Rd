@@ -9,7 +9,8 @@ apply_bumpy_function(
   FUN,
   req_assay_name,
   out_assay_name,
-  parallelize = FALSE
+  parallelize = FALSE,
+  ...
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ Output of the function must return a data.table.}
 \item{out_assay_name}{String of the assay name that will contain the results of the applied function.}
 
 \item{parallelize}{Logical indicating whether or not to parallelize the computation.}
+
+\item{...}{Additional args to be passed to teh \code{FUN}.}
 }
 \value{
 The original \code{se} object with a new assay, \code{out_assay_name}.

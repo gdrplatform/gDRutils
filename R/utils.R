@@ -171,7 +171,7 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' @param req_assay_name String of the assay name in the \code{se} that the \code{FUN} will act on.
 #' @param out_assay_name String of the assay name that will contain the results of the applied function.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
-#'
+#' @param ... Additional args to be passed to teh \code{FUN}.
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
@@ -188,7 +188,12 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' )
 #' 
 #' @export
-apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parallelize = FALSE) {
+apply_bumpy_function <- function(se,
+                                 FUN,
+                                 req_assay_name,
+                                 out_assay_name,
+                                 parallelize = FALSE,
+                                 ...) {
   # Assertions:
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(req_assay_name)
@@ -204,8 +209,7 @@ apply_bumpy_function <- function(se, FUN, req_assay_name, out_assay_name, parall
     i <- x[["row"]]
     j <- x[["column"]]
     elem_df <- asy[i, j][[1]]
-    
-    store <- FUN(elem_df)
+    store <- FUN(elem_df, ...)
     if (is(store, "data.table") || is(store, "DFrame")) {
       if (nrow(store) != 0L) {
         store$row <- i

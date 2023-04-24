@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(gDRutils)
+suppressPackageStartupMessages(library(MultiAssayExperiment))
 ```
 # Overview
 `gDRutils` is the part of `gDR` suite. This package provides bunch of tools for, among others:
@@ -51,13 +52,15 @@ All the metrics data are stored inside `assays` of `SummarizedExperiment`. For t
 There are two functions working on `MultiAssayExperiment` object (`convert_mae_assay_to_dt`) and for `SummarizedExperiment` (`convert_se_assay_to_dt`).
 
 ```{r}
-convert_mae_assay_to_dt(mae, "Metrics")
+mdt <- convert_mae_assay_to_dt(mae, "Metrics")
+head(mdt, 3)
 ```
 or alternatively for `SummarizedExperiment` object:
 
 ```{r}
 se <- mae[[1]]
-convert_se_assay_to_dt(se, "Metrics")
+sdt <- convert_se_assay_to_dt(se, "Metrics")
+head(sdt, 3)
 ```
 
 ### Managing gDR identifiers

@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.6
-Date: 2023-04-20
+Version: 0.99.9
+Date: 2023-04-24
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -14,7 +14,7 @@ Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
 Description: This package contains utility functions used throughout the gDR platform. 
     Contaion many helper functions for maniplating data, including e.g. converting and 
     validating. This package also has the necessary default constants for gDR platform.
-License: file LICENSE
+License: Artistic-2.0
 LazyLoad: yes
 Depends:
     R (>= 4.2)
@@ -40,7 +40,7 @@ Suggests:
     BiocStyle,
     futile.logger,
     gDRstyle (>= 0.99.11),
-    gDRtestData (>= 0.99.7),
+    gDRtestData (>= 0.99.10),
     knitr,
     lintr,
     purrr,

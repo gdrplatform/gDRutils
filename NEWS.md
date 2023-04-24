@@ -1,5 +1,14 @@
-# Change to v.0.99.6
+# Change to v.0.99.9
 - Changed data.frame to data.table.
+
+# Change to v.0.99.8
+- Switch to OSI license
+
+# Change to v.0.99.7
+- Clean-up vignette
+
+# Change to v.0.99.6
+- Extend the logic of `apply_bumpy_function`
 
 # Change to v.0.99.5
 - Add R 4.2 as a dependency
