@@ -1,6 +1,6 @@
 pkgs:
   gDRtestData:
-    ver: '>=0.99.7'
+    ver: '>=0.99.10'
     url: gdrplatform/gDRtestData
     ref: master
     subdir: gDRtestData
