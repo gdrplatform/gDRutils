@@ -1,3 +1,6 @@
+# Change to v.0.99.9
+- Add support for merging combination-data assays
+
 # Change to v.0.99.8
 - Switch to OSI license
 
