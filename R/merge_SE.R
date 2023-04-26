@@ -15,8 +15,12 @@ merge_SE <- function(SElist,
                      discard_keys = c("normalization_type",
                                       "fit_source",
                                       unique(unlist(
-                                        lapply(SElist,get_SE_identifiers,
-                                               "barcode"))))) {
+                                        lapply(SElist,
+                                               get_SE_identifiers,
+                                               c("barcode",
+                                                 "concentration",
+                                                 "concentration2"),
+                                               simplify = FALSE))))){
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)

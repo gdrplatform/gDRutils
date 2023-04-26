@@ -52,7 +52,8 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   df_ <- S4Vectors::DataFrame(df_)
   all_cols <- colnames(df_)
   # Identify known data fields.
-  data_fields <- c(get_header("raw_data"), get_header("normalized_results"), get_header("averaged_results"),
+  data_fields <- c(get_header("raw_data"), get_header("normalized_results"),
+                   get_header("averaged_results"), get_header("combo_matrix_results"),
     get_header("metrics_results"), get_env_identifiers("concentration", simplify = TRUE),
     identifiers_md$well_position, identifiers_md$template, nested_keys)
   data_fields <- unique(data_fields)
