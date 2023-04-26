@@ -3,6 +3,11 @@ listMAE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
 listSE <- lapply(listMAE, function(x) x[[2]])
 names(listSE) <- c("combo1", "combo2")
 
+listMAE2 <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
+                             "final", full.names = TRUE)[1:2], readRDS)
+listSE2 <- lapply(listMAE, function(x) x[[1]])
+names(listSE2) <- c("combo1", "combo2")
+
 
 test_that("merge_assay works as expected", {
   normalizedMerged <- merge_assay(listSE, "Normalized")
@@ -28,16 +33,34 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
-  mergedSE <- purrr::quietly(merge_SE)(listSE, discard_keys = c("normalization_type", "fit_source"))
-  expect_length(mergedSE$warnings, 2)
+  mergedSE <- purrr::quietly(merge_SE)(listSE)
+  expect_length(mergedSE$warnings, 5)
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
   additional_col_name <- "QCS"
-  mergedSE2 <- purrr::quietly(merge_SE)(listSE, additional_col_name,
-                                        discard_keys = c("normalization_type", "fit_source"))
-  expect_length(mergedSE2$warnings, 2)
+  mergedSE2 <- purrr::quietly(merge_SE)(listSE, additional_col_name)
+  expect_length(mergedSE2$warnings, 5)
   assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
+  expect_identical(SummarizedExperiment::assayNames(listSE[[1]]),
+                   SummarizedExperiment::assayNames(mergedSE[[1]]))
   })
+
+
+test_that("merge_SE works as expected with combo matrix data", {
+  mergedSE <- purrr::quietly(merge_SE)(listSE2)
+  expect_length(mergedSE$warnings, 14)
+  checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
+  S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
+  validate_SE(mergedSE$result)
+  additional_col_name <- "QCS"
+  mergedSE2 <- purrr::quietly(merge_SE)(listSE2, additional_col_name)
+  expect_length(mergedSE2$warnings, 14)
+  assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
+  expect_true(additional_col_name %in% names(assayNormalized))
+  expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
+  expect_identical(SummarizedExperiment::assayNames(listSE2[[1]]),
+                   SummarizedExperiment::assayNames(mergedSE[[1]]))
+})
