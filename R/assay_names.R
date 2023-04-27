@@ -1,19 +1,22 @@
-ASSAY_INFO_TBL <- tibble::tribble(
-  ~ name, ~pname, ~ type, ~ group, ~ data_type,
-  "rawTreated", "Raw Treated", "raw", "raw", "single-agent",
-  "Controls", "Controls", "control", "core", "single-agent",
-  "Normalized", "Normalized", "normalized", "core", "single-agent",
-  "Averaged", "Averaged", "averaged", "core", "single-agent",
-  "Metrics", "Metrics", "metrics", "core", "single-agent",
-  "SmoothMatrix", "MX full", "smooth", "combo_base_mx", "combo",
-  "BlissExcess", "Bliss excess", "bliss_excess", "combo_base_excess", "combo",
-  "HSAExcess", "HSA excess", "hsa_excess", "combo_base_excess", "combo",
-  "HSAScore", "HSA excess", "hsa_score", "combo_score_excess", "combo",
-  "BlissScore", "Bliss excess", "bliss_score", "combo_score_excess", "combo",
-  "CIScore_50", "log2(CI) @ GR/IC50", "ci_score_50", "combo_score_mx", "combo",
-  "CIScore_80", "log2(CI) @ GR/IC80", "ci_score_80", "combo_score_mx", "combo",
-  "isobolograms", "isobolograms", "iso", "combo_iso", "combo"
-)
+ASSAY_INFO_TBL <- data.table::setDT(
+  list(
+    name = c("rawTreated", "Controls", "Normalized", "Averaged", "Metrics",
+             "SmoothMatrix", "BlissExcess", "HSAExcess", "HSAScore", "BlissScore",
+             "CIScore_50", "CIScore_80", "isobolograms"),
+    pname = c("Raw Treated", "Controls", "Normalized", "Averaged", "Metrics",
+              "MX full", "Bliss excess", "HSA excess", "HSA excess", "Bliss excess",
+              "log2(CI) @ GR/IC50", "log2(CI) @ GR/IC80", "isobolograms"),
+    type = c("raw", "control", "normalized", "averaged", "metrics", "smooth",
+             "bliss_excess", "hsa_excess", "hsa_score", "bliss_score",
+             "ci_score_50", "ci_score_80", "iso"),
+    group = c("raw", "core", "core", "core", "core", "combo_base_mx",
+              "combo_base_excess", "combo_base_excess", "combo_score_excess",
+              "combo_score_excess", "combo_score_mx", "combo_score_mx", "combo_iso"),
+    data_type = c("single-agent", "single-agent", "single-agent", "single-agent",
+                  "single-agent", "combo", "combo", "combo", "combo", "combo",
+                  "combo", "combo", "combo")
+    )
+  )
 
 
 #' get default assay names
@@ -92,7 +95,7 @@ get_env_assay_names <-
 #'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_env_assay_names}.
-#' 
+#'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 #' @return  charvec
@@ -129,10 +132,10 @@ get_combo_assay_names <- function(se = NULL, ...) {
 }
 
 #' get names of combo base assays
-#' 
+#'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_combo_assay_names}.
-#' 
+#'
 #' @return  charvec
 #' @export
 #'
@@ -145,12 +148,12 @@ get_combo_base_assay_names <- function(se = NULL, ...) {
 }
 
 #' get names of combo score assays
-#' 
+#'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_combo_assay_names}.
-#' 
+#'
 #' @return  charvec
-#' 
+#'
 #' @export
 #' 
 #' @examples 

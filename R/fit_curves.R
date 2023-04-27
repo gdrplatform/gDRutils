@@ -1,10 +1,10 @@
 #' Fit curves
 #'
-#' Fit GR and RV curves from a data.frame.
+#' Fit GR and RV curves from a data.table.
 #'
-#' @param df_ data.frame containing data to fit. See details.
-#' @param series_identifiers character vector of the column names in \code{data.frame}
-#' whose combination represents a unique series for which to fit curves. 
+#' @param df_ data.table containing data to fit. See details.
+#' @param series_identifiers character vector of the column names in \code{data.table}
+#' whose combination represents a unique series for which to fit curves.
 #' @param e_0 numeric value representing the \code{x_0} value for the RV curve.
 #' Defaults to \code{1}.
 #' @param GR_0 numeric value representing the \code{x_0} value for the GR curve.
@@ -22,7 +22,7 @@
 #' @param normalization_type character vector of types of curves to fit.
 #' Defaults to \code{c("GR", "RV")}.
 #'
-#' @return data.frame of fit parameters as specified by the \code{normalization_type}.
+#' @return data.table of fit parameters as specified by the \code{normalization_type}.
 #'
 #' @details
 #' The \code{df_} expects the following columns:
@@ -32,8 +32,8 @@
 #'  }
 #'
 #' The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
-#' The purpose of this statistic is to enable comparison across different experiments with slightly 
-#' different concentration ranges. 
+#' The purpose of this statistic is to enable comparison across different experiments with slightly
+#' different concentration ranges.
 #'
 #' @export
 #'
@@ -45,28 +45,30 @@ fit_curves <- function(df_,
                        range_conc = c(5e-3, 5),
                        force_fit = FALSE,
                        pcutoff = 0.05,
-                       cap = 0.1, 
+                       cap = 0.1,
                        normalization_type = c("GR", "RV")) {
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
   stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
   if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
-    stop(sprintf("unknown curve type: '%s'", 
+    stop(sprintf("unknown curve type: '%s'",
       paste0(normalization_type[bad_normalization_type], collapse = ", ")))
-  } 
+  }
 
   req_fields <- series_identifiers
   opt_fields <- NULL
-  
+
   req_fields <- c(req_fields, "x")
   opt_fields <- "x_std"
-  
+
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
 
-  df_[, setdiff(opt_fields, colnames(df_))] <- NA
+  if (length(setdiff(opt_fields, colnames(df_))) > 0L) {
+    df_[, setdiff(opt_fields, colnames(df_))] <- NA
+  }
 
   df_metrics <- .apllyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
                                   pcutoff, cap, n_point_cutoff)
@@ -77,7 +79,7 @@ fit_curves <- function(df_,
     stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
   }
   rownames(df_metrics) <- paste0(df_metrics$normalization_type, "_", df_metrics$fit_source)
-
+  
   concsNA <- all(is.na(unique(df_[[series_identifiers]])))
   if (concsNA) df_metrics[] <- NA
   df_metrics
@@ -86,7 +88,7 @@ fit_curves <- function(df_,
 #' @keywords internal
 .apllyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
                             pcutoff, cap, n_point_cutoff) {
-  
+
   df_metrics <- NULL
   concs <- unique(df_[[series_identifiers]])
   med_concs <- stats::median(concs)
@@ -98,15 +100,15 @@ fit_curves <- function(df_,
   if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
       concs,
-      df_$x[df_$normalization_type == "RV"], 
-      df_$x_std[df_$normalization_type == "RV"], 
+      df_$x[df_$normalization_type == "RV"],
+      df_$x_std[df_$normalization_type == "RV"],
       priors = c(2, 0.4, 1, med_concs),
       lower = c(0.1, 0, 0, min_concs / 10),
-      x_0 = e_0, 
-      range_conc = range_conc, 
-      force_fit = force_fit, 
-      pcutoff = pcutoff, 
-      cap = cap, 
+      x_0 = e_0,
+      range_conc = range_conc,
+      force_fit = force_fit,
+      pcutoff = pcutoff,
+      cap = cap,
       n_point_cutoff = n_point_cutoff
     )
     df_metrics$normalization_type <- "RV"
@@ -115,23 +117,22 @@ fit_curves <- function(df_,
   if ("GR" %in% normalization_type) {
     df_gr <- logisticFit(
       concs,
-      df_$x[df_$normalization_type == "GR"], 
-      df_$x_std[df_$normalization_type == "GR"], 
+      df_$x[df_$normalization_type == "GR"],
+      df_$x_std[df_$normalization_type == "GR"],
       priors = c(2, 0.1, 1, med_concs),
       lower = c(0.1, -1, -1, min_concs / 10),
-      x_0 = GR_0, 
-      range_conc = range_conc, 
-      force_fit = force_fit, 
-      pcutoff = pcutoff, 
-      cap = cap, 
+      x_0 = GR_0,
+      range_conc = range_conc,
+      force_fit = force_fit,
+      pcutoff = pcutoff,
+      cap = cap,
       n_point_cutoff = n_point_cutoff
     )
     df_gr$normalization_type <- "GR"
     df_metrics <- rbind(df_metrics, df_gr)
   }
-  
+
   df_metrics$fit_source <- "gDR"
-  
   df_metrics
 }
 
@@ -155,27 +156,27 @@ fit_curves <- function(df_,
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
 #' @param capping_fold Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.
 #'
-#' @return data.frame with metrics and fit parameters.
+#' @return data.table with metrics and fit parameters.
 #'
 #' @details
-#' Implementation of the genedata approach for curve fit: 
+#' Implementation of the genedata approach for curve fit:
 #' https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity #nolint
 #'
 #' The output parameter names correspond to the following definitions:
 #' \describe{
 #'  \item{x_mean}{The mean of a given dose-response metric}
 #'  \item{x_AOC_range}{The range of the area over the curve}
-#'  \item{x_AOC}{The area over the GR curve or, respectively, under the relative 
+#'  \item{x_AOC}{The area over the GR curve or, respectively, under the relative
 #'  cell count curve, averaged over the range of concentration values}
-#'  \item{xc50}{The concentration at which the effect reaches a value of 0.5 based 
+#'  \item{xc50}{The concentration at which the effect reaches a value of 0.5 based
 #'  on interpolation of the fitted curve}
 #'  \item{x_max}{The maximum effect of the drug}
 #'  \item{ec50}{The drug concentration at half-maximal effect}
-#'  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response 
+#'  \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response
 #'  data as concentration goes to infinity}
-#'  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0 
+#'  \item{x_0}{The asymptotic metric value corresponding to a concentration of 0
 #'  for the primary drug}
-#'  \item{h}{The hill coefficient of the fitted curve, which reflects how steep 
+#'  \item{h}{The hill coefficient of the fitted curve, which reflects how steep
 #'  the dose-response curve is}
 #'  \item{r2}{The goodness of the fit}
 #'  \item{x_sd_avg}{The standard deviation of GR/IC}
@@ -214,13 +215,14 @@ logisticFit <-
     if (any(concs < 0)) {
       stop("logisticFit accepts only unlogged concentrations, negative concentrations are detected")
     }
+    
     out <- .setup_metric_output()
     out$maxlog10Concentration <- log10(max(concs))
     out$N_conc <- length(unique(concs))
     out$x_sd_avg <- mean(std_norm_values, na.rm = TRUE)
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
     norm_values <- pmin(norm_values, (ifelse(is.na(x_0), 1, x_0) + cap))
-    df_ <- data.frame(concs = concs, norm_values = norm_values)
+    df_ <- data.table::data.table(concs = concs, norm_values = norm_values)
     if (has_dups(df_$concs)) {
       warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
@@ -230,8 +232,7 @@ logisticFit <-
     out$x_mean <- mean_norm_value
     out$x_AOC <- .calculate_complement(mean_norm_value)
     out$x_max <- .calculate_x_max(df_)
-    
-    ## Perform a 3-param or 4-param fit. 
+    ## Perform a 3-param or 4-param fit.
     ## Fit type is determined based on number of free variables available.
     fit_param <- c("h", "x_inf", "x_0", "ec50")
     controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
@@ -241,7 +242,7 @@ logisticFit <-
                       priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, 
                       concs = concs, controls = controls, range_conc = range_conc, pcutoff = pcutoff, 
                       capping_fold = capping_fold, mean_norm_value = mean_norm_value)
-    data.frame(out)
+    data.table::data.table(data.frame(out))
   }
 
 #' @keywords internal
@@ -372,10 +373,10 @@ logisticFit <-
 #' @param c Numeric vector representing concentrations to predict efficacies for.
 #' @param x_inf Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
 #'  data as concentration goes to infinity.
-#' @param x_0 Numeric vector representing the asymptotic metric value corresponding to a concentration of 0 
+#' @param x_0 Numeric vector representing the asymptotic metric value corresponding to a concentration of 0
 #'  for the primary drug.
 #' @param ec50 Numeric vector representing the drug concentration at half-maximal effect.
-#' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep 
+#' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep
 #'  the dose-response curve is.
 #'
 #' @return Numeric vector representing predicted efficacies from given concentrations and fit parameters.
@@ -408,10 +409,10 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #' @param efficacy Numeric vector representing efficacies to predict concentrations for.
 #' @param x_inf Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
 #'  data as concentration goes to infinity.
-#' @param x_0 Numeric vector representing the asymptotic metric value corresponding to a concentration of 0 
+#' @param x_0 Numeric vector representing the asymptotic metric value corresponding to a concentration of 0
 #'  for the primary drug.
 #' @param ec50 Numeric vector representing the drug concentration at half-maximal effect.
-#' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep 
+#' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep
 #'
 #' @return Numeric vector representing predicted concentrations from given efficacies and fit parameters.
 #'
@@ -468,7 +469,7 @@ logistic_metrics <- function(c, x_metrics) {
 }
 
 
-# Estimate values for undefined IC/GR50 values. 
+# Estimate values for undefined IC/GR50 values.
 #' @keywords internal
 .estimate_xc50 <- function(param) {
   if (all(is.na(param))) {
@@ -522,7 +523,7 @@ average_dups <- function(df, col) {
 #' @keywords internal
 .set_model_fit_params <- function(out, model, fit_param) {
   for (p in fit_param) {
-    # drm will output model with the ":(Intercept)" term concatenated at end. 
+    # drm will output model with the ":(Intercept)" term concatenated at end.
     out[[p]] <- stats::coef(model)[[paste0(p, ":(Intercept)")]]
   }
   out
@@ -586,9 +587,9 @@ average_dups <- function(df, col) {
 .predict_mean_from_model <- function(model, min, max, intervals = 100) {
   lg_min_con <- log10(min)
   lg_max_con <- log10(max)
-  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
+  inputs <- data.table::data.table(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
   mean(stats::predict(model, inputs), na.rm = TRUE)
-} 
+}
 
 
 #' @keywords internal
@@ -597,8 +598,8 @@ average_dups <- function(df, col) {
 }
 
 
-# 'x_max' can be considered either the lowest readout (max efficacy) 
-# or the efficacy at the max concentration. We take the min 
+# 'x_max' can be considered either the lowest readout (max efficacy)
+# or the efficacy at the max concentration. We take the min
 # of the two highest concentrations as a compromise.
 #' @keywords internal
 .calculate_x_max <- function(df) {

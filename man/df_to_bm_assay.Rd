@@ -11,7 +11,7 @@ df_to_bm_assay(
 )
 }
 \arguments{
-\item{data}{tibble or data.frame with drug-response data}
+\item{data}{data.table with drug-response data}
 
 \item{data_type}{string type of data to be returned: all, for untreated conditions only ('untreated')
 or for treated conditions only ('treated')}
@@ -22,7 +22,7 @@ or for treated conditions only ('treated')}
 BumpyMatrix object
 }
 \description{
-Convert data.frame with dose-reponse data into a BumpyMatrix assay.
+Convert data.table with dose-reponse data into a BumpyMatrix assay.
 }
 \details{
 The 'assay' is simply a BumpyMatrix object with rownames being the treatment ids,

@@ -1,3 +1,6 @@
+# Change to v.0.99.9
+- Changed data.frame to data.table.
+
 # Change to v.0.99.8
 - Switch to OSI license
 
