@@ -50,7 +50,7 @@ fit_curves <- function(df_,
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
-  stopifnot(any(inherits(df_, "data.table")))
+  stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
   if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'",
       paste0(normalization_type[bad_normalization_type], collapse = ", ")))
