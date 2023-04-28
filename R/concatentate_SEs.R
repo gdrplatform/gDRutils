@@ -110,8 +110,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   rowmd <- colnames(rowData(se))
   colmd <- colnames(colData(se))
   if (any(rfields <- fields %in% rowmd) || any(cfields <- fields %in% colmd)) {
-    stop(sprintf("fields '%s' are already promoted fields",
-                 paste0(fields[rfields || cfields], collapse = ", ")))
+    stop(sprintf("fields '%s' are already promoted fields", paste0(fields[rfields || cfields], collapse = ", ")))
   }
   if (MARGIN == 1) {
     rowmd <- c(rowmd, fields)
