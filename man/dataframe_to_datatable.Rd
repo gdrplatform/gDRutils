@@ -16,5 +16,5 @@ a data.table object
 Convert object to data.table using \code{data.table::setDT}
 }
 \author{
-Sergiu Mocanu <sergiu.mocanu@contractors.roche.com>
+Sergiu Mocanu \href{mailto:sergiu.mocanu@contractors.roche.com}{sergiu.mocanu@contractors.roche.com}
 }

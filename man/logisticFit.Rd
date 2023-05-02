@@ -58,32 +58,32 @@ https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dos
 
 The output parameter names correspond to the following definitions:
 \describe{
- \item{x_mean}{The mean of a given dose-response metric}
- \item{x_AOC_range}{The range of the area over the curve}
- \item{x_AOC}{The area over the GR curve or, respectively, under the relative
- cell count curve, averaged over the range of concentration values}
- \item{xc50}{The concentration at which the effect reaches a value of 0.5 based
- on interpolation of the fitted curve}
- \item{x_max}{The maximum effect of the drug}
- \item{ec50}{The drug concentration at half-maximal effect}
- \item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response
- data as concentration goes to infinity}
- \item{x_0}{The asymptotic metric value corresponding to a concentration of 0
- for the primary drug}
- \item{h}{The hill coefficient of the fitted curve, which reflects how steep
- the dose-response curve is}
- \item{r2}{The goodness of the fit}
- \item{x_sd_avg}{The standard deviation of GR/IC}
- \item{fit_type}{This will be given by one of the following:
-  \itemize{
-   \item{"DRC4pHillFitModel"} Successfully fit with a 4-parameter model
-   \item{"DRC3pHillFitModelFixS0"} Successfully fit with a 3-parameter model
-   \item{"DRCConstantFitResult"} Successfully fit with a constant fit
-   \item{"DRCTooFewPointsToFit"} Not enough points to run a fit
-   \item{"DRCInvalidFitResult"} Fit was attempted but failed
-  }
- }
- \item{maxlog10Concentration}{The highest log10 concentration}
- \item{N_conc}{Number of unique concentrations}
+\item{x_mean}{The mean of a given dose-response metric}
+\item{x_AOC_range}{The range of the area over the curve}
+\item{x_AOC}{The area over the GR curve or, respectively, under the relative
+cell count curve, averaged over the range of concentration values}
+\item{xc50}{The concentration at which the effect reaches a value of 0.5 based
+on interpolation of the fitted curve}
+\item{x_max}{The maximum effect of the drug}
+\item{ec50}{The drug concentration at half-maximal effect}
+\item{x_inf}{The asymptotic value of the sigmoidal fit to the dose-response
+data as concentration goes to infinity}
+\item{x_0}{The asymptotic metric value corresponding to a concentration of 0
+for the primary drug}
+\item{h}{The hill coefficient of the fitted curve, which reflects how steep
+the dose-response curve is}
+\item{r2}{The goodness of the fit}
+\item{x_sd_avg}{The standard deviation of GR/IC}
+\item{fit_type}{This will be given by one of the following:
+\itemize{
+\item{"DRC4pHillFitModel"} Successfully fit with a 4-parameter model
+\item{"DRC3pHillFitModelFixS0"} Successfully fit with a 3-parameter model
+\item{"DRCConstantFitResult"} Successfully fit with a constant fit
+\item{"DRCTooFewPointsToFit"} Not enough points to run a fit
+\item{"DRCInvalidFitResult"} Fit was attempted but failed
+}
+}
+\item{maxlog10Concentration}{The highest log10 concentration}
+\item{N_conc}{Number of unique concentrations}
 }
 }
