@@ -273,7 +273,8 @@ logisticFit <-
     df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
     df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
     f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
-    if ((!force_fit) & ((exists("f_pval") & !is.na(f_pval) & f_pval >= pcutoff) | is.na(out$ec50))) {
+    if (all((!force_fit), 
+           any(all(exists("f_pval"), !is.na(f_pval), f_pval >= pcutoff), is.na(out$ec50)))) {
       stop(fitting_handler(
         "constant_fit",
         message = sprintf("fit is not statistically significant (p=%.2f), setting constant fit", f_pval)
