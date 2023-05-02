@@ -1,3 +1,6 @@
+# Change to v.0.99.10
+- Refactor code with single ampersand in if statements
+
 # Change to v.0.99.9
 - Changed data.frame to data.table.
 
