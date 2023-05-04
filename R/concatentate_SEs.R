@@ -216,7 +216,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #' mae <- get_synthetic_data("finalMAE_small.RDS") 
 #' se <- mae[[1]]
 #' assay <- SummarizedExperiment::assay(se)
-#' aggregate_assay(assay, FUN = sum, by = c("Barcode"))
+#' aggregate_assay(assay, FUN = mean, by = c("Barcode"))
 #' 
 #' @export
 aggregate_assay <- function(asy, by, FUN) {

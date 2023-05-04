@@ -7,7 +7,9 @@
 merge_SE(
   SElist,
   additional_col_name = "data_source",
-  discard_keys = c("normalization_type", "fit_source", "Metrics_rownames")
+  discard_keys = c("normalization_type", "fit_source", "record_id", "swap_sa",
+    "control_type", unique(unlist(lapply(SElist, get_SE_identifiers, c("barcode",
+    "concentration", "concentration2"), simplify = FALSE))))
 )
 }
 \arguments{

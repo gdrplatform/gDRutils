@@ -8,6 +8,12 @@ listMAE2 <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
 listSE2 <- lapply(listMAE, function(x) x[[1]])
 names(listSE2) <- c("combo1", "combo2")
 
+listSE3 <- c(listSE[1], listSE2[2])
+
+listSE4 <- c(listSE[1], ligand = readRDS(
+  list.files(system.file(package = "gDRtestData", "testdata"),
+             "Ligand", full.names = TRUE))[[1]])
+
 
 test_that("merge_assay works as expected", {
   normalizedMerged <- merge_assay(listSE, "Normalized")
@@ -63,4 +69,21 @@ test_that("merge_SE works as expected with combo matrix data", {
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
   expect_identical(SummarizedExperiment::assayNames(listSE2[[1]]),
                    SummarizedExperiment::assayNames(mergedSE[[1]]))
+})
+
+test_that("merge_SE works as expected with mixed data types", {
+  mergedSE <- purrr::quietly(merge_SE)(listSE3)
+  expect_length(mergedSE$warnings, 14)
+  checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
+  S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
+  validate_SE(mergedSE$result)
+})
+
+
+test_that("merge_SE works with data with additional perturbations", {
+  mergedSE <- purrr::quietly(merge_SE)(listSE4)
+  expect_length(mergedSE$warnings, 5)
+  checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
+  validate_SE(mergedSE$result)
+  expect_equal(dim(mergedSE$result), c(10, 5))
 })

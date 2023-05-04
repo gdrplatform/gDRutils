@@ -14,6 +14,9 @@ merge_SE <- function(SElist,
                      additional_col_name = "data_source",
                      discard_keys = c("normalization_type",
                                       "fit_source",
+                                      "record_id",
+                                      "swap_sa",
+                                      "control_type",
                                       unique(unlist(
                                         lapply(SElist,
                                                get_SE_identifiers,
@@ -102,17 +105,24 @@ merge_assay <- function(SElist,
   
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(assay_name)
-  lapply(SElist, function(x) validate_se_assay_name(x, assay_name))
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
 
-  DT <- if (is.null(additional_col_name)) {
-    data.table::rbindlist(lapply(names(SElist), function(y) {
-      convert_se_assay_to_dt(SElist[[y]], assay_name)}), fill = TRUE)
-  } else {
-    data.table::rbindlist(lapply(names(SElist), function(y) {
-      convert_se_assay_to_dt(SElist[[y]], assay_name)[, eval(additional_col_name) := rep_len(y, .N)]}), fill = TRUE)
-  }
+  SElist <- lapply(SElist, function(x) {
+    if (assay_name %in% SummarizedExperiment::assayNames(x)) {
+      x
+    } else {
+      suppressWarnings(SummarizedExperiment::assay(x, assay_name) <-
+        BumpyMatrix::splitAsBumpyMatrix(S4Vectors::DataFrame(x = rep(NA, product(dim(x)))),
+                                        row = rownames(x), column = colnames(x)))
+      x
+    }
+  })
+    
+  DT <- data.table::rbindlist(lapply(setNames(names(SElist), names(SElist)),
+                                     function(y) {
+      convert_se_assay_to_dt(SElist[[y]], assay_name)
+    }),  fill = TRUE, idcol = additional_col_name)
   
 
   DT$rId <- DT$cId <- NULL
