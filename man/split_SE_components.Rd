@@ -28,11 +28,11 @@ to identify the different components of a \linkS4class{SummarizedExperiment} obj
 \details{
 Named list containing the following elements:
 \itemize{
- \item{"treatment_md": }{treatment metadata}
- \item{"condition_md": }{condition metadata}
- \item{"data_fields": }{all data.table column names corresponding to fields nested within a BumpyMatrix cell}
- \item{"experiment_md": }{metadata that is constant for all entries of the data.table}
- \item{"identifiers_md": }{key identifier mappings}
+\item{"treatment_md": }{treatment metadata}
+\item{"condition_md": }{condition metadata}
+\item{"data_fields": }{all data.table column names corresponding to fields nested within a BumpyMatrix cell}
+\item{"experiment_md": }{metadata that is constant for all entries of the data.table}
+\item{"identifiers_md": }{key identifier mappings}
 }
 
 The \code{nested_keys} provides the user the opportunity to specify that they would not
@@ -49,4 +49,8 @@ and any remaining columns that represent constant metadata fields across all row
 Next, any cell line metadata will be heuristically extracted.
 Finally, all remaining columns will be combined on either the rows or columns as specified by
 \code{combine_on}.
+}
+\examples{
+split_SE_components(data.table::data.table(clid = "CL1", Gnumber = "DrugA"))
+
 }

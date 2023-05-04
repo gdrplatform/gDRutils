@@ -7,6 +7,10 @@
 #' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
 #'
+#' @examples
+#' se1 <- get_synthetic_data("finalMAE_small.RDS")[[1]]
+#' merge_SE(list(se1 = se1, se2 = se1))
+#'
 #' @return merged SummarizedExperiment object
 #' @export
 #'

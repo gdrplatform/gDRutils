@@ -15,6 +15,10 @@ a data.table object
 \description{
 Convert object to data.table using \code{data.table::setDT}
 }
+\examples{
+dataframe_to_datatable(list(a = 2)) 
+
+}
 \author{
-Sergiu Mocanu <sergiu.mocanu@contractors.roche.com>
+Sergiu Mocanu \href{mailto:sergiu.mocanu@contractors.roche.com}{sergiu.mocanu@contractors.roche.com}
 }
