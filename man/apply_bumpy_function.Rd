@@ -17,7 +17,7 @@ apply_bumpy_function(
 \item{se}{A \code{SummarizedExperiment} object with bumpy matrices.}
 
 \item{FUN}{A function that will be applied to each element of the matrix in assay \code{req_assay_name}.
-Output of the function must return a data.frame.}
+Output of the function must return a data.table.}
 
 \item{req_assay_name}{String of the assay name in the \code{se} that the \code{FUN} will act on.}
 
@@ -37,7 +37,7 @@ Apply a user-specified function to every element of a bumpy matrix.
 mae <- get_synthetic_data("finalMAE_small.RDS")
 se <- mae[[1]]
 FUN <- function(x) {
-  data.frame(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
+  data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
 } 
 apply_bumpy_function(
   se, 

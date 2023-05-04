@@ -18,9 +18,9 @@ fit_curves(
 )
 }
 \arguments{
-\item{df_}{data.frame containing data to fit. See details.}
+\item{df_}{data.table containing data to fit. See details.}
 
-\item{series_identifiers}{character vector of the column names in \code{data.frame}
+\item{series_identifiers}{character vector of the column names in \code{data.table}
 whose combination represents a unique series for which to fit curves.}
 
 \item{e_0}{numeric value representing the \code{x_0} value for the RV curve.
@@ -48,10 +48,10 @@ Defaults to \code{0.1}.}
 Defaults to \code{c("GR", "RV")}.}
 }
 \value{
-data.frame of fit parameters as specified by the \code{normalization_type}.
+data.table of fit parameters as specified by the \code{normalization_type}.
 }
 \description{
-Fit GR and RV curves from a data.frame.
+Fit GR and RV curves from a data.table.
 }
 \details{
 The \code{df_} expects the following columns:

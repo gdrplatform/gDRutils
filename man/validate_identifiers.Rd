@@ -12,7 +12,7 @@ validate_identifiers(
 )
 }
 \arguments{
-\item{df}{data.frame with \code{colnames}.}
+\item{df}{data.table with \code{colnames}.}
 
 \item{identifiers}{Named list of identifiers where the \code{names} are standardized identifier names.
 If not passed, defaults to \code{get_env_identifiers()}.}

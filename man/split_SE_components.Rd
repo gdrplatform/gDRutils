@@ -7,7 +7,7 @@
 split_SE_components(df_, nested_keys = NULL, combine_on = 1L)
 }
 \arguments{
-\item{df_}{data.frame with drug-response data}
+\item{df_}{data.table with drug-response data}
 
 \item{nested_keys}{character vector of keys to exclude from the row or column metadata,
 and to instead nest within an element of the matrix. See details.}
@@ -21,25 +21,25 @@ named list containing different elements of a \linkS4class{SummarizedExperiment}
 see details.
 }
 \description{
-Divide the columns of an input data.frame into treatment metadata, condition metadata,
+Divide the columns of an input data.table into treatment metadata, condition metadata,
 experiment metadata, and assay data for further analysis. This will most commonly be used
 to identify the different components of a \linkS4class{SummarizedExperiment} object.
 }
 \details{
 Named list containing the following elements:
 \itemize{
-\item{"treatment_md": }{treatment metadata}
-\item{"condition_md": }{condition metadata}
-\item{"data_fields": }{all data.frame column names corresponding to fields nested within a BumpyMatrix cell}
-\item{"experiment_md": }{metadata that is constant for all entries of the data.frame}
-\item{"identifiers_md": }{key identifier mappings}
+ \item{"treatment_md": }{treatment metadata}
+ \item{"condition_md": }{condition metadata}
+ \item{"data_fields": }{all data.table column names corresponding to fields nested within a BumpyMatrix cell}
+ \item{"experiment_md": }{metadata that is constant for all entries of the data.table}
+ \item{"identifiers_md": }{key identifier mappings}
 }
 
 The \code{nested_keys} provides the user the opportunity to specify that they would not
 like to use that metadata field as a differentiator of the treatments, and instead, incorporate it
 into a nested \code{DataFrame} in the BumpyMatrix matrix object.
 
-In the event that if any of the \code{nested_keys} are constant throughout the whole data.frame,
+In the event that if any of the \code{nested_keys} are constant throughout the whole data.table,
 they will still be included in the DataFrame of the BumpyMatrix and not in the experiment_metadata.
 
 Columns within the \code{df_} will be identified through the following logic:

@@ -89,10 +89,10 @@ merge_SE <- function(SElist,
 #' 
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
-#' se <- mae[[1]]
+
 #' listSE <- list(
-#'   combo1 = se, 
-#'   combo2 = se
+#'   combo1 = mae[[1]], 
+#'   sa = mae[[2]]
 #' )
 #' merge_assay(listSE, "Normalized")
 #' 

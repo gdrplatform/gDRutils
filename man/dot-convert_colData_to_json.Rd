@@ -11,7 +11,7 @@
 )
 }
 \arguments{
-\item{cdata}{data.frame of \code{colData}.}
+\item{cdata}{data.table of \code{colData}.}
 
 \item{identifiers}{charvec with identifiers}
 
@@ -29,13 +29,16 @@ and tidies formatting to be condusive to joining
 with other JSON responses.
 }
 \examples{
-cdata <- data.frame(mycellline = letters, mycelllinename = letters, mycelllinetissue = letters, 
-                   cellline_ref_div_time = "cellline_ref_div_time")
+cdata <- data.table::data.table(
+  mycellline = letters, 
+  mycelllinename = letters, 
+  mycelllinetissue = letters,
+  cellline_ref_div_time = "cellline_ref_div_time")
 identifiers <- list(cellline = "mycellline",
                     cellline_name = "mycelllinename",
                     cellline_ref_div_time = "cellline_ref_div_time",
                     cellline_tissue = "mycelllinetissue")
-gDRutils:::.convert_colData_to_json(cdata, identifiers) 
+gDRutils:::.convert_colData_to_json(cdata, identifiers)
 
 }
 \keyword{internal}

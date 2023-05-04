@@ -55,7 +55,7 @@ test_that("assert_choices",  {
   expect_null(assert_choices(letters[1:2], letters))
   expect_null(assert_choices(1:5, 1:10))
   expect_null(assert_choices(1, 1:10))
-  
+
   ### errors
   err_msg <- sprintf("Assertion on '%s' failed.", letters[8])
   expect_error(assert_choices(letters[5:8], letters[1:7]), err_msg)
@@ -71,7 +71,7 @@ test_that("MAEpply works as expected", {
   v1 <- unique(MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE))
   expect_length(v1, 14)
   expect_true(inherits(v1, "character"))
-  
+
   v2 <- unique(MAEpply(maeReal, SummarizedExperiment::rowData, unify = TRUE))
   expect_identical(vapply(dimnames(v2), length, numeric(1)), c(7, 7))
   expect_true(inherits(v2, "data.frame"))
@@ -102,23 +102,23 @@ test_that("mrowData works as expected", {
   mr <- mrowData(maeReal)
   expect_identical(vapply(dimnames(mr), length, numeric(1)), c(7, 7))
   checkmate::expect_class(mr, "data.frame")
-  
+
   mr <- mrowData(empty_mae)
-  expect_identical(mr, data.frame())
+  expect_identical(mr, data.table::data.table())
 })
-  
+
 test_that("mcolData works as expected", {
   mc <- mcolData(maeReal)
   expect_identical(vapply(dimnames(mc), length, numeric(1)), c(6, 4))
   checkmate::expect_class(mc, "data.frame")
-  
+
   mc <- mcolData(empty_mae)
-  expect_identical(mc, data.frame())
+  expect_identical(mc, data.table::data.table())
 })
 
 test_that("apply_bumpy_function works as expected", {
   n <- 1000
-  df <- data.frame(row = sample(LETTERS, n, replace = TRUE), 
+  df <- data.table::data.table(row = sample(LETTERS, n, replace = TRUE),
     column = sample(LETTERS, n, replace = TRUE),
     a = runif(n),
     b = runif(n))
@@ -132,7 +132,7 @@ test_that("apply_bumpy_function works as expected", {
 
   # Output is bumpy matrix.
   FUN <- function(x) {
-    data.frame(y = x$a + x$b, z = x$a - x$b)
+    data.table::data.table(y = x$a + x$b, z = x$a - x$b)
   }
   bumpy_out <- apply_bumpy_function(se, FUN = FUN, req_assay_name = "bumpy", out_assay_name = "bumpy_mtx")
   expect_true(is(bumpy_out, "SummarizedExperiment"))
