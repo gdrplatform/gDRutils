@@ -46,8 +46,8 @@ test_that("standardize_MAE works as expected",  {
     mae_standardized <- standardize_mae(mae),
     "overwriting existing metadata entry: 'identifiers'"
   )
-  expect_equal(get_MAE_identifiers(mae_standardized),
-               get_MAE_identifiers(mae_original))
+  expect_equal(lapply(get_MAE_identifiers(mae_standardized), lapply, sort),
+               lapply(get_MAE_identifiers(mae_original), lapply, sort))
   expect_equal(convert_mae_assay_to_dt(mae_standardized, "RawTreated"),
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })
