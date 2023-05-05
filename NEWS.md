@@ -1,3 +1,6 @@
+# Change to v.0.99.10
+- Removed `cotreatment` entry from EXPERIMENT_GROUPS
+
 # Change to v.0.99.9
 - Changed data.frame to data.table.
 
