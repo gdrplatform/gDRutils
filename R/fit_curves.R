@@ -165,7 +165,12 @@ fit_curves <- function(df_,
 #' @param capping_fold Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.
 #'
 #' @examples
-#' logisticFit(0.1, NA)
+#' logisticFit(
+#' c(0.001, 0.00316227766016838, 0.01, 0.0316227766016838),
+#' c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482),
+#' rep(0.1, 4),
+#' priors = c(2, 0.4, 1, 0.00658113883008419)
+#' )
 #'
 #' @return data.table with metrics and fit parameters.
 #'
