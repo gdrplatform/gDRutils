@@ -112,7 +112,8 @@ merge_assay <- function(SElist,
   
 
   DT$rId <- DT$cId <- NULL
-  BM <- df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
+  discard_keys <- intersect(names(DT), c(discard_keys, additional_col_name))
+  BM <- df_to_bm_assay(DT, discard_keys = discard_keys)
 
   list(DT = DT, BM = BM)
 }
