@@ -26,8 +26,8 @@ test_that("standardize_se works as expected",  {
     se_standardized <- standardize_se(se),
     "overwriting existing metadata entry: 'identifiers'"
   )
-  expect_equal(get_SE_identifiers(se_standardized),
-               get_SE_identifiers(se_original))
+  expect_equal(lapply(get_SE_identifiers(se_standardized), sort),
+               lapply(get_SE_identifiers(se_original), sort))
   expect_equal(convert_se_assay_to_dt(se_standardized, "RawTreated"),
                convert_se_assay_to_dt(se_original, "RawTreated"))
 })
