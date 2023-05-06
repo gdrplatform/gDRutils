@@ -191,6 +191,5 @@ convert_mae_assay_to_dt <- function(mae,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames)
   })
-  dt <- plyr::rbind.fill(dtList)
-  dt
+  data.table::rbindlist(dtList, fill = TRUE, use.names = TRUE)
 }
