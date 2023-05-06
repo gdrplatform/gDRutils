@@ -1,3 +1,6 @@
+# Change to v.0.99.10
+- Fix bug in convert_mae_assay_to_dt
+
 # Change to v.0.99.9
 - Changed data.frame to data.table.
 
