@@ -26,8 +26,8 @@ test_that("standardize_se works as expected",  {
     se_standardized <- standardize_se(se),
     "overwriting existing metadata entry: 'identifiers'"
   )
-  expect_equal(get_SE_identifiers(se_standardized),
-               get_SE_identifiers(se_original))
+  expect_equal(lapply(get_SE_identifiers(se_standardized), sort),
+               lapply(get_SE_identifiers(se_original), sort))
   expect_equal(convert_se_assay_to_dt(se_standardized, "RawTreated"),
                convert_se_assay_to_dt(se_original, "RawTreated"))
 })
@@ -46,8 +46,8 @@ test_that("standardize_MAE works as expected",  {
     mae_standardized <- standardize_mae(mae),
     "overwriting existing metadata entry: 'identifiers'"
   )
-  expect_equal(get_MAE_identifiers(mae_standardized),
-               get_MAE_identifiers(mae_original))
+  expect_equal(lapply(get_MAE_identifiers(mae_standardized), lapply, sort),
+               lapply(get_MAE_identifiers(mae_original), lapply, sort))
   expect_equal(convert_mae_assay_to_dt(mae_standardized, "RawTreated"),
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })
@@ -65,8 +65,8 @@ test_that("standardize_MAE works with polymapped identifiers",  {
     mae_standardized <- standardize_mae(mae),
     "overwriting existing metadata entry: 'identifiers'"
   )
-  expect_equal(get_MAE_identifiers(mae_standardized),
-               get_MAE_identifiers(mae_original))
+  expect_equal(lapply(get_MAE_identifiers(mae_standardized), lapply, sort),
+               lapply(get_MAE_identifiers(mae_original), lapply, sort))
   expect_equal(convert_mae_assay_to_dt(mae_standardized, "RawTreated"),
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })

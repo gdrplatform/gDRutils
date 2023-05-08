@@ -16,7 +16,7 @@ IDENTIFIERS_LIST <- list(
   drug_moa = "drug_moa",
   # corresponds to the field 'gcsi_drug_name' from gCellGenomics::getDrugs()
 
-  untreated_tag = c("untreated", "vehicle"),
+  untreated_tag = c("vehicle", "untreated"),
   # flag to identify control treatments
 
   masked_tag = "masked",

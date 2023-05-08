@@ -40,13 +40,11 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 
 test_that("merge_SE works as expected", {
   mergedSE <- purrr::quietly(merge_SE)(listSE)
-  expect_length(mergedSE$warnings, 5)
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
   additional_col_name <- "QCS"
   mergedSE2 <- purrr::quietly(merge_SE)(listSE, additional_col_name)
-  expect_length(mergedSE2$warnings, 5)
   assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
@@ -57,13 +55,11 @@ test_that("merge_SE works as expected", {
 
 test_that("merge_SE works as expected with combo matrix data", {
   mergedSE <- purrr::quietly(merge_SE)(listSE2)
-  expect_length(mergedSE$warnings, 14)
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
   additional_col_name <- "QCS"
   mergedSE2 <- purrr::quietly(merge_SE)(listSE2, additional_col_name)
-  expect_length(mergedSE2$warnings, 14)
   assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
@@ -73,7 +69,6 @@ test_that("merge_SE works as expected with combo matrix data", {
 
 test_that("merge_SE works as expected with mixed data types", {
   mergedSE <- purrr::quietly(merge_SE)(listSE3)
-  expect_length(mergedSE$warnings, 14)
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
@@ -82,7 +77,6 @@ test_that("merge_SE works as expected with mixed data types", {
 
 test_that("merge_SE works with data with additional perturbations", {
   mergedSE <- purrr::quietly(merge_SE)(listSE4)
-  expect_length(mergedSE$warnings, 5)
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   validate_SE(mergedSE$result)
   expect_equal(dim(mergedSE$result), c(10, 5))

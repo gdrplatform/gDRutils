@@ -40,7 +40,7 @@ test_that("get_prettified_identifiers works as expected", {
 test_that("get_env_identifier works with untreated_tag", {
   obs <- get_env_identifiers("untreated_tag", simplify = TRUE)
   expect_length(obs, 2)
-  expect_equal(obs, c("untreated", "vehicle"))
+  expect_equal(obs, c("vehicle", "untreated"))
 })
 
 test_that("get_SE_identifier works with untreated_tag", {
@@ -50,7 +50,7 @@ test_that("get_SE_identifier works with untreated_tag", {
     "'se' was passed, but identifier 'untreated_tag' not found on se's identifiers"
   )
   expect_length(obs, 2)
-  expect_equal(obs, c("untreated", "vehicle"))
+  expect_equal(obs, c("vehicle", "untreated"))
 })
 
 test_that("get_expect_one_identifiers works as expected", {

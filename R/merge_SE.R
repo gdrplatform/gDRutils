@@ -7,6 +7,10 @@
 #' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
 #'
+#' @examples
+#' se1 <- get_synthetic_data("finalMAE_small.RDS")[[1]]
+#' merge_SE(list(se1 = se1, se2 = se1))
+#'
 #' @return merged SummarizedExperiment object
 #' @export
 #'
@@ -126,7 +130,8 @@ merge_assay <- function(SElist,
   
 
   DT$rId <- DT$cId <- NULL
-  BM <- df_to_bm_assay(DT, discard_keys = c(discard_keys, additional_col_name))
+  discard_keys <- intersect(names(DT), c(discard_keys, additional_col_name))
+  BM <- df_to_bm_assay(DT, discard_keys = discard_keys)
 
   list(DT = DT, BM = BM)
 }
