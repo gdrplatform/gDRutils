@@ -35,6 +35,14 @@
 #' The purpose of this statistic is to enable comparison across different experiments with slightly
 #' different concentration ranges.
 #'
+#' @examples 
+#' df_ <- data.table::data.table(Concentration = c(0.001, 0.00316227766016838, 
+#' 0.01, 0.0316227766016838),
+#' x_std = c(0.1, 0.1, 0.1, 0.1), normalization_types = c("RV", "RV", "RV", "RV"),
+#' x = c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482))
+#' 
+#' fit_curves(df_, "Concentration", normalization_type = "RV")
+#'
 #' @export
 #'
 fit_curves <- function(df_,
@@ -155,6 +163,14 @@ fit_curves <- function(df_,
 #' @param cap numeric value capping \code{norm_values} to stay below (\code{x_0} + cap).
 #' @param n_point_cutoff integer indicating number of unique concentrations required to fit curve.
 #' @param capping_fold Integer value of the fold number to use for capping IC50/GR50. Default is \code{5}.
+#'
+#' @examples
+#' logisticFit(
+#' c(0.001, 0.00316227766016838, 0.01, 0.0316227766016838),
+#' c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482),
+#' rep(0.1, 4),
+#' priors = c(2, 0.4, 1, 0.00658113883008419)
+#' )
 #'
 #' @return data.table with metrics and fit parameters.
 #'

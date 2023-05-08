@@ -243,6 +243,9 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 #'
 #' @param mae_idfs A list containing MAE identifiers
 #'
+#' @examples
+#' update_env_idfs_from_mae(list(get_env_identifiers()))
+#'
 #' @return \code{NULL}
 #' 
 #' @export

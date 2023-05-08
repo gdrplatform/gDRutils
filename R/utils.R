@@ -386,7 +386,10 @@ get_synthetic_data <- function(rds) {
 #' @return a data.table object
 #' @export
 #'
+#' @examples 
+#' dataframe_to_datatable(list(a = 2)) 
+#'
 #' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
 dataframe_to_datatable <- function(obj) {
-  data.table::setDT(data.frame(obj))
+  data.table::as.data.table(obj)
 }

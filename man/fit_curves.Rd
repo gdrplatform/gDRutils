@@ -64,3 +64,12 @@ The \code{range_conc} is used to calculate the \code{x_AOC_range} statistic.
 The purpose of this statistic is to enable comparison across different experiments with slightly
 different concentration ranges.
 }
+\examples{
+df_ <- data.table::data.table(Concentration = c(0.001, 0.00316227766016838, 
+0.01, 0.0316227766016838),
+x_std = c(0.1, 0.1, 0.1, 0.1), normalization_types = c("RV", "RV", "RV", "RV"),
+x = c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482))
+
+fit_curves(df_, "Concentration", normalization_type = "RV")
+
+}
