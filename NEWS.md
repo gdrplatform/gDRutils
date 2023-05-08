@@ -1,8 +1,11 @@
-# Change to v.0.99.10
+# Change to v.0.99.11
 - Refactor code with single ampersand in if statements
 
+# Change to v.0.99.10
+- Change order of untreated tags
+
 # Change to v.0.99.9
-- Changed data.frame to data.table.
+- Changed data.frame to data.table
 
 # Change to v.0.99.8
 - Switch to OSI license

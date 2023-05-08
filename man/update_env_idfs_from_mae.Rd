@@ -15,3 +15,7 @@ update_env_idfs_from_mae(mae_idfs)
 \description{
 Update environment identifiers from MAE object identifiers
 }
+\examples{
+update_env_idfs_from_mae(list(get_env_identifiers()))
+
+}

@@ -50,3 +50,7 @@ Next, any cell line metadata will be heuristically extracted.
 Finally, all remaining columns will be combined on either the rows or columns as specified by
 \code{combine_on}.
 }
+\examples{
+split_SE_components(data.table::data.table(clid = "CL1", Gnumber = "DrugA"))
+
+}

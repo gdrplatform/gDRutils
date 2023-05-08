@@ -12,6 +12,9 @@
 #' or for treated conditions only ('treated')
 #' @param discard_keys a vector of keys that should be discarded
 #'
+#' @examples 
+#' df_to_bm_assay(data.table::data.table(Gnumber = 2, clid = "A"))
+#'
 #' @return BumpyMatrix object
 #'
 #' @export

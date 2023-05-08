@@ -48,7 +48,9 @@ standardize_se <- function(se) {
   diff_names <- unique(unlist(lapply(diff_identifiers, names)))
 
   if ("untreated_tag" %in% diff_names) {
-    rowData(se) <- .replace_untreated_tag(rowData(se))
+    rowData(se) <- .replace_untreated_tag(rowData(se),
+                                          idfs,
+                                          idfs_se)
   }
 
   # Create mapping vector
@@ -100,8 +102,13 @@ standardize_se <- function(se) {
                               y = se_identifiers[["untreated_tag"]])
   untreated_tag_mapping <- untreated_tag$x
   names(untreated_tag_mapping) <- untreated_tag$y
-  S4Vectors::DataFrame(lapply(row_data, function(x) stringr::str_replace_all(x, untreated_tag_mapping)),
-                       row.names = rownames(row_data))
+  S4Vectors::DataFrame(lapply(row_data, function(x) {
+    if (is.character(x)) {
+      stringr::str_replace_all(x, untreated_tag_mapping)
+      } else {
+        x
+      }
+    }), row.names = rownames(row_data))
 }
 
 #' Rename DFrame
