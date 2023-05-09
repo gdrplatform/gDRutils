@@ -11,6 +11,9 @@
 #' should be combined on row or column respectively.
 #' Defaults to \code{1}.
 #'
+#' @examples
+#' split_SE_components(data.table::data.table(clid = "CL1", Gnumber = "DrugA"))
+#'
 #' @return named list containing different elements of a \linkS4class{SummarizedExperiment};
 #' see details.
 #'
