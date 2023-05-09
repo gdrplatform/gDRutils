@@ -101,6 +101,7 @@ test_that("convert_mae_assay_to_dt works as expected", {
   mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se))
   
   dt <- convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue", include_metadata = FALSE)
+  checkmate::expect_data_table(dt)
   expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 3))
   
@@ -123,11 +124,13 @@ test_that("convert_mae_assay_to_dt works as expected", {
   
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
+  checkmate::expect_data_table(dt1)
   expect_equal(dt1$RefGRvalue, as.vector(ref_gr_value[1:10, , drop = FALSE]))
   expect_equal(dim(dt1), c(m / 2 * n, 3))
   
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
+  checkmate::expect_data_table(dt1)
   expect_equal(sort(dt1[order(dt1), "RefGRvalue"][[1]]), sort(as.vector(ref_gr_value[1:10, ])))
   expect_equal(dim(dt1), c(m / 2 * n, 5))
   expect_equal(dt1$rnames, as.character(dt1$rId))
@@ -136,11 +139,13 @@ test_that("convert_mae_assay_to_dt works as expected", {
   
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
+  checkmate::expect_data_table(dt2)
   expect_equal(dt2$RefGRvalue, as.vector(ref_gr_value[11:20, , drop = FALSE]))
   expect_equal(dim(dt2), c(m / 2 * n, 3))
   
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
+  checkmate::expect_data_table(dt2)
   expect_equal(sort(dt2[order(dt2), "RefGRvalue"][[1]]), sort(as.vector(ref_gr_value[11:20, ])))
   expect_equal(dim(dt2), c(m / 2 * n, 5))
   expect_equal(dt2$rnames, as.character(dt2$rId))
@@ -149,7 +154,10 @@ test_that("convert_mae_assay_to_dt works as expected", {
   
   dt3 <- convert_mae_assay_to_dt(mae = maeTwoExperiments,
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
-  expect_equal(dt3[order(dt3$cId), "RefGRvalue"], as.vector(ref_gr_value))
+  checkmate::expect_data_table(dt3)
+  exp_rgr <-
+    data.table::data.table(RefGRvalue = as.vector(ref_gr_value))
+  expect_equal(dt3[order(dt3$cId), "RefGRvalue"], exp_rgr)
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))

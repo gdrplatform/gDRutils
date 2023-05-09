@@ -1,3 +1,6 @@
+# Change to v.0.99.12
+- Fix bug in convert_mae_assay_to_dt
+
 # Change to v.0.99.11
 - Refactor code with single ampersand in if statements
 

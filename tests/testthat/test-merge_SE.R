@@ -8,7 +8,7 @@ test_that("merge_assay works as expected", {
   normalizedMerged <- merge_assay(listSE, "Normalized")
   checkmate::expect_list(normalizedMerged)
   testthat::expect_true(all(c("DT", "BM") == names(normalizedMerged)))
-  checkmate::expect_class(normalizedMerged[[1]], "data.table")
+  checkmate::expect_data_table(normalizedMerged[[1]])
   checkmate::expect_class(normalizedMerged[[2]], "BumpyDataFrameMatrix")
 })
 
