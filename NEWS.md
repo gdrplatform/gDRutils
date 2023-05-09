@@ -1,3 +1,6 @@
+# Change to v.0.99.13
+- Removed `cotreatment` entry from EXPERIMENT_GROUPS
+
 # Change to v.0.99.12
 - Fix bug in convert_mae_assay_to_dt
 
