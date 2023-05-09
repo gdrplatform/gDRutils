@@ -29,3 +29,7 @@ The 'assay' is simply a BumpyMatrix object with rownames being the treatment ids
 colnames being the ids of the cell lines and values with
 dose-response data for given cell lines under given conditions.
 }
+\examples{
+df_to_bm_assay(data.table::data.table(Gnumber = 2, clid = "A"))
+
+}

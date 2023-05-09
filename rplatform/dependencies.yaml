@@ -1,12 +1,12 @@
 pkgs:
   gDRtestData:
-    ver: '>=0.99.10'
+    ver: '>=0.99.11'
     url: gdrplatform/gDRtestData
     ref: master
     subdir: gDRtestData
     source: GITHUB
   gDRstyle:
-    ver: '>=0.99.11'
+    ver: '>=0.99.15'
     url: gdrplatform/gDRstyle
     ref: main
     subdir: ~

@@ -210,11 +210,11 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
     i[["example"]]
   })
   if (is.null(k)) {
-    if (get_description & !get_example) { # nolint
+    if (all(get_description, !get_example)) {
       description
-    } else if (!get_description & get_example) { # nolint
+    } else if (all(!get_description, get_example)) {
       example
-    } else if (get_description & get_example) { # nolint
+    } else if (all(get_description, get_example)) {
       list(
         description = description,
         example = example
@@ -224,11 +224,11 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
     }
   } else {
     checkmate::assert_true(k %in% names(dt))
-    if (get_description & !get_example) { # nolint
+    if (all(get_description, !get_example)) {
       description[[k]]
-    } else if (!get_description & get_example) { # nolint
+    } else if (all(!get_description, get_example)) {
       example[[k]]
-    } else if (get_description & get_example) { # nolint
+    } else if (all(get_description, get_example)) {
       list(
         description = description[[k]],
         example = example[[k]]
@@ -242,6 +242,9 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 #' Update environment identifiers from MAE object identifiers
 #'
 #' @param mae_idfs A list containing MAE identifiers
+#'
+#' @examples
+#' update_env_idfs_from_mae(list(get_env_identifiers()))
 #'
 #' @return \code{NULL}
 #' 
