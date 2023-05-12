@@ -145,12 +145,13 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
       out <- .get_SE_identifier(se, id_type)
     }
   } else {
-    id_vector <- Vectorize(function(i)
-      unlist(unname(lapply(i, function(x) .get_SE_identifier(se, x)))),
-      SIMPLIFY = FALSE)
+    id_vector <- Vectorize(function(i) {
+      unlist(unname(lapply(i, function(x) .get_SE_identifier(se, x))))
+    },
+    SIMPLIFY = FALSE)
     out <- id_vector(id_type)
   }
-
+  
   out
 }
 
@@ -168,7 +169,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
 #' @export
 get_MAE_identifiers <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   MAEpply(mae, get_SE_identifiers)
 }
 
