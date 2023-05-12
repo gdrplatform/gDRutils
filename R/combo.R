@@ -32,21 +32,8 @@ convert_combo_data_to_dt <-
     my_l <-
       lapply(names(c_assays), function(x) {
         if (x %in% names(get_combo_base_assay_names())) {
-          if (x == names(get_combo_assay_names(group = "combo_base_mx"))) {
-            dt <- convert_se_assay_to_dt(se, c_assays[[x]])
-            for (n in names(ntype_dict)) {
-              data.table::setnames(dt, n, ntype_dict[n], skip_absent = TRUE)
-            }
-            dt <- data.table::melt(
-              dt,
-              measure.vars = as.character(ntype_dict),
-              variable.name = ntype_name,
-              value.name = "base-value"
-            )
-          } else {
             dt <- convert_se_assay_to_dt(se, c_assays[[x]])
             dt[["base-value"]] <- dt[["excess"]]
-          }
         } else {
           dt <- convert_se_assay_to_dt(se, c_assays[[x]])
         }
