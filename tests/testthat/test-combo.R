@@ -58,13 +58,13 @@ test_that("get_combo_col_settings",  {
   ### expected values
   gcan <- names(get_combo_assay_names()[1])
   gcc <-
-    get_combo_col_settings(g_metric = "GRvalue", assay_type = gcan)
+    get_combo_col_settings(g_metric = "GR", assay_type = gcan)
   expect_true(inherits(gcc, "list"))
   expect_identical(sort(names(gcc)), c("breaks", "colors", "limits"))
   
   ### errors
   err_msg <- "Assertion on 'assay_type' failed: "
-  expect_error(get_combo_col_settings("GRvalue", 8), err_msg)
+  expect_error(get_combo_col_settings("GR", 8), err_msg)
   err_msg <- "Assertion on 'g_metric' failed: "
   expect_error(get_combo_col_settings("grvalue", 8), err_msg)
 })
