@@ -1,3 +1,6 @@
+# Change to v.0.99.15
+- Update after unifying normalization types
+
 # Change to v.0.99.14
 - Fix lintr
 
