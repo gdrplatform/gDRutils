@@ -29,14 +29,7 @@ convert_combo_data_to_dt <-
 
     my_l <-
       lapply(names(c_assays), function(x) {
-        if (x %in% names(get_combo_base_assay_names())) {
-            dt <- convert_se_assay_to_dt(se, c_assays[[x]])
-            if ("excess" %in% names(dt)) {
-              dt[["x"]] <- dt[["excess"]]
-            }
-        } else {
-          dt <- convert_se_assay_to_dt(se, c_assays[[x]])
-        }
+        dt <- convert_se_assay_to_dt(se, c_assays[[x]])
         # TODO: let's discuss how to handle names in isobologram assay (pos_x, iso_level)
         if (prettify) {
           colnames(dt) <-
