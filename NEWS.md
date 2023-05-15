@@ -1,3 +1,6 @@
+# Change to v.0.99.15
+- Fixed issue with melting
+
 # Change to v.0.99.14
 - Fix lintr
 
