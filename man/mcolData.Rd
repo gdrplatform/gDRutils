@@ -10,7 +10,7 @@ mcolData(mae)
 \item{mae}{MultiAssayExperiment object}
 }
 \value{
-tibble with all-experiments colData
+data.table with all-experiments colData
 }
 \description{
 get colData of all experiments
