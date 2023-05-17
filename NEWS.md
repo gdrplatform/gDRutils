@@ -1,3 +1,6 @@
+# Change to v.0.99.16
+- Fix related with data.table
+
 # Change to v.0.99.15
 - Update after unifying normalization types
 

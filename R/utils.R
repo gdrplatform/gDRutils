@@ -127,7 +127,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     if (all(vapply(out, is.atomic, logical(1)))) {
       unlist(out, use.names = FALSE)
     } else {
-      plyr::rbind.fill(lapply(out, dataframe_to_datatable))
+      data.table::rbindlist(lapply(out, dataframe_to_datatable), fill = TRUE)
     }
 
   } else {
@@ -336,7 +336,7 @@ get_non_empty_assays <- function(mae) {
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
 #' mcolData(mae)
 #'
-#' @return tibble with all-experiments colData
+#' @return data.table with all-experiments colData
 #'
 #' @export
 mcolData <- function(mae) {
@@ -351,7 +351,7 @@ mcolData <- function(mae) {
 #' @param mae MultiAssayExperiment object
 #' @export
 #'
-#' @return tibble with all-experiments rowData
+#' @return data.table with all-experiments rowData
 #'
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.RDS") 
