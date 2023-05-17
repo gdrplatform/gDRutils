@@ -54,7 +54,7 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   headers <- get_header("response_metrics")
   m <- 20
   n <- length(headers)
-  metrics <- as.data.frame(matrix(runif(m * 2 * n), nrow = m * 2, ncol = n))
+  metrics <- data.table::data.table(matrix(runif(m * 2 * n), nrow = m * 2, ncol = n))
   colnames(metrics) <- headers
   metrics$dr_metric <- rep(c("RV", "GR"), m)
   rId <- as.factor(rep(rep(seq(4), each = 2), 5))

@@ -73,8 +73,8 @@ test_that("MAEpply works as expected", {
   expect_true(inherits(v1, "character"))
 
   v2 <- unique(MAEpply(maeReal, SummarizedExperiment::rowData, unify = TRUE))
-  expect_identical(vapply(dimnames(v2), length, numeric(1)), c(7, 7))
-  expect_true(inherits(v2, "data.frame"))
+  expect_equal(dim(v2), c(7, 7))
+  checkmate::expect_data_table(v2)
 })
 
 test_that("is_mae_empty works as expected", {
@@ -100,8 +100,8 @@ test_that("get_non_empty_assays works as expected", {
 
 test_that("mrowData works as expected", {
   mr <- mrowData(maeReal)
-  expect_identical(vapply(dimnames(mr), length, numeric(1)), c(7, 7))
-  checkmate::expect_class(mr, "data.frame")
+  expect_equal(dim(mr), c(7, 7))
+  checkmate::expect_data_table(mr)
 
   mr <- mrowData(empty_mae)
   expect_identical(mr, data.table::data.table())
@@ -109,8 +109,8 @@ test_that("mrowData works as expected", {
 
 test_that("mcolData works as expected", {
   mc <- mcolData(maeReal)
-  expect_identical(vapply(dimnames(mc), length, numeric(1)), c(6, 4))
-  checkmate::expect_class(mc, "data.frame")
+  expect_equal(dim(mc), c(6, 4))
+  checkmate::expect_data_table(mc)
 
   mc <- mcolData(empty_mae)
   expect_identical(mc, data.table::data.table())

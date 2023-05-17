@@ -157,9 +157,9 @@ test_that("promote_fields and demote_fields are reversible operations", {
     colData = out$colData)
   promoted_se <- promote_fields(se, "group", 1)
   demoted_promoted_se <- demote_fields(promoted_se, "group")
-  obs <- S4Vectors::DataFrame(as.data.frame(
+  obs <- S4Vectors::DataFrame(
     convert_se_assay_to_dt(demoted_promoted_se, "test", include_metadata = TRUE)
-  ))
+  )
   obs_df <- sort(obs[, setdiff(colnames(obs), c("rId", "cId"))])
   expect_equal(ncol(obs_df), ncol(df))
   expect_true(all(colnames(obs_df) %in% colnames(df)))
