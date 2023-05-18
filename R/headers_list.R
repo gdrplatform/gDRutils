@@ -24,15 +24,6 @@
     HEADERS_LIST[["response_metrics"]],
     as.character(HEADERS_LIST[["metrics_names"]])
   )
-  
-  HEADERS_LIST[["combo_matrix_results"]] <-
-    c(
-      "GRvalue",
-      "RelativeViability",
-      "GR",
-      "RV",
-      "excess"
-    )
 
   HEADERS_LIST[["controlled"]] <- c(
     get_env_identifiers("cellline", simplify = TRUE),

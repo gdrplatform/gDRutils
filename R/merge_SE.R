@@ -20,17 +20,17 @@ merge_SE <- function(SElist,
                                       "fit_source",
                                       "record_id",
                                       "swap_sa",
-                                      "control_type",
-                                      unique(unlist(
-                                        lapply(SElist,
-                                               get_SE_identifiers,
-                                               c("barcode",
-                                                 "concentration",
-                                                 "concentration2"),
-                                               simplify = FALSE))))){
+                                      "control_type")){
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
+  
+  discard_keys <- c(discard_keys, unique(unlist(
+    lapply(SElist, get_SE_identifiers,
+           c("barcode",
+             "concentration",
+             "concentration2"),
+           simplify = FALSE))))
   
   se_assays <- unique(unlist(lapply(SElist,
                                     SummarizedExperiment::assayNames)))
