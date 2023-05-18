@@ -117,7 +117,7 @@ merge_assay <- function(SElist,
       x
     } else {
       suppressWarnings(SummarizedExperiment::assay(x, assay_name) <-
-        BumpyMatrix::splitAsBumpyMatrix(S4Vectors::DataFrame(x = rep(NA, product(dim(x)))),
+        BumpyMatrix::splitAsBumpyMatrix(S4Vectors::DataFrame(x = rep(NA, prod(dim(x)))),
                                         row = rownames(x), column = colnames(x)))
       x
     }
