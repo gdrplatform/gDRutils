@@ -7,7 +7,7 @@
 convert_combo_data_to_dt(
   se,
   c_assays = get_combo_assay_names(),
-  normalization_type = c("RelativeViability", "GRvalue"),
+  normalization_type = c("RV", "GR"),
   prettify = TRUE
 )
 }

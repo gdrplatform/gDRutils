@@ -1,9 +1,8 @@
 library(testthat)
 context("combo-related functions")
-test_mae <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
-test_l <- convert_combo_data_to_dt(test_mae[[1]])
 
-test_that("convert_combo_data_to_dt",  {
+test_that("convert_combo_data_to_dt", {
+  test_mae <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
   res_l <- convert_combo_data_to_dt(test_mae[[1]])
 
   # expected assays converted
@@ -59,13 +58,13 @@ test_that("get_combo_col_settings",  {
   ### expected values
   gcan <- names(get_combo_assay_names()[1])
   gcc <-
-    get_combo_col_settings(g_metric = "GRvalue", assay_type = gcan)
+    get_combo_col_settings(g_metric = "GR", assay_type = gcan)
   expect_true(inherits(gcc, "list"))
   expect_identical(sort(names(gcc)), c("breaks", "colors", "limits"))
   
   ### errors
   err_msg <- "Assertion on 'assay_type' failed: "
-  expect_error(get_combo_col_settings("GRvalue", 8), err_msg)
+  expect_error(get_combo_col_settings("GR", 8), err_msg)
   err_msg <- "Assertion on 'g_metric' failed: "
   expect_error(get_combo_col_settings("grvalue", 8), err_msg)
 })

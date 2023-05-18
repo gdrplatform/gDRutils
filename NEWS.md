@@ -1,5 +1,21 @@
-# Change to v.0.99.11
+# Change to v.0.99.16
 - Add support for merging combination-data assays
+
+# Change to v.0.99.15
+- Update after unifying normalization types
+
+# Change to v.0.99.14
+- Fix lintr
+
+# Change to v.0.99.13
+- Removed `cotreatment` entry from EXPERIMENT_GROUPS
+
+# Change to v.0.99.12
+- Fix bug in convert_mae_assay_to_dt
+
+# Change to v.0.99.11
+- Refactor code with single ampersand in if statements
+>>>>>>> master
 
 # Change to v.0.99.10
 - Change order of untreated tags

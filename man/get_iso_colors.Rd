@@ -4,7 +4,7 @@
 \alias{get_iso_colors}
 \title{get_iso_colors}
 \usage{
-get_iso_colors(normalization_type = c("RelativeViability", "GRvalue"))
+get_iso_colors(normalization_type = c("RV", "GR"))
 }
 \arguments{
 \item{normalization_type}{charvec normalization_types expected in the data}
