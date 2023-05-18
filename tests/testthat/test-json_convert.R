@@ -14,9 +14,9 @@ test_that(".standardize_column_names works as expected", {
 test_that(".convert_element_metadata_to_json works as expected", {
   m <- 100
   n <- 26
-  data <- data.table::data.table(matrix(rep(seq(m), n), nrow = m))
+  data <- data.table::as.data.table(matrix(rep(seq(m), n), nrow = m))
   shuffle <- sample(1:n, n)
-  names(data) <- LETTERS[shuffle]
+  data.table::setnames(data, LETTERS[shuffle])
 
   expect_error(.convert_element_metadata_to_json(data, req_cols = c("AA", "A", "B")))
 

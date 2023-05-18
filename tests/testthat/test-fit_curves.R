@@ -44,8 +44,7 @@ test_that("appropriate fit type is assigned for various use cases", {
   # Test a 3P fit.
   ## Note that this should correspond to a cytotoxic response.
   df_result <- fit_curves(df_resp, series_identifiers = "Concentration")
-  test_colnames <- names(params)
-  expect_equal(round(df_result[, ..test_colnames], 4), expected, tolerance = 1e-5)
+  expect_equal(round(df_result[, names(params), with = FALSE], 4), expected, tolerance = 1e-5)
 
   obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
