@@ -15,7 +15,6 @@
 
 # Change to v.0.99.11
 - Refactor code with single ampersand in if statements
->>>>>>> master
 
 # Change to v.0.99.10
 - Change order of untreated tags
