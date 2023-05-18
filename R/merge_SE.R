@@ -20,7 +20,7 @@ merge_SE <- function(SElist,
                                       "fit_source",
                                       "record_id",
                                       "swap_sa",
-                                      "control_type")){
+                                      "control_type")) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
