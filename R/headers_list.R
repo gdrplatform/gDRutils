@@ -19,6 +19,8 @@
   HEADERS_LIST[["metrics_results"]] <- c(
     "maxlog10Concentration",
     "N_conc",
+    "cotrt_value",
+    "source",
     HEADERS_LIST[["response_metrics"]],
     as.character(HEADERS_LIST[["metrics_names"]])
   )
@@ -134,6 +136,7 @@
     )
   )
 }
+
 
 #' @keywords internal
 .orderHeaderList <- function(headers_list, type) {

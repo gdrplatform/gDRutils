@@ -7,7 +7,8 @@
 merge_SE(
   SElist,
   additional_col_name = "data_source",
-  discard_keys = c("normalization_type", "fit_source", "Metrics_rownames")
+  discard_keys = c("normalization_type", "fit_source", "record_id", "swap_sa",
+    "control_type")
 )
 }
 \arguments{
