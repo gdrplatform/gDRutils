@@ -116,9 +116,9 @@ merge_assay <- function(SElist,
     if (assay_name %in% SummarizedExperiment::assayNames(x)) {
       x
     } else {
-      suppressWarnings(SummarizedExperiment::assay(x, assay_name) <-
+      SummarizedExperiment::assay(x, assay_name) <-
         BumpyMatrix::splitAsBumpyMatrix(S4Vectors::DataFrame(x = rep(NA, prod(dim(x)))),
-                                        row = rownames(x), column = colnames(x)))
+                                        row = rownames(x), column = colnames(x))
       x
     }
   })
