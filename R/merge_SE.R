@@ -123,7 +123,8 @@ merge_assay <- function(SElist,
     }
   })
     
-  DT <- data.table::rbindlist(lapply(setNames(names(SElist), names(SElist)),
+  DT <- data.table::rbindlist(lapply(stats::setNames(names(SElist),
+                                                     names(SElist)),
                                      function(y) {
       convert_se_assay_to_dt(SElist[[y]], assay_name)
     }),  fill = TRUE, idcol = additional_col_name)
