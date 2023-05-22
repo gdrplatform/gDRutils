@@ -259,6 +259,7 @@ logisticFit <-
                       capping_fold = capping_fold, mean_norm_value = mean_norm_value)
     
     data.table::setDT(out)
+    
   }
 
 #' @keywords internal
@@ -513,7 +514,7 @@ has_dups <- function(vec) {
 average_dups <- function(df, col) {
   stopifnot(col %in% colnames(df))
   agg_col <- colnames(df)[colnames(df) != col]
-  data.table::setDT(
+  data.table::as.data.table(
     aggregate(df[, agg_col, with = FALSE],
               by = list(concs = df[[col]]),
               FUN = function(x) {

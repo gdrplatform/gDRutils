@@ -48,5 +48,5 @@ df_to_bm_assay <-
     stopifnot(!is.unsorted(as.numeric(rownames(bm))))
     stopifnot(!is.unsorted(as.numeric(colnames(bm))))
     
-    return(bm)
+    bm
   }
