@@ -1,5 +1,8 @@
-# Change to v.0.99.16
+# Change to v.0.99.17
 - Fix related with data.table
+
+# Change to v.0.99.16
+- Add support for merging combination-data assays
 
 # Change to v.0.99.15
 - Update after unifying normalization types

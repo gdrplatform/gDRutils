@@ -18,23 +18,38 @@ merge_SE <- function(SElist,
                      additional_col_name = "data_source",
                      discard_keys = c("normalization_type",
                                       "fit_source",
-                                      "Metrics_rownames")) {
+                                      "record_id",
+                                      "swap_sa",
+                                      "control_type")) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   
-  normalized <- merge_assay(SElist = SElist, assay_name = "Normalized", additional_col_name = additional_col_name,
-                            discard_keys = discard_keys)
-  averaged <- merge_assay(SElist = SElist, assay_name = "Averaged", additional_col_name = additional_col_name,
-                          discard_keys = discard_keys)
-  metrics <- merge_assay(SElist = SElist, assay_name = "Metrics", additional_col_name = additional_col_name,
-                         discard_keys = discard_keys)
+  discard_keys <- c(discard_keys, unique(unlist(
+    lapply(SElist, get_SE_identifiers,
+           c("barcode",
+             "concentration",
+             "concentration2"),
+           simplify = FALSE))))
+  
+  se_assays <- unique(unlist(lapply(SElist,
+                                    SummarizedExperiment::assayNames)))
+  
+  merged_assays <- lapply(se_assays, function(x) {
+    merge_assay(SElist = SElist,
+                assay_name = x,
+                additional_col_name = additional_col_name,
+                discard_keys = discard_keys)
+  })
+  
+  names(merged_assays) <- se_assays
 
   if (!is.null(additional_col_name)) {
-    data.table::set(averaged$DT, , intersect(names(averaged$DT),
-                                             c(additional_col_name, discard_keys)), NULL)
+    data.table::set(merged_assays$Averaged$DT, ,
+                    intersect(names(merged_assays$Averaged$DT),
+                              c(additional_col_name, discard_keys)), NULL)
   }
-  data <- split_SE_components(averaged$DT)
+  data <- split_SE_components(merged_assays$Averaged$DT)
   data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
   identifiers <- NULL
@@ -48,11 +63,7 @@ merge_SE <- function(SElist,
   metadata <- c(metadata, identifiers)
   p_list <-
     list(
-      assays = list(
-        Normalized = normalized$BM,
-        Averaged = averaged$BM,
-        Metrics = metrics$BM
-      ),
+      assays = lapply(merged_assays, "[[", "BM"),
       colData = data$condition_md,
       rowData = data$treatment_md,
       metadata = metadata,
@@ -98,17 +109,25 @@ merge_assay <- function(SElist,
   
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(assay_name)
-  lapply(SElist, function(x) validate_se_assay_name(x, assay_name))
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
 
-  DT <- if (is.null(additional_col_name)) {
-    data.table::rbindlist(lapply(names(SElist), function(y) {
-      convert_se_assay_to_dt(SElist[[y]], assay_name)}), fill = TRUE)
-  } else {
-    data.table::rbindlist(lapply(names(SElist), function(y) {
-      convert_se_assay_to_dt(SElist[[y]], assay_name)[, eval(additional_col_name) := rep_len(y, .N)]}), fill = TRUE)
-  }
+  SElist <- lapply(SElist, function(x) {
+    if (assay_name %in% SummarizedExperiment::assayNames(x)) {
+      x
+    } else {
+      SummarizedExperiment::assay(x, assay_name) <-
+        BumpyMatrix::splitAsBumpyMatrix(S4Vectors::DataFrame(x = rep(NA, prod(dim(x)))),
+                                        row = rownames(x), column = colnames(x))
+      x
+    }
+  })
+    
+  DT <- data.table::rbindlist(lapply(stats::setNames(names(SElist),
+                                                     names(SElist)),
+                                     function(y) {
+      convert_se_assay_to_dt(SElist[[y]], assay_name)
+    }),  fill = TRUE, idcol = additional_col_name)
   
 
   DT$rId <- DT$cId <- NULL
