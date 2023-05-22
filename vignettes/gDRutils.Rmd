@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 library(gDRutils)
 suppressPackageStartupMessages(library(MultiAssayExperiment))
 ```
+
 # Overview
 `gDRutils` is the part of `gDR` suite. This package provides bunch of tools for, among others:
 * data manipulation, especially output of the `gDRcore` package (`MultiAssayExperiments` and `SummarizedExperiment`),
@@ -28,7 +29,7 @@ suppressPackageStartupMessages(library(MultiAssayExperiment))
 
 # Use cases
 
-### Data manipulation
+## Data manipulation
 
 The basic output of `gDRcore` package is the `MultiAssayExperiment` object. Function `MAEpply` allows for the data manipulation of this object, and can be used in a similar way as a basic function `lapply`.
 
@@ -46,7 +47,7 @@ This function allows also for extraction of unified data across all the `Summari
 MAEpply(mae, rowData, unify = TRUE)
 ```
 
-### Data extraction
+## Data extraction
 
 All the metrics data are stored inside `assays` of `SummarizedExperiment`. For the downstream analyses we provide tools allowing for the extraction of the data into user-friendly `data.table` style.
 
@@ -64,7 +65,7 @@ sdt <- convert_se_assay_to_dt(se, "Metrics")
 head(sdt, 3)
 ```
 
-### Managing gDR identifiers
+## Managing gDR identifiers
 
 In `gDR` we require standard identifiers that should be visible in the input data, such as e.g. `Gnumber`, `CLID`, `Concentration`. However, user can define their own custom identifiers.
 
@@ -96,7 +97,7 @@ reset_env_identifiers()
 get_env_identifiers("concentration")
 ```
 
-### Data validation
+## Data validation
 
 Applied custom changes in the gDR output can upset internal functions operation. Custom changes can be validated using `validate_MAE`
 
