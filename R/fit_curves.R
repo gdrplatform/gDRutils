@@ -259,7 +259,7 @@ logisticFit <-
                       capping_fold = capping_fold, mean_norm_value = mean_norm_value)
     
     data.table::setDT(out)
-    
+    out
   }
 
 #' @keywords internal
