@@ -58,29 +58,28 @@ fit_curves <- function(df_,
   if (length(series_identifiers) != 1L) {
     stop("gDR does not yet support multiple series_identifiers, feature coming soon")
   }
-  stopifnot(any(inherits(df_, "data.frame"), inherits(df_, "DFrame")))
+  stopifnot(any(inherits(df_, "data.table"), inherits(df_, "DFrame")))
   if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'",
-      paste0(normalization_type[bad_normalization_type], collapse = ", ")))
+                 paste0(normalization_type[bad_normalization_type], collapse = ", ")))
   }
-
+  
   req_fields <- series_identifiers
   opt_fields <- NULL
-
+  
   req_fields <- c(req_fields, "x")
   opt_fields <- "x_std"
-
+  
   if (!all(req_fields %in% colnames(df_))) {
     stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
   }
-
+  
   if (length(setdiff(opt_fields, colnames(df_))) > 0L) {
     df_[, setdiff(opt_fields, colnames(df_))] <- NA
   }
-
   df_metrics <- .apllyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
                                   pcutoff, cap, n_point_cutoff)
-
+  
   is_unique_normalization_type_and_fit_source <- 
     nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
@@ -95,8 +94,8 @@ fit_curves <- function(df_,
 
 #' @keywords internal
 .apllyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
-                            pcutoff, cap, n_point_cutoff) {
-
+                              pcutoff, cap, n_point_cutoff) {
+  
   df_metrics <- NULL
   concs <- unique(df_[[series_identifiers]])
   med_concs <- stats::median(concs)
@@ -139,7 +138,7 @@ fit_curves <- function(df_,
     df_gr$normalization_type <- "GR"
     df_metrics <- rbind(df_metrics, df_gr)
   }
-
+  
   df_metrics$fit_source <- "gDR"
   df_metrics
 }
@@ -258,7 +257,8 @@ logisticFit <-
                       priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, 
                       concs = concs, controls = controls, range_conc = range_conc, pcutoff = pcutoff, 
                       capping_fold = capping_fold, mean_norm_value = mean_norm_value)
-    data.table::data.table(data.frame(out))
+    
+    data.table::setDT(out)
   }
 
 #' @keywords internal
@@ -512,11 +512,14 @@ has_dups <- function(vec) {
 #' @importFrom stats aggregate
 average_dups <- function(df, col) {
   stopifnot(col %in% colnames(df))
-  aggregate(df[colnames(df) != col],
-    by = list(concs = df[[col]]),
-    FUN = function(x) {
-      mean(x, na.rm = TRUE)
-    }
+  agg_col <- colnames(df)[colnames(df) != col]
+  data.table::setDT(
+    aggregate(df[, agg_col, with = FALSE],
+              by = list(concs = df[[col]]),
+              FUN = function(x) {
+                mean(x, na.rm = TRUE)
+              }
+    )
   )
 }
 

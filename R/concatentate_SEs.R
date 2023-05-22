@@ -239,8 +239,8 @@ aggregate_assay <- function(asy, by, FUN) {
   }
 
   by <- c(row.field, column.field, by)
-  agg <- stats::aggregate(x = data.table::setDT(data.frame(df[, setdiff(colnames(df), by)])),
-                          by = data.table::setDT(data.frame(df[, by])),
+  agg <- stats::aggregate(x = data.table::as.data.table(df[, setdiff(colnames(df), by)]),
+                          by = data.table::as.data.table(df[, by]),
                           FUN = FUN,
                           na.rm = TRUE)
   mat <- BumpyMatrix::splitAsBumpyMatrix(agg[, setdiff(colnames(agg), c(row.field, column.field))],
