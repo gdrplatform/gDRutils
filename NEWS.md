@@ -1,3 +1,6 @@
+# Change to v.0.99.17
+- Format the vignette with BiocStyle
+
 # Change to v.0.99.16
 - Add support for merging combination-data assays
 
