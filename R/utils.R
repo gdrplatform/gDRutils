@@ -114,7 +114,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     if (all(vapply(out, is.atomic, logical(1)))) {
       unlist(out, use.names = FALSE)
     } else {
-      data.table::rbindlist(lapply(out, dataframe_to_datatable), fill = TRUE)
+      data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
     }
 
   } else {
@@ -364,19 +364,4 @@ mrowData <- function(mae) {
 #' 
 get_synthetic_data <- function(rds) {
   readRDS(system.file("testdata", rds, package = "gDRtestData"))
-}
-  
-#' Convert object to data.table using \code{data.table::setDT}
-#'
-#' @param obj any object
-#'
-#' @return a data.table object
-#' @export
-#'
-#' @examples 
-#' dataframe_to_datatable(list(a = 2)) 
-#'
-#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
-dataframe_to_datatable <- function(obj) {
-  data.table::as.data.table(obj)
 }
