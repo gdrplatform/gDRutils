@@ -1,6 +1,7 @@
 ---
 title: "gDRutils"
-output: rmarkdown::html_vignette
+author: "gDR team"
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{gDRutils}
   %\VignetteEngine{knitr::rmarkdown}
