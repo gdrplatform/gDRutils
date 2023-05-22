@@ -16,8 +16,9 @@ test_that("convert_combo_data_to_dt", {
 
   # errors
   expect_error(
-    convert_combo_data_to_dt(data.frame(a = 1)),
-    "Assertion on 'se' failed: Must inherit from class 'SummarizedExperiment', but has class 'data.frame'.",
+    convert_combo_data_to_dt(data.table::data.table(a = 1)),
+    paste("Assertion on 'se' failed: Must inherit from class 'SummarizedExperiment',",
+          "but has classes 'data.table','data.frame'."), 
     fixed = TRUE
   )
   err_msg <-

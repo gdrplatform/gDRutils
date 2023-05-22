@@ -267,9 +267,10 @@ test_that(".estimate_xc50 works as expected", {
 
 
 test_that("average_dups works as expected", {
-  df <- data.frame(concs = rep(seq(5), each = 2),
-    norm_value = seq(10))
-  expect_equal(gDRutils:::average_dups(df, "concs"), data.frame(concs = seq(5), norm_value = seq(1.5, 9.5, 2)))
+  df <- data.table::data.table(concs = rep(seq(5), each = 2),
+                               norm_value = seq(10))
+  expect_equal(gDRutils:::average_dups(df, "concs"), 
+               data.table::data.table(concs = seq(5), norm_value = seq(1.5, 9.5, 2)))
 })
 
 
