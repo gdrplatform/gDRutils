@@ -41,7 +41,7 @@ params_above <- data.table::data.table(h = 2, x_inf = 0.5, x_0 = 1, ec50 = 0.75)
 df_resp_above <- .create_data(conc, params_above, params_above)
 
 # Below 0.5 curve.
-params_below <- data.table::setDT(data.frame(h = 2, x_inf = 0, x_0 = 0.4, ec50 = 0.2))
+params_below <- data.table::data.table(h = 2, x_inf = 0, x_0 = 0.4, ec50 = 0.2)
 df_resp_below <- .create_data(conc, params_below, params_below)
 
 n <- 64

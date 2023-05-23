@@ -10,8 +10,8 @@ test_that(".check_required_identifiers works as expected", {
   ids <- as.list(LETTERS[seq(nids)])
   names(ids) <- req_ids
 
-  df <- as.data.frame(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
-  names(df) <- ids
+  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  data.table::setnames(df, unlist(ids))
 
   # Single mapping all exist.
   obs <- gDRutils:::.check_required_identifiers(df, req_ids = req_ids, id_map = ids)
@@ -59,8 +59,8 @@ test_that(".check_polymapped_identifiers works as expected", {
   id_map <- as.list(LETTERS[seq(nids)])
   names(id_map) <- exp_one_ids
 
-  df <- as.data.frame(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
-  names(df) <- id_map
+  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  data.table::setnames(df, unlist(id_map))
 
   # All singletons.
   obs <- gDRutils:::.check_polymapped_identifiers(df, exp_one_ids, id_map)
@@ -90,8 +90,8 @@ test_that("gDRutils:::.modify_polymapped_identifiers works as expected", {
   id_map <- as.list(LETTERS[seq(nids)])
   names(id_map) <- exp_one_ids
 
-  df <- as.data.frame(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
-  names(df) <- id_map
+  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  data.table::setnames(df, unlist(id_map))
 
   # All singletons.
   obs <- gDRutils:::.modify_polymapped_identifiers(df, exp_one_ids, id_map)
@@ -126,8 +126,8 @@ test_that("validate_identifiers works as expected", {
   ids <- as.list(LETTERS[seq(nids)])
   names(ids) <- exp_one_ids
 
-  df <- as.data.frame(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
-  names(df) <- ids
+  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  data.table::setnames(df, unlist(ids))
 
   # Single mapping all valid.
   expect_equal(validate_identifiers(df, identifiers = ids, req_ids = req_ids, exp_one_ids = exp_one_ids), ids)

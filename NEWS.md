@@ -1,3 +1,7 @@
+# Change to v.0.99.17
+- Fix related with data.table
+- Remove `.get_treated_conditions` and `.get_untreated_conditions`
+
 # Change to v.0.99.16
 - Add support for merging combination-data assays
 
