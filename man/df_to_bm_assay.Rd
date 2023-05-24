@@ -4,17 +4,10 @@
 \alias{df_to_bm_assay}
 \title{df_to_bm_assay}
 \usage{
-df_to_bm_assay(
-  data,
-  data_type = c("all", "treated", "untreated"),
-  discard_keys = NULL
-)
+df_to_bm_assay(data, discard_keys = NULL)
 }
 \arguments{
 \item{data}{data.table with drug-response data}
-
-\item{data_type}{string type of data to be returned: all, for untreated conditions only ('untreated')
-or for treated conditions only ('treated')}
 
 \item{discard_keys}{a vector of keys that should be discarded}
 }

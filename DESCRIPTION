@@ -1,7 +1,7 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.17
+Version: 0.99.18
 Date: 2023-05-22
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
@@ -26,7 +26,6 @@ Imports:
     jsonvalidate,
     magrittr,
     methods,
-    plyr,
     reshape2,
     stats,
     stringr,
@@ -34,8 +33,7 @@ Imports:
     MultiAssayExperiment,
     S4Vectors,
     SummarizedExperiment,
-    BiocParallel,
-    tibble
+    BiocParallel
 Suggests:
     BiocStyle,
     futile.logger,

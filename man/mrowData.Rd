@@ -10,7 +10,7 @@ mrowData(mae)
 \item{mae}{MultiAssayExperiment object}
 }
 \value{
-tibble with all-experiments rowData
+data.table with all-experiments rowData
 }
 \description{
 get rowData of all experiments

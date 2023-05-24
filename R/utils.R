@@ -114,7 +114,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     if (all(vapply(out, is.atomic, logical(1)))) {
       unlist(out, use.names = FALSE)
     } else {
-      plyr::rbind.fill(lapply(out, dataframe_to_datatable))
+      data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
     }
 
   } else {
@@ -323,7 +323,7 @@ get_non_empty_assays <- function(mae) {
 #' mae <- get_synthetic_data("finalMAE_small.RDS")
 #' mcolData(mae)
 #'
-#' @return tibble with all-experiments colData
+#' @return data.table with all-experiments colData
 #'
 #' @export
 mcolData <- function(mae) {
@@ -338,7 +338,7 @@ mcolData <- function(mae) {
 #' @param mae MultiAssayExperiment object
 #' @export
 #'
-#' @return tibble with all-experiments rowData
+#' @return data.table with all-experiments rowData
 #'
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.RDS") 
@@ -364,19 +364,4 @@ mrowData <- function(mae) {
 #' 
 get_synthetic_data <- function(rds) {
   readRDS(system.file("testdata", rds, package = "gDRtestData"))
-}
-  
-#' Convert object to data.table using \code{data.table::setDT}
-#'
-#' @param obj any object
-#'
-#' @return a data.table object
-#' @export
-#'
-#' @examples 
-#' dataframe_to_datatable(list(a = 2)) 
-#'
-#' @author Sergiu Mocanu <sergiu.mocanu@@contractors.roche.com>
-dataframe_to_datatable <- function(obj) {
-  data.table::as.data.table(obj)
 }

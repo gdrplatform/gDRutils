@@ -213,7 +213,7 @@ convert_se_to_json <- function(se) {
 
 #' @keywords internal
 .standardize_column_names <- function(mdata, identifiers) {
-  stopifnot(all(identifiers %in% names(mdata)))
+  stopifnot(all(unlist(identifiers) %in% names(mdata)))
   colnames(mdata)[match(identifiers, colnames(mdata))] <- names(identifiers)
   mdata
 }
@@ -223,14 +223,14 @@ convert_se_to_json <- function(se) {
 .convert_element_metadata_to_json <- function(mdata, req_cols) {
   stopifnot(all(req_cols %in% names(mdata)))
 
-  mdata <- data.table::setDT(as.list(mdata))
+  mdata <- data.table::as.data.table(as.list(mdata))
   
-  main_mdata <- mdata[, ..req_cols]
+  main_mdata <- mdata[, req_cols, with = FALSE]
   mjson <- jsonlite::toJSON(main_mdata, "columns")
   mjson <- strip_first_and_last_char(mjson)
 
   opt_cols <- setdiff(colnames(mdata), req_cols)
-  opt_mdata <- mdata[, ..opt_cols]
+  opt_mdata <- mdata[, opt_cols, with = FALSE]
   ojson <- jsonlite::toJSON(opt_mdata, "columns")
 
   list(main = mjson, opt = ojson)
