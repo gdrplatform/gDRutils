@@ -1,3 +1,6 @@
+# Change to v.0.99.18
+- Format the vignette with BiocStyle
+
 # Change to v.0.99.17
 - Fix related with data.table
 - Remove `.get_treated_conditions` and `.get_untreated_conditions`
