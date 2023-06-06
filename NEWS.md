@@ -1,3 +1,6 @@
+# Change to v.0.99.19
+- Switch from `aggregate` to `data.table`
+
 # Change to v.0.99.18
 - Format the vignette with BiocStyle
 
