@@ -511,17 +511,12 @@ has_dups <- function(vec) {
 
 #' @keywords internal
 #' @importFrom stats aggregate
-average_dups <- function(df, col) {
-  stopifnot(col %in% colnames(df))
-  agg_col <- colnames(df)[colnames(df) != col]
-  data.table::as.data.table(
-    aggregate(df[, agg_col, with = FALSE],
-              by = list(concs = df[[col]]),
-              FUN = function(x) {
-                mean(x, na.rm = TRUE)
-              }
-    )
-  )
+average_dups <- function(dt, col) {
+  stopifnot(col %in% colnames(dt))
+  agg_col <- setdiff(colnames(dt), col)
+  dt <- dt[, .(x = mean(get(agg_col), na.rm = TRUE)), by = col]
+  data.table::setnames(dt, "x", agg_col)
+  dt
 }
 
 ############
