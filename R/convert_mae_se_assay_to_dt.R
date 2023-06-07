@@ -116,7 +116,9 @@ convert_se_assay_to_dt <- function(se,
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
     if (is.numeric(first)) {
-      as_dt <- data.table::melt(data.table::as.data.table(object, keep.rownames = T), measure.vars = colnames(object))
+      as_dt <-
+        data.table::melt(data.table::as.data.table(object, keep.rownames = TRUE),
+                         measure.vars = colnames(object))
       data.table::setnames(as_dt, c("rId", "cId", assay_name))
     } else {
       stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
