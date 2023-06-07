@@ -111,19 +111,23 @@ convert_se_assay_to_dt <- function(se,
     if (retain_nested_rownames) {
       as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
     }
+    as_dt <- data.table::as.data.table(as_df)
 
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
     if (is.numeric(first)) {
-      as_df <- reshape2::melt(object, varnames = c("rId", "cId"), value.name = assay_name)
+      as_dt <-
+        data.table::melt(data.table::as.data.table(object, keep.rownames = TRUE),
+                         measure.vars = colnames(object))
+      data.table::setnames(as_dt, c("rId", "cId", assay_name))
     } else {
       stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
     }
-    as_df
+    as_dt
   } else {
     stop(sprintf("assay of class '%s' is not supported", class(object)))
   }
-  data.table::as.data.table(as_df)
+  as_dt
 }
 
 
