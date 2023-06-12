@@ -239,11 +239,10 @@ aggregate_assay <- function(asy, by, FUN) {
   }
 
   by <- c(row.field, column.field, by)
-  agg <- stats::aggregate(x = data.table::as.data.table(df[, setdiff(colnames(df), by)]),
-                          by = data.table::as.data.table(df[, by]),
-                          FUN = FUN,
-                          na.rm = TRUE)
-  mat <- BumpyMatrix::splitAsBumpyMatrix(agg[, setdiff(colnames(agg), c(row.field, column.field))],
+  dt <- data.table::as.data.table(df)
+  agg <- dt[, lapply(.SD, FUN), by = by]
+  mat <- BumpyMatrix::splitAsBumpyMatrix(agg[, setdiff(colnames(agg),
+                                                       c(row.field, column.field)), with = FALSE],
                                          row = agg[[row.field]],
                                          column = agg[[column.field]])
 

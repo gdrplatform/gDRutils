@@ -38,7 +38,9 @@ df_to_bm_assay <-
     complete$factor_id <- seq_len(nrow(complete))
     completeMerged <- merge(merge(complete, seColData, by = "col_id"), seRowData, by = "row_id")
     
-    data_assigned <- merge(data, completeMerged, by = c(cond_entries, cl_entries))
+    data_assigned <- data.table::as.data.table(
+      merge(data, completeMerged, by = c(cond_entries, cl_entries))
+    )
     data.table::setorder(data_assigned, factor_id)
     bm <- BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE], 
                                           row = data_assigned$row_id,

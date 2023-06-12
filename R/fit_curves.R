@@ -510,18 +510,10 @@ has_dups <- function(vec) {
 
 
 #' @keywords internal
-#' @importFrom stats aggregate
-average_dups <- function(df, col) {
-  stopifnot(col %in% colnames(df))
-  agg_col <- colnames(df)[colnames(df) != col]
-  data.table::as.data.table(
-    aggregate(df[, agg_col, with = FALSE],
-              by = list(concs = df[[col]]),
-              FUN = function(x) {
-                mean(x, na.rm = TRUE)
-              }
-    )
-  )
+average_dups <- function(dt, col) {
+  checkmate::assert_subset(col, names(dt))
+  checkmate::assert_data_table(dt, types = "numeric")
+  dt[, lapply(.SD, mean, na.rm = TRUE), by = col]
 }
 
 ############

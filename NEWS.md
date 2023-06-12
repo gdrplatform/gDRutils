@@ -1,5 +1,11 @@
-# Change to v.0.99.19
+# Change to v.0.99.21
 - Replace `order` with `data.table::setorder`
+
+# Change to v.0.99.20
+- Switch from `aggregate` to `data.table`
+
+# Change to v.0.99.19
+- replaced reshape2 functions by functions from data.table
 
 # Change to v.0.99.18
 - Format the vignette with BiocStyle
