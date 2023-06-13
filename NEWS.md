@@ -1,3 +1,6 @@
+# Change to v.0.99.21
+- Add support for custom identifiers in merge_SE
+
 # Change to v.0.99.20
 - Switch from `aggregate` to `data.table`
 

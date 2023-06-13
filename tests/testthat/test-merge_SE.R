@@ -39,6 +39,7 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
 })
 
 test_that("merge_SE works as expected", {
+  set_env_identifier("cellline", "CELL_LINE_ID")
   mergedSE <- purrr::quietly(merge_SE)(listSE)
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
@@ -50,6 +51,7 @@ test_that("merge_SE works as expected", {
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
   expect_identical(SummarizedExperiment::assayNames(listSE[[1]]),
                    SummarizedExperiment::assayNames(mergedSE[[1]]))
+  reset_env_identifiers()
   })
 
 
