@@ -25,12 +25,20 @@ merge_SE <- function(SElist,
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   
+  
+  SE_identifiers <- unique(lapply(SElist, get_SE_identifiers))[[1]]
+  lapply(names(SE_identifiers), function(x) {
+    gDRutils::set_env_identifier(x, SE_identifiers[[x]])
+  })
+
   discard_keys <- c(discard_keys, unique(unlist(
     lapply(SElist, get_SE_identifiers,
            c("barcode",
              "concentration",
              "concentration2"),
            simplify = FALSE))))
+  
+  
   
   se_assays <- unique(unlist(lapply(SElist,
                                     SummarizedExperiment::assayNames)))
@@ -133,7 +141,6 @@ merge_assay <- function(SElist,
   DT$rId <- DT$cId <- NULL
   discard_keys <- intersect(names(DT), c(discard_keys, additional_col_name))
   BM <- df_to_bm_assay(DT, discard_keys = discard_keys)
-
   list(DT = DT, BM = BM)
 }
 
