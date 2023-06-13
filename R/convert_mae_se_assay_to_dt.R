@@ -80,16 +80,16 @@ convert_se_assay_to_dt <- function(se,
 
 #' @keywords internal
 .extract__and_merge_metadata <- function(se, dt) {
-  rData <- rowData(se)
-  rData$rId <- rownames(rData)
-  cData <- colData(se)
-  cData$cId <- rownames(cData)
-  ids <- expand.grid(rData$rId, cData$cId)
-  colnames(ids) <- c("rId", "cId")
-  ids[] <- lapply(ids, as.character)
-  annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
-  annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
-  merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
+  rData <- data.table::as.data.table(rowData(se))
+  rData[, rId := rownames(se)]
+  cData <- data.table::as.data.table(colData(se))
+  cData[, cId := colnames(se)]
+
+  ids <- data.table::CJ(rData$rId, cData$cId)
+  data.table::setnames(ids, c("rId", "cId"))
+  ids[, names(ids) := lapply(.SD, as.character), .SDcols = names(ids)]
+  annotations <- cData[rData[ids, on = "rId"], on = "cId"]
+  annotations[dt, on = c("rId", "cId")]
 }
 
 #' Convert assay data into data.table.
