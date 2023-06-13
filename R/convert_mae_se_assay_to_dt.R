@@ -54,7 +54,6 @@ convert_se_assay_to_dt <- function(se,
   if (include_metadata) {
     dt <- .extract__and_merge_metadata(se, dt)
   }
-  dt <- data.table::as.data.table(dt)
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
     id_col <- paste0(assay_name, "_rownames")
