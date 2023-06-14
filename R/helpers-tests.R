@@ -62,7 +62,7 @@ gen_synthetic_data <- function(m, n) {
     "Drug Name" = rep(drug_names, n),
     "Drug MOA" = rep(c(rep("moa_A", m - 1), "moa_B"), n),
     "Cell Line Name" = rep(cell_names, each = m),
-    "Primary Tissue" = rep(c(rep("tissue_x", n - 1), "tissue_y"), each = m),
+    "Tissue" = rep(c(rep("tissue_x", n - 1), "tissue_y"), each = m),
     "GR_AOC" = values,
     "GR Inf" = values,
     "GR 0" = values,
@@ -76,7 +76,7 @@ gen_synthetic_data <- function(m, n) {
     "IC50" = values,
     "GR Max" = values,
     "E Max" = values,
-    "x" = values,
+    "GR value" = values,
     "Concentration" = values,
     check.names = FALSE
   )
