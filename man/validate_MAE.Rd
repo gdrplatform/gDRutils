@@ -25,7 +25,7 @@ Function validates correctness of SE included in MAE by checking multiple cases:
 }
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small") 
 validate_MAE(mae)
 
 }

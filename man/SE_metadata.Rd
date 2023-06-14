@@ -64,23 +64,23 @@ For \code{*et_SE_fit_parameters}, get/set metadata for fit parameters
 used to construct the Metrics assay in a SummarizedExperiment object.
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.qs") 
 se <- mae[[1]]
 get_SE_fit_parameters(se)
 
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.qs") 
 se <- mae[[1]]
 get_SE_processing_metadata(se)
 
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.qs") 
 se <- mae[[1]]
 get_SE_experiment_raw_data(se)
 
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.qs") 
 se <- mae[[1]]
 get_SE_experiment_metadata(se)
 
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small.qs") 
 se <- mae[[1]]
 get_SE_identifiers(se)
 
