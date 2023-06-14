@@ -2,7 +2,7 @@ library(testthat)
 context("combo-related functions")
 
 test_that("convert_combo_data_to_dt", {
-  test_mae <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
+  test_mae <- get_synthetic_data("finalMAE_combo_matrix_small")
   res_l <- convert_combo_data_to_dt(test_mae[[1]])
 
   # expected assays converted

@@ -35,7 +35,7 @@ The basic output of `gDRcore` package is the `MultiAssayExperiment` object. Func
 
 
 ```{r}
-mae <- get_synthetic_data("finalMAE_combo_matrix_small.RDS")
+mae <- get_synthetic_data("finalMAE_combo_matrix_small")
 MAEpply(mae, dim)
 ```
 ```{r}

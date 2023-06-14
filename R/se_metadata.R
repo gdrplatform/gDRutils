@@ -70,7 +70,7 @@ set_SE_experiment_raw_data <- function(se, value) {
 #' @rdname SE_metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' se <- mae[[1]]
 #' get_SE_fit_parameters(se)
 #' 
@@ -83,7 +83,7 @@ get_SE_fit_parameters <- function(se) {
 #' @rdname SE_metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' se <- mae[[1]]
 #' get_SE_processing_metadata(se)
 #' 
@@ -95,7 +95,7 @@ get_SE_processing_metadata <- function(se) {
 #' @rdname SE_metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' se <- mae[[1]]
 #' get_SE_experiment_raw_data(se)
 #' 
@@ -107,7 +107,7 @@ get_SE_experiment_raw_data <- function(se) {
 #' @rdname SE_metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' se <- mae[[1]]
 #' get_SE_experiment_metadata(se)
 #' 
@@ -131,7 +131,7 @@ get_SE_keys <- function(se, key_type = NULL) {
 #' @rdname SE_metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' se <- mae[[1]]
 #' get_SE_identifiers(se)
 #' 
@@ -163,7 +163,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
 #' @return named list with identifiers for each SE
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' get_MAE_identifiers(mae)
 #' 
 #' @export

@@ -8,7 +8,7 @@
 #' @return String representation of a JSON document.
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small")
 #' convert_mae_to_json(mae)
 #' convert_mae_to_json(mae, with_experiments = FALSE)
 #' 

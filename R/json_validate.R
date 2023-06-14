@@ -67,7 +67,7 @@ validate_json <- function(json, schema_path) {
 #' @return Boolean of whether or not mae is valid
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small") 
 #' validate_mae_with_schema(mae)
 #' 
 #' @export

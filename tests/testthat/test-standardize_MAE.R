@@ -16,7 +16,7 @@ test_that("rename_DFrame works as expected",  {
 })
 
 test_that("standardize_se works as expected",  {
-  se_original <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))[[1]]
+  se_original <- get_synthetic_data("finalMAE_combo_matrix_small")[[1]]
   se <- se_original
   se@metadata$identifiers$drug <- "druuug"
   se@metadata$identifiers$concentration2 <- "dose 2"
@@ -34,7 +34,7 @@ test_that("standardize_se works as expected",  {
 
 
 test_that("standardize_MAE works as expected",  {
-  mae_original <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
+  mae_original <- get_synthetic_data("finalMAE_combo_matrix_small")
   mae <- mae_original
   mae[[1]]@metadata$identifiers$drug <- "druuug"
   mae[[2]]@metadata$identifiers$drug <- "druuug"
@@ -53,7 +53,7 @@ test_that("standardize_MAE works as expected",  {
 })
 
 test_that("standardize_MAE works with polymapped identifiers",  {
-  mae_original <- readRDS(system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS"))
+  mae_original <- get_synthetic_data("finalMAE_combo_matrix_small")
   mae <- mae_original
   mae[[1]]@metadata$identifiers$drug <- c("druuug", "Drug")
   mae[[2]]@metadata$identifiers$drug <- c("druuug", "Drug")
@@ -72,10 +72,7 @@ test_that("standardize_MAE works with polymapped identifiers",  {
 })
 
 test_that("colData/rowData refinement functions work as expected",  {
-  mae <-
-    readRDS(
-      system.file(package = "gDRtestData", "testdata", "finalMAE_combo_matrix_small.RDS")
-    )
+  mae <- get_synthetic_data("finalMAE_combo_matrix_small")
   expect_true(inherits(refine_coldata(SummarizedExperiment::colData(mae[[1]]), mae[[1]]),
                "DataFrame"))
   expect_true(inherits(refine_rowdata(SummarizedExperiment::rowData(mae[[1]]), mae[[1]]),
