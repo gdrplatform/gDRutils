@@ -40,3 +40,45 @@ gen_testdata <- function() {
     raw_data = raw_data
   )
 }
+
+
+
+
+#' gen_synthetic_data
+#'
+#' Function for generating local synthetic data used for unit tests in modules
+#'
+#' @examples 
+#' gen_synthetic_data()
+#'
+#' @return list with drugs, cell_lines, raw_data and assay_data
+#'
+#' @export
+gen_synthetic_data <- function(m, n) {
+  drug_names <- paste0("drug_00", 1:m)
+  cell_names <- paste0("cellline_", LETTERS[2:6], "A")
+  values <- seq(0.1, 2.5, length.out = m * n)
+  dt <- data.table::data.table(
+    "Drug Name" = rep(drug_names, n),
+    "Drug MOA" = rep(c(rep("moa_A", m - 1), "moa_B"), n),
+    "Cell Line Name" = rep(cell_names, each = m),
+    "Primary Tissue" = rep(c(rep("tissue_x", n - 1), "tissue_y"), each = m),
+    "GR_AOC" = values,
+    "GR Inf" = values,
+    "GR 0" = values,
+    "GEC50" = values,
+    "h GR" = values,
+    "E Inf" = values,
+    "E0" = values,
+    "EC50" = values,
+    "h RV" = values,
+    "GR50" = values,
+    "IC50" = values,
+    "GR Max" = values,
+    "E Max" = values,
+    "x" = values,
+    "Concentration" = values,
+    check.names = FALSE
+  )
+  list(drug_names = drug_names, cell_names = cell_names, dt = dt)
+}
