@@ -16,16 +16,12 @@ gen_testdata <- function() {
   cell_line_names <- unique(raw_data$CellLineName)
   
   # getting first occurrence of drug_names for each cell_line to avoid aggregation
-  increment <- table(raw_data$DrugName)[1]
-  idx <- rep(match(cell_line_names, raw_data$CellLineName), times = length(drug_names)) +
-    rep(seq(0, nrow(raw_data) - increment, increment), each = length(drug_names))
-  
-  dt <- raw_data[idx, ]
+  dt <- raw_data[, .SD[1], by = c("DrugName", "CellLineName")]
   data.table::setnames(dt,
-                       c("CellLineName", "DrugName", "Tissue", "drug_moa", "x_inf", 
+                       c("CellLineName", "DrugName", "drug_moa", "x_inf", 
                              "x_0", "xc50", "h", "r2", "x_sd_avg", "x_mean", "x_AOC_range", 
                              "x_max", "maxlog10Concentration"),
-                       c("Cell Line Name", "Drug Name", "Primary Tissue", "Drug MOA", 
+                       c("Cell Line Name", "Drug Name", "Drug MOA", 
                          "GR Inf", "GR 0", "GEC50", "h GR", "E Inf", "E0", "EC50", "h RV", 
                          "GR Max", "Concentration"))
   dt$GR50 <- dt$EC50
