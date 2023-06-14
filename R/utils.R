@@ -100,7 +100,7 @@ assert_choices <- function(x, choices, ...) {
 #' @return list or vector depends on unify param
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' MAEpply(mae, SummarizedExperiment::assayNames)
 #' 
 #' @export
@@ -162,7 +162,7 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' se <- mae[[1]]
 #' FUN <- function(x) {
 #'   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
@@ -230,7 +230,7 @@ apply_bumpy_function <- function(se,
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' is_mae_empty(mae)
 #' 
 #' @export
@@ -250,7 +250,7 @@ is_mae_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' is_any_exp_empty(mae)
 #' 
 #' @export
@@ -270,7 +270,7 @@ is_any_exp_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' se <- mae[[1]]
 #' is_exp_empty(se)
 #' 
@@ -301,7 +301,7 @@ is_exp_empty <- function(exp) {
 #' @return charvec with non-empty experiments
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' get_non_empty_assays(mae)
 #' 
 #' @export
@@ -320,7 +320,7 @@ get_non_empty_assays <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @examples
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small.qs")
 #' mcolData(mae)
 #'
 #' @return data.table with all-experiments colData
@@ -341,7 +341,7 @@ mcolData <- function(mae) {
 #' @return data.table with all-experiments rowData
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS") 
+#' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' mrowData(mae)
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
@@ -353,15 +353,23 @@ mrowData <- function(mae) {
 
 #' Get synthetic data from gDRtestData package
 #'
-#' @param rds RDS filename
+#' @param qs qs filename
 #' 
 #' @export
 #' 
 #' @examples 
-#' get_synthetic_data("finalMAE_small.RDS") 
+#' get_synthetic_data("finalMAE_small.qs") 
 #'
 #' @return loaded data
 #' 
-get_synthetic_data <- function(rds) {
-  readRDS(system.file("testdata", rds, package = "gDRtestData"))
+get_synthetic_data <- function(qs) {
+  if (!grepl(".qs$", qs)) {
+    #TODO: remove backward compatibility fix for RDS
+    if (grepl(".RDS$", qs)) {
+      qs <- gsub(".RDS", ".qs", qs)
+    } else {
+      qs <- paste0(qs, ".qs")
+    }
+  }
+  qs::qread(system.file("testdata", qs, package = "gDRtestData"))
 }

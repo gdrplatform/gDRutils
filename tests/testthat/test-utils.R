@@ -4,9 +4,8 @@ empty_se <-
 empty_mae <-
   MultiAssayExperiment::MultiAssayExperiment(experiments = MultiAssayExperiment::ExperimentList(test = empty_se))
 maeReal <-
-  readRDS(
-    system.file("testdata", "finalMAE_combo_2dose_nonoise2.RDS", package = "gDRtestData")
-)
+  get_synthetic_data("finalMAE_combo_2dose_nonoise2")
+
 partially_empty_mae <-
   MultiAssayExperiment::MultiAssayExperiment(experiments = (MultiAssayExperiment::ExperimentList(
     experiments = c(
@@ -153,4 +152,14 @@ test_that("loop works as expected", {
   sumOfList <- loop(listRunif, sum)
   expect_true(is(sumOfList, "list"))
   expect_length(unlist(sumOfList), n)
+})
+
+test_that("get_synthetic_data works as expected", {
+  expect_is(get_synthetic_data("finalMAE_small.qs"),
+            "MultiAssayExperiment")
+  expect_is(get_synthetic_data("finalMAE_small"),
+            "MultiAssayExperiment")
+  expect_is(get_synthetic_data("finalMAE_small.RDS"),
+            "MultiAssayExperiment")
+  expect_error(get_synthetic_data("finalMAE_small.wrong"), "Failed to open")
 })
