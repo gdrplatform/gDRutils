@@ -51,6 +51,8 @@ get_testdata <- function() {
 #'
 #' @export
 gen_synthetic_data <- function(m = 1, n = 1) {
+  checkmate::assert_number(m, lower = 1)
+  checkmate::assert_number(n, lower = 1)
   drug_names <- paste0("drug_00", seq_len(m))
   cell_names <- paste0("cellline_", LETTERS[2:6], "A")
   values <- seq(0.1, 2.5, length.out = m * n)
@@ -73,8 +75,7 @@ gen_synthetic_data <- function(m = 1, n = 1) {
     "GR Max" = values,
     "E Max" = values,
     "GR value" = values,
-    "Concentration" = values,
-    check.names = FALSE
+    "Concentration" = values
   )
   list(drug_names = drug_names, cell_names = cell_names, dt = dt)
 }
