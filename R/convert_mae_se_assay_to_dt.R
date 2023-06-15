@@ -84,8 +84,8 @@ convert_se_assay_to_dt <- function(se,
   cData <- data.table::as.data.table(colData(se))
   cData[, cId := colnames(se)]
 
-  ids <- data.table::CJ(rData$rId, cData$cId)
-  data.table::setnames(ids, c("rId", "cId"))
+  ids <- data.table::CJ(cData$cId, rData$rId)
+  data.table::setnames(ids, c("cId", "rId"))
   ids[, names(ids) := lapply(.SD, as.character), .SDcols = names(ids)]
   annotations <- cData[rData[ids, on = "rId"], on = "cId"]
   annotations[dt, on = c("rId", "cId")]
