@@ -11,7 +11,7 @@ test_that("convert_se_assay_to_dt works as expected", {
                                                    colData = S4Vectors::DataFrame(cnames))
   
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = FALSE)
-  expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
+  expect_equal(dt$RefGRvalue, as.vector(t(ref_gr_value)))
   expect_equal(dim(dt), c(m * n, 3))
   
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = TRUE)
@@ -99,7 +99,7 @@ test_that("convert_mae_assay_to_dt works as expected", {
   
   dt <- convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt)
-  expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
+  expect_equal(dt$RefGRvalue, as.vector(t(ref_gr_value)))
   expect_equal(dim(dt), c(m * n, 3))
   
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = TRUE)
@@ -122,7 +122,7 @@ test_that("convert_mae_assay_to_dt works as expected", {
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt1)
-  expect_equal(dt1$RefGRvalue, as.vector(ref_gr_value[1:10, , drop = FALSE]))
+  expect_equal(dt1$RefGRvalue, as.vector(t(ref_gr_value[1:10, , drop = FALSE])))
   expect_equal(dim(dt1), c(m / 2 * n, 3))
   
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
@@ -137,7 +137,7 @@ test_that("convert_mae_assay_to_dt works as expected", {
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt2)
-  expect_equal(dt2$RefGRvalue, as.vector(ref_gr_value[11:20, , drop = FALSE]))
+  expect_equal(dt2$RefGRvalue, as.vector(t(ref_gr_value[11:20, , drop = FALSE])))
   expect_equal(dim(dt2), c(m / 2 * n, 3))
   
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
