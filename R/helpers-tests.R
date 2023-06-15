@@ -1,14 +1,14 @@
-#' gen_testdata
+#' get_testdata
 #'
 #' Function to obtain data from gDRtestData and prepare for unit tests
 #'
 #' @examples 
-#' gen_testdata()
+#' get_testdata()
 #'
 #' @return list with drugs, cell_lines, raw_data and assay_data
 #'
 #' @export
-gen_testdata <- function() {
+get_testdata <- function() {
   
   mae <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
   raw_data <- gDRutils::convert_mae_assay_to_dt(mae, "Metrics")
@@ -50,8 +50,8 @@ gen_testdata <- function() {
 #' @return list with drugs, cell_lines, raw_data and assay_data
 #'
 #' @export
-gen_synthetic_data <- function(m, n) {
-  drug_names <- paste0("drug_00", 1:m)
+gen_synthetic_data <- function(m = 1, n = 1) {
+  drug_names <- paste0("drug_00", seq_len(m))
   cell_names <- paste0("cellline_", LETTERS[2:6], "A")
   values <- seq(0.1, 2.5, length.out = m * n)
   dt <- data.table::data.table(

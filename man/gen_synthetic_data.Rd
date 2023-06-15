@@ -4,7 +4,7 @@
 \alias{gen_synthetic_data}
 \title{gen_synthetic_data}
 \usage{
-gen_synthetic_data(m, n)
+gen_synthetic_data(m = 1, n = 1)
 }
 \value{
 list with drugs, cell_lines, raw_data and assay_data
