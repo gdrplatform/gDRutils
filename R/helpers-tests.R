@@ -44,13 +44,16 @@ get_testdata <- function() {
 #'
 #' Function for generating local synthetic data used for unit tests in modules
 #'
+#' @param m number of drugs
+#' @param n number of records
+#'
 #' @examples 
 #' gen_synthetic_data()
 #'
 #' @return list with drugs, cell_lines, raw_data and assay_data
 #'
 #' @export
-gen_synthetic_data <- function(m = 1, n = 1) {
+gen_synthetic_data <- function(m = 1, n = 5) {
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_number(n, lower = 1)
   drug_names <- paste0("drug_00", seq_len(m))

@@ -4,7 +4,12 @@
 \alias{gen_synthetic_data}
 \title{gen_synthetic_data}
 \usage{
-gen_synthetic_data(m = 1, n = 1)
+gen_synthetic_data(m = 1, n = 5)
+}
+\arguments{
+\item{m}{number of drugs}
+
+\item{n}{number of records}
 }
 \value{
 list with drugs, cell_lines, raw_data and assay_data
