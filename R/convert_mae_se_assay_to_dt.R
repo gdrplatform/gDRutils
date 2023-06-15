@@ -52,7 +52,7 @@ convert_se_assay_to_dt <- function(se,
     return(dt) # TODO: Should this return something else?
   }
   if (include_metadata) {
-    dt <- .extract__and_merge_metadata(se, dt)
+    dt <- .extract__and_merge_metadata(se, data.table::copy(dt))
   }
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
@@ -74,6 +74,7 @@ convert_se_assay_to_dt <- function(se,
     }
     data.table::setnames(dt, new_cols, new_cols_rename, skip_absent = TRUE)
   }
+  data.table::setorder(dt)
   dt
 }
 
@@ -83,12 +84,13 @@ convert_se_assay_to_dt <- function(se,
   rData[, rId := rownames(se)]
   cData <- data.table::as.data.table(colData(se))
   cData[, cId := colnames(se)]
-
+  
   ids <- data.table::CJ(cData$cId, rData$rId)
   data.table::setnames(ids, c("cId", "rId"))
   ids[, names(ids) := lapply(.SD, as.character), .SDcols = names(ids)]
-  annotations <- cData[rData[ids, on = "rId"], on = "cId"]
-  annotations[dt, on = c("rId", "cId")]
+  annotations <- cData[rData[ids, on = "rId"], on = "cId"][dt, on = c("rId", "cId")]
+  data.table::setcolorder(annotations, Reduce(union, list(names(dt), names(rData), names(cData))))
+  annotations
 }
 
 #' Convert assay data into data.table.
