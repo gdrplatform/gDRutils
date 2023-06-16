@@ -74,7 +74,6 @@ convert_se_assay_to_dt <- function(se,
     }
     data.table::setnames(dt, new_cols, new_cols_rename, skip_absent = TRUE)
   }
-  data.table::setorder(dt)
   dt
 }
 
