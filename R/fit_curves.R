@@ -619,7 +619,7 @@ average_dups <- function(dt, col) {
   stopifnot(c("concs", "norm_values") %in% colnames(df))
 
   # Ascending order for position norm_values subsetting.
-  df <- df[order(df$concs), ]
+  data.table::setorder(df, concs)
   norm_values <- df$norm_values
 
   if (all(is.na(norm_values))) {
