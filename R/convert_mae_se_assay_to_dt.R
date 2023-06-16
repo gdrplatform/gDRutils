@@ -52,9 +52,8 @@ convert_se_assay_to_dt <- function(se,
     return(dt) # TODO: Should this return something else?
   }
   if (include_metadata) {
-    dt <- .extract__and_merge_metadata(se, dt)
+    dt <- .extract__and_merge_metadata(se, data.table::copy(dt))
   }
-  dt <- data.table::as.data.table(dt)
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
     id_col <- paste0(assay_name, "_rownames")
@@ -80,16 +79,17 @@ convert_se_assay_to_dt <- function(se,
 
 #' @keywords internal
 .extract__and_merge_metadata <- function(se, dt) {
-  rData <- rowData(se)
-  rData$rId <- rownames(rData)
-  cData <- colData(se)
-  cData$cId <- rownames(cData)
-  ids <- expand.grid(rData$rId, cData$cId)
-  colnames(ids) <- c("rId", "cId")
-  ids[] <- lapply(ids, as.character)
-  annotations <- merge(ids, rData, by = "rId", all.x = TRUE)
-  annotations <- merge(annotations, cData, by = "cId", all.x = TRUE)
-  merge(dt, annotations, by = c("rId", "cId"), all.x = TRUE)
+  rData <- data.table::as.data.table(rowData(se))
+  rData[, rId := rownames(se)]
+  cData <- data.table::as.data.table(colData(se))
+  cData[, cId := colnames(se)]
+  
+  ids <- data.table::CJ(cData$cId, rData$rId)
+  data.table::setnames(ids, c("cId", "rId"))
+  ids[, names(ids) := lapply(.SD, as.character), .SDcols = names(ids)]
+  annotations <- cData[rData[ids, on = "rId"], on = "cId"][dt, on = c("rId", "cId")]
+  data.table::setcolorder(annotations, Reduce(union, list(names(dt), names(rData), names(cData))))
+  annotations
 }
 
 #' Convert assay data into data.table.
