@@ -70,7 +70,7 @@ test_that("demote_fields works as expected", {
 
   obs <- demote_fields(se, "group")
   expect_equal(ncol(SummarizedExperiment::rowData(obs)), ncol(SummarizedExperiment::rowData(se)) - 1)
-  expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), c(nested_fields, "group"))
+  expect_setequal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), c(nested_fields, "group"))
   expect_equal(nrow(obs), nrow(unique(df[, setdiff(row_fields, "group")])))
   expect_equal(ncol(obs), ncol(se))
 
@@ -88,7 +88,7 @@ test_that("demote_fields works as expected", {
     colData = out$colData)
   obs <- demote_fields(se, "group")
   expect_equal(ncol(SummarizedExperiment::colData(obs)), ncol(SummarizedExperiment::colData(se)) - 1)
-  expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), c(nested_fields, "group"))
+  expect_setequal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), c(nested_fields, "group"))
   expect_equal(ncol(obs), nrow(unique(df[, setdiff(column_fields, "group")])))
   expect_equal(nrow(obs), nrow(se))
 })

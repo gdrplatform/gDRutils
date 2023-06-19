@@ -1,7 +1,11 @@
-# Change to v.0.99.22
+# Change to v.0.99.23
 - Replaced RDS with qs
 
+# Change to v.0.99.22
+- Switch from `merge` to `[[`
+
 # Change to v.0.99.21
+- Replace `order` with `data.table::setorder`
 - Add support for custom identifiers in merge_SE
 
 # Change to v.0.99.20
