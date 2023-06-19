@@ -363,8 +363,12 @@ mrowData <- function(mae) {
 #' @return loaded data
 #' 
 get_synthetic_data <- function(qs) {
+  # check if prefix exist, if not add one
+  if (!grepl("finalMAE", qs)) {
+    qs <- paste("finalMAE", qs, sep = "_")
+  }
+  # check if extension exist and is supported -`qs`, if not add one or replace
   if (!grepl(".qs$", qs)) {
-    #TODO: remove backward compatibility fix for RDS
     if (grepl(".RDS$", qs)) {
       qs <- gsub(".RDS", ".qs", qs)
     } else {

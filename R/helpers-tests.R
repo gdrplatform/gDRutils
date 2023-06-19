@@ -10,7 +10,7 @@
 #' @export
 get_testdata <- function() {
   
-  mae <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
+  mae <- gDRutils::get_synthetic_data("finalMAE_small")
   raw_data <- gDRutils::convert_mae_assay_to_dt(mae, "Metrics")
   drug_names <- unique(raw_data$DrugName)
   cell_line_names <- unique(raw_data$CellLineName)
