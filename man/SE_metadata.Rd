@@ -70,7 +70,7 @@ get_SE_fit_parameters(se)
 
 mae <- get_synthetic_data("finalMAE_small.RDS") 
 se <- mae[[1]]
-invisible(get_SE_processing_metadata(se))
+meta <- get_SE_processing_metadata(se)
 
 mae <- get_synthetic_data("finalMAE_small.RDS") 
 se <- mae[[1]]
