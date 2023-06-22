@@ -85,7 +85,7 @@ get_SE_fit_parameters <- function(se) {
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small.qs") 
 #' se <- mae[[1]]
-#' get_SE_processing_metadata(se)
+#' meta <- get_SE_processing_metadata(se)
 #' 
 #' @export
 get_SE_processing_metadata <- function(se) {
