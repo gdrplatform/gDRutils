@@ -18,7 +18,7 @@ list of merged metadata
 Merge metadata
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small")
 se <- mae[[1]]
 listSE <- list(
   se, 

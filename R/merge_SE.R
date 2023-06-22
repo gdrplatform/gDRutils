@@ -8,7 +8,7 @@
 #' during creating BumpyMatrix object
 #'
 #' @examples
-#' se1 <- get_synthetic_data("finalMAE_small.RDS")[[1]]
+#' se1 <- get_synthetic_data("finalMAE_small")[[1]]
 #' merge_SE(list(se1 = se1, se2 = se1))
 #'
 #' @return merged SummarizedExperiment object
@@ -100,7 +100,7 @@ merge_SE <- function(SElist,
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.RDS")
+#' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
 
 #' listSE <- list(
 #'   combo1 = mae[[1]], 
@@ -152,7 +152,7 @@ merge_assay <- function(SElist,
 #' @return character vector of unique names of metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small")
 #' se <- mae[[1]]
 #' SElist <- list(
 #'   se, 
@@ -178,7 +178,7 @@ identify_unique_se_metadata_fields <- function(SElist) {
 #' @return list of merged metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small")
 #' se <- mae[[1]]
 #' listSE <- list(
 #'   se, 

@@ -16,7 +16,7 @@ named list with identifiers for each SE
 get the identifiers of all SE's in the MAE
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.qs")
 get_MAE_identifiers(mae)
 
 }

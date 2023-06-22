@@ -23,7 +23,7 @@ current improvements done on the rowData as a standardization step:
 }
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.qs")
 refine_rowdata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
 
 }

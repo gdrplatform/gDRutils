@@ -27,7 +27,7 @@ list of data.table(s) with combo data
 convert combo assays from SummarizedExperiments to the list of data.tables
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_combo_matrix_small.RDS")
+mae <- get_synthetic_data("finalMAE_combo_matrix_small.qs")
 convert_combo_data_to_dt(mae[[1]])
 
 }

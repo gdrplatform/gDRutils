@@ -16,7 +16,7 @@ logical
 check if all mae experiments are empty
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.qs")
 is_mae_empty(mae)
 
 }

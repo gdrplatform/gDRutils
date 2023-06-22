@@ -44,7 +44,8 @@ test_that("validate_SE works as expected", {
 
 
 test_that("validate_SE works as expected on real data", {
-  maeReal <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
+  maeReal <- get_synthetic_data("finalMAE_small")
+
   validate_SE(maeReal[[1]])
   # Add empty drug_moa in one record of rowData
   rowdata <- SummarizedExperiment::rowData(maeReal[[1]])
@@ -98,7 +99,7 @@ test_that("validate_mae works as expected", {
   
   mae2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se3))
   
-  maeReal <- readRDS(system.file("testdata", "finalMAE_small.RDS", package = "gDRtestData"))
+  maeReal <- get_synthetic_data("finalMAE_small")
   validate_MAE(maeReal)
   maeReal2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = maeReal[[1]],
                                                                             "matrix" = maeReal[[1]]))

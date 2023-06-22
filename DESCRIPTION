@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 0.99.23
-Date: 2023-06-20
+Version: 0.99.24
+Date: 2023-06-22
 Authors@R: c(person("Bartosz", "Czech", role=c("aut")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com"),
              person("Aleksander", "Chlebowski", role=c("aut")),
@@ -19,6 +19,8 @@ LazyLoad: yes
 Depends:
     R (>= 4.2)
 Imports:
+    BiocParallel,
+    BumpyMatrix,
     checkmate,
     data.table,
     drc,
@@ -26,28 +28,27 @@ Imports:
     jsonvalidate,
     magrittr,
     methods,    
-    stats,
-    stringr,
-    BumpyMatrix,
     MultiAssayExperiment,
     S4Vectors,
-    SummarizedExperiment,
-    BiocParallel
+    stats,
+    stringr,
+    SummarizedExperiment
 Suggests:
+    BiocManager,
     BiocStyle,
     futile.logger,
     gDRstyle (>= 0.99.15),
     gDRtestData (>= 0.99.12),
+    IRanges,
     knitr,
     lintr,
     purrr,
+    qs,
     rcmdcheck,
+    rmarkdown,
     testthat,
     tools,
-    IRanges,
-    yaml,
-    BiocManager,
-    rmarkdown
+    yaml
 biocViews: Software, Infrastructure
 VignetteBuilder: knitr
 ByteCompile: TRUE
