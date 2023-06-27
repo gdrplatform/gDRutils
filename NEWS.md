@@ -1,3 +1,6 @@
+# Change to v.0.99.24
+- Replaced RDS with qs
+
 # Change to v.0.99.23
 - Fix check in R 4.3
 

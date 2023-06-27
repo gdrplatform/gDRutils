@@ -33,7 +33,7 @@ test_that("validate works as expected", {
   # original MAE not converted to DSDB MAE
   # errors expected
   tmae1 <-
-    readRDS(system.file(package = "gDRtestData", "testdata/finalMAE_small.RDS"))
+    get_synthetic_data("finalMAE_small")
   v_st <- validate_mae_with_schema(tmae1)
   exp_names_v <- c("mae", paste0("experiment:", names(MultiAssayExperiment::experiments(tmae1))))
   expect_true(all(exp_names_v %in% names(v_st)))

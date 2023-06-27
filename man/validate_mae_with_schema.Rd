@@ -29,7 +29,7 @@ Currently only SEs are validated
 TODO: add mae.json schema and validate full MAE object
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS") 
+mae <- get_synthetic_data("finalMAE_small") 
 validate_mae_with_schema(mae)
 
 }

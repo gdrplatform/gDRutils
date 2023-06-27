@@ -22,7 +22,7 @@
 #' @return data.table representation of the data in \code{assay_name}.
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small")
 #' se <- mae[[1]]
 #' convert_se_assay_to_dt(se, "Metrics")
 #' 
@@ -166,7 +166,7 @@ convert_se_assay_to_dt <- function(se,
 #' @seealso flatten
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.RDS")
+#' mae <- get_synthetic_data("finalMAE_small")
 #' convert_mae_assay_to_dt(mae, "Metrics")
 #' 
 #' @export

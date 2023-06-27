@@ -28,7 +28,7 @@ merged SummarizedExperiment object
 Merge multiple Summarized Experiments
 }
 \examples{
-se1 <- get_synthetic_data("finalMAE_small.RDS")[[1]]
+se1 <- get_synthetic_data("finalMAE_small")[[1]]
 merge_SE(list(se1 = se1, se2 = se1))
 
 }

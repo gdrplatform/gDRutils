@@ -1,16 +1,16 @@
 listMAE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                             "final", full.names = TRUE)[1:2], readRDS)
+                             "final", full.names = TRUE)[1:2], qs::qread)
 listSE <- lapply(listMAE, function(x) x[[2]])
 names(listSE) <- c("combo1", "combo2")
 
 listMAE2 <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                             "final", full.names = TRUE)[1:2], readRDS)
+                             "final", full.names = TRUE)[1:2], qs::qread)
 listSE2 <- lapply(listMAE, function(x) x[[1]])
 names(listSE2) <- c("combo1", "combo2")
 
 listSE3 <- c(listSE[1], listSE2[2])
 
-listSE4 <- c(listSE[1], ligand = readRDS(
+listSE4 <- c(listSE[1], ligand = qs::qread(
   list.files(system.file(package = "gDRtestData", "testdata"),
              "Ligand", full.names = TRUE))[[1]])
 

@@ -42,7 +42,7 @@ function with the name of the assay holding data on controls.
 To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small")
 se <- mae[[1]]
 convert_se_assay_to_dt(se, "Metrics")
 

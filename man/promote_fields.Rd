@@ -27,7 +27,7 @@ as either the \code{rowData} or \code{colData}.
 Revert this operation using \code{demote_fields}.
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small")
 se <- mae[[1]]
 se <- promote_fields(se, "ReadoutValue", 2)
 

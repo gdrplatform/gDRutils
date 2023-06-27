@@ -23,7 +23,7 @@ list or vector depends on unify param
 Lapply through all the experiments in MultiAssayExperiment object
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.RDS")
+mae <- get_synthetic_data("finalMAE_small.qs")
 MAEpply(mae, SummarizedExperiment::assayNames)
 
 }

@@ -4,10 +4,10 @@
 \alias{get_synthetic_data}
 \title{Get synthetic data from gDRtestData package}
 \usage{
-get_synthetic_data(rds)
+get_synthetic_data(qs)
 }
 \arguments{
-\item{rds}{RDS filename}
+\item{qs}{qs filename}
 }
 \value{
 loaded data
@@ -16,6 +16,6 @@ loaded data
 Get synthetic data from gDRtestData package
 }
 \examples{
-get_synthetic_data("finalMAE_small.RDS") 
+get_synthetic_data("finalMAE_small.qs") 
 
 }
