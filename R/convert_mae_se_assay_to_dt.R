@@ -67,7 +67,7 @@ convert_se_assay_to_dt <- function(se,
       x[length(x)] <- gDRutils::extend_normalization_type_name(x[length(x)])
       paste(x[-1], collapse = "_")
       }))
-    dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols, sep = "_1")
+    dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols)
     dt$id <- NULL 
     if (!all(new_cols %in% names(dt))) {
       new_cols <- gsub("x_", "", new_cols)
@@ -109,6 +109,7 @@ convert_se_assay_to_dt <- function(se,
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
     # Retain nested rownames.
     if (retain_nested_rownames) {
+      checkmate::assert_string(rownames(as_df))
       as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
     }
     as_dt <- data.table::as.data.table(as_df)
