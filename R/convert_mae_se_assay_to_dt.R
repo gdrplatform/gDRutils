@@ -109,7 +109,7 @@ convert_se_assay_to_dt <- function(se,
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
     # Retain nested rownames.
     if (retain_nested_rownames) {
-      checkmate::assert_string(rownames(as_df))
+      checkmate::assert_character(rownames(as_df))
       as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
     }
     as_dt <- data.table::as.data.table(as_df)
