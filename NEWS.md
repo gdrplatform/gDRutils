@@ -1,3 +1,6 @@
+# Change to v.0.99.25
+- Add assert for missing rownames
+
 # Change to v.0.99.24
 - Replaced RDS with qs
 
