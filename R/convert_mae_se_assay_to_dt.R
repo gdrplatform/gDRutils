@@ -49,10 +49,10 @@ convert_se_assay_to_dt <- function(se,
   }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
   if (nrow(dt) == 0L) {
-    return(dt) # TODO: Should this return something else?
+    return(dt)
   }
   if (include_metadata) {
-    dt <- .extract__and_merge_metadata(se, data.table::copy(dt))
+    dt <- .extract_and_merge_metadata(se, data.table::copy(dt))
   }
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
@@ -78,7 +78,7 @@ convert_se_assay_to_dt <- function(se,
 }
 
 #' @keywords internal
-.extract__and_merge_metadata <- function(se, dt) {
+.extract_and_merge_metadata <- function(se, dt) {
   rData <- data.table::as.data.table(rowData(se))
   rData[, rId := rownames(se)]
   cData <- data.table::as.data.table(colData(se))
