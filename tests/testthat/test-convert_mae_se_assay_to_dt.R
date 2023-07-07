@@ -157,4 +157,8 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
+
+  expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments,
+                                         assay_name = "Nonexistent"),
+                 "assay 'Nonexistent' was not found in any of the following expeirments")
 })
