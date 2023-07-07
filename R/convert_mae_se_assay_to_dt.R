@@ -106,7 +106,9 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
 
   if (methods::is(object, "BumpyDataFrameMatrix")) {
-    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
+    rowfield <- "rId"
+    colfield <- "cId"
+    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = rowfield, column.field = colfield)
     # Retain nested rownames.
     if (retain_nested_rownames) {
       checkmate::assert_character(rownames(as_df))
@@ -120,11 +122,10 @@ convert_se_assay_to_dt <- function(se,
       as_dt <-
         data.table::melt(data.table::as.data.table(object, keep.rownames = TRUE),
                          measure.vars = colnames(object))
-      data.table::setnames(as_dt, c("rId", "cId", assay_name))
+      data.table::setnames(as_dt, c(rowfield, colfield, assay_name))
     } else {
       stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
     }
-    as_dt
   } else {
     stop(sprintf("assay of class '%s' is not supported", class(object)))
   }
