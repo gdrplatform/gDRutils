@@ -44,6 +44,7 @@ convert_se_assay_to_dt <- function(se,
         BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
       retain_nested_rownames <- TRUE 
     } else {
+      warning("'normalization_type' not found in assay, wide_structure=TRUE ignored")
       wide_structure <- FALSE
     }
   }
