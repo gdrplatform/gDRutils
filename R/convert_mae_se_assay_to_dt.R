@@ -143,15 +143,14 @@ convert_se_assay_to_dt <- function(se,
 #'
 #' @details NOTE: to extract information about 'Control' data, simply call the
 #' function with the name of the assay holding data on controls.
-#' To extract the reference data in to same format as 'Averaged' use \code{convert_mae_ref_assay_to_dt}.
 #'
 #' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with 
 #' raw and/or processed dose-response data in its assays.
-#' @param assay_name String of name of the assay to transform within the \code{se}.
-#' @param experiment_name String of name of the experiment in `mae` whose `assay_name` should be converted.
-#' Default to `NULL` that all the experiment should be converted into one data.table object.
-#' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
-#' and \code{colData(se)} in the returned data.table.
+#' @param assay_name String of name of the assay to transform within an experiment of the \code{mae}.
+#' @param experiment_name String of name of the experiment in \code{mae} whose \code{assay_name} should be converted.
+#' Defaults to \code{NULL} to indicate to convert assay in all experiments into one data.table object.
+#' @param include_metadata Boolean indicating whether or not to include \code{rowData()}
+#' and \code{colData()} in the returned data.table.
 #' Defaults to \code{TRUE}.
 #' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
 #' nested within a \code{BumpyMatrix} assay.
@@ -196,5 +195,10 @@ convert_mae_assay_to_dt <- function(mae,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames)
   })
+  if (all(vapply(dtList, is.null, logical(1)))) {
+    warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
+                    assay_name,
+                    paste(experiment_name, collapse=", ")))
+  }
   data.table::rbindlist(dtList, fill = TRUE, use.names = TRUE)
 }
