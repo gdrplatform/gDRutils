@@ -200,7 +200,7 @@ convert_mae_assay_to_dt <- function(mae,
   if (all(vapply(dtList, is.null, logical(1)))) {
     warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
                     assay_name,
-                    paste(experiment_name, collapse=", ")))
+                    paste(experiment_name, collapse = ", ")))
   }
   data.table::rbindlist(dtList, fill = TRUE, use.names = TRUE)
 }
