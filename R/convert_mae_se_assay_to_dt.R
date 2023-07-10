@@ -79,7 +79,12 @@ convert_se_assay_to_dt <- function(se,
 }
 
 #' @keywords internal
+#' @return data.table containing merged assay data and metadata.
+#' @noRd
 .extract_and_merge_metadata <- function(se, dt) {
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_data_table(dt)
+
   rData <- data.table::as.data.table(rowData(se))
   rData[, rId := rownames(se)]
   cData <- data.table::as.data.table(colData(se))
@@ -106,9 +111,10 @@ convert_se_assay_to_dt <- function(se,
   object <- assays(se)[[assay_name]]
   checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
 
+  rowfield <- "rId"
+  colfield <- "cId"
+
   if (methods::is(object, "BumpyDataFrameMatrix")) {
-    rowfield <- "rId"
-    colfield <- "cId"
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = rowfield, column.field = colfield)
     # Retain nested rownames.
     if (retain_nested_rownames) {
