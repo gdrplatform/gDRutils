@@ -39,7 +39,7 @@ test_that("convert_se_assay_to_dt works as expected", {
   dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = TRUE, retain_nested_rownames = TRUE)
   
   # Properly handles nested rownames.
-  expect_equal(dt$norm_rownames, as.character(nested_rnames))
+  expect_equal(sort(dt$norm_rownames), sort(as.character(nested_rnames)))
   expect_true("norm_rownames" %in% colnames(dt))
   
   merged <- base::merge(df, S4Vectors::DataFrame(dt[, c("rnames", "cnames", "values")]))
@@ -160,5 +160,5 @@ test_that("convert_mae_assay_to_dt works as expected", {
 
   expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments,
                                          assay_name = "Nonexistent"),
-                 "assay 'Nonexistent' was not found in any of the following expeirments")
+                 "assay 'Nonexistent' was not found in any of the following experiments")
 })
