@@ -224,7 +224,7 @@ logisticFit <-
            n_point_cutoff = 4,
            capping_fold = 5) {
     if (length(concs) != length(norm_values)) {
-      stop("unequal vector lengths for 'conc' and 'norm_values'")
+      warning("Unequal vector lengths for 'conc' and 'norm_values'. Invalid fitting.")
     }
     # Check that values have not been logged yet. 
     if (any(concs < 0)) {
