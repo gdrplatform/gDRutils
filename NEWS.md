@@ -1,3 +1,6 @@
+# Change to v.0.99.26
+- Tidy code
+
 # Change to v.0.99.25
 - Add assert for missing rownames
 
