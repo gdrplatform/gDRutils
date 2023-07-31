@@ -9,7 +9,7 @@
 package help page
 }
 \description{
-This package contains utility functions used throughout the gDR platform. Contaion many helper functions for maniplating data, including e.g. converting and validating. This package also has the necessary default constants for gDR platform.
+This package contains utility functions used throughout the gDR platform to maniplate data, including converting and validating data structures. This package also has the necessary default constants for gDR platform.
 }
 \note{
 To learn more about functions start with \code{help(package = "gDRutils")}

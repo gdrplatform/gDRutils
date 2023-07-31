@@ -16,13 +16,13 @@ convert_mae_assay_to_dt(
 \item{mae}{A \linkS4class{MultiAssayExperiment} object holding experiments with
 raw and/or processed dose-response data in its assays.}
 
-\item{assay_name}{String of name of the assay to transform within the \code{se}.}
+\item{assay_name}{String of name of the assay to transform within an experiment of the \code{mae}.}
 
 \item{experiment_name}{String of name of the experiment in \code{mae} whose \code{assay_name} should be converted.
-Default to \code{NULL} that all the experiment should be converted into one data.table object.}
+Defaults to \code{NULL} to indicate to convert assay in all experiments into one data.table object.}
 
-\item{include_metadata}{Boolean indicating whether or not to include \code{rowData(se)}
-and \code{colData(se)} in the returned data.table.
+\item{include_metadata}{Boolean indicating whether or not to include \code{rowData()}
+and \code{colData()} in the returned data.table.
 Defaults to \code{TRUE}.}
 
 \item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames
@@ -41,7 +41,6 @@ to a long data.table.
 \details{
 NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
-To extract the reference data in to same format as 'Averaged' use \code{convert_mae_ref_assay_to_dt}.
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small")
