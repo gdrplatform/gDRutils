@@ -10,7 +10,9 @@
     averaged_results = .getAveragedResultsList(),
     response_metrics = .getResponseMetricsList(),
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
-    add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue", "cellline_ref_div_time"), simplify = FALSE)
+    add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue",
+                                     "cellline_parental_identifier",
+                                     "cellline_subtype", "cellline_ref_div_time"), simplify = FALSE)
   )
   metrics_names <- .getMetricNamesList()
   colnames(metrics_names) <- HEADERS_LIST[["response_metrics"]]

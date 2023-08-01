@@ -57,7 +57,7 @@ merge_SE <- function(SElist,
                     intersect(names(merged_assays$Averaged$DT),
                               c(additional_col_name, discard_keys)), NULL)
   }
-  data <- split_SE_components(merged_assays$Averaged$DT)
+  data <- split_SE_components(merged_assays$Averaged$DT, nested_keys = additional_col_name)
   data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
   identifiers <- NULL
