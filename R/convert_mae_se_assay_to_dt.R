@@ -44,15 +44,16 @@ convert_se_assay_to_dt <- function(se,
         BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
       retain_nested_rownames <- TRUE 
     } else {
+      warning("'normalization_type' not found in assay, wide_structure=TRUE ignored")
       wide_structure <- FALSE
     }
   }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
   if (nrow(dt) == 0L) {
-    return(dt) # TODO: Should this return something else?
+    return(dt)
   }
   if (include_metadata) {
-    dt <- .extract__and_merge_metadata(se, data.table::copy(dt))
+    dt <- .extract_and_merge_metadata(se, data.table::copy(dt))
   }
   if (wide_structure) {
     normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
@@ -78,7 +79,12 @@ convert_se_assay_to_dt <- function(se,
 }
 
 #' @keywords internal
-.extract__and_merge_metadata <- function(se, dt) {
+#' @return data.table containing merged assay data and metadata.
+#' @noRd
+.extract_and_merge_metadata <- function(se, dt) {
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_data_table(dt)
+
   rData <- data.table::as.data.table(rowData(se))
   rData[, rId := rownames(se)]
   cData <- data.table::as.data.table(colData(se))
@@ -105,8 +111,11 @@ convert_se_assay_to_dt <- function(se,
   object <- assays(se)[[assay_name]]
   checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
 
+  rowfield <- "rId"
+  colfield <- "cId"
+
   if (methods::is(object, "BumpyDataFrameMatrix")) {
-    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = "rId", column.field = "cId")
+    as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = rowfield, column.field = colfield)
     # Retain nested rownames.
     if (retain_nested_rownames) {
       checkmate::assert_character(rownames(as_df))
@@ -120,11 +129,10 @@ convert_se_assay_to_dt <- function(se,
       as_dt <-
         data.table::melt(data.table::as.data.table(object, keep.rownames = TRUE),
                          measure.vars = colnames(object))
-      data.table::setnames(as_dt, c("rId", "cId", assay_name))
+      data.table::setnames(as_dt, c(rowfield, colfield, assay_name))
     } else {
       stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
     }
-    as_dt
   } else {
     stop(sprintf("assay of class '%s' is not supported", class(object)))
   }
@@ -143,15 +151,14 @@ convert_se_assay_to_dt <- function(se,
 #'
 #' @details NOTE: to extract information about 'Control' data, simply call the
 #' function with the name of the assay holding data on controls.
-#' To extract the reference data in to same format as 'Averaged' use \code{convert_mae_ref_assay_to_dt}.
 #'
 #' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with 
 #' raw and/or processed dose-response data in its assays.
-#' @param assay_name String of name of the assay to transform within the \code{se}.
-#' @param experiment_name String of name of the experiment in `mae` whose `assay_name` should be converted.
-#' Default to `NULL` that all the experiment should be converted into one data.table object.
-#' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
-#' and \code{colData(se)} in the returned data.table.
+#' @param assay_name String of name of the assay to transform within an experiment of the \code{mae}.
+#' @param experiment_name String of name of the experiment in \code{mae} whose \code{assay_name} should be converted.
+#' Defaults to \code{NULL} to indicate to convert assay in all experiments into one data.table object.
+#' @param include_metadata Boolean indicating whether or not to include \code{rowData()}
+#' and \code{colData()} in the returned data.table.
 #' Defaults to \code{TRUE}.
 #' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
 #' nested within a \code{BumpyMatrix} assay.
@@ -196,5 +203,10 @@ convert_mae_assay_to_dt <- function(mae,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames)
   })
+  if (all(vapply(dtList, is.null, logical(1)))) {
+    warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
+                    assay_name,
+                    paste(experiment_name, collapse = ", ")))
+  }
   data.table::rbindlist(dtList, fill = TRUE, use.names = TRUE)
 }
