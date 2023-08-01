@@ -119,7 +119,5 @@ prettify_flat_metrics <- function(x,
   # adding space between words like “ReferenceDivisionTime”
   prettified_cols <- gsub("([a-z])([A-Z])", "\\1 \\2", prettified_cols)
 
-  # remove leading and trailing whitespace
-  prettified_cols <- trimws(prettified_cols)
-  prettified_cols
+  trimws(prettified_cols)
 }

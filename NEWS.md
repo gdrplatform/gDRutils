@@ -1,5 +1,8 @@
-# Change to v.0.99.26
+# Change to v.0.99.27
 - Keep unchanged names in DataFrame
+
+# Change to v.0.99.26
+- Tidy code
 
 # Change to v.0.99.25
 - Add assert for missing rownames
