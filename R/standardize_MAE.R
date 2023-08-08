@@ -10,11 +10,11 @@
 #' standardize_mae(mae)
 #' 
 #' @export
-standardize_mae <- function(mae) {
+standardize_mae <- function(mae, use_default = TRUE) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
   experiments <- names(mae)
   for (experiment in experiments) {
-    mae[[experiment]] <- standardize_se(mae[[experiment]])
+    mae[[experiment]] <- standardize_se(mae[[experiment]], use_default = use_default)
   }
   mae
 }
@@ -32,14 +32,24 @@ standardize_mae <- function(mae) {
 #' standardize_se(se)
 #' 
 #' @export
-standardize_se <- function(se) {
+standardize_se <- function(se, use_default = TRUE) {
   checkmate::assert_class(se, "SummarizedExperiment")
+  
+  gDRutils::reset_env_identifiers()
   idfs <- get_default_identifiers()
   idfs_se <- get_SE_identifiers(se)
   
+  if (use_default) {
+    from_idfs <- idfs_se
+    to_idfs <- idfs
+  } else {
+    from_idfs <- idfs
+    to_idfs <- idfs_se
+  }
+  
   # Extract matching names of identifiers
-  matching_idfs <- .extract_matching_identifiers(idfs,
-                                                 idfs_se)
+  matching_idfs <- .extract_matching_identifiers(to_idfs,
+                                                 from_idfs)
   
   # Extract changed identifiers
   diff_identifiers <- .extract_diff_identifiers(matching_idfs$default,
@@ -49,8 +59,8 @@ standardize_se <- function(se) {
   
   if ("untreated_tag" %in% diff_names) {
     rowData(se) <- .replace_untreated_tag(rowData(se),
-                                          idfs,
-                                          idfs_se)
+                                          to_idfs,
+                                          from_idfs)
   }
   
   # Create mapping vector
@@ -72,7 +82,6 @@ standardize_se <- function(se) {
     rename_bumpy(x, mapping_vector)
   })
   assays(se) <- assayList
-  se <- set_SE_identifiers(se, idfs)
   se
 }
 
