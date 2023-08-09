@@ -35,7 +35,7 @@ standardize_mae <- function(mae, use_default = TRUE) {
 standardize_se <- function(se, use_default = TRUE) {
   checkmate::assert_class(se, "SummarizedExperiment")
   
-  gDRutils::reset_env_identifiers()
+ reset_env_identifiers()
   idfs <- get_default_identifiers()
   idfs_se <- get_SE_identifiers(se)
   
