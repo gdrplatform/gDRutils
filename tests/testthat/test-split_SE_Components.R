@@ -72,7 +72,7 @@ test_that("split_SE_components returns rowData in a proper order", {
 
 test_that("split_SE_components works with colnames with -", {
   test_df2 <- data.table::copy(test_df)
-  test_df2$`fix5-aza` <- sample(c(0.5 ,0), size = nrow(test_df2), replace = TRUE)
+  test_df2$`fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df2), replace = TRUE)
   md <- split_SE_components(test_df2)
   expect_true("fix5-aza" %in% names(md$treatment_md))
 })
