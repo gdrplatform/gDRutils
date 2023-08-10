@@ -111,7 +111,7 @@ standardize_se <- function(se) {
     } else {
       x
     }
-  }), row.names = rownames(row_data))
+  }), row.names = rownames(row_data), check.names = FALSE)
 }
 
 #' Rename DFrame

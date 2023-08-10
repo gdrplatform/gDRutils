@@ -65,8 +65,16 @@ test_that("add_rownames_to_metadata works as expected", {
 
 test_that("split_SE_components returns rowData in a proper order", {
   md <- split_SE_components(test_df)
-  testthat::expect_true(all(gsub("_.*", "",
-                                  rownames(md$treatment_md)) ==
-                              md$treatment_md[[gDRutils::get_env_identifiers("drug")]]))
+  expect_true(all(gsub("_.*", "",
+                       rownames(md$treatment_md)) ==
+                    md$treatment_md[[gDRutils::get_env_identifiers("drug")]]))
 })
+
+test_that("split_SE_components works with colnames with -", {
+  test_df2 <- data.table::copy(test_df)
+  test_df2$`fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df2), replace = TRUE)
+  md <- split_SE_components(test_df2)
+  expect_true("fix5-aza" %in% names(md$treatment_md))
+})
+
 

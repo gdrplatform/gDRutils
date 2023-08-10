@@ -1,3 +1,6 @@
+# Change to v.0.99.27
+- Keep unchanged names in DataFrame
+
 # Change to v.0.99.26
 - Tidy code
 
