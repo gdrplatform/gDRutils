@@ -52,7 +52,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   identifiers_md <- get_env_identifiers(simplify = TRUE)
   identifiers_md$nested_keys <- nested_keys
 
-  df_ <- S4Vectors::DataFrame(df_)
+  df_ <- S4Vectors::DataFrame(df_, check.names = FALSE)
   all_cols <- colnames(df_)
   # Identify known data fields.
   data_fields <- c(get_header("raw_data"), get_header("normalized_results"),
