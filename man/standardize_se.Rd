@@ -8,6 +8,9 @@ standardize_se(se, use_default = TRUE)
 }
 \arguments{
 \item{se}{a SummarizedExperiment object with drug-response data generate by gDR pipeline}
+
+\item{use_default}{boolean indicating whether or not to use default
+identifiers for standardization}
 }
 \value{
 se a SummarizedExperiment with default gDR identifiers

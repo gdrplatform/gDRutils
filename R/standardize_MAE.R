@@ -1,7 +1,9 @@
 #' Standardize MAE by switching from custom identifiers into gDR-default
 #'
 #' @param mae a MultiAssayExperiment object with drug-response data generate by gDR pipeline
-#'
+#' @param use_default boolean indicating whether or not to use default
+#' identifiers for standardization
+#' 
 #' @return mae a MultiAssayExperiment with default gDR identifiers
 #' 
 #' @examples 
@@ -22,6 +24,8 @@ standardize_mae <- function(mae, use_default = TRUE) {
 #' Standardize SE by switching from custom identifiers into gDR-default
 #'
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
+#' @param use_default boolean indicating whether or not to use default
+#' identifiers for standardization
 #'
 #' @return se a SummarizedExperiment with default gDR identifiers
 #' 
