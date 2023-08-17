@@ -39,7 +39,7 @@ standardize_mae <- function(mae, use_default = TRUE) {
 standardize_se <- function(se, use_default = TRUE) {
   checkmate::assert_class(se, "SummarizedExperiment")
   
- reset_env_identifiers()
+  reset_env_identifiers()
   idfs <- get_default_identifiers()
   idfs_se <- get_SE_identifiers(se)
   
@@ -76,16 +76,20 @@ standardize_se <- function(se, use_default = TRUE) {
                                }
                         )
   )
-  mapping_vector <- mapping_df$x
-  names(mapping_vector) <- mapping_df$y
   
-  # Replace rowData, colData and assays
-  rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
-  colData(se) <- rename_DFrame(colData(se), mapping_vector)
-  assayList <- lapply(assays(se), function(x) {
-    rename_bumpy(x, mapping_vector)
-  })
-  assays(se) <- assayList
+  if (length(mapping_df)) {
+    mapping_vector <- mapping_df$x
+    names(mapping_vector) <- mapping_df$y
+    
+    # Replace rowData, colData and assays
+    rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
+    colData(se) <- rename_DFrame(colData(se), mapping_vector)
+    
+    assayList <- lapply(assays(se), function(x) {
+      rename_bumpy(x, mapping_vector)
+    })
+    assays(se) <- assayList
+  }
   se
 }
 
