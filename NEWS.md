@@ -1,3 +1,6 @@
+# Change to v.0.99.28
+- Improve the logic of standardize_MAE to keep SE-specific metadata and be able to revert standardization
+
 # Change to v.0.99.27
 - Keep unchanged names in DataFrame
 

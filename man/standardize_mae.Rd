@@ -4,10 +4,13 @@
 \alias{standardize_mae}
 \title{Standardize MAE by switching from custom identifiers into gDR-default}
 \usage{
-standardize_mae(mae)
+standardize_mae(mae, use_default = TRUE)
 }
 \arguments{
 \item{mae}{a MultiAssayExperiment object with drug-response data generate by gDR pipeline}
+
+\item{use_default}{boolean indicating whether or not to use default
+identifiers for standardization}
 }
 \value{
 mae a MultiAssayExperiment with default gDR identifiers
