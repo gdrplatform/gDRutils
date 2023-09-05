@@ -40,7 +40,10 @@ IDENTIFIERS_LIST <- list(
   concentration3 = "Concentration_3",
   
   # data source
-  data_source = "data_source"
+  data_source = "data_source",
+  
+  # replicate
+  replicate = "Replicate"
 )
 
 REQ_COL_IDENTIFIERS <- c(
