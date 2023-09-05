@@ -50,7 +50,7 @@ md_df <- data.table::data.table(
   DrugName = rep(c("vehicle", "untreated", paste0("GN", seq(2))), each = 16),
   clid = paste0("C", rep_len(seq(4), n)),
   CellLineName = paste0("N", rep_len(seq(4), n)),
-  replicates = rep_len(paste0("R", rep(seq(4), each = 4)), 64),
+  Replicate = rep_len(paste0("R", rep(seq(4), each = 4)), 64),
   drug_moa = "inhibitor",
   ReferenceDivisionTime = rep_len(c(120, 60), n),
   Tissue = "Lung",
