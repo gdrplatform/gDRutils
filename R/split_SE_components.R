@@ -80,10 +80,6 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
   cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], identifiers_md$cellline)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
-  if (!all(present <- cell_cols %in% cl_entries)) {
-    warning(sprintf("'%s' not metadata for unique cell line identifier column: '%s'", 
-      paste(cell_cols[!present], collapse = ", "), identifiers_md$cellline))
-  }
   md_list <- .combine_drug_and_trt_cols(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols)
   out <- list(
     condition_md = md_list$condition_md,
@@ -103,7 +99,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   drug_md <- identifiers_md[req_identifiers_idx]
   drug_cols <- intersect(drug_md, md_cols)
   cell_id <- identifiers_md$cellline
-  cell_fields <- c(cell_id, get_header("add_clid"))
+  cell_fields <- c(cell_id, get_header("add_clid"), identifiers_md["replicate"])
   cell_cols <- cell_fields[cell_fields %in% md_cols]
   
   remaining_cols <- setdiff(md_cols, c(drug_cols, cell_cols))
