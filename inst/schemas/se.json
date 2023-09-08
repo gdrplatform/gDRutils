@@ -13,7 +13,7 @@
         },
         "experimentalist": {
             "type": "string",
-            "description": "Unix id of experimentalist.",
+            "description": "Unix id or name of experimentalist.",
             "examples": ["eqlin"]
         },
         "duration": {
