@@ -1,3 +1,6 @@
+# Change to v.0.99.30
+- Updated `experimentalist` description in schema
+
 # Change to v.0.99.29
 - Add `Replicate` as a new identifier
 
