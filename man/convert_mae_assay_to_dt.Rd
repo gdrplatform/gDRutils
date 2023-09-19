@@ -9,7 +9,8 @@ convert_mae_assay_to_dt(
   assay_name,
   experiment_name = NULL,
   include_metadata = TRUE,
-  retain_nested_rownames = FALSE
+  retain_nested_rownames = FALSE,
+  wide_structure = FALSE
 )
 }
 \arguments{
@@ -30,6 +31,10 @@ nested within a \code{BumpyMatrix} assay.
 Defaults to \code{FALSE}.
 If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.}
+
+\item{wide_structure}{Boolean indicating whether or not to transform data.table into wide format.
+\code{wide_structure = TRUE} requires \code{retain_nested_rownames = TRUE} however that will be validated
+in \code{convert_se_assay_to_dt} function}
 }
 \value{
 data.table representation of the data in \code{assay_name}.
@@ -48,7 +53,7 @@ convert_mae_assay_to_dt(mae, "Metrics")
 
 }
 \seealso{
-flatten
+flatten convert_se_assay_to_dt
 }
 \author{
 Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
