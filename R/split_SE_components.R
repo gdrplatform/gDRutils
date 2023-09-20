@@ -52,7 +52,6 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   identifiers_md <- get_env_identifiers(simplify = TRUE)
   identifiers_md$nested_keys <- nested_keys
 
-  df_ <- S4Vectors::DataFrame(df_, check.names = FALSE)
   all_cols <- colnames(df_)
   # Identify known data fields.
   data_fields <- c(get_header("raw_data"), get_header("normalized_results"),
@@ -62,7 +61,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   data_fields <- unique(data_fields)
   data_cols <- data_fields[data_fields %in% all_cols]
   md_cols <- setdiff(all_cols, data_cols) 
-  md <- unique(df_[, md_cols]) 
+  md <- unique(df_[, md_cols, with = FALSE]) 
   colnames_list <- .extract_colnames(identifiers_md, md_cols)
   remaining_cols <- colnames_list$remaining_cols
   cell_cols <- colnames_list$cell_cols
@@ -75,10 +74,11 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     logical(1))
   # Get experiment columns.
   constant_cols <- remaining_cols[singletons]
-  exp_md <- unique(md[, constant_cols, drop = FALSE])
+  exp_md <- unique(md[, constant_cols, with = FALSE])
   remaining_cols <- remaining_cols[!singletons]
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
-  cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], identifiers_md$cellline)
+  cl_entries <- identify_linear_dependence(md[, c(unname(unlist(cell_cols)), remaining_cols), with = FALSE],
+                                           identifiers_md$cellline)
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   md_list <- .combine_drug_and_trt_cols(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols)
   out <- list(
@@ -137,7 +137,7 @@ identify_linear_dependence <- function(df, identifier) {
   }
   entries <- identifier
   for (j in setdiff(colnames(df), identifier)) {
-    prop <- split(df[[j]], as.factor(df[, identifier]))
+    prop <- split(df[[j]], as.factor(df[[identifier]]))
     prop <- lapply(prop, function(grp) {
       length(unique(grp)) == 1L
       })
@@ -151,10 +151,7 @@ identify_linear_dependence <- function(df, identifier) {
 
 #' @keywords internal
 add_rownames_to_metadata <- function(md, cols) {
-  md <- unique(md[, unname(unlist(cols)), drop = FALSE])
-  rownames(md) <- apply(md, 1, function(x) {
-    paste(x, collapse = "_")
-    })
-  md <- md[! names(md) %in% c("unique_id")]
-  md
+  md <- unique(md[, unname(unlist(cols)), with = FALSE])
+  rownames(md) <- do.call(paste, c(as.data.frame(md), sep = "_"))
+  md[, setdiff(names(md), "unique_id"), with = FALSE]
 }
