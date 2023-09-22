@@ -36,7 +36,8 @@ test_that("convert_se_assay_to_dt works as expected", {
   expect_equal(merged$r, merged$rId)
   expect_equal(merged$c, merged$cId)
   
-  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = TRUE, retain_nested_rownames = TRUE)
+  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", 
+                               include_metadata = TRUE, retain_nested_rownames = TRUE)
   
   # Properly handles nested rownames.
   expect_equal(sort(dt$norm_rownames), sort(as.character(nested_rnames)))
@@ -63,7 +64,7 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
                                                    colData = S4Vectors::DataFrame(colnames(mat)))
   
   obs <- convert_se_assay_to_dt(se, "Metrics")
-
+  
   expect_equal(nrow(obs), m * 2)
   expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs)))
   
@@ -103,22 +104,34 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 3))
   
+  dt <- suppressWarnings(convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue", 
+                                                 include_metadata = FALSE, wide_structure = TRUE))
+  checkmate::expect_data_table(dt)
+  expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
+  expect_equal(dim(dt), c(m * n, 3))
+  expect_warning(convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue",
+                                         include_metadata = FALSE, wide_structure = TRUE),
+                 "assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
+  
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = TRUE)
   expect_equal(data.table::setorder(dt, cId)[["RefGRvalue"]], as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
   
-  se1 <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value[1:10, ]),
-                                                   rowData = S4Vectors::DataFrame(rnames)[1:10, , drop = FALSE],
-                                                   colData = S4Vectors::DataFrame(cnames))
+  se1 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(RefGRvalue = ref_gr_value[1:10, ]),
+    rowData = S4Vectors::DataFrame(rnames)[1:10, , drop = FALSE],
+    colData = S4Vectors::DataFrame(cnames))
   
-  se2 <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value[11:20, ]),
-                                                    rowData = S4Vectors::DataFrame(rnames)[11:20, , drop = FALSE],
-                                                    colData = S4Vectors::DataFrame(cnames))
+  se2 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(RefGRvalue = ref_gr_value[11:20, ]),
+    rowData = S4Vectors::DataFrame(rnames)[11:20, , drop = FALSE],
+    colData = S4Vectors::DataFrame(cnames))
   
-  maeTwoExperiments <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se1,
-                                                                                     "matrix" = se2))
+  maeTwoExperiments <- MultiAssayExperiment::MultiAssayExperiment(
+    experiments = list("single-agent" = se1,
+                       "matrix" = se2))
   
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
@@ -129,7 +142,8 @@ test_that("convert_mae_assay_to_dt works as expected", {
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
   checkmate::expect_data_table(dt1)
-  expect_equal(sort(data.table::setorder(dt1)[["RefGRvalue"]]), sort(as.vector(ref_gr_value[1:10, ])))
+  expect_equal(sort(data.table::setorder(dt1)[["RefGRvalue"]]), 
+               sort(as.vector(ref_gr_value[1:10, ])))
   expect_equal(dim(dt1), c(m / 2 * n, 5))
   expect_equal(dt1$rnames, as.character(dt1$rId))
   expect_equal(dt1$cnames, as.character(dt1$cId))
@@ -144,7 +158,8 @@ test_that("convert_mae_assay_to_dt works as expected", {
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
   checkmate::expect_data_table(dt2)
-  expect_equal(sort(data.table::setorder(dt2)[["RefGRvalue"]]), sort(as.vector(ref_gr_value[11:20, ])))
+  expect_equal(sort(data.table::setorder(dt2)[["RefGRvalue"]]), 
+               sort(as.vector(ref_gr_value[11:20, ])))
   expect_equal(dim(dt2), c(m / 2 * n, 5))
   expect_equal(dt2$rnames, as.character(dt2$rId))
   expect_equal(dt2$cnames, as.character(dt2$cId))
@@ -157,8 +172,28 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
-
+  
   expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments,
                                          assay_name = "Nonexistent"),
                  "assay 'Nonexistent' was not found in any of the following experiments")
+  
+  expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments, assay_name = "RefGRvalue", 
+                                         include_metadata = TRUE, wide_structure = TRUE),
+                 "assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
+  
+  
+  real_mae <- get_synthetic_data("finalMAE_small")
+  
+  dt_l <- convert_mae_assay_to_dt(mae = real_mae, assay_name = "Averaged", wide_structure = FALSE)
+  checkmate::expect_data_table(dt_l)
+  col_l <- c("normalization_type", "x", "x_std")
+  expect_true(all(col_l %in% colnames(dt_l)))
+  
+  dt_w <- convert_mae_assay_to_dt(mae = real_mae, assay_name = "Averaged", wide_structure = TRUE)
+  checkmate::expect_data_table(dt_w)
+  col_w <- c("RelativeViability", "GRvalue", "std_RelativeViability", "std_GRvalue")
+  expect_true(all(col_w %in% colnames(dt_w)))
+  
+  expect_equal(setdiff(colnames(dt_w), col_w), setdiff(colnames(dt_l), col_l))
+  expect_equal(max(dt_l[, .N, by = "normalization_type"]$N), NROW(dt_w))
 })
