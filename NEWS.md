@@ -1,4 +1,7 @@
 # Change to v.0.99.30
+- Add `wide_structure` param to `convert_mae_assay_to_dt`
+
+# Change to v.0.99.30
 - Updated `experimentalist` description in schema
 
 # Change to v.0.99.29
