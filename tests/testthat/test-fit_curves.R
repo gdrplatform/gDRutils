@@ -377,3 +377,20 @@ test_that("cap_xc50 works as expected", {
   expect_equal(cap_xc50(xc50 = 1e-6, max_conc = 5, capping_fold = 5), -Inf)
   expect_equal(cap_xc50(xc50 = 1, max_conc = 5, capping_fold = 5), 1)
 })
+
+test_that("predict_efficacy_from_conc works as expected", {
+  # params
+  h <- 2
+  x_inf <- 0.1
+  x_0 <- 1
+  ec50 <- 0.5
+  conc <- c(0, 10 ^ (seq(-3, 1, 0.5)))
+  
+  out <- predict_efficacy_from_conc(conc, x_inf, x_0, ec50, h)
+  
+  res <- c(x_0, 
+           vapply(conc[2:NROW(conc)], 
+                  function(c) x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h), numeric(1)))
+  
+  expect_equal(out, res)
+})
