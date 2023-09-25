@@ -414,7 +414,9 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
   checkmate::assert_numeric(h)
   assert_equal_input_len(outlier = c, x_inf, x_0, ec50, h)
 
-  x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h)
+  ifelse(c > 0, 
+         x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h), 
+         x_0) # avoid issues with c=0 for DRCConstantFitResult
 }
 
 

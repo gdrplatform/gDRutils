@@ -1,4 +1,7 @@
-# Change to v.0.99.30
+# Change to v.0.99.32
+- Fix bug in the case of conc=0 for evaluating efficacy
+
+# Change to v.0.99.31
 - Add `wide_structure` param to `convert_mae_assay_to_dt`
 
 # Change to v.0.99.30
