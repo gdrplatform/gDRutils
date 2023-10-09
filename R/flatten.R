@@ -58,7 +58,12 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   rename <- colnames(out[[1]]) %in% wide_cols
   for (grp in names(out)) {
     group <- out[[grp]]
-    colnames(group)[rename] <- paste0(grp, sep, colnames(group)[rename])
+    colnames(group)[rename] <- if (any("x" == colnames(group))) {
+      gsub("x(_)(.*)|^x$", paste0("\\2", "\\1", extend_normalization_type_name(grp)),
+           colnames(group)[rename])
+      } else {
+        paste0(grp, sep, colnames(group)[rename])
+      }
     out[[grp]] <- group
   }
 
