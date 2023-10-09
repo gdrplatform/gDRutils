@@ -1,3 +1,6 @@
+# Change to v.0.99.33
+- Add support for flattening averaged assays
+
 # Change to v.0.99.32
 - Fix bug in the case of conc=0 for evaluating efficacy
 
