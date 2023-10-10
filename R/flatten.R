@@ -58,7 +58,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   rename <- colnames(out[[1]]) %in% wide_cols
   for (grp in names(out)) {
     group <- out[[grp]]
-    colnames(group)[rename] <- if (any("x" == colnames(group))) {
+    colnames(group)[rename] <- if (any(colnames(group) == "x")) {
       gsub("x(_)(.*)|^x$", paste0("\\2", "\\1", extend_normalization_type_name(grp)),
            colnames(group)[rename])
       } else {
@@ -69,6 +69,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
 
   ## Drop empty elements for successful merge.
   filtered <- out[lapply(out, nrow) > 0L]
-  Reduce(function(x, y) x[y, on = intersect(names(x), names(y)),
-                          allow.cartesian = TRUE], filtered)
+  Reduce(function(x, y) {
+    x[y, on = intersect(names(x), names(y)), allow.cartesian = TRUE]
+    }, filtered)
 }
