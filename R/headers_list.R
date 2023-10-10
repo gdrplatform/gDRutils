@@ -81,8 +81,7 @@
 #' @keywords internal
 .getAveragedResultsList <- function() {
   c(
-    "std_GRvalue", 
-    "std_RelativeViability",
+    "x",
     "x_std"
   )
 }
