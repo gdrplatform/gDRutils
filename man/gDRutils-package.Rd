@@ -24,6 +24,7 @@ Authors:
   \item Marc Hafner
   \item Pawel Piatkowski
   \item Dariusz Scigocki
+  \item Janina Smola
   \item Sergiu Mocanu
   \item Allison Vuong
 }
