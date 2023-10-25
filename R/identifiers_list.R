@@ -24,7 +24,7 @@ IDENTIFIERS_LIST <- list(
 
   well_position = c("WellRow", "WellColumn"),
   concentration = "Concentration",
-  template = "Template",
+  template = c("Template", "Treatment"),
   barcode = c("Barcode", "Plate"),
  
   # ids for the 2nd drug 
