@@ -1,3 +1,6 @@
+## 0.99.35 (2023-10-26)
+- added new function `gemoetric_mean`
+
 ## 0.99.34 (2023-10-18)
 - adjust NEWS to Bioc format
 
