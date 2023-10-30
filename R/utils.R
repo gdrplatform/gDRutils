@@ -396,7 +396,7 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
   if (fixed) {
     x <- pmax(
       10 ^ maxlog10Concentration / 1e6,
-      pmin(5 * 10 ** maxlog10Concentration, x)
+      pmin(5 * 10 ^ maxlog10Concentration, x)
     )
   }
   exp(mean(log(x)))
