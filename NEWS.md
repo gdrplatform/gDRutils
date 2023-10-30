@@ -1,3 +1,6 @@
+## 0.99.36 (2023-10-30)
+- transform values into numeric in `predict_efficacy_from_conc` function 
+
 ## 0.99.35 (2023-10-24)
 - add "Treatment" as template identifier
 
