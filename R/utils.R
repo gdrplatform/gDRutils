@@ -393,6 +393,10 @@ get_synthetic_data <- function(qs) {
 #' 
 #' @keywords internal
 geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_flag(fixed)
+  checkmate::assert_numeric(maxlog10Concentration)
+  
   if (fixed) {
     x <- pmax(
       10 ^ maxlog10Concentration / 1e6,
