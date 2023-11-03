@@ -377,3 +377,32 @@ get_synthetic_data <- function(qs) {
   }
   qs::qread(system.file("testdata", qs, package = "gDRtestData"))
 }
+
+
+#' Geometric mean
+#' 
+#' Auxiliary function for calculating geometric mean with possibility to handle -Inf
+#' 
+#' @param x numeric vector
+#' @param fixed flag should be add fix for -Inf 
+#' @param maxlog10Concentration numeric value needed to calculate minimal value
+#' 
+#' @return numeric vector
+#' 
+#' @export
+#' 
+#' @keywords internal
+geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_flag(fixed)
+  checkmate::assert_numeric(maxlog10Concentration)
+  
+  if (fixed) {
+    x <- pmax(
+      10 ^ maxlog10Concentration / 1e6,
+      pmin(5 * 10 ^ maxlog10Concentration, x)
+    )
+  }
+  exp(mean(log(x)))
+}
+

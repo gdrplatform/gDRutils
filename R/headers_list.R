@@ -9,6 +9,7 @@
     normalized_results = .getNormalizedResultsList(),
     averaged_results = .getAveragedResultsList(),
     response_metrics = .getResponseMetricsList(),
+    metric_average_filds = .getMetricAverageFilds(),
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
     add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue",
                                      "cellline_parental_identifier",
@@ -138,6 +139,23 @@
   )
 }
 
+#' @keywords internal
+.getMetricAverageFilds <- function() {
+  list(
+    mean = c(
+      "x_mean", 
+      "x_AOC", 
+      "x_AOC_range", 
+      "x_max", 
+      "x_inf", 
+      "x_0"
+    ),
+    geometric_mean = c(
+      "xc50", 
+      "ec50"
+    )
+  )
+}
 
 #' @keywords internal
 .orderHeaderList <- function(headers_list, type) {

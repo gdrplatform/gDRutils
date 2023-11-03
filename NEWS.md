@@ -1,3 +1,6 @@
+## 0.99.37 (2023-11-02)
+- added new function `gemoetric_mean`
+
 ## 0.99.36 (2023-10-30)
 - transform values into numeric in `predict_efficacy_from_conc` function 
 
