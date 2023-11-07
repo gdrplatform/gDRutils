@@ -389,6 +389,9 @@ get_synthetic_data <- function(qs) {
 #' 
 #' @return numeric vector
 #' 
+#' @examples 
+#' geometric_mean(c(2, 8))
+#' 
 #' @export
 #' 
 #' @keywords internal

@@ -19,4 +19,8 @@ numeric vector
 \description{
 Auxiliary function for calculating geometric mean with possibility to handle -Inf
 }
+\examples{
+geometric_mean(c(2, 8))
+
+}
 \keyword{internal}
