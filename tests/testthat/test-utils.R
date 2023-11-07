@@ -179,18 +179,24 @@ test_that("geometric_mean works as expected", {
     "Assertion on 'maxlog10Concentration' failed: Must be of type 'numeric', not 'character'."
   )
   
-  expect_equal(geometric_mean(c(2,8)), 4)
-  expect_equal(geometric_mean(c(0.02,8)), 0.4)
+  expect_equal(geometric_mean(c(2, 8)), 4)
+  expect_equal(geometric_mean(c(0.02, 8)), 0.4)
   
-  expect_equal(round(geometric_mean(c(0.000000000002,8)), digits = 5), 0.00894)
-  expect_equal(round(geometric_mean(c(0.000000000002,8), fixed = TRUE), digits = 5), 0.00894)
-  expect_equal(geometric_mean(c(0.000000000002,8), fixed = FALSE), 0.000004)
+  expect_equal(round(geometric_mean(c(0.000000000002, 8)), digits = 5), 0.00894)
+  expect_equal(round(geometric_mean(c(0.000000000002, 8), fixed = TRUE), digits = 5), 0.00894)
+  expect_equal(geometric_mean(c(0.000000000002, 8), fixed = FALSE), 0.000004)
   
-  expect_equal(geometric_mean(c(2,800)), 10)
-  expect_equal(geometric_mean(c(2,800), fixed = TRUE), 10)
-  expect_equal(geometric_mean(c(2,800), fixed = FALSE), 40)
+  expect_equal(geometric_mean(c(2, 800)), 10)
+  expect_equal(geometric_mean(c(2, 800), fixed = TRUE), 10)
+  expect_equal(geometric_mean(c(2, 800), fixed = FALSE), 40)
   
-  expect_equal(round(geometric_mean(c(2,8), fixed = TRUE, maxlog10Concentration = 1), digits = 5), 4)
-  expect_equal(round(geometric_mean(c(2,8), fixed = TRUE, maxlog10Concentration = 0.1), digits = 5), 3.54813)
+  expect_equal(round(
+    geometric_mean(c(2, 8), fixed = TRUE, maxlog10Concentration = 1),
+    digits = 5
+  ), 4)
+  expect_equal(round(
+    geometric_mean(c(2, 8), fixed = TRUE, maxlog10Concentration = 0.1),
+    digits = 5
+  ), 3.54813)
   
 })

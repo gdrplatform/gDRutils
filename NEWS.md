@@ -1,3 +1,6 @@
+## 0.99.38 (2023-11-06)
+- added minor fix in code styling
+
 ## 0.99.37 (2023-11-02)
 - added new function `gemoetric_mean`
 
