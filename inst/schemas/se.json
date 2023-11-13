@@ -48,7 +48,8 @@
             "description": "Reference division time of the given cell line",
             "type": "array",
             "items": {
-                 "type": "integer"
+                 "type": ["integer", "string"],
+                 "pattern": "[0-9]+|NA"
             }
         },
         "drug": {
