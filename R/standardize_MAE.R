@@ -198,13 +198,14 @@ get_optional_coldata_fields <- function(se) {
 #'
 get_optional_rowdata_fields <- function(se) {
   idfs <- get_SE_identifiers(se)
+  rowdata <- data.table::as.data.table(SummarizedExperiment::rowData(se))
   
   out <- c(idfs["drug_moa"])
   
-  if (!is.null(idfs["drug2"])) {
+  if (!is.null(rowdata[[idfs[["drug2"]]]])) {
     out <- c(out, idfs["drug_moa2"])
   }
-  if (!is.null(idfs["drug3"])) {
+  if (!is.null(rowdata[[idfs[["drug3"]]]])) {
     out <- c(out, idfs["drug_moa3"])
   }
   

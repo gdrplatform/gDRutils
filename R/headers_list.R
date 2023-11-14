@@ -42,6 +42,7 @@
     get_env_identifiers("drug_name", simplify = TRUE),
     get_env_identifiers("masked_tag", simplify = TRUE),
     paste0(get_env_identifiers("drug_name", simplify = TRUE), "_", 2:10),
+    paste0(get_env_identifiers("drug_moa", simplify = TRUE), "_", 2:10),
     HEADERS_LIST[["raw_data"]],
     HEADERS_LIST[["normalized_results"]],
     HEADERS_LIST[["averaged_results"]],
@@ -51,6 +52,8 @@
   
   HEADERS_LIST[["ordered_1"]] <- .orderHeaderList(HEADERS_LIST, 1)
   HEADERS_LIST[["ordered_2"]] <- .orderHeaderList(HEADERS_LIST, 2)
+  
+  HEADERS_LIST[["id"]] <- c("rId", "cId")
 
   HEADERS_LIST
 }
@@ -83,7 +86,9 @@
 .getAveragedResultsList <- function() {
   c(
     "x",
-    "x_std"
+    "x_std",
+    "std_RelativeViability",
+    "std_GRvalue"
   )
 }
 
