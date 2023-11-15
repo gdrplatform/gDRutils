@@ -1,3 +1,7 @@
+## 0.99.40 (2023-11-15)
+- fix bug with refining rowData
+- extend the list of headers
+
 ## 0.99.39 (2023-11-10)
 - update schema to support NA in reference division time
 
