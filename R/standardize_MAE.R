@@ -198,7 +198,7 @@ get_optional_coldata_fields <- function(se) {
 #'
 get_optional_rowdata_fields <- function(se) {
   idfs <- get_SE_identifiers(se)
-  rowdata <- data.table::as.data.table(SummarizedExperiment::rowData(se))
+  rowdata <- SummarizedExperiment::rowData(se)
   
   out <- c(idfs["drug_moa"])
   
