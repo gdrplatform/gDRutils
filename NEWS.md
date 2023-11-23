@@ -1,17 +1,16 @@
-## 0.99.39 (2023-11-10)
+## 1.1.1 (2023-11-22)
+- sync master with devel branch
 - update schema to support NA in reference division time
-
-## 0.99.38 (2023-11-06)
 - added minor fix in code styling
-
-## 0.99.37 (2023-11-02)
 - added new function `gemoetric_mean`
-
-## 0.99.36 (2023-10-30)
 - transform values into numeric in `predict_efficacy_from_conc` function 
-
-## 0.99.35 (2023-10-24)
 - add "Treatment" as template identifier
+
+## 1.1.0 (2023-10-24)
+- release Bioc 3.18
+
+## 1.0.0 (2023-10-24)
+- prerelease Bioc 3.18
 
 ## 0.99.34 (2023-10-18)
 - adjust NEWS to Bioc format
