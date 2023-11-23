@@ -10,7 +10,7 @@
 - release Bioc 3.18
 
 ## 1.0.0 (2023-10-24)
-- release Bioc 3.18
+- prerelease Bioc 3.18
 
 ## 0.99.34 (2023-10-18)
 - adjust NEWS to Bioc format
