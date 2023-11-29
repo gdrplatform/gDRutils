@@ -409,3 +409,41 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
   exp(mean(log(x)))
 }
 
+#' Average biological replicates.
+#'
+#' Average biological replicates on the data table side. 
+#'
+#' @param dt data.table with Metric data
+#' @param group_by Character vector of column names in \code{dt} to group by.
+#' @param fixed Flag should be add fix for -Inf in geometric mean.
+#' @param average_fields Character vector of column names in \code{dt} to take 
+#' the average of.
+#' @param geometric_average_fields Character vector of column names in \code{dt} 
+#' to take the geometric average of.
+#' 
+#' @return data.table without replicates
+#' @export
+average_biological_replicates_dt <- function(
+    dt,
+    group_by = c(
+      get_env_identifiers("cellline"),
+      get_env_identifiers("drug"),
+      "normalization_type"
+    ),
+    fixed = TRUE,
+    average_fields = get_header("metric_average_fields")$mean,
+    geometric_average_fields = get_header("metric_average_fields")$geometric_mean) {
+  
+  #TODO: add support for specific rows to keep/remove/include in averaging
+  dt[, 
+     (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
+     .SDcols = average_fields, 
+     by = group_by][, 
+                    (geometric_average_fields) := lapply(.SD, FUN = function(x) {
+                      geometric_mean(x, fixed = fixed)
+                    }), 
+                    .SDcols = geometric_average_fields, 
+                    by = group_by]
+  unique(dt, by = group_by)
+}
+
