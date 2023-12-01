@@ -59,7 +59,6 @@ modifyData <- function(x, ...) {
 
 #' @export
 #' @describeIn modifyData includes the name and concentration of the second drug
-#' #
 modifyData.drug_name2 <- function(x, option, keep, ...) {
   assert_data_table(x)
   assert_string(option)
@@ -148,7 +147,6 @@ modifyData.data_source <- function(x, option, keep, ...) {
 
 #' @export
 #' @describeIn modifyData includes the name of other additional variables
-#' #
 modifyData.default <- function(x, option, keep, ...) {
   assert_data_table(x)
   assert_string(option)

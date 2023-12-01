@@ -15,13 +15,14 @@ average_biological_replicates_dt(
 \arguments{
 \item{dt}{data.table with Metric data}
 
+\item{var}{String representing additional metadata of replicates}
+
+\item{pidfs}{list of prettified identifiers}
+
 \item{fixed}{Flag should be add fix for -Inf in geometric mean.}
 
 \item{geometric_average_fields}{Character vector of column names in \code{dt}
 to take the geometric average of.}
-
-\item{average_fields}{Character vector of column names in \code{dt} to take
-the average of.}
 }
 \value{
 data.table without replicates

@@ -414,9 +414,9 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' Average biological replicates on the data table side. 
 #'
 #' @param dt data.table with Metric data
+#' @param var String representing additional metadata of replicates
+#' @param pidfs list of prettified identifiers
 #' @param fixed Flag should be add fix for -Inf in geometric mean.
-#' @param average_fields Character vector of column names in \code{dt} to take 
-#' the average of.
 #' @param geometric_average_fields Character vector of column names in \code{dt} 
 #' to take the geometric average of.
 #' 
@@ -444,4 +444,3 @@ average_biological_replicates_dt <- function(
                     by = group_by]
   unique(data, by = group_by)
 }
-
