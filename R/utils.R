@@ -431,15 +431,16 @@ average_biological_replicates_dt <- function(
   data <- data.table::copy(dt)
   average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
-  group_by <- setdiff(names(data), c(average_fields, var))
+  group_by <- setdiff(names(data),
+                      c(average_fields, var, prettify_flat_metrics(get_header("id"), human_readable = TRUE)))
   data <- data[, (var) := NULL][, 
-     (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
-     .SDcols = average_fields, 
-     by = group_by][,
-                    (geometric_average_fields) := lapply(.SD, FUN = function(x) {
-                      geometric_mean(x, fixed = fixed)
-                    }), 
-                    .SDcols = geometric_average_fields, 
-                    by = group_by]
+                                (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
+                                .SDcols = average_fields, 
+                                by = group_by][,
+                                               (geometric_average_fields) := lapply(.SD, FUN = function(x) {
+                                                 geometric_mean(x, fixed = fixed)
+                                               }), 
+                                               .SDcols = geometric_average_fields, 
+                                               by = group_by]
   unique(data, by = group_by)
 }
