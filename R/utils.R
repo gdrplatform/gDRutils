@@ -428,9 +428,8 @@ average_biological_replicates_dt <- function(
     pidfs = get_prettified_identifiers(),
     fixed = TRUE,
     geometric_average_fields = get_header("metric_average_fields")$geometric_mean) {
-  
   data <- data.table::copy(dt)
-  average_fields <- setdiff(names(Filter(is.numeric, data)), unlist(pidfs))
+  average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
   group_by <- setdiff(names(data), c(average_fields, var))
   data <- data[, (var) := NULL][, 
