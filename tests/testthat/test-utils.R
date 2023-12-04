@@ -200,3 +200,17 @@ test_that("geometric_mean works as expected", {
   ), 3.54813)
   
 })
+
+
+test_that("average_biological_replicates_dt works as expected", {
+  ligand_data <- gDRutils::get_synthetic_data("finalMAE_wLigand")
+  metrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
+  data.table::setnames(metrics_data,
+                       prettify_flat_metrics(names(metrics_data),
+                                             human_readable = TRUE))
+  avg_metrics_data <- average_biological_replicates_dt(dt = metrics_data,
+                                                       var = "Ligand")
+  expect_equal(dim(metrics_data), c(60, 27))
+  expect_equal(dim(avg_metrics_data), c(40, 26))
+  expect_true(!"Ligand" %in% names(avg_metrics_data))
+})
