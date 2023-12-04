@@ -55,14 +55,18 @@
   
   HEADERS_LIST[["id"]] <- c("rId", "cId")
   
-  HEADERS_LIST[["combo"]] <- c("normalization_type",
-                               "iso_level",
-                               "pos_x",
-                               "pos_y",
-                               "pos_x_ref",
-                               "pos_y_ref",
-                               "log2_CI",
-                               "log10_ratio_conc")
+  
+  HEADERS_LIST[["iso_position"]] <- c("iso_level",
+                                      "pos_x",
+                                      "pos_y",
+                                      "pos_x_ref",
+                                      "pos_y_ref")
+  
+  
+  HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
+                                      HEADERS_LIST[["iso_position"]],
+                                      "log2_CI",
+                                      "log10_ratio_conc")
   
   HEADERS_LIST[["obsolete"]] <- c("RV",
                                   "GR",
