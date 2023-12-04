@@ -171,7 +171,11 @@
     ),
     geometric_mean = c(
       "xc50", 
-      "ec50"
+      "ec50",
+      "GR50",
+      "GEC50",
+      "IC50",
+      "EC50"
     )
   )
 }
