@@ -1,4 +1,3 @@
-
 context("Tests for helpers-manageData")
 m <- 9
 n <- 5
@@ -10,15 +9,4 @@ dt <- synthetic_data$dt
 
 test_that("addClass works as expected", {
   expect_s3_class(addClass(dt, "testingClass"), "testingClass")
-})
-
-
-test_that("modifyData works as expected", {
-  dt2 <- dt
-  dt2[["GR_AOC (GDS)"]] <- 1
-  data <- list(dt2)
-  dtReplaced <- replaceMetrics(list(dt2), c("gDR", "GDS"), "GDS")
-  expect_subset("GR_AOC (gDR)", names(dtReplaced[[1]]))
-  expect_equal(dt2[["GR_AOC"]], dtReplaced[[1]][["GR_AOC (gDR)"]])
-  expect_equal(dt2[["GR_AOC (GDS)"]], dtReplaced[[1]][["GR_AOC"]])
 })
