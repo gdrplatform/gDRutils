@@ -14,7 +14,7 @@
 #' @export
 #'
 addClass <- function(x, newClass) {
-  assert_string(newClass)
+  checkmate::assert_string(newClass)
   if (!is(x, newClass)) {
     class(x) <- c(newClass, class(x))
   }
@@ -60,10 +60,10 @@ modifyData <- function(x, ...) {
 #' @export
 #' @describeIn modifyData includes the name and concentration of the second drug
 modifyData.drug_name2 <- function(x, option, keep, ...) {
-  assert_data_table(x)
-  assert_string(option)
-  assert_choice(option, c("average", "toDrug", "toCellLine"))
-  assert_string(keep, null.ok = TRUE)
+  checkmate::assert_data_table(x)
+  checkmate::assert_string(option)
+  checkmate::assert_choice(option, c("average", "toDrug", "toCellLine"))
+  checkmate::assert_string(keep, null.ok = TRUE)
   
   pidfs <- get_prettified_identifiers(simplify = TRUE)
   drug_name <- pidfs[["drug_name"]]
@@ -106,10 +106,10 @@ modifyData.drug_name2 <- function(x, option, keep, ...) {
 #' @export
 #' @describeIn modifyData includes the data source
 modifyData.data_source <- function(x, option, keep, ...) {
-  assert_data_table(x)
-  assert_string(option)
-  assert_choice(option, c("average", "toDrug", "toCellLine"))
-  assert_string(keep, null.ok = TRUE)
+  checkmate::assert_data_table(x)
+  checkmate::assert_string(option)
+  checkmate::assert_choice(option, c("average", "toDrug", "toCellLine"))
+  checkmate::assert_string(keep, null.ok = TRUE)
   
   pidfs <- get_prettified_identifiers(simplify = TRUE)
   dt_src <- pidfs[["data_source"]]
@@ -148,10 +148,10 @@ modifyData.data_source <- function(x, option, keep, ...) {
 #' @export
 #' @describeIn modifyData includes the name of other additional variables
 modifyData.default <- function(x, option, keep, ...) {
-  assert_data_table(x)
-  assert_string(option)
-  assert_choice(option, c("average", "toDrug", "toCellLine"))
-  assert_string(keep, null.ok = TRUE)
+  checkmate::assert_data_table(x)
+  checkmate::assert_string(option)
+  checkmate::assert_choice(option, c("average", "toDrug", "toCellLine"))
+  checkmate::assert_string(keep, null.ok = TRUE)
   pidfs <- get_prettified_identifiers(simplify = TRUE)
   additional_var_names <- class(x)[[1]]
   additional_var <- ifelse(additional_var_names %in% names(pidfs),
