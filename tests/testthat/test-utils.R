@@ -214,3 +214,30 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_equal(dim(avg_metrics_data), c(40, 26))
   expect_true(!"Ligand" %in% names(avg_metrics_data))
 })
+
+test_that("get_duplicated_rows works as expected", {
+  
+  # single column
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = "DrugName"),
+    c(1, 2)
+  )
+  # single column with only duplicates
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = "DrugName_2"),
+    c(1, 2, 3)
+  )
+  # single column without duplicates
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = c("Gnumber")),
+    integer()
+  )
+  # multiple columns
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = c("DrugName_2", "DrugName")),
+    c(1, 2)
+  )
+  
+  expect_error(get_duplicated_rows(DF1co, c("DrugName", "Fake Column")),
+               "Assertion on 'all(col_names %in% colnames(x))' failed: Must be TRUE.", fixed = TRUE)
+})
