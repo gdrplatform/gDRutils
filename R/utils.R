@@ -456,8 +456,8 @@ average_biological_replicates_dt <- function(
 #' @return integer vector
 #' @export
 get_duplicated_rows <- function(x, col_names = NULL) {
-  assert_true(inherits(x, "data.table") || inherits(x, "DataFrame"))
-  assert_true(all(col_names %in% colnames(x)))
+  checkmate::assertMultiClass(x, c("data.table", "DataFrame"))
+  checkmate::assert_true(all(col_names %in% colnames(x)))
   
   if (!is.null(col_names)) {
     x <- subset(x, select = col_names)
