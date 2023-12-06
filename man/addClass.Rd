@@ -22,3 +22,7 @@ This is a simple convenience function that an item to the \code{class} attribute
 so that it can be dispatched to a proper S3 method. This is purely for code clarity,
 so that individual methods do not clutter the definitions of higher order functions.
 }
+\examples{
+addClass(data.table::data.table(), "someClass")
+
+}

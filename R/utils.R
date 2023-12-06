@@ -420,6 +420,10 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' @param geometric_average_fields Character vector of column names in \code{dt} 
 #' to take the geometric average of.
 #' 
+#' @examples
+#' dt <- data.table(a = c(1:10, 1), b = c(rep("drugA", 10), rep("drugB", 1)))
+#' average_biological_replicates_dt(dt, var = "a")
+#' 
 #' @return data.table without replicates
 #' @export
 average_biological_replicates_dt <- function(
@@ -454,6 +458,9 @@ average_biological_replicates_dt <- function(
 #' @param x data frame
 #' @param col_names character vector, columns in which duplication are searched for
 #' @return integer vector
+#' @examples
+#' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
+#' get_duplicated_rows(dt, "b")
 #' @export
 get_duplicated_rows <- function(x, col_names = NULL) {
   checkmate::assertMultiClass(x, c("data.table", "DataFrame"))

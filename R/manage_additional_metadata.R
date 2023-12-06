@@ -10,6 +10,9 @@
 #' @param newClass character string; class to be added
 #'
 #' @return The same object with an added S3 class.
+#' 
+#' @examples 
+#' addClass(data.table::data.table(), "someClass")
 #'
 #' @export
 #'
@@ -50,6 +53,11 @@ addClass <- function(x, newClass) {
 #' @param ... additional arguments passed to methods
 #' @param option character string specifying the action to be taken, see \code{Details}
 #' @param keep character string specifying the value of the active variable that will be kept
+#'
+#' @examples
+#' dt <- data.table::data.table(a = as.character(1:10), b = "data")
+#' dt <- addClass(dt, "a")
+#' modifyData(dt, "average", keep = "b")
 #'
 #' @export
 #'

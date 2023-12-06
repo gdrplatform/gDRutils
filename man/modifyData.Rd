@@ -57,3 +57,9 @@ Following modification, the additional columns are discarded.
 \item \code{modifyData(default)}: includes the name of other additional variables
 
 }}
+\examples{
+dt <- data.table::data.table(a = as.character(1:10), b = "data")
+dt <- addClass(dt, "a")
+modifyData(dt, "average", keep = "b")
+
+}
