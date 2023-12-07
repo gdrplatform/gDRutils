@@ -31,7 +31,8 @@ data.table without replicates
 Average biological replicates on the data table side.
 }
 \examples{
-dt <- data.table(a = c(1:10, 1), b = c(rep("drugA", 10), rep("drugB", 1)))
+dt <- data.table::data.table(a = c(1:10, 1),
+b = c(rep("drugA", 10), rep("drugB", 1)))
 average_biological_replicates_dt(dt, var = "a")
 
 }

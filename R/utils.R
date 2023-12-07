@@ -421,7 +421,8 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' to take the geometric average of.
 #' 
 #' @examples
-#' dt <- data.table(a = c(1:10, 1), b = c(rep("drugA", 10), rep("drugB", 1)))
+#' dt <- data.table::data.table(a = c(1:10, 1),
+#' b = c(rep("drugA", 10), rep("drugB", 1)))
 #' average_biological_replicates_dt(dt, var = "a")
 #' 
 #' @return data.table without replicates
