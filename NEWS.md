@@ -1,4 +1,4 @@
-## 1.1.2 (2023-12-01)
+## 1.1.3 (2023-12-08)
 - improve the performance by removing `S4Vectors::DataFrame`
 
 ## 1.1.2 (2023-12-01)
