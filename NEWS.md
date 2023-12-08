@@ -1,3 +1,7 @@
+## 1.1.2 (2023-12-01)
+- fix bug with refining rowData
+- extend the list of headers
+
 ## 1.1.1 (2023-11-22)
 - sync master with devel branch
 - update schema to support NA in reference division time

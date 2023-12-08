@@ -185,6 +185,7 @@ rename_bumpy <- function(bumpy, mapping_vector) {
 #' @return a charvec containing the names of the optional identifiers in the SE colData
 #'
 get_optional_coldata_fields <- function(se) {
+  checkmate::assert_class(se, "SummarizedExperiment")
   idfs <- get_SE_identifiers(se)
   
   as.character(idfs["cellline_tissue"])
@@ -197,14 +198,16 @@ get_optional_coldata_fields <- function(se) {
 #' @return a charvec containing the names of the optional identifiers in the SE rowData
 #'
 get_optional_rowdata_fields <- function(se) {
+  checkmate::assert_class(se, "SummarizedExperiment")
   idfs <- get_SE_identifiers(se)
+  rowdata <- SummarizedExperiment::rowData(se)
   
   out <- c(idfs["drug_moa"])
   
-  if (!is.null(idfs["drug2"])) {
+  if (!is.null(rowdata[[idfs[["drug2"]]]])) {
     out <- c(out, idfs["drug_moa2"])
   }
-  if (!is.null(idfs["drug3"])) {
+  if (!is.null(rowdata[[idfs[["drug3"]]]])) {
     out <- c(out, idfs["drug_moa3"])
   }
   

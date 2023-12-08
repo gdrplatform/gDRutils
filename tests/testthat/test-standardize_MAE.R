@@ -79,3 +79,17 @@ test_that("colData/rowData refinement functions work as expected",  {
   expect_error(refine_rowdata(mae, mae), "Assertion on 'se' failed:")
   
 })
+
+
+test_that("get_optional_rowdata_fields works as expected", {
+  se <- get_synthetic_data("finalMAE_combo_matrix_small")[[1]]
+  idfs <- get_SE_identifiers(se)
+  opt_idfs <- get_optional_rowdata_fields(se)
+  expect_equal(opt_idfs, unlist(idfs[c("drug_moa", "drug_moa2")],
+                                use.names = FALSE))
+  
+  se2 <- get_synthetic_data("finalMAE_small")[[1]]
+  idfs2 <- get_SE_identifiers(se2)
+  opt_idfs2 <- get_optional_rowdata_fields(se2)
+  expect_equal(opt_idfs2, idfs[["drug_moa"]])
+})
