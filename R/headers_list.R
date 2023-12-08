@@ -9,6 +9,7 @@
     normalized_results = .getNormalizedResultsList(),
     averaged_results = .getAveragedResultsList(),
     response_metrics = .getResponseMetricsList(),
+    metric_average_fields = .getMetricAverageFields(),
     # corresponds to the field "celllinename", "primarytissue", "doublingtime" from gneDB CLIDs
     add_clid = get_env_identifiers(c("cellline_name", "cellline_tissue",
                                      "cellline_parental_identifier",
@@ -41,6 +42,7 @@
     get_env_identifiers("drug_name", simplify = TRUE),
     get_env_identifiers("masked_tag", simplify = TRUE),
     paste0(get_env_identifiers("drug_name", simplify = TRUE), "_", 2:10),
+    paste0(get_env_identifiers("drug_moa", simplify = TRUE), "_", 2:10),
     HEADERS_LIST[["raw_data"]],
     HEADERS_LIST[["normalized_results"]],
     HEADERS_LIST[["averaged_results"]],
@@ -50,6 +52,26 @@
   
   HEADERS_LIST[["ordered_1"]] <- .orderHeaderList(HEADERS_LIST, 1)
   HEADERS_LIST[["ordered_2"]] <- .orderHeaderList(HEADERS_LIST, 2)
+  
+  HEADERS_LIST[["id"]] <- c("rId", "cId")
+  
+  
+  HEADERS_LIST[["iso_position"]] <- c("iso_level",
+                                      "pos_x",
+                                      "pos_y",
+                                      "pos_x_ref",
+                                      "pos_y_ref")
+  
+  
+  HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
+                                      HEADERS_LIST[["iso_position"]],
+                                      "log2_CI",
+                                      "log10_ratio_conc")
+  
+  HEADERS_LIST[["obsolete"]] <- c("RV",
+                                  "GR",
+                                  "Excess")
+  
 
   HEADERS_LIST
 }
@@ -81,9 +103,10 @@
 #' @keywords internal
 .getAveragedResultsList <- function() {
   c(
-    "std_GRvalue", 
+    "x",
+    "x_std",
     "std_RelativeViability",
-    "x_std"
+    "std_GRvalue"
   )
 }
 
@@ -139,6 +162,27 @@
   )
 }
 
+#' @keywords internal
+.getMetricAverageFields <- function() {
+  list(
+    mean = c(
+      "x_mean", 
+      "x_AOC", 
+      "x_AOC_range", 
+      "x_max", 
+      "x_inf", 
+      "x_0"
+    ),
+    geometric_mean = c(
+      "xc50", 
+      "ec50",
+      "GR50",
+      "GEC50",
+      "IC50",
+      "EC50"
+    )
+  )
+}
 
 #' @keywords internal
 .orderHeaderList <- function(headers_list, type) {

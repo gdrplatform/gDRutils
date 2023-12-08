@@ -1,462 +1,492 @@
-# Change to v.0.99.30
-- Updated `experimentalist` description in schema
+## 1.1.2 (2023-12-01)
+- fix bug with refining rowData
+- extend the list of headers
 
-# Change to v.0.99.29
-- Add `Replicate` as a new identifier
+## 1.1.1 (2023-11-22)
+- sync master with devel branch
+- update schema to support NA in reference division time
+- added minor fix in code styling
+- added new function `gemoetric_mean`
+- transform values into numeric in `predict_efficacy_from_conc` function 
+- add "Treatment" as template identifier
 
-# Change to v.0.99.28
-- Improve the logic of standardize_MAE to keep SE-specific metadata and be able to revert standardization
+## 1.1.0 (2023-10-24)
+- release Bioc 3.18
 
-# Change to v.0.99.27
-- Keep unchanged names in DataFrame
+## 1.0.0 (2023-10-24)
+- prerelease Bioc 3.18
 
-# Change to v.0.99.26
-- Tidy code
+## 0.99.34 (2023-10-18)
+- adjust NEWS to Bioc format
 
-# Change to v.0.99.25
-- Add assert for missing rownames
+## 0.99.33 (2023-10-09)
+- add support for flattening averaged assays
 
-# Change to v.0.99.24
-- Replaced RDS with qs
+## 0.99.32 (2023-09-22)
+- fix bug in the case of conc=0 for evaluating efficacy
 
-# Change to v.0.99.23
-- Fix check in R 4.3
+## 0.99.31 (2023-09-19)
+- add `wide_structure` param to `convert_mae_assay_to_dt`
 
-# Change to v.0.99.22
-- Switch from `merge` to `[[`
+## 0.99.30 (2023-09-08)
+- updated `experimentalist` description in schema
 
-# Change to v.0.99.21
-- Replace `order` with `data.table::setorder`
-- Add support for custom identifiers in merge_SE
+## 0.99.29 (2023-09-05)
+- add `Replicate` as a new identifier
 
-# Change to v.0.99.20
-- Switch from `aggregate` to `data.table`
+## 0.99.28 (2023-09-05)
+- improve the logic of standardize_MAE to keep SE-specific metadata and be able to revert standardization
 
-# Change to v.0.99.19
+## 0.99.27 (2023-08-01)
+- keep unchanged names in DataFrame
+
+## 0.99.26 (2023-08-01)
+- tidy code
+
+## 0.99.25 (2023-06-27)
+- add assert for missing rownames
+
+## 0.99.24 (2023-06-22)
+- replaced RDS with qs
+
+## 0.99.23 (2023-06-20)
+- fix check in R 4.3
+
+## 0.99.22 (2023-06-12)
+- switch from `merge` to `[[`
+
+## 0.99.21 (2023-06-12)
+- replace `order` with `data.table::setorder`
+- add support for custom identifiers in merge_SE
+
+## 0.99.20 (2023-06-07)
+- switch from `aggregate` to `data.table`
+
+## 0.99.19 (2023-06-06)
 - replaced reshape2 functions by functions from data.table
 
-# Change to v.0.99.18
-- Format the vignette with BiocStyle
+## 0.99.18 (2023-05-22)
+- format the vignette with BiocStyle
 
-# Change to v.0.99.17
-- Fix related with data.table
-- Remove `.get_treated_conditions` and `.get_untreated_conditions`
+## 0.99.17 (2023-05-22)
+- fix related with data.table
+- remove `.get_treated_conditions` and `.get_untreated_conditions`
 
-# Change to v.0.99.16
-- Add support for merging combination-data assays
+## 0.99.16 (2023-05-18)
+- add support for merging combination-data assays
 
-# Change to v.0.99.15
-- Update after unifying normalization types
+## 0.99.15 (2023-05-12)
+- update after unifying normalization types
 
-# Change to v.0.99.14
-- Fix lintr
+## 0.99.14 (2023-05-12)
+- fix lintr
 
-# Change to v.0.99.13
-- Removed `cotreatment` entry from EXPERIMENT_GROUPS
+## 0.99.13 (2023-05-09)
+- removed `cotreatment` entry from EXPERIMENT_GROUPS
 
-# Change to v.0.99.12
-- Fix bug in convert_mae_assay_to_dt
+## 0.99.12 (2023-05-09)
+- fix bug in `convert_mae_assay_to_dt`
 
-# Change to v.0.99.11
-- Refactor code with single ampersand in if statements
+## 0.99.11 (2023-05-08)
+- refactor code with single ampersand in if statements
 
-# Change to v.0.99.10
-- Change order of untreated tags
+## 0.99.10 (2023-04-28)
+- change order of untreated tags
 
-# Change to v.0.99.9
-- Changed data.frame to data.table
+## 0.99.9 (2023-04-24)
+- changed data.frame to data.table
 
-# Change to v.0.99.8
-- Switch to OSI license
+## 0.99.8 (2023-04-20)
+- switch to OSI license
 
-# Change to v.0.99.7
-- Clean-up vignette
+## 0.99.7 (2023-04-20)
+- clean-up vignette
 
-# Change to v.0.99.6
-- Extend the logic of `apply_bumpy_function`
+## 0.99.6 (2023-04-18)
+- extend the logic of `apply_bumpy_function`
 
-# Change to v.0.99.5
-- Add R 4.2 as a dependency
+## 0.99.5 (2023-04-17)
+- add R 4.2 as a dependency
 
-# Change to v.0.99.4
-- Fixed examples
+## 0.99.4 (2023-04-14)
+- fix examples
 
-# Change to v.0.99.3
-- Make linter happy
+## 0.99.3 (2023-04-13)
+- make linter happy
 
-# Change to v.0.99.1
-- Update maintainer
+## 0.99.2 (2023-04-12)
+- add licence
 
-# Change to v.0.99.0
-- Downgrade version to make it Bioconductor compatible
+## 0.99.1 (2023-04-07)
+- update maintainer
 
-# Change to v.1.3.22
-- Tidy code
+## 0.99.0 (2023-03-28)
+- downgrade version to make it Bioconductor compatible
 
-# Change to v.1.3.21
-- Better handling of corner cases for the single-agent fitting
+## 0.1.3.22 (2023-03-13)
+- tidy code
 
-# Change to v.1.3.20
-- Add support for splitting normalization data types
+## 0.1.3.21 (2023-03-09)
+- better handling of corner cases for the single-agent fitting
 
-# Change to v.1.3.19
-- Restore necessary functions
+## 0.1.3.20 (2023-03-08)
+- add support for splitting normalization data types
 
-# Change to v.1.3.18
-- Add examples of identifiers
+## 0.1.3.19 (2023-03-08)
+- restore necessary functions
 
-# Change to v.1.3.17
-- Remove obsolete code
+## 0.1.3.18 (2023-03-01)
+- add examples of identifiers
 
-# Change to v.1.3.16
-- Tidy code
+## 0.1.3.17 (2023-03-01)
+- remove obsolete code
 
-# Change to v.1.3.15
-- Add tests for convert_se_ref_assay_to_dt
+## 0.1.3.16 (2023-02-22)
+- tidy code
 
-# Change to v.1.3.14
-- Add helpers for colData/rowData refinement
+## 0.1.3.15 (2023-02-10)
+- add tests for `convert_se_ref_assay_to_dt`
 
-# Change to v.1.3.13
-- Fixed warnings in unit tests
+## 0.1.3.14 (2023-01-10)
+- add helpers for colData/rowData refinement
 
-# Change to v.1.3.12
+## 0.1.3.13 (2022-12-22)
+- fix warnings in unit tests
+
+## 0.1.3.12 (2022-12-20)
 - `R CMD check` returns `0 errors ✓ | 0 warnings ✓ | 0 notes ✓` 
 
-# Change to v.1.3.11
+## 0.1.3.11 (2022-12-15)
 - default apply_bumpy_function parallelize to TRUE 
 
-# Change to v.1.3.10
+## 0.1.3.10 (2022-12-08)
 - add apply_bumpy_function support
 
-# Change to v.1.3.9
+## 0.1.3.9 (2022-12-07)
 - add co-dilution to single-agent group
 
-# Change to v.1.3.8
-- Bugfix in validate_SE
+## 0.1.3.8 (2022-11-30)
+- bugfix in validate_SE
 
-# Change to v.1.3.7
+## 0.1.3.7 (2022-10-18)
 - add update_env_idfs_from_mae function
 
-# Change to v.1.3.6
+## 0.1.3.6 (2022-10-04)
 - add helper for dealing with idfs' synonyms
 
-# Change to v.1.3.5
-- Promote or demote fields in a BumpyMatrix object and perform summarization on assays.
+## 0.1.3.5 (2022-09-21)
+- promote or demote fields in a BumpyMatrix object and perform summarization on assays.
 
-# Change to v.1.3.4
-- Major improvents in JSON validation/conversion logic 
-  * provide info about JSON schemas via env variables
+## 0.1.3.4 (2022-08-11)
+- major improvements in JSON validation/conversion logic 
+  * provide info about JSON schemes via env variables
   * convert and validate MAE summary next to the SE experiments
 
-# Change to v.1.3.3
-- Move json validation/convertion logic from gDRelastic
+## 0.1.3.3 (2022-07-25)
+- move json validation/convertion logic from gDRelastic
 
-# Change to v.1.3.2
-- Standardize MAE using default gDR identifiers
+## 0.1.3.2 (2022-07-11)
+- standardize MAE using default gDR identifiers
 
-# Change to v.1.3.1
-- Remove adding integer identifiers at the end of colnames/rownames
+## 0.1.3.1 (2022-06-29)
+- remove adding integer identifiers at the end of colnames/rownames
 
-# Change to v.1.3.0
-- Release
+## 0.1.3.0 (2022-06-02)
+- release 1.3.0
 
-# Change to v.1.0.48
+## 0.1.0.48 (2022-05-27)
 - correct recognition of empty SE
 
-# Change to v.1.0.47
+## 0.1.0.47 (2022-05-25)
 - remove redundant validation of rownames in SE
 
-# Change to v.1.0.46
+## 0.1.0.46 (2022-05-03)
 - update prettify function
 - fix hardcoded identifiers in validated_SE
 
-# Change to v.1.0.45
+## 0.1.0.45 (2022-04-29)
 - avoid using `grep` for getting cotreatment identifiers
 
-# Change to v.1.0.44
+## 0.1.0.44 (2022-04-26)
 - switched from unnamed to named vector of experiment groups for `single-agent`
-- fixed the logic in validating single-agent experiments
+- fix the logic in validating single-agent experiments
 
-# Change to v.1.0.43
+## 0.1.0.43 (2022-04-13)
 - set r2 value to NA for invalid and 0 for constant fits
 
-# Change to v.1.0.42
+## 0.1.0.42 (2022-04-08)
 - added identifier descriptions
 
-# Change to v.1.0.41
+## 0.1.0.41 (2022-04-08)
 - fix wrong order of elements in rownames in SE
 
-# Change to v.1.0.40
+## 0.1.0.40 (2022-04-07)
 - add cap_ic50 function
 
-# Change to v.1.0.39
+## 0.1.0.39 (2022-03-31)
 - extend possible `Barcode` identifiers
 
-# Change to v.1.0.38
+## 0.1.0.38 (2022-03-30)
 - fix hardcoded identifiers in validate SE
 
-# Change to v.1.0.37
+## 0.1.0.37 (2022-03-28)
 - added a space between two-word cotreatment identifiers
 
-# Change to v.1.0.36
+## 0.1.0.36 (2022-03-24)
 - remove all R CMD check warnings
 
-# Change to v.1.0.35
+## 0.1.0.35 (2022-03-22)
 - change prettify functions to not substitute metadata
 
-# Change to v.1.0.34
+## 0.1.0.34 (2022-03-21)
 - add helper function for MAE/experiments
 
-# Change to v.1.0.33
+## 0.1.0.33 (2022-03-19)
 - move constant fit warning
 
-# Change to v.1.0.32
+## 0.1.0.32 (2022-03-18)
 - add .calculate_complement 
 
-# Change to v.1.0.31
+## 0.1.0.31 (2022-03-16)
 - move duplication warning 
 
-# Change to v.1.0.30
+## 0.1.0.30 (2022-03-14)
 - add support for identifier validation
 
-# Change to v.1.0.29
+## 0.1.0.29 (2022-03-03)
 - add getter and setter for experiment_raw_data
 
-# Change to v.1.0.28
+## 0.1.0.28 (2022-02-16)
 - refactor identifier `drugname` to `drug_name`
 
-# Change to v.1.0.27
+## 0.1.0.27 (2022-02-10)
 - add `MAEpply` function
 
-# Change to v.1.0.26
+## 0.1.0.26 (2022-02-01)
 - update documentation
 
-# Change to v.1.0.25
+## 0.1.0.25 (2022-01-31)
 - support SE() init for different BioC versions
 
-# Change to v.1.0.24
+## 0.1.0.24 (2022-01-25)
 - standardize/improve CI
 
-# Change to v.1.0.23
+## 0.1.0.23 (2022-01-25)
 - switch unit tests from SE to MAE from `gDRtestData`
 
-# Change to v.1.0.21
+## 0.1.0.22 (2022-01-07)
 - update assert in `validate_MAE`
 
-# Change to v.1.0.21
+## 0.1.0.21 (2022-01-07)
 - update SE-related functions of gDRutils to support MAE
 
-# Change to v.1.0.20
+## 0.1.0.20 (2021-12-21)
 - move combo-related functions from gDRviz
 - add unit tests for combo-related functions
 
-# Change to v.1.0.19
+## 0.1.0.19 (2021-11-04)
 - do not create a nested list of identifiers during mergin SE
 
-# Changes to v.1.0.18
-- fixed issued with new SummarizedExperiment
+## 0.1.0.18 (2021-11-01)
+- fix issued with new SummarizedExperiment
 
-# Changes to v.1.0.17
+## 0.1.0.17 (2021-10-22)
 - refactor: generalize prediction help functions for fits
 
-# Changes to v.1.0.16
+## 0.1.0.16 (2021-09-27)
 - update validate_SE as per combos
 
-# Changes to v.1.0.15
+## 0.1.0.15 (2021-09-22)
 - feat: use 'GRvalue' and 'RelativeViability' as normalization_types in 'fit_curves'
 
-# Changes to v.1.0.14
+## 0.1.0.14 (2021-09-15)
 - fix bug with getting_SE_identifiers for untreated_tag
 
-# Changes to v.1.0.13
+## 0.1.0.13 (2021-09-13)
 - fix obsolete arguments in `reset_env_identifiers`
 
-# Changes to v.1.0.12
+## 0.1.0.12 (2021-09-07)
 - fix bug with getting identifiers for untreated_tag
 
-# Changes to v.1.0.11
+## 0.1.0.11 (2021-08-26)
 - move NA logic for elements of BumpyMatrix with no data to fit_curve
 
-# Change to v.1.0.10
+## 0.1.0.10 (2021-08-25)
 - remove additional ordering line in df_to_bm_assay.R
 
-# Changes to v.1.0.9
+## 0.1.0.9 (2021-08-19)
 - update list of available identifiers (2nd and 3rd drug, data_source)
 - update the logic for get_identifier and .get_id
 - add prettified_identifier()
 
-# Changes to v.1.0.8
+## 0.1.0.8 (2021-08-13)
 - fix bug with wrong order of rows and cols in `df_to_bm_assay`
 
-# Changes to v.1.0.7
+## 0.1.0.7 (2021-07-06)
 - remove hard version equality for pkg deps 
 
-# Changes to v.1.0.6
+## 0.1.0.6 (2021-06-29)
 - add barcode as identifiers and store identifiers within split_SE_components
 
-# Changes to v.1.0.5
+## 0.1.0.5 (2021-06-25)
 - update the logic for CI/CD (repos fetching is now handled with technical user)
 
-# Changes to v.1.0.4
+## 0.1.0.4 (2021-06-18)
 - add concentration and template as additional identifiers
 
-# Changes to v.1.0.3
+## 0.1.0.3 (2021-06-21)
 - refactor logisticFit with error handling
 
-# Changes to v.1.0.2
+## 0.1.0.2 (2021-06-18)
 - remove deprecated functions
 - switch from getMetadata to split_SE_components
 - refactor df_to_bm_assay
 
-# Changes to v.1.0.1
+## 0.1.0.1 (2021-06-02)
 - upgrade validate_SE by checking if rowData and colData do not have empty strings
 - isolate flatten function
 
-# Changes to v.1.0.0
+## 0.1.0.0 (2021-06-02)
 - release 1.0.0
 
-# Changes to v.0.0.49
+## 0.0.0.49 (2021-06-02)
 - fix bug with merging flatten assays
 
-# Changes to v.0.0.48
+## 0.0.0.48 (2021-05-24)
 - refactor validate_SE function
 
-# Changes to v.0.0.47
+## 0.0.0.47 (2021-05-18)
 - add `merge_SE` function
 
-# Changes to v.0.0.46
+## 0.0.0.46 (2021-05-18)
 - fix typo in SE validator function
 
-# Changes to v.0.0.45
+## 0.0.0.45 (2021-05-18)
 - add SE validator function
 
-# Changes to v.0.0.44
+## 0.0.0.44 (2021-05-13)
 - refactor `prettify_flat_metrics` function
 
-# Changes to v.0.0.43
+## 0.0.0.43 (2021-04-30)
 - remove `Metrics_rownames` during flattening data.frame/data.table
 
-# Changes to v.0.0.42
+## 0.0.0.42 (2021-04-29)
 - add `prettify_flat_metrics` function
 
-# Changes to v.0.0.41
+## 0.0.0.41 (2021-04-29)
 - bugfix flattening data.tables
 
-# Changes to v.0.0.40
+## 0.0.0.40 (2021-04-29)
 - bugfix data.table merge in `convert_se_assay_ref_to_dt`
 
-# Changes to v.0.0.39
+## 0.0.0.39 (2021-04-27)
 - add support for flattening data.tables
 
-# Changes to v.0.0.38
+## 0.0.0.38 (2021-04-21)
 - switch from `processing_metadata` to `.internal`
 
-# Changes to v.0.0.37
+## 0.0.0.37 (2021-04-20)
 - add support for getting and setting processing info metadata
 
-# Changes to v.0.0.36
+## 0.0.0.36 (2021-04-19)
 - sort BumpyMatrix created from dt
 
-# Changes to v.0.0.35
+## 0.0.0.35 (2021-04-14)
 - revert metric arguments in 'convert_se_assay_to_dt'
 
-# Changes to v.0.0.34
+## 0.0.0.34 (2021-04-09)
 - add support for getting and setting fit parameter metadata
 
-# Changes to v.0.0.33
+## 0.0.0.33 (2021-04-07)
 - standardize metric header names
 
-# Changes to v.0.0.32
-- add more options for returned data (with 'Metrics' assay) in the case of 'convert_se_assay_to_dt'
+## 0.0.0.32 (2021-04-07)
+- add more options for returned data (with 'Metrics' assay) in the case of `convert_se_assay_to_dt`
 - add 'convert_se_ref_assay_to_dt' function
 
-# Changes to v.0.0.31
+## 0.0.0.31 (2021-03-30)
 - add support for getting and setting metadata on the SummarizedExperiment object
 
-# Changes to v.0.0.30
+## 0.0.0.30 (2021-03-30)
 - add support for getting and setting metadata on the SummarizedExperiment object
 - add numeric type assertions and tests for logistic_4parameters
 
-# Changes to v.0.0.29
+## 0.0.0.29 (2021-03-23)
 - remove positional naming dependence on assay_to_dt for (merge_metrics = TRUE) argument
 
-# Changes to v.0.0.28
+## 0.0.0.28 (2021-03-16)
 - minor refactor to assay_to_dt
-- deprecated support for assay_to_dt(include_controls = TRUE) argument
-(not backwards compatible)
+- deprecated support for assay_to_dt(include_controls = TRUE) argument (not backwards compatible)
 
-# Changes to v.0.0.27
+## 0.0.0.27 (2021-03-09)
 - update .estimate_xc50 and add tests
 
-# Changes to v.0.0.26
+## 0.0.0.26 (2021-03-04)
 - fix bug with wrong class for S3 methods in convert_assay_data_to_dt
 - update the documentation
 
-# Changes to v.0.0.25
+## 0.0.0.25 (2021-03-02)
 - fix bug with missing class in assert for matrix
 
-# Changes to v.0.0.24
+## 0.0.0.24 (2021-02-10)
 - modify fit_curves to take in flexible curve_type(s)
 - clean-up assay_to_dt
 
-# Changes to v.0.0.23
+## 0.0.0.23 (2021-02-04)
 - added linter
 
-# Changes to v.0.0.22
+## 0.0.0.22 (2021-02-03)
 - move assay_to_dt from gDR to gDRutils
 - refactor assay_to_dt to support two assay types
   * list of DFrame(s)
   * BumpyMatrix objects
-- move .get_treated_conditions and .get_untreated_conditions from gDR to
-    gDRutils 
+- move .get_treated_conditions and .get_untreated_conditions from gDR to gDRutils 
 
-# Changes to v.0.0.21
+## 0.0.0.21 (2021-01-26)
 - allow for DFrame as input
 
-# Changes to v.0.0.20
+## 0.0.0.20 (2021-01-26)
 - 's/BumpyMatrix::splitToBumpyMatrix/BumpyMatrix::splitAsBumpyMatrix/'
 
-# Changes to v.0.0.19
+## 0.0.0.19 (2021-01-20)
 - refactor RVGRfits and rename to fit_curves
 - make logisticFit function independent of curve_type
 
-# Changes to v.0.0.18
+## 0.0.0.18 (2021-01-19)
 - move df_to_assay.R from gDRcore to gDRutils
 - move df_to_bm_assay.R from gDRcore to gDRutils
 - update identifiers_list.R
 
-# Changes to v.0.0.15
+## 0.0.0.15 (2020-12-14)
 - refactor get_identifiers and get_headers to be settable and cached
 
-# Changes to v.0.0.14
+## 0.0.0.14 (2020-12-14)
 - totally, finally, and unscrupulously remove dplyr package from gDRutils
 - replace IC by RV
 
-# Changes to v.0.0.13
+## 0.0.0.13 (2020-10-12)
 - add CI
 
-# Changes to v.0.0.12
+## 0.0.0.12 (2020-10-09)
 - fix assay_to_df
 
-# Changes to v.0.0.11
+## 0.0.0.11 (2020-10-09)
 - update namespaces
 
-# Changes to v.0.0.10
+## 0.0.0.10 (2020-10-05)
 - minor refactor
 
-# Changes to v.0.0.9
+## 0.0.0.9 (2020-09-14)
 - add small fixes for assays with empty DataFrame
 
-# Changes to v.0.0.8
+## 0.0.0.8 (2020-09-02)
 - update logic as per new db model
 
-# Changes to v.0.0.7
+## 0.0.0.7 (2020-08-07)
 - update variable names as per new db model
 
-# Changes to v.0.0.6 - 2020.07.02
+## 0.0.0.6 (2020-07-02)
 - import pipes from magrittr
 
-# Changes to v.0.0.4 - 2020.06.10
+## 0.0.0.4 (2020-06-10)
 - including the masked field to be able to remove the masked data from averages
-

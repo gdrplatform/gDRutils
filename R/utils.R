@@ -377,3 +377,98 @@ get_synthetic_data <- function(qs) {
   }
   qs::qread(system.file("testdata", qs, package = "gDRtestData"))
 }
+
+
+#' Geometric mean
+#' 
+#' Auxiliary function for calculating geometric mean with possibility to handle -Inf
+#' 
+#' @param x numeric vector
+#' @param fixed flag should be add fix for -Inf 
+#' @param maxlog10Concentration numeric value needed to calculate minimal value
+#' 
+#' @return numeric vector
+#' 
+#' @examples 
+#' geometric_mean(c(2, 8))
+#' 
+#' @export
+#' 
+#' @keywords internal
+geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_flag(fixed)
+  checkmate::assert_numeric(maxlog10Concentration)
+  
+  if (fixed) {
+    x <- pmax(
+      10 ^ maxlog10Concentration / 1e6,
+      pmin(5 * 10 ^ maxlog10Concentration, x)
+    )
+  }
+  exp(mean(log(x)))
+}
+
+#' Average biological replicates.
+#'
+#' Average biological replicates on the data table side. 
+#'
+#' @param dt data.table with Metric data
+#' @param var String representing additional metadata of replicates
+#' @param pidfs list of prettified identifiers
+#' @param fixed Flag should be add fix for -Inf in geometric mean.
+#' @param geometric_average_fields Character vector of column names in \code{dt} 
+#' to take the geometric average of.
+#' 
+#' @examples
+#' dt <- data.table::data.table(a = c(1:10, 1),
+#' b = c(rep("drugA", 10), rep("drugB", 1)))
+#' average_biological_replicates_dt(dt, var = "a")
+#' 
+#' @return data.table without replicates
+#' @export
+average_biological_replicates_dt <- function(
+    dt,
+    var,
+    pidfs = get_prettified_identifiers(),
+    fixed = TRUE,
+    geometric_average_fields = get_header("metric_average_fields")$geometric_mean) {
+  data <- data.table::copy(dt)
+  average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs),
+                                                               var,
+                                                               prettify_flat_metrics(get_header("iso_position"),
+                                                                                     human_readable = TRUE)))
+  geometric_average_fields <- intersect(geometric_average_fields, names(dt))
+  group_by <- setdiff(names(data),
+                      c(average_fields, var, prettify_flat_metrics(get_header("id"), human_readable = TRUE)))
+  group_by <- grep("Fit Type", group_by, invert = TRUE, value = TRUE)
+  data <- data[, (var) := NULL][, 
+                                (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
+                                .SDcols = average_fields, 
+                                by = group_by][,
+                                               (geometric_average_fields) := lapply(.SD, FUN = function(x) {
+                                                 geometric_mean(x, fixed = fixed)
+                                               }), 
+                                               .SDcols = geometric_average_fields, 
+                                               by = group_by]
+  unique(data, by = group_by)
+}
+
+#' Helper function to find duplicated rows
+#'
+#' @param x data frame
+#' @param col_names character vector, columns in which duplication are searched for
+#' @return integer vector
+#' @examples
+#' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
+#' get_duplicated_rows(dt, "b")
+#' @export
+get_duplicated_rows <- function(x, col_names = NULL) {
+  checkmate::assertMultiClass(x, c("data.table", "DataFrame"))
+  checkmate::assert_true(all(col_names %in% colnames(x)))
+  
+  if (!is.null(col_names)) {
+    x <- subset(x, select = col_names)
+  }
+  which(duplicated(x) | duplicated(x, fromLast = TRUE))
+}

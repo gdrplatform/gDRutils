@@ -39,8 +39,12 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_flag(retain_nested_rownames)
   validate_se_assay_name(se, assay_name)
   if (wide_structure) {
-    # wide_structure works only with `normalization_type` column in the assay
-    if ("normalization_type" %in%
+    # wide_structure works only with `normalization_type` column in the assay 
+    # and only for assays class "BumpyMatrix"
+    if (!inherits(SummarizedExperiment::assay(se, assay_name), "BumpyDataFrameMatrix")) {
+      warning("assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
+      wide_structure <- FALSE
+    } else if ("normalization_type" %in%
         BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
       retain_nested_rownames <- TRUE 
     } else {
@@ -56,10 +60,10 @@ convert_se_assay_to_dt <- function(se,
     dt <- .extract_and_merge_metadata(se, data.table::copy(dt))
   }
   if (wide_structure) {
-    normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
     id_col <- paste0(assay_name, "_rownames")
     dt$id <- gsub("_.*", "", dt[[id_col]])
     dt[[id_col]] <- NULL
+    normalization_cols <- grep("^x$|x_+", names(dt), value = TRUE)
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
     dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
@@ -118,8 +122,9 @@ convert_se_assay_to_dt <- function(se,
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = rowfield, column.field = colfield)
     # Retain nested rownames.
     if (retain_nested_rownames) {
-      checkmate::assert_character(rownames(as_df))
-      as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+      if (is.character(rownames(as_df))) {
+        as_df[[paste0(assay_name, "_rownames")]] <- rownames(as_df)
+      }
     }
     as_dt <- data.table::as.data.table(as_df)
 
@@ -165,12 +170,15 @@ convert_se_assay_to_dt <- function(se,
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
+#' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
+#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated 
+#' in `convert_se_assay_to_dt` function
 #'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
 #' 
 #' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @seealso flatten
+#' @seealso flatten convert_se_assay_to_dt
 #' 
 #' @examples 
 #' mae <- get_synthetic_data("finalMAE_small")
@@ -181,7 +189,8 @@ convert_mae_assay_to_dt <- function(mae,
                                     assay_name,
                                     experiment_name = NULL,
                                     include_metadata = TRUE,
-                                    retain_nested_rownames = FALSE) {
+                                    retain_nested_rownames = FALSE,
+                                    wide_structure = FALSE) {
   
   # Assertions.
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -189,6 +198,7 @@ convert_mae_assay_to_dt <- function(mae,
   checkmate::assert_choice(experiment_name, names(mae), null.ok = TRUE)
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
+  checkmate::assert_flag(wide_structure)
   
   if (is.null(experiment_name)) {
     experiment_name <- names(mae)
@@ -201,7 +211,8 @@ convert_mae_assay_to_dt <- function(mae,
     convert_se_assay_to_dt(mae[[x]],
                            assay_name = assay_name,
                            include_metadata = include_metadata,
-                           retain_nested_rownames = retain_nested_rownames)
+                           retain_nested_rownames = retain_nested_rownames,
+                           wide_structure = wide_structure)
   })
   if (all(vapply(dtList, is.null, logical(1)))) {
     warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
