@@ -200,3 +200,50 @@ test_that("geometric_mean works as expected", {
   ), 3.54813)
   
 })
+
+
+test_that("average_biological_replicates_dt works as expected", {
+  ligand_data <- gDRutils::get_synthetic_data("finalMAE_wLigand")
+  metrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
+  data.table::setnames(metrics_data,
+                       prettify_flat_metrics(names(metrics_data),
+                                             human_readable = TRUE))
+  avg_metrics_data <- average_biological_replicates_dt(dt = metrics_data,
+                                                       var = "Ligand")
+  expect_equal(dim(metrics_data), c(60, 27))
+  expect_equal(dim(avg_metrics_data), c(40, 26))
+  expect_true(!"Ligand" %in% names(avg_metrics_data))
+})
+
+test_that("get_duplicated_rows works as expected", {
+  DF1co <- S4Vectors::DataFrame("Gnumber" = c("G0123456.1-1", "G0123456.2-2", "G1234567.1-1"),
+                                "DrugName" = c("drug_name1", "drug_name1", "drug_name2"),
+                                "Gnumber_2" = c("G9876543.1-1", "G9876543.1-1", "G9876543.1-1"),
+                                "DrugName_2" = c("codrug_name1", "codrug_name1", "codrug_name1"),
+                                "Concentration_2" = c("untreated", "untreated", "untreated"))
+  
+  
+  # single column
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = "DrugName"),
+    c(1, 2)
+  )
+  # single column with only duplicates
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = "DrugName_2"),
+    c(1, 2, 3)
+  )
+  # single column without duplicates
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = c("Gnumber")),
+    integer()
+  )
+  # multiple columns
+  expect_equal(
+    get_duplicated_rows(DF1co, col_names = c("DrugName_2", "DrugName")),
+    c(1, 2)
+  )
+  
+  expect_error(get_duplicated_rows(DF1co, c("DrugName", "Fake Column")),
+               "Assertion on 'all(col_names %in% colnames(x))' failed: Must be TRUE.", fixed = TRUE)
+})
