@@ -1,4 +1,7 @@
 ## 1.1.2 (2023-12-01)
+- improve the performance by removing `S4Vectors::DataFrame`
+
+## 1.1.2 (2023-12-01)
 - fix bug with refining rowData
 - extend the list of headers
 
