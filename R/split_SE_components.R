@@ -45,7 +45,13 @@
 #' @export
 #'
 split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
-  stopifnot(any(inherits(df_, "data.table"), inherits(df_, "DataFrame")))
+  checkmate::assert_multi_class(df_, classes = c("data_table", "DataFrame"))
+  
+  if (!inherits(df_, "data.table")) {
+    df_ <- data.table::as.data.table(df_)
+  }
+  
+  
   checkmate::assert_character(nested_keys, null.ok = TRUE)
   checkmate::assert_choice(combine_on, c(1, 2))
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
@@ -69,7 +75,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
 
   singletons <- vapply(remaining_cols,
     function(x) {
-      nrow(unique(md[, x, drop = FALSE])) == 1L
+      nrow(unique(md[, x, with = FALSE])) == 1L
       },
     logical(1))
   # Get experiment columns.
