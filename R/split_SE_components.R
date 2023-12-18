@@ -157,6 +157,9 @@ identify_linear_dependence <- function(df, identifier) {
 
 #' @keywords internal
 add_rownames_to_metadata <- function(md, cols) {
+  if (!data.table::is.data.table(md)) {
+    md <- data.table::as.data.table(md)
+  }
   md <- unique(md[, unname(unlist(cols)), with = FALSE])
   rownames(md) <- do.call(paste, c(data.table::as.data.table(md), sep = "_"))
   md[, setdiff(names(md), "unique_id"), with = FALSE]
