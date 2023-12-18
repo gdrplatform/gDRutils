@@ -88,10 +88,10 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   md_list <- .combine_drug_and_trt_cols(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols)
   out <- list(
-    condition_md = md_list$condition_md,
-    treatment_md = md_list$treatment_md,
+    condition_md = S4Vectors::DataFrame(md_list$condition_md),
+    treatment_md = S4Vectors::DataFrame(md_list$treatment_md),
     data_fields = data_cols,
-    experiment_md = exp_md,
+    experiment_md = S4Vectors::DataFrame(exp_md),
     identifiers_md = identifiers_md
   )
   out
