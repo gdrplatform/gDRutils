@@ -45,7 +45,7 @@
 #' @export
 #'
 split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
-  checkmate::assert_multi_class(df_, classes = c("data_table", "DataFrame"))
+  checkmate::assert_multi_class(df_, classes = c("data.table", "DataFrame"))
   
   if (!inherits(df_, "data.table")) {
     df_ <- data.table::as.data.table(df_)
