@@ -1,3 +1,6 @@
+## 1.1.3 (2024-01-03)
+- rename `matrix` into `combination`
+
 ## 1.1.2 (2023-12-01)
 - fix bug with refining rowData
 - extend the list of headers
