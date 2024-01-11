@@ -110,8 +110,8 @@ get_combo_col_settings <-
       myv <- get_iso_colors(g_metric)
       colors <- as.character(myv)
       breaks <- names(myv)
-    } else if (assay_type %in% c(names(get_combo_assay_names(group = "combo_score_excess")),
-                                 names(get_combo_assay_names(group = "combo_base_excess")))) {
+    } else if (assay_type %in% c(names(get_combo_assay_names(group = "combo_excess")),
+                                 names(get_combo_assay_names(group = "combo_score")))) {
       colors <- c("#003355", "#4488dd", "#eeeedd", "#CC8844", "#662200")
       if (g_metric == "GR") {
         breaks <- c(-0.5, -0.25, 0, 0.25, 0.5)

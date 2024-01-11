@@ -1,19 +1,12 @@
 ASSAY_INFO_TBL <- data.table::data.table(
   name = c("rawTreated", "Controls", "Normalized", "Averaged", "Metrics",
-           "SmoothMatrix", "BlissExcess", "HSAExcess", "HSAScore", "BlissScore",
-           "CIScore_50", "CIScore_80", "isobolograms"),
+           "excess", "scores", "isobolograms"),
   pname = c("Raw Treated", "Controls", "Normalized", "Averaged", "Metrics",
-            "MX full", "Bliss excess", "HSA excess", "HSA excess", "Bliss excess",
-            "log2(CI) @ GR/IC50", "log2(CI) @ GR/IC80", "isobolograms"),
-  type = c("raw", "control", "normalized", "averaged", "metrics", "smooth",
-           "bliss_excess", "hsa_excess", "hsa_score", "bliss_score",
-           "ci_score_50", "ci_score_80", "iso"),
-  group = c("raw", "core", "core", "core", "core", "combo_base_mx",
-            "combo_base_excess", "combo_base_excess", "combo_score_excess",
-            "combo_score_excess", "combo_score_mx", "combo_score_mx", "combo_iso"),
+            "Excess", "Scores", "isobolograms"),
+  type = c("raw", "control", "normalized", "averaged", "metrics", "excess", "scores", "iso"),
+  group = c("raw", "core", "core", "core", "core","combo_excess", "combo_score", "combo_iso"),
   data_type = c("single-agent", "single-agent", "single-agent", "single-agent",
-                "single-agent", "combo", "combo", "combo", "combo", "combo",
-                "combo", "combo", "combo")
+                "single-agent", "combo", "combo", "combo")
 )
 
 

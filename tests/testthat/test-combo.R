@@ -22,11 +22,11 @@ test_that("convert_combo_data_to_dt", {
     fixed = TRUE
   )
   err_msg <-
-    "Assertion on 'dummy, Smooth_Matrix' failed. Must be element(s) of {'SmoothMatrix, BlissExcess, "
+    "Assertion on 'dummy' failed. Must be element(s) of {'excess, scores, "
   err_msg2 <-
-    "HSAExcess, HSAScore, BlissScore, CIScore_50, CIScore_80, isobolograms'} set."
+    "isobolograms'} set."
   expect_error(
-    convert_combo_data_to_dt(test_mae[[1]], c_assays = c("dummy", "Smooth_Matrix", "HSAExcess")),
+    convert_combo_data_to_dt(test_mae[[1]], c_assays = c("dummy", "excess")),
     sprintf("%s%s", err_msg, err_msg2),
     fixed = TRUE
   )
@@ -78,3 +78,4 @@ test_that("shorten_normalization_type_name", {
   err_msg <- "Assertion on 'x' failed: Must be element of set"
   expect_error(shorten_normalization_type_name("invalid"), err_msg)
 })
+
