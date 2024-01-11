@@ -78,4 +78,3 @@ test_that("shorten_normalization_type_name", {
   err_msg <- "Assertion on 'x' failed: Must be element of set"
   expect_error(shorten_normalization_type_name("invalid"), err_msg)
 })
-

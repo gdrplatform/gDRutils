@@ -146,3 +146,41 @@ get_combo_col_settings <-
       limits = c(min(breaks), max(breaks))
     )
   }
+
+
+DATA_COMBO_INFO_TBL <- data.table::data.table(
+  name = c("hsa_score", "bliss_score", "CIScore_50", "CIScore_80",
+           "mx", "hsa_excess", "b_excess"),
+  pname = c("HSA Score", "Bliss Score", "log2(CI) @ GR/IC50", "log2(CI) @ GR/IC80",
+            "MX full", "HSA excess", "Bliss excess"),
+  type = c("scores", "scores", "scores", "scores",
+           "excess", "excess", "excess")
+)
+
+#' get names of combo score fields
+#'
+#' @return  charvec
+#'
+#' @export
+#' 
+#' @examples 
+#' get_combo_score_assay_names()
+#' 
+get_combo_score_field_names <- function() {
+  dt <- DATA_COMBO_INFO_TBL[type == "scores", c("name", "pname"), with = FALSE]
+  setNames(dt$pname, dt$name)
+}
+
+#' get names of combo excess fields
+#'
+#' @return charvec
+#'
+#' @export
+#' 
+#' @examples 
+#' get_combo_excess_assay_names()
+#' 
+get_combo_excess_field_names <- function() {
+  dt <- DATA_COMBO_INFO_TBL[type == "excess", c("name", "pname"), with = FALSE]
+  setNames(dt$pname, dt$name)
+}
