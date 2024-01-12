@@ -184,3 +184,20 @@ get_combo_excess_field_names <- function() {
   dt <- DATA_COMBO_INFO_TBL[type == "excess", c("name", "pname"), with = FALSE]
   setNames(dt$pname, dt$name)
 }
+
+
+#' get combo assay names based on the field name
+#'
+#'
+#' @param field String containing name of the field for which the assay name should be returned
+#' @return charvec
+#'
+#' @export
+#' 
+#' @examples 
+#' get_combo_excess_assay_names("hsa_score")
+#' 
+convert_combo_field_to_assay <- function(field) {
+  checkmate::assert_string(field)
+  DATA_COMBO_INFO_TBL[name == field, ][["type"]]
+}
