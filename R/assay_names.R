@@ -3,7 +3,7 @@ ASSAY_INFO_TBL <- data.table::data.table(
            "excess", "scores", "isobolograms"),
   pname = c("Raw Treated", "Controls", "Normalized", "Averaged", "Metrics",
             "Excess", "Scores", "isobolograms"),
-  type = c("raw", "control", "normalized", "averaged", "metrics", "excess", "scores", "iso"),
+  type = c("raw", "control", "normalized", "averaged", "metrics", "excess", "scores", "isobolograms"),
   group = c("raw", "core", "core", "core", "core","combo_excess", "combo_score", "combo_iso"),
   data_type = c("single-agent", "single-agent", "single-agent", "single-agent",
                 "single-agent", "combo", "combo", "combo")
