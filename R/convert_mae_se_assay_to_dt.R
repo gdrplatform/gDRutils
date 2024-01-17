@@ -113,7 +113,7 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_string(assay_name)
   
   object <- assays(se)[[assay_name]]
-  checkmate::assertClass(object, "BumpyDataFrameMatrix")
+  checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
 
   rowfield <- "rId"
   colfield <- "cId"
@@ -128,6 +128,16 @@ convert_se_assay_to_dt <- function(se,
     }
     as_dt <- data.table::as.data.table(as_df)
 
+  } else if (methods::is(object, "matrix")) {
+    first <- object[1, 1][[1]]
+    if (is.numeric(first)) {
+      as_dt <-
+        data.table::melt(data.table::as.data.table(object, keep.rownames = TRUE),
+                         measure.vars = colnames(object))
+      data.table::setnames(as_dt, c(rowfield, colfield, assay_name))
+    } else {
+      stop(sprintf("matrix with nested objects of class '%s' is not supported", class(first)))
+    }
   } else {
     stop(sprintf("assay of class '%s' is not supported", class(object)))
   }
