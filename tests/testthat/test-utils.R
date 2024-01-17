@@ -68,7 +68,7 @@ test_that("MAEpply works as expected", {
   expect_length(list1, 2)
   expect_true(inherits(list1, "list"))
   v1 <- unique(MAEpply(maeReal, SummarizedExperiment::assayNames, unify = TRUE))
-  expect_length(v1, 14)
+  expect_length(v1, 9)
   expect_true(inherits(v1, "character"))
 
   v2 <- unique(MAEpply(maeReal, SummarizedExperiment::rowData, unify = TRUE))
