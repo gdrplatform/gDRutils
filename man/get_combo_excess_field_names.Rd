@@ -13,6 +13,6 @@ charvec
 get names of combo excess fields
 }
 \examples{
-get_combo_excess_assay_names()
+get_combo_excess_field_names()
 
 }

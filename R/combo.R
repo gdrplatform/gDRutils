@@ -168,7 +168,7 @@ DATA_COMBO_INFO_TBL <- data.table::data.table(
 #' 
 get_combo_score_field_names <- function() {
   dt <- DATA_COMBO_INFO_TBL[type == "scores", c("name", "pname"), with = FALSE]
-  setNames(dt$pname, dt$name)
+  stats::setNames(dt$pname, dt$name)
 }
 
 #' get names of combo excess fields
@@ -178,11 +178,11 @@ get_combo_score_field_names <- function() {
 #' @export
 #' 
 #' @examples 
-#' get_combo_excess_assay_names()
+#' get_combo_excess_field_names()
 #' 
 get_combo_excess_field_names <- function() {
   dt <- DATA_COMBO_INFO_TBL[type == "excess", c("name", "pname"), with = FALSE]
-  setNames(dt$pname, dt$name)
+  stats::setNames(dt$pname, dt$name)
 }
 
 
@@ -195,7 +195,7 @@ get_combo_excess_field_names <- function() {
 #' @export
 #' 
 #' @examples 
-#' get_combo_excess_assay_names("hsa_score")
+#' convert_combo_field_to_assay("hsa_score")
 #' 
 convert_combo_field_to_assay <- function(field) {
   checkmate::assert_string(field)

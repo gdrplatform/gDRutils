@@ -6,6 +6,9 @@
 \usage{
 convert_combo_field_to_assay(field)
 }
+\arguments{
+\item{field}{String containing name of the field for which the assay name should be returned}
+}
 \value{
 charvec
 }
@@ -13,6 +16,6 @@ charvec
 get combo assay names based on the field name
 }
 \examples{
-get_combo_excess_assay_names()
+convert_combo_field_to_assay("hsa_score")
 
 }
