@@ -94,7 +94,7 @@ assert_RGB_format <- function(x) {
 #'
 #' @return list with colors, breaks and limits
 #' @examples 
-#' get_combo_col_settings("GR", "smooth")
+#' get_combo_col_settings("GR", "excess")
 #' 
 #' @export
 get_combo_col_settings <-
