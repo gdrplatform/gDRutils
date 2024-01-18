@@ -150,7 +150,7 @@ get_combo_col_settings <-
 
 DATA_COMBO_INFO_TBL <- data.table::data.table(
   name = c("hsa_score", "bliss_score", "CIScore_50", "CIScore_80",
-           "mx", "hsa_excess", "b_excess"),
+           "smooth", "hsa_excess", "bliss_excess"),
   pname = c("HSA Score", "Bliss Score", "log2(CI) @ GR/IC50", "log2(CI) @ GR/IC80",
             "MX full", "HSA excess", "Bliss excess"),
   type = c("scores", "scores", "scores", "scores",
