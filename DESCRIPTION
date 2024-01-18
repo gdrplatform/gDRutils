@@ -51,6 +51,8 @@ Suggests:
     testthat,
     tools,
     yaml
+URL: https://github.com/gdrplatform/gDRutils
+BugReports: https://github.com/gdrplatform/gDRutils/issues
 biocViews: Software, Infrastructure
 VignetteBuilder: knitr
 ByteCompile: TRUE
