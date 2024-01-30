@@ -28,7 +28,6 @@ Imports:
     drc,
     jsonlite,
     jsonvalidate,
-    magrittr,
     methods,    
     MultiAssayExperiment,
     S4Vectors,
