@@ -1,5 +1,8 @@
-## 1.1.3 (2024-01-03)
+## 1.1.4 (2024-01-30)
 - rename `matrix` into `combination`
+
+## 1.1.3 (2024-01-22)
+- add new description fields
 
 ## 1.1.2 (2023-12-01)
 - fix bug with refining rowData
