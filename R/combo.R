@@ -94,7 +94,7 @@ assert_RGB_format <- function(x) {
 #'
 #' @return list with colors, breaks and limits
 #' @examples 
-#' get_combo_col_settings("GR", "smooth")
+#' get_combo_col_settings("GR", "excess")
 #' 
 #' @export
 get_combo_col_settings <-
@@ -110,8 +110,8 @@ get_combo_col_settings <-
       myv <- get_iso_colors(g_metric)
       colors <- as.character(myv)
       breaks <- names(myv)
-    } else if (assay_type %in% c(names(get_combo_assay_names(group = "combo_score_excess")),
-                                 names(get_combo_assay_names(group = "combo_base_excess")))) {
+    } else if (assay_type %in% c(names(get_combo_assay_names(group = "combo_excess")),
+                                 names(get_combo_assay_names(group = "combo_score")))) {
       colors <- c("#003355", "#4488dd", "#eeeedd", "#CC8844", "#662200")
       if (g_metric == "GR") {
         breaks <- c(-0.5, -0.25, 0, 0.25, 0.5)
@@ -146,3 +146,58 @@ get_combo_col_settings <-
       limits = c(min(breaks), max(breaks))
     )
   }
+
+
+DATA_COMBO_INFO_TBL <- data.table::data.table(
+  name = c("hsa_score", "bliss_score", "CIScore_50", "CIScore_80",
+           "smooth", "hsa_excess", "bliss_excess"),
+  pname = c("HSA Score", "Bliss Score", "log2(CI) @ GR/IC50", "log2(CI) @ GR/IC80",
+            "MX full", "HSA excess", "Bliss excess"),
+  type = c("scores", "scores", "scores", "scores",
+           "excess", "excess", "excess")
+)
+
+#' get names of combo score fields
+#'
+#' @return  charvec
+#'
+#' @export
+#' 
+#' @examples 
+#' get_combo_score_assay_names()
+#' 
+get_combo_score_field_names <- function() {
+  dt <- DATA_COMBO_INFO_TBL[type == "scores", c("name", "pname"), with = FALSE]
+  stats::setNames(dt$pname, dt$name)
+}
+
+#' get names of combo excess fields
+#'
+#' @return charvec
+#'
+#' @export
+#' 
+#' @examples 
+#' get_combo_excess_field_names()
+#' 
+get_combo_excess_field_names <- function() {
+  dt <- DATA_COMBO_INFO_TBL[type == "excess", c("name", "pname"), with = FALSE]
+  stats::setNames(dt$pname, dt$name)
+}
+
+
+#' get combo assay names based on the field name
+#'
+#'
+#' @param field String containing name of the field for which the assay name should be returned
+#' @return charvec
+#'
+#' @export
+#' 
+#' @examples 
+#' convert_combo_field_to_assay("hsa_score")
+#' 
+convert_combo_field_to_assay <- function(field) {
+  checkmate::assert_string(field)
+  DATA_COMBO_INFO_TBL[name == field, ][["type"]]
+}

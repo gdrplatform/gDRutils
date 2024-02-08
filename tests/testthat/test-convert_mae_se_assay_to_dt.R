@@ -131,7 +131,7 @@ test_that("convert_mae_assay_to_dt works as expected", {
   
   maeTwoExperiments <- MultiAssayExperiment::MultiAssayExperiment(
     experiments = list("single-agent" = se1,
-                       "matrix" = se2))
+                       "combination" = se2))
   
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
@@ -149,13 +149,13 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_equal(dt1$cnames, as.character(dt1$cId))
   
   
-  dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
+  dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "combination",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt2)
   expect_equal(dt2$RefGRvalue, as.vector(ref_gr_value[11:20, , drop = FALSE]))
   expect_equal(dim(dt2), c(m / 2 * n, 3))
   
-  dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "matrix",
+  dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "combination",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
   checkmate::expect_data_table(dt2)
   expect_equal(sort(data.table::setorder(dt2)[["RefGRvalue"]]), 

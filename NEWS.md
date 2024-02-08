@@ -1,3 +1,6 @@
+## 1.1.4 (2024-01-30)
+- rename `matrix` into `combination`
+
 ## 1.1.3 (2024-01-22)
 - add new description fields
 

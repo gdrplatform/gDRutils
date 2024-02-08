@@ -12,9 +12,7 @@
           "enum": [
             "single-agent",
             "co-dilution",
-            "matrix",
-            "cotreatment",
-            "other"
+            "combination"
           ]
         },
       "minItems": 1,

@@ -102,6 +102,6 @@ test_that("validate_mae works as expected", {
   maeReal <- get_synthetic_data("finalMAE_small")
   validate_MAE(maeReal)
   maeReal2 <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = maeReal[[1]],
-                                                                            "matrix" = maeReal[[1]]))
+                                                                            "combination" = maeReal[[1]]))
   validate_MAE(maeReal2)
 })
