@@ -22,7 +22,7 @@ RUN echo "$GITHUB_TOKEN" >> /mnt/vol/.github_access_token.txt
 RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
-COPY gDRutils/ /tmp/gDRutils/
+COPY ./ /tmp/gDRutils/
 RUN Rscript -e "gDRstyle::installLocalPackage('/tmp/gDRutils')"
 
 #================= Clean up
