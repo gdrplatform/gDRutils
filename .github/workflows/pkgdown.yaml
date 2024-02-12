@@ -48,7 +48,7 @@ jobs:
       USERNAME: ${{ github.actor }}
       PACKAGE_NAME: ${{ github.event.repository.name }}
       BRANCH_NAME: ${{ github.head_ref }}
-      BASE_IMAGE: marcinkam/gdrshiny:0.20
+      BASE_IMAGE: bioconductor/bioconductor_docker:devel
     permissions:
       contents: write
     steps:
