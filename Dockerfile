@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=marcinkam/gdrshiny:0.20
+ARG BASE_IMAGE=bioconductor/bioconductor_docker:devel
 FROM ${BASE_IMAGE}
 
 # ------ Be aware that any changes in following may cause issue with RPlatform and CBS
