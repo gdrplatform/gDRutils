@@ -16,7 +16,7 @@ LABEL VERSION=0.0.0.9100
 ARG GITHUB_TOKEN
 
 #================= Install dependencies
-RUN apt-get update && apt-get -y install git
+#RUN apt-get update && apt-get -y install git
 RUN mkdir -p /mnt/vol
 COPY rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol
 RUN echo "$GITHUB_TOKEN" >> /mnt/vol/.github_access_token.txt
@@ -25,6 +25,7 @@ RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
 COPY ./ /tmp/gDRutils/
+COPY .git/ /tmp/gDRutils/.git
 RUN Rscript -e "gDRstyle::installLocalPackage('/tmp/gDRutils')"
 
 #================= Clean up
