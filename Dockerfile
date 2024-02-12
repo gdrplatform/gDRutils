@@ -19,8 +19,8 @@ ARG GITHUB_TOKEN
 RUN mkdir -p /mnt/vol
 COPY rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol
 RUN echo "$GITHUB_TOKEN" >> /mnt/vol/.github_access_token.txt
-RUN Rscript -e 'BiocManager::install(c("BiocStyle", "gDRstyle", "gDRtestData", "gDRutils"))'
-RUN Rscript -e "gDRstyle::installAllDeps()"
+RUN Rscript -e 'BiocManager::install(c("gDRstyle", "gDRtestData", "gDRutils"))'
+RUN Rscript -e "gDRstyle::installAllDeps(repos = c('BiocStyle', 'qs'))"
 
 #================= Check & build package
 COPY ./ /tmp/gDRutils/
