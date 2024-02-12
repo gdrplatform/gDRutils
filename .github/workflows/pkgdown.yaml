@@ -67,15 +67,15 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          load: true
+          #context: .
+          #load: true
           tags: ${{ env.TEST_TAG }}
           build-args: |
             GITHUB_TOKEN=${{ env.GITHUB_PAT }}
             BASE_IMAGE=${{ env.BASE_IMAGE }}
       - name: Run tests
         run: |
-          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/mnt/vol", new_process = FALSE)'
+          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/tmp/gDRutils/", new_process = FALSE)'
           #docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::build_site_github_pages("/tmp/gDRutils", new_process = FALSE, install = FALSE)'
 
       #- uses: r-lib/actions/setup-r-dependencies@v2
