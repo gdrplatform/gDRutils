@@ -50,7 +50,7 @@ Suggests:
     testthat,
     tools,
     yaml
-URL: https://github.com/gdrplatform/gDRutils
+URL: https://github.com/gdrplatform/gDRutils, https://gdrplatform.github.io/gDRutils/
 BugReports: https://github.com/gdrplatform/gDRutils/issues
 biocViews: Software, Infrastructure
 VignetteBuilder: knitr
