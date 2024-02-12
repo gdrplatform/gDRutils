@@ -1,5 +1,8 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+
+name: pkgdown
+
 on:
   push:
     branches: [main, master, GDR-2371]
@@ -7,9 +10,31 @@ on:
     branches: [main, master]
   release:
     types: [published]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      USERNAME:
+        required: true
+        type: string
+      PACKAGE_NAME:
+        required: true
+        type: string
+      BRANCH_NAME:
+        required: true
+        type: string
+      COMMIT_HASH:
+        required: true
+        type: string
+      COMMIT_MSG:
+        required: true
+        type: string
+    secrets:
+      PRIVATE_ACCESS_TOKEN:
+        required: true
+      GDRGENESIS_TRIGGER_TOKEN:
+        required: true
+      GDRVIZ_TRIGGER_TOKEN:
+        required: true
 
-name: pkgdown
 
 jobs:
   pkgdown:
@@ -19,25 +44,47 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      TEST_TAG: user/app:latest-${{ github.sha }}
+      USERNAME: ${{ github.actor }}
+      PACKAGE_NAME: ${{ github.event.repository.name }}
+      BRANCH_NAME: ${{ github.head_ref }}
+      BASE_IMAGE: marcinkam/gdrshiny:0.11
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      #- uses: actions/checkout@v4
 
-      - uses: r-lib/actions/setup-pandoc@v2
+      #- uses: r-lib/actions/setup-pandoc@v2
 
-      - uses: r-lib/actions/setup-r@v2
+      #- uses: r-lib/actions/setup-r@v2
+      #  with:
+      #    use-public-rspm: true
+
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build
+        uses: docker/build-push-action@v2
         with:
-          use-public-rspm: true
+          context: .
+          load: true
+          tags: ${{ env.TEST_TAG }}
+          build-args: |
+            GITHUB_TOKEN=${{ secrets.PRIVATE_ACCESS_TOKEN }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
+      - name: Run tests
+        run: |
+          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)'
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::pkgdown, local::.
-          needs: website
+      #- uses: r-lib/actions/setup-r-dependencies@v2
+      #  with:
+      #    extra-packages: any::pkgdown, local::.
+      #    needs: website
 
-      - name: Build site
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
-        shell: Rscript {0}
+      #- name: Build site
+      #  run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+      #  shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
