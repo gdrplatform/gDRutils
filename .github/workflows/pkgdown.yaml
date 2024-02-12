@@ -75,7 +75,7 @@ jobs:
             BASE_IMAGE=${{ env.BASE_IMAGE }}
       - name: Run tests
         run: |
-          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/tmp/gDRutils", new_process = FALSE)'
+          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/mnt/vol", new_process = FALSE)'
           #docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::build_site_github_pages("/tmp/gDRutils", new_process = FALSE, install = FALSE)'
 
       #- uses: r-lib/actions/setup-r-dependencies@v2
