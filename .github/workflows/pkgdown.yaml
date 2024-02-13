@@ -35,6 +35,8 @@ on:
       GDRVIZ_TRIGGER_TOKEN:
         required: true
 
+permissions:
+  contents: write
 
 jobs:
   pkgdown:
