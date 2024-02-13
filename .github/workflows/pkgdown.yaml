@@ -14,7 +14,7 @@ on:
 
 jobs:
   trigger_pkgdown:
-    uses: gdrplatform/gDRstyle/.github/workflows/pkgdown.yml@GDR-2371_2
+    uses: gdrplatform/gDRstyle/.github/workflows/pkgdown.yaml@GDR-2371_2
     with:
       USERNAME: ${{ github.actor }}
       PACKAGE_NAME: ${{ github.event.repository.name }}
