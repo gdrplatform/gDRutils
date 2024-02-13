@@ -15,6 +15,11 @@ LABEL VERSION=0.0.0.9100
 # Need to be defined after FROM as it flushes ARGs
 ARG GITHUB_TOKEN
 
+COPY ./ /tmp/gDRutils/
+COPY .git/ /tmp/gDRutils/.git/
+RUN ls -ltra /tmp/gDRutils/
+RUN ls -ltra /tmp/gDRutils/.git/
+
 #================= Install dependencies
 #RUN apt-get update && apt-get -y install git
 RUN mkdir -p /mnt/vol
@@ -24,8 +29,6 @@ RUN Rscript -e 'BiocManager::install(c("gDRstyle", "gDRtestData", "gDRutils", "B
 RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
-COPY ./ /tmp/gDRutils/
-COPY .git/ /tmp/gDRutils/.git/
 RUN Rscript -e "gDRstyle::installLocalPackage('/tmp/gDRutils')"
 
 #================= Clean up
