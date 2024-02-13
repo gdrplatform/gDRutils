@@ -1,86 +1,23 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+#
+# See https://github.com/r-lib/actions/tree/master/examples#readme for
+# additional example workflows available for the R community.
 
 name: pkgdown
 
 on:
   push:
-    branches: [main, master, GDR-2371]
-  pull_request:
-    branches: [main, master]
-  release:
-    types: [published]
-  workflow_call:
-    inputs:
-      USERNAME:
-        required: true
-        type: string
-      PACKAGE_NAME:
-        required: true
-        type: string
-      BRANCH_NAME:
-        required: true
-        type: string
-      COMMIT_HASH:
-        required: true
-        type: string
-      COMMIT_MSG:
-        required: true
-        type: string
-    secrets:
-      PRIVATE_ACCESS_TOKEN:
-        required: true
-      GDRGENESIS_TRIGGER_TOKEN:
-        required: true
-      GDRVIZ_TRIGGER_TOKEN:
-        required: true
-
-permissions:
-  contents: write
+    branches: [main, master, GDR-2371, test_ci_pkgdown]
 
 jobs:
-  pkgdown:
-    runs-on: ubuntu-latest
-    # Only restrict concurrency for non-PR jobs
-    concurrency:
-      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      TEST_TAG: user/app:latest-${{ github.sha }}
+  trigger_pkgdown:
+    uses: gdrplatform/gDRstyle/.github/workflows/pkgdown.yml@GDR-2371_2
+    with:
       USERNAME: ${{ github.actor }}
       PACKAGE_NAME: ${{ github.event.repository.name }}
       BRANCH_NAME: ${{ github.head_ref }}
-      BASE_IMAGE: bioconductor/bioconductor_docker:devel
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      #- name: Set up Docker Buildx
-      #  uses: docker/setup-buildx-action@v1
-      - name: Build
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          #load: true
-          fetch-depth: 0
-          ref: ${{ env.BRANCH_NAME }}
-          tags: ${{ env.TEST_TAG }}
-          build-args: |
-            GITHUB_TOKEN=${{ env.GITHUB_PAT }}
-            BASE_IMAGE=${{ env.BASE_IMAGE }}
-      - name: Run tests
-        run: |
-          docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} bash  -c "find /mnt/vol/"
-          # git fails with exit code 128 
-          #docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/mnt/vol/", new_process = FALSE)'
-          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::build_site_github_pages("/mnt/vol", new_process = FALSE, install = FALSE)'
-
-      - name: Deploy to GitHub pages 🚀
-        if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
-        with:
-          clean: true
-          branch: pages
-          folder: docs
-          target-folder: docs
+      DEFAULT_BRANCH: master
+    secrets: inherit
