@@ -69,6 +69,7 @@ jobs:
         with:
           context: .
           #load: true
+          fetch-depth: 0
           tags: ${{ env.TEST_TAG }}
           build-args: |
             GITHUB_TOKEN=${{ env.GITHUB_PAT }}
@@ -76,7 +77,8 @@ jobs:
             #BUILDKIT_CONTEXT_KEEP_GIT_DIR=true
       - name: Run tests
         run: |
-          docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/tmp/gDRutils/", new_process = FALSE)'
+          docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/mnt/vol/gDRutils/", new_process = FALSE)'
+          #docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/tmp/gDRutils/", new_process = FALSE)'
           #docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::build_site_github_pages("/tmp/gDRutils", new_process = FALSE, install = FALSE)'
 
       #- uses: r-lib/actions/setup-r-dependencies@v2
