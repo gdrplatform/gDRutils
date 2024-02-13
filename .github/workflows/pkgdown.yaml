@@ -64,12 +64,11 @@ jobs:
           context: .
           #load: true
           fetch-depth: 0
-          ref: GDR-2371
+          ref: {{ env.BRANCH_NAME }}
           tags: ${{ env.TEST_TAG }}
           build-args: |
             GITHUB_TOKEN=${{ env.GITHUB_PAT }}
             BASE_IMAGE=${{ env.BASE_IMAGE }}
-            #BUILDKIT_CONTEXT_KEEP_GIT_DIR=true
       - name: Run tests
         run: |
           docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} bash  -c "find /mnt/vol/"
@@ -82,6 +81,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
           clean: true
-          branch: gh-pages
+          branch: pages
           folder: docs
           target-folder: docs
