@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=bioconductor/bioconductor_docker:devel
+ARG BASE_IMAGE=marcinkam/gdrshiny:1.0
 FROM ${BASE_IMAGE}
 
 # temporary fix
@@ -10,7 +10,7 @@ ARG GITHUB_TOKEN
 RUN mkdir -p /mnt/vol
 COPY rplatform/dependencies.yaml rplatform/.github_access_token.txt* /mnt/vol
 RUN echo "$GITHUB_TOKEN" >> /mnt/vol/.github_access_token.txt
-RUN Rscript -e 'BiocManager::install(c("gDRstyle", "gDRtestData", "gDRutils", "BiocStyle", "qs"))'
+RUN Rscript -e 'BiocManager::install(c("BiocStyle", "qs"))'
 RUN Rscript -e "gDRstyle::installAllDeps()"
 
 #================= Check & build package
