@@ -70,6 +70,7 @@ jobs:
           context: .
           #load: true
           fetch-depth: 0
+          ref: GDR-2371
           tags: ${{ env.TEST_TAG }}
           build-args: |
             GITHUB_TOKEN=${{ env.GITHUB_PAT }}
@@ -78,7 +79,7 @@ jobs:
       - name: Run tests
         run: |
           docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} bash  -c "find /mnt/vol/"
-          docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/mnt/vol/gDRutils/", new_process = FALSE)'
+          docker run -v $GITHUB_WORKSPACE:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/mnt/vol/", new_process = FALSE)'
           #docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::deploy_to_branch("/tmp/gDRutils/", new_process = FALSE)'
           #docker run -v `pwd`:/mnt/vol ${{ env.TEST_TAG }} Rscript -e 'pkgdown::build_site_github_pages("/tmp/gDRutils", new_process = FALSE, install = FALSE)'
 
