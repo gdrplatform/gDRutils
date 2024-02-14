@@ -1,3 +1,6 @@
+## 1.1.5 (2024-02-14)
+- make documentation compatible with pkdgdown
+
 ## 1.1.4 (2024-01-30)
 - rename `matrix` into `combination`
 
