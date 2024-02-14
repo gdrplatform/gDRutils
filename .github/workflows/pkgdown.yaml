@@ -10,7 +10,7 @@ name: pkgdown
 
 on:
   push:
-    branches: [main, master, GDR-2371, test_ci_pkgdown]
+    branches: [main, master, test_ci_pkgdown]
 
 jobs:
   trigger_pkgdown:
