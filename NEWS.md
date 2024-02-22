@@ -1,3 +1,6 @@
+## 1.1.6 (2024-02-22)
+- add fit_source to header list
+
 ## 1.1.5 (2024-02-14)
 - make documentation compatible with pkdgdown
 
