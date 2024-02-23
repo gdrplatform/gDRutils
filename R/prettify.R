@@ -49,22 +49,30 @@ prettify_flat_metrics <- function(x,
 # Prettify helpers
 ####################
 
+#' This function change raw names of metric from long format table into more descriptive
+#' names in the wide format table. 
+#' It works for metrics: \code{colnames(get_header("metrics_names"))}
+#' 
 #' @keywords internal
 .convert_norm_specific_metrics <- function(x, normalization_type) {
+  
+  # to do not crush app for unsupported norm type
+  normalization_type <- 
+    normalization_type[normalization_type %in% rownames(get_header("metrics_names"))]
+  
   for (norm in normalization_type) {
     metrics_names <- get_header("metrics_names")[norm, ]
-    if (length(metrics_names) == 0L) {
-      stop(sprintf("missing normalization type: '%s' from header: 'metrics_names'", norm))
-    }
     
     is_norm <- grepl(norm, x)
     
-    if (!sum(is_norm)) return (x) # to skip loop below
+    if (!sum(is_norm)) next # to skip loop below (nothing to change)
     
     # to do not touch combo metrics
     combo_pattern <- paste(c(names(gDRutils::get_combo_score_field_names()), 
                              names(gDRutils::get_combo_excess_field_names())), collapse = "|")
     is_combo <- grepl(combo_pattern, x)
+    
+    if (!sum(is_norm & !is_combo)) next # to skip loop below (nothing to change)
     
     for (name in names(metrics_names)) {
       replace <- is_norm & grepl(name, x) & !is_combo
