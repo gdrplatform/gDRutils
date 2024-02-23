@@ -38,8 +38,8 @@ Suggests:
     BiocManager,
     BiocStyle,
     futile.logger,
-    gDRstyle (>= 1.1.1),
-    gDRtestData (>= 1.1.3),
+    gDRstyle (>= 1.1.3),
+    gDRtestData (>= 1.1.7),
     IRanges,
     knitr,
     lintr,
@@ -56,7 +56,7 @@ biocViews: Software, Infrastructure
 VignetteBuilder: knitr
 ByteCompile: TRUE
 Roxygen: list(markdown = TRUE) 
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 SwitchrLibrary: gDRutils
 DeploySubPath: gDRutils
 Encoding: UTF-8
