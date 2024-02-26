@@ -1,5 +1,8 @@
-## 1.1.6 (2024-02-22)
+## 1.1.7 (2024-02-26)
 - add fit_source to header list
+
+## 1.1.6 (2024-02-22)
+- restore tooltips in table
 
 ## 1.1.5 (2024-02-14)
 - make documentation compatible with pkdgdown
