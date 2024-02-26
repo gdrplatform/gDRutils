@@ -23,7 +23,7 @@
 * sync master with devel branch
 * update schema to support NA in reference division time
 * add minor fix in code styling
-* added new function `gemoetric_mean`
+* add new function `gemoetric_mean`
 * transform values into numeric in `predict_efficacy_from_conc` function 
 * add "Treatment" as template identifier
 
