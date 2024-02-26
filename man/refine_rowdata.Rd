@@ -27,3 +27,4 @@ mae <- get_synthetic_data("finalMAE_small.qs")
 refine_rowdata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
 
 }
+\keyword{standardize_MAE}

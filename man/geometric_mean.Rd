@@ -24,3 +24,4 @@ geometric_mean(c(2, 8))
 
 }
 \keyword{internal}
+\keyword{package_utils}

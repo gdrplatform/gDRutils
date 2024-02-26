@@ -23,3 +23,4 @@ na <- list(x_0 = NA)
 gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
 
 }
+\keyword{fit_curves}

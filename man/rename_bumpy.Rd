@@ -26,3 +26,4 @@ assay <- SummarizedExperiment::assay(se)
 rename_bumpy(assay, c("Concentration" = "conc"))
 
 }
+\keyword{standardize_MAE}

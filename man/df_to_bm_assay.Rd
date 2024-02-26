@@ -26,3 +26,4 @@ dose-response data for given cell lines under given conditions.
 df_to_bm_assay(data.table::data.table(Gnumber = 2, clid = "A"))
 
 }
+\keyword{convert_to_bm}

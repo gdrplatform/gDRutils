@@ -47,3 +47,4 @@ apply_bumpy_function(
 )
 
 }
+\keyword{package_utils}

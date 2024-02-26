@@ -36,3 +36,4 @@ b = c(rep("drugA", 10), rep("drugB", 1)))
 average_biological_replicates_dt(dt, var = "a")
 
 }
+\keyword{package_utils}
