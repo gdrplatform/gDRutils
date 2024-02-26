@@ -22,7 +22,7 @@
 ## gDRutils 1.1.1 - 2023-11-22
 * sync master with devel branch
 * update schema to support NA in reference division time
-* added minor fix in code styling
+* add minor fix in code styling
 * added new function `gemoetric_mean`
 * transform values into numeric in `predict_efficacy_from_conc` function 
 * add "Treatment" as template identifier
