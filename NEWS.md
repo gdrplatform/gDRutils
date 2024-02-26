@@ -247,7 +247,7 @@
 * fix hardcoded identifiers in validate SE
 
 ## gDRutils 0.1.0.37 - 2022-03-28
-* added a space between two-word cotreatment identifiers
+* add a space between two-word cotreatment identifiers
 
 ## gDRutils 0.1.0.36 - 2022-03-24
 * remove all R CMD check warnings
