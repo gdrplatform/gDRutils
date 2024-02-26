@@ -21,6 +21,7 @@
 #' Defaults to \code{0.1}.
 #' @param normalization_type character vector of types of curves to fit.
 #' Defaults to \code{c("GR", "RV")}.
+#' @keywords fit_curves
 #'
 #' @return data.table of fit parameters as specified by the \code{normalization_type}.
 #'
@@ -207,6 +208,7 @@ fit_curves <- function(df_,
 #'  \item{maxlog10Concentration}{The highest log10 concentration}
 #'  \item{N_conc}{Number of unique concentrations}
 #' }
+#' @keywords fit_curves
 #'
 #' @export
 #'
@@ -396,6 +398,7 @@ logisticFit <-
 #' @param ec50 Numeric vector representing the drug concentration at half-maximal effect.
 #' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep
 #'  the dose-response curve is.
+#' @keywords fit_curves
 #'
 #' @return Numeric vector representing predicted efficacies from given concentrations and fit parameters.
 #'
@@ -433,6 +436,7 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #'  for the primary drug.
 #' @param ec50 Numeric vector representing the drug concentration at half-maximal effect.
 #' @param h Numeric vector representing the hill coefficient of the fitted curve, which reflects how steep
+#' @keywords fit_curves
 #'
 #' @return Numeric vector representing predicted concentrations from given efficacies and fit parameters.
 #'
@@ -480,6 +484,7 @@ logistic_metrics <- function(c, x_metrics) {
 # Helper functions
 ##################
 
+#' @keywords fit_curves
 #' @export
 .setup_metric_output <- function() {
   resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
@@ -523,6 +528,7 @@ average_dups <- function(dt, col) {
 ############
 
 #' @importFrom checkmate assert_number
+#' @keywords fit_curves
 #' @export
 .set_mean_params <- function(out, mean_norm_value) {
   assert_number(mean_norm_value)
@@ -560,6 +566,7 @@ average_dups <- function(dt, col) {
 #' @param out Named list of fit parameters.
 #' @param mean_norm_value Numeric value that be used to set all parameters
 #' that can be calculated from the mean.
+#' @keywords fit_curves
 #' @return Modified named list of fit parameters.
 #' 
 #' @examples 
@@ -581,6 +588,7 @@ average_dups <- function(dt, col) {
 #' Set fit parameters for an invalid fit.
 #' @param out Named list of fit parameters.
 #' @param norm_values Numeric vector used to estimate an \code{xc50} value.
+#' @keywords fit_curves
 #' @return Modified named list of fit parameters.
 #' 
 #' @examples 
@@ -644,6 +652,7 @@ average_dups <- function(dt, col) {
 
 
 #' @export
+#' @keywords fit_curves
 .calculate_complement <- function(x) {
   1 - x
 }
@@ -662,6 +671,7 @@ average_dups <- function(dt, col) {
 #' @param min_conc Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
 #' If \code{NA} (default), using \code{max_conc/1e5} instead.
 #' @param capping_fold Integer value of the fold number to use for capping. Defaults to \code{5}.
+#' @keywords fit_curves
 #'
 #' @return Capped IC50/GR50 value.
 #'

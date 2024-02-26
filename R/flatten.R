@@ -7,6 +7,7 @@
 #' @param wide_cols character vector of column names to flatten.
 #' @param sep string representing separator between \code{wide_cols} columns, used in column renaming.
 #' Defaults to \code{"_"}.
+#' @keywords flatten
 #'
 #' @return table of flattened data as defined by \code{wide_cols}.
 #'

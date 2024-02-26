@@ -18,6 +18,7 @@
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
 #' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE`.
+#' @keywords convert_to_dt
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
@@ -176,6 +177,7 @@ convert_se_assay_to_dt <- function(se,
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
 #' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated 
 #' in `convert_se_assay_to_dt` function
+#' @keywords convert_to_dt
 #'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
 #' 

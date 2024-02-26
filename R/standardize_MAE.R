@@ -3,6 +3,7 @@
 #' @param mae a MultiAssayExperiment object with drug-response data generate by gDR pipeline
 #' @param use_default boolean indicating whether or not to use default
 #' identifiers for standardization
+#' @keywords standardize_MAE
 #' 
 #' @return mae a MultiAssayExperiment with default gDR identifiers
 #' 
@@ -26,6 +27,7 @@ standardize_mae <- function(mae, use_default = TRUE) {
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
 #' @param use_default boolean indicating whether or not to use default
 #' identifiers for standardization
+#' @keywords standardize_MAE
 #'
 #' @return se a SummarizedExperiment with default gDR identifiers
 #' 
@@ -137,6 +139,7 @@ standardize_se <- function(se, use_default = TRUE) {
 #' @param mapping_vector a named vector for mapping old and new values.
 #' The names of the character vector indicate the source names, and the
 #' corresponding values the destination names.
+#' @keywords standardize_MAE
 #'
 #' @return a renamed DFrame object
 #' 
@@ -159,6 +162,7 @@ rename_DFrame <- function(df, mapping_vector) {
 #' @param mapping_vector a named vector for mapping old and new values.
 #' The names of the character vector indicate the source names, and the
 #' corresponding values the destination names.
+#' @keywords standardize_MAE
 #'
 #' @return a renamed BumpyMatrix object
 #' 
@@ -181,6 +185,7 @@ rename_bumpy <- function(bumpy, mapping_vector) {
 #' get optional colData fields
 #'
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
+#' @keywords standardize_MAE
 #'
 #' @return a charvec containing the names of the optional identifiers in the SE colData
 #'
@@ -194,6 +199,7 @@ get_optional_coldata_fields <- function(se) {
 #' get optional rowData fields
 #'
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
+#' @keywords standardize_MAE
 #'
 #' @return a charvec containing the names of the optional identifiers in the SE rowData
 #'
@@ -222,6 +228,7 @@ get_optional_rowdata_fields <- function(se) {
 #' @param cd DataFrame with colData
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
 #' @param default_v string with default value for optional columns in colData
+#' @keywords standardize_MAE
 #'
 #' @return refined colData
 #' 
@@ -253,6 +260,7 @@ refine_coldata <- function(cd, se, default_v = "Undefined") {
 #' @param rd DataFrame with rowData
 #' @param se a SummarizedExperiment object with drug-response data generate by gDR pipeline
 #' @param default_v string with default value for optional columns in rowData
+#' @keywords standardize_MAE
 #'
 #' @return refined rowData
 #' 

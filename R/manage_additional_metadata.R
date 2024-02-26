@@ -8,6 +8,7 @@
 #'
 #' @param x an object
 #' @param newClass character string; class to be added
+#' @keywords metadata_management
 #'
 #' @return The same object with an added S3 class.
 #' 
@@ -53,6 +54,7 @@ addClass <- function(x, newClass) {
 #' @param ... additional arguments passed to methods
 #' @param option character string specifying the action to be taken, see \code{Details}
 #' @param keep character string specifying the value of the active variable that will be kept
+#' @keywords metadata_management
 #'
 #' @examples
 #' dt <- data.table::data.table(a = as.character(1:10), b = "data")
@@ -65,6 +67,7 @@ modifyData <- function(x, ...) {
   UseMethod("modifyData")
 }
 
+#' @keywords metadata_management
 #' @export
 #' @describeIn modifyData includes the name and concentration of the second drug
 modifyData.drug_name2 <- function(x, option, keep, ...) {
@@ -111,6 +114,7 @@ modifyData.drug_name2 <- function(x, option, keep, ...) {
   return(x)
 }
 
+#' @keywords metadata_management
 #' @export
 #' @describeIn modifyData includes the data source
 modifyData.data_source <- function(x, option, keep, ...) {
@@ -153,6 +157,7 @@ modifyData.data_source <- function(x, option, keep, ...) {
 }
 
 
+#' @keywords metadata_management
 #' @export
 #' @describeIn modifyData includes the name of other additional variables
 modifyData.default <- function(x, option, keep, ...) {
