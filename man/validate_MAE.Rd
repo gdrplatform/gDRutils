@@ -32,4 +32,4 @@ validate_MAE(mae)
 \author{
 Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
 }
-\keyword{experiment_validators}
+\keyword{experiment}

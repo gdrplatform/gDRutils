@@ -41,4 +41,4 @@ validate_identifiers(
 )
 
 }
-\keyword{validate_identifiers}
+\keyword{identifiers}

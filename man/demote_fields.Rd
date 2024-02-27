@@ -33,4 +33,4 @@ demote_fields(se, "ReadoutValue")
 \seealso{
 promote_fields
 }
-\keyword{concatenate_SEs}
+\keyword{SE_operators}

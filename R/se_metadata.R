@@ -24,7 +24,7 @@ NULL
 # Setters
 ############
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 #' @rdname SE_metadata
 #'
@@ -33,7 +33,7 @@ set_SE_fit_parameters <- function(se, value) {
 }
 
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @rdname SE_metadata
 #' @export
 #'
@@ -42,7 +42,7 @@ set_SE_processing_metadata <- function(se, value) {
 }
 
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @rdname SE_metadata
 #' @export
 #'
@@ -51,7 +51,7 @@ set_SE_keys <- function(se, value) {
 }
 
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @rdname SE_metadata
 #' @export
 #'
@@ -59,7 +59,7 @@ set_SE_experiment_metadata <- function(se, value) {
   .set_SE_metadata(se, name = "experiment_metadata", value)
 }
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @rdname SE_metadata
 #' @export
 #'
@@ -79,7 +79,7 @@ set_SE_experiment_raw_data <- function(se, value) {
 #' se <- mae[[1]]
 #' get_SE_fit_parameters(se)
 #' 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 get_SE_fit_parameters <- function(se) {
   .get_SE_metadata(se, name = "fit_parameters")
@@ -93,7 +93,7 @@ get_SE_fit_parameters <- function(se) {
 #' se <- mae[[1]]
 #' meta <- get_SE_processing_metadata(se)
 #' 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 get_SE_processing_metadata <- function(se) {
   .get_SE_metadata(se, name = ".internal")
@@ -106,7 +106,7 @@ get_SE_processing_metadata <- function(se) {
 #' se <- mae[[1]]
 #' get_SE_experiment_raw_data(se)
 #' 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 get_SE_experiment_raw_data <- function(se) {
   .get_SE_metadata(se, name = "experiment_raw_data")
@@ -119,13 +119,13 @@ get_SE_experiment_raw_data <- function(se) {
 #' se <- mae[[1]]
 #' get_SE_experiment_metadata(se)
 #' 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 get_SE_experiment_metadata <- function(se) {
   .get_SE_metadata(se, name = "experiment_metadata")
 }
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @rdname SE_metadata
 #' @export
 #'
@@ -145,7 +145,7 @@ get_SE_keys <- function(se, key_type = NULL) {
 #' se <- mae[[1]]
 #' get_SE_identifiers(se)
 #' 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
   ## `strict = FALSE` is present for backwards compatibility.
@@ -177,7 +177,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
 #' mae <- get_synthetic_data("finalMAE_small.qs")
 #' get_MAE_identifiers(mae)
 #' 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @export
 get_MAE_identifiers <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -204,7 +204,7 @@ get_MAE_identifiers <- function(mae) {
 }
 
 
-#' @keywords SE_metadata
+#' @keywords SE_operators
 #' @rdname SE_metadata
 #' @export
 #'

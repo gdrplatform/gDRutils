@@ -7,7 +7,7 @@
 #' Defaults to \code{FALSE}.
 #' @param normalization_type character vector with a specified normalization type.
 #' Defaults to \code{c("GR", "RV")}.
-#' @keywords prettify
+#' @keywords identifiers
 #'
 #' @return character vector of prettified names.
 #'

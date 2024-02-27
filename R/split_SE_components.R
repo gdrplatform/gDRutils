@@ -10,7 +10,7 @@
 #' @param combine_on integer value of \code{1} or \code{2}, indicating whether unrecognized columns
 #' should be combined on row or column respectively.
 #' Defaults to \code{1}.
-#' @keywords split_SE
+#' @keywords SE_operators
 #'
 #' @examples
 #' split_SE_components(data.table::data.table(clid = "CL1", Gnumber = "DrugA"))
