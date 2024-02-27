@@ -50,4 +50,4 @@ convert_se_assay_to_dt(se, "Metrics")
 \seealso{
 flatten
 }
-\keyword{convert_to_dt}
+\keyword{convert}

@@ -47,4 +47,4 @@ flatten(repgrid, groups = groups, wide_cols = wide_cols)
 \seealso{
 convert_se_assay_to_dt
 }
-\keyword{flatten}
+\keyword{convert}

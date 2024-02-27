@@ -38,4 +38,4 @@ listSE <- list(
 merge_assay(listSE, "Normalized")
 
 }
-\keyword{merge_SE}
+\keyword{SE_operators}

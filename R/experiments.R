@@ -9,7 +9,7 @@ EXPERIMENT_GROUPS <-
 #' get experiment groups
 #' @param type String indicating the name of an assay group.
 #' Defaults to all experiment groups.
-#' @keywords experiment_helpers
+#' @keywords experiment
 #'
 #' @return list with experiment groups or string (if type not NULL)
 #'

@@ -58,4 +58,4 @@ flatten convert_se_assay_to_dt
 \author{
 Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
 }
-\keyword{convert_to_dt}
+\keyword{convert}

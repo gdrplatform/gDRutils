@@ -37,4 +37,4 @@ x <- c("CellLineName", "Tissue", "Primary Tissue", "GR_gDR_x_mean", "GR_gDR_xc50
 prettify_flat_metrics(x, human_readable = FALSE)
 
 }
-\keyword{prettify}
+\keyword{identifiers}

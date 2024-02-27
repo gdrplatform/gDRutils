@@ -25,4 +25,4 @@ SElist <- list(
 identify_unique_se_metadata_fields(SElist)
 
 }
-\keyword{merge_SE}
+\keyword{SE_operators}

@@ -3,39 +3,27 @@ template:
   bootstrap: 5
 
 reference:
+- title: SE operators
+- contents:
+  - has_keyword("SE_operators")
+- title: Converters
+- contents:
+  - has_keyword("convert")
+- title: Identifiers helpers/operators
+- contents:
+  - has_keyword("identifiers")
+- title: Experiment helpers 
+- contents:
+  - has_keyword("experiment")
 - title: Assay names
 - contents:
   - has_keyword("assay_names")
 - title: Combination data
 - contents:
   - has_keyword("combination_data")
-- title: Concatenate SummarizedExperiment(s)
-- contents:
-  - has_keyword("concatenate_SEs")
-- title: Convert to data.table
-- contents:
-  - has_keyword("convert_to_dt")
-- title: Convert to BumpyMatrix
-- contents:
-  - has_keyword("convert_to_bm")
-- title: Experiment validators
-- contents:
-  - has_keyword("experiment_validators")
-- title: Experiment helpers
-- contents:
-  - has_keyword("experiment_helpers")
 - title: Fit curves
 - contents:
   - has_keyword("fit_curves")
-- title: Flatten
-- contents:
-  - has_keyword("flatten")
-- title: Headers
-- contents:
-  - has_keyword("headers")
-- title: Identifiers
-- contents:
-  - has_keyword("identifiers")
 - title: JSON conversion
 - contents:
   - has_keyword("json_convert")
@@ -45,27 +33,12 @@ reference:
 - title: Metadata management
 - contents:
   - has_keyword("metadata_management")
-- title: Merge SummarizedExperiment(s)
-- contents:
-  - has_keyword("merge_SE")
-- title: Prettify
-- contents:
-  - has_keyword("prettify")
-- title: Metadata of SummarizedExperiment(s)
-- contents:
-  - has_keyword("SE_metadata")
 - title: Standardize MAE
 - contents:
   - has_keyword("standardize_MAE")
 - title: Utils
 - contents:
   - has_keyword("package_utils")
-- title: Validate identifiers
-- contents:
-  - has_keyword("validate_identifiers")
 - title: Test helpers
 - contents:
   - has_keyword("test_helpers")
-- title: Split SummarizedExperiment(s)
-- contents:
-  - has_keyword("split_SE")

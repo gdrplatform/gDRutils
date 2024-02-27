@@ -28,4 +28,4 @@ metadata_fields <- identify_unique_se_metadata_fields(listSE)
 merge_metadata(listSE, metadata_fields)
 
 }
-\keyword{merge_SE}
+\keyword{SE_operators}

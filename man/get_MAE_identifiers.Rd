@@ -20,4 +20,4 @@ mae <- get_synthetic_data("finalMAE_small.qs")
 get_MAE_identifiers(mae)
 
 }
-\keyword{SE_metadata}
+\keyword{SE_operators}
