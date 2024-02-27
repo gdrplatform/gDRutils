@@ -4,6 +4,7 @@
 #'
 #' @param mae SummarizedExperiment object.
 #' @param with_experiments logical convert experiment metadata as well?
+#' @keywords json_convert
 #'
 #' @return String representation of a JSON document.
 #'
@@ -33,6 +34,7 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'  currently only experiment names
 #'
 #' @param mae MultiAssayExperiment object.
+#' @keywords @internal json_convert
 #'
 #' @return String representation of a JSON document.
 #'
@@ -53,6 +55,7 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #' Convert a SummarizedExperiment object to a JSON document.
 #'
 #' @param se SummarizedExperiment object.
+#' @keywords json_convert
 #'
 #' @return String representation of a JSON document.
 #'
@@ -242,6 +245,7 @@ convert_se_to_json <- function(se) {
 #' String first and last characters of a string.
 #'
 #' @param jstring String of any number of characters greater than 1.
+#' @keywords json_convert
 #'
 #' @return String with first and last characters stripped.
 #' @details This is most often used to remove the JSON brackets \code{'{'} and \code{'}'}.

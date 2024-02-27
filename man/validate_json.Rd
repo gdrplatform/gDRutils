@@ -25,3 +25,4 @@ before passing it in as a document to an ElasticSearch index.
 json <- '{}'
 
 }
+\keyword{json_validate}

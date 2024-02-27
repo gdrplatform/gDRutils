@@ -16,3 +16,4 @@ Get gDR synonyms for the identifiers
 get_idfs_synonyms()
 
 }
+\keyword{identifiers}

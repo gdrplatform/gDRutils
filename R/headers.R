@@ -11,6 +11,7 @@
 NULL
 
 #' @param k string of field (data type) to return headers for
+#' @keywords headers
 #' 
 #' @details
 #' If \code{get_header} is called with no values, the entire available header list is returned.

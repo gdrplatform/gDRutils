@@ -26,3 +26,4 @@ so that individual methods do not clutter the definitions of higher order functi
 addClass(data.table::data.table(), "someClass")
 
 }
+\keyword{metadata_management}

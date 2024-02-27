@@ -21,6 +21,7 @@ ASSAY_INFO_TBL <- data.table::data.table(
 #' @param simplify logical flag, simplify the output?
 #'    will return single string instead of named vector with single element
 #'    useful when function is expected to return single element/assay only
+#' @keywords assay_names
 #'    
 #' @return charvec
 #' 
@@ -86,6 +87,7 @@ get_env_assay_names <-
 #'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_env_assay_names}.
+#' @keywords assay_names
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
@@ -111,6 +113,7 @@ get_assay_names <- function(se = NULL, ...) {
 #'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_assay_names}.
+#' @keywords assay_names
 #' @return charvec of combo assay names.
 #' @export
 #' @examples 
@@ -126,6 +129,7 @@ get_combo_assay_names <- function(se = NULL, ...) {
 #'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_combo_assay_names}.
+#' @keywords assay_names
 #'
 #' @return  charvec
 #' @export
@@ -142,6 +146,7 @@ get_combo_base_assay_names <- function(se = NULL, ...) {
 #'
 #' @param se SummarizedExperiment or NULL
 #' @param ... Additional arguments to pass to \code{get_combo_assay_names}.
+#' @keywords assay_names
 #'
 #' @return  charvec
 #'

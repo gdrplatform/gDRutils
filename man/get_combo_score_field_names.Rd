@@ -16,3 +16,4 @@ get names of combo score fields
 get_combo_score_assay_names()
 
 }
+\keyword{combination_data}

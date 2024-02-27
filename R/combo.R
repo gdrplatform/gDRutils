@@ -4,6 +4,7 @@
 #' @param c_assays charvec of combo assays to be used
 #' @param normalization_type charvec of normalization_types expected in the data
 #' @param prettify boolean flag indicating whether or not to prettify the colnames of the returned data 
+#' @keywords combination_data
 #' 
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
@@ -48,6 +49,7 @@ convert_combo_data_to_dt <-
 #' 
 #' 
 #' @param  normalization_type charvec normalization_types expected in the data
+#' @keywords combination_data
 #'
 #' @return named charvec with iso colors
 #' 
@@ -91,6 +93,7 @@ assert_RGB_format <- function(x) {
 #'
 #' @param g_metric growth metric
 #' @param assay_type assay type
+#' @keywords combination_data
 #'
 #' @return list with colors, breaks and limits
 #' @examples 
@@ -159,6 +162,7 @@ DATA_COMBO_INFO_TBL <- data.table::data.table(
 
 #' get names of combo score fields
 #'
+#' @keywords combination_data
 #' @return  charvec
 #'
 #' @export
@@ -173,6 +177,7 @@ get_combo_score_field_names <- function() {
 
 #' get names of combo excess fields
 #'
+#' @keywords combination_data
 #' @return charvec
 #'
 #' @export
@@ -190,6 +195,7 @@ get_combo_excess_field_names <- function() {
 #'
 #'
 #' @param field String containing name of the field for which the assay name should be returned
+#' @keywords combination_data
 #' @return charvec
 #'
 #' @export

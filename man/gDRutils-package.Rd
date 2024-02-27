@@ -14,6 +14,15 @@ This package contains utility functions used throughout the gDR platform to fit 
 \note{
 To learn more about functions start with \code{help(package = "gDRutils")}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/gdrplatform/gDRutils}
+  \item \url{https://gdrplatform.github.io/gDRutils/}
+  \item Report bugs at \url{https://github.com/gdrplatform/gDRutils/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Arkadiusz Gladki \email{gladki.arkadiusz@gmail.com}
 

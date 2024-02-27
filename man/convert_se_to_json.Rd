@@ -41,3 +41,4 @@ se <- gDRutils::set_SE_identifiers(se, identifiers)
 convert_se_to_json(se)
 
 }
+\keyword{json_convert}

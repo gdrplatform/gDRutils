@@ -6,6 +6,7 @@
 #' that can arise from multiple projects
 #' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
+#' @keywords merge_SE
 #'
 #' @examples
 #' se1 <- get_synthetic_data("finalMAE_small")[[1]]
@@ -96,6 +97,7 @@ merge_SE <- function(SElist,
 #' that can arise from multiple projects
 #' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
+#' @keywords merge_SE
 #'
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
 #' 
@@ -148,6 +150,7 @@ merge_assay <- function(SElist,
 #' Identify unique metadata fields from a list of \code{SummarizedExperiment}s
 #'
 #' @param SElist named list of \code{SummarizedExperiment}s
+#' @keywords merge_SE
 #'
 #' @return character vector of unique names of metadata
 #' 
@@ -174,6 +177,7 @@ identify_unique_se_metadata_fields <- function(SElist) {
 #'
 #' @param SElist named list of \code{SummarizedExperiment}s
 #' @param metadata_fields vector of metadata names that will be merged
+#' @keywords merge_SE
 #'
 #' @return list of merged metadata
 #' 

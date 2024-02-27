@@ -10,6 +10,7 @@
 #' @param k String corresponding to identifier name.
 #' @param v Character vector corresponding to the value for given identifier \code{k}.
 #' @param simplify Boolean indicating whether output should be simplified.
+#' @keywords identifiers
 #'
 #' @return
 #' For any \code{set}ting or \code{reset}ting functionality, a \code{NULL} invisibly.
@@ -44,6 +45,7 @@ NULL
 
 #' @rdname identifiers
 #' 
+#' @keywords identifiers
 #' @return list or charvec depends on unify param
 #' 
 #' @export
@@ -63,6 +65,7 @@ get_env_identifiers <- function(k = NULL, simplify = TRUE) {
 
 #' @rdname identifiers
 #' 
+#' @keywords identifiers
 #' @return list or charvec depends on unify param
 #' 
 #' @export
@@ -82,6 +85,7 @@ get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
 
 
 #' Get identifiers required for downstream analysis.
+#' @keywords identifiers
 #' @return  charvec
 #' 
 #' @examples 
@@ -93,6 +97,7 @@ get_required_identifiers <- function() {
 }
 
 #' Get gDR default identifiers required for downstream analysis.
+#' @keywords identifiers
 #' @return  charvec
 #' 
 #' @examples 
@@ -107,6 +112,7 @@ get_default_identifiers <- function() {
 #'
 #' Get gDR synonyms for the identifiers
 #'
+#' @keywords identifiers
 #' @return  charvec
 #' 
 #' @examples 
@@ -123,6 +129,7 @@ get_idfs_synonyms <- function() {
 #'
 #' @param data list of charvec with identifiers data
 #' @param dict list with dictionary
+#' @keywords identifiers
 #'
 #' @return list
 #' 
@@ -156,6 +163,7 @@ update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
 }
 
 #' Get identifiers that expect only one value for each identifier.
+#' @keywords identifiers
 #' @export
 #' 
 #' @examples 
@@ -168,6 +176,7 @@ get_expect_one_identifiers <- function() {
 
 
 #' @rdname identifiers
+#' @keywords identifiers
 #' @export
 #'
 #' @return \code{NULL}
@@ -178,6 +187,7 @@ set_env_identifier <- function(k, v) {
 
 
 #' @rdname identifiers
+#' @keywords identifiers
 #' @export
 #'
 #' @return \code{NULL}
@@ -191,6 +201,7 @@ reset_env_identifiers <- function() {
 #' @param k identifier key, string
 #' @param get_description return descriptions only, boolean
 #' @param get_example return examples only, boolean
+#' @keywords identifiers
 #' 
 #' @examples 
 #' get_identifiers_dt()
@@ -242,6 +253,7 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 #' Update environment identifiers from MAE object identifiers
 #'
 #' @param mae_idfs A list containing MAE identifiers
+#' @keywords identifiers
 #'
 #' @examples
 #' update_env_idfs_from_mae(list(get_env_identifiers()))

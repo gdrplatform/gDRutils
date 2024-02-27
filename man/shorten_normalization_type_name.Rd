@@ -19,3 +19,4 @@ shorten normalization type
 shorten_normalization_type_name("GRvalue")
 
 }
+\keyword{package_utils}
