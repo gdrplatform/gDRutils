@@ -21,3 +21,4 @@ Function for generating local synthetic data used for unit tests in modules
 gen_synthetic_data()
 
 }
+\keyword{test_helpers}

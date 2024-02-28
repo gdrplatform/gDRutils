@@ -19,3 +19,4 @@ extend abbreviated normalization type
 extend_normalization_type_name("GR")
 
 }
+\keyword{package_utils}

@@ -35,3 +35,4 @@ se <- promote_fields(se, "ReadoutValue", 2)
 \seealso{
 demote_fields
 }
+\keyword{SE_operators}

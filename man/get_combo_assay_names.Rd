@@ -24,3 +24,4 @@ get_combo_assay_names()
 \author{
 Arkadiusz Gładki \email{arkadiusz.gladki@contractors.roche.com}
 }
+\keyword{assay_names}

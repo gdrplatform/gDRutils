@@ -21,3 +21,4 @@ Set fit parameters for an invalid fit.
 .set_invalid_fit_params(list(), norm_values = rep(0.3, 6))
 
 }
+\keyword{fit_curves}

@@ -54,3 +54,4 @@ Finally, all remaining columns will be combined on either the rows or columns as
 split_SE_components(data.table::data.table(clid = "CL1", Gnumber = "DrugA"))
 
 }
+\keyword{SE_operators}

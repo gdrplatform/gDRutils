@@ -16,3 +16,5 @@ String representation of a JSON document.
 Create JSON document with MAE summary,
 currently only experiment names
 }
+\keyword{@internal}
+\keyword{json_convert}

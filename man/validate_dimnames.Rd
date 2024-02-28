@@ -20,3 +20,4 @@ if a given dimname is empty in the case of both objects}
 \description{
 Assure that dimnames of two objects are the same
 }
+\keyword{experiment}

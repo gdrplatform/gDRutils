@@ -23,3 +23,4 @@ is_mae_empty(mae)
 \author{
 Arkadiusz Gladki \href{mailto:arkadiusz.gladki@contractors.roche.com}{arkadiusz.gladki@contractors.roche.com}
 }
+\keyword{package_utils}

@@ -30,3 +30,4 @@ Lapply or bplapply.
 loop(list(c(1,2), c(2,3)), sum, parallelize = FALSE)
 
 }
+\keyword{package_utils}

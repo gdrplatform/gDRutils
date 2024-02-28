@@ -24,6 +24,7 @@ has_nested_field <- function(asy, nested_field) {
 #'
 #' @param se A \code{SummarizedExperiment} object.
 #' @param fields Character vector of metadata fields to demote as nested columns.
+#' @keywords SE_operators
 #'
 #' @return A \code{SummarizedExperiment} object with new dimensions resulting from demoting given \code{fields}
 #' to nested columns.
@@ -88,6 +89,7 @@ demote_fields <- function(se, fields) {
 #' metadata fields of a \code{se}.
 #' @param MARGIN Numeric of values \code{1} or \code{2} indicating whether to
 #' promote fields to rows or columns respectively.
+#' @keywords SE_operators
 #'
 #' @return A \code{SummarizedExperiment} object with new dimensions resulting from promoting given \code{fields}.
 #' @details Revert this operation using \code{demote_fields}.
@@ -211,6 +213,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #' @param asy A \code{BumpyMatrix} object.
 #' @param by Character vector of the nested fields to aggregate by.
 #' @param FUN A function to use to aggregate the data.
+#' @keywords SE_operators
 #'
 #' @return A \code{BumpyMatrix} object aggregated by \code{FUN}.
 #' 

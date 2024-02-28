@@ -5,6 +5,7 @@
 #' @examples 
 #' get_testdata()
 #'
+#' @keywords test_helpers
 #' @return list with drugs, cell_lines, raw_data and assay_data
 #'
 #' @export
@@ -46,6 +47,7 @@ get_testdata <- function() {
 #'
 #' @param m number of drugs
 #' @param n number of records
+#' @keywords test_helpers
 #'
 #' @examples 
 #' gen_synthetic_data()

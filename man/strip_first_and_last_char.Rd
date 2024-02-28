@@ -18,3 +18,4 @@ String first and last characters of a string.
 \details{
 This is most often used to remove the JSON brackets \code{'{'} and \code{'}'}.
 }
+\keyword{json_convert}

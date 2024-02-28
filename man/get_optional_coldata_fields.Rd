@@ -15,3 +15,4 @@ a charvec containing the names of the optional identifiers in the SE colData
 \description{
 get optional colData fields
 }
+\keyword{standardize_MAE}

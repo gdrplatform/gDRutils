@@ -34,3 +34,4 @@ convert_combo_data_to_dt(mae[[1]])
 \author{
 Arkadiusz Gładki \email{arkadiusz.gladki@contractors.roche.com}
 }
+\keyword{combination_data}
