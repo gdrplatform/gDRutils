@@ -9,6 +9,7 @@
 #'
 #' @param data data.table with drug-response data
 #' @param discard_keys a vector of keys that should be discarded
+#' @keywords convert
 #'
 #' @examples 
 #' df_to_bm_assay(data.table::data.table(Gnumber = 2, clid = "A"))

@@ -24,3 +24,4 @@ se <- mae[[1]]
 validate_se_assay_name(se, "RawTreated")
 
 }
+\keyword{experiment}

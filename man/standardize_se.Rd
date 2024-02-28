@@ -25,3 +25,4 @@ S4Vectors::metadata(se)$identifiers$drug <- "druug"
 standardize_se(se)
 
 }
+\keyword{standardize_MAE}

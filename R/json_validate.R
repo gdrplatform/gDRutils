@@ -7,6 +7,7 @@
 #' 
 #' @param json String of JSON in memory.
 #' @param schema_path String of the schema to validate against.
+#' @keywords json_validate
 #'
 #' @return Boolean of whether or not JSON successfully validated.
 #'
@@ -63,6 +64,7 @@ validate_json <- function(json, schema_path) {
 #' @param schema_package string name of the package with JSON schema files
 #' @param schema_dir_path path to the dir with JSON schema files
 #' @param schema named charvec with filenames of schemas to validate against.
+#' @keywords json_convert
 #'
 #' @return Boolean of whether or not mae is valid
 #'

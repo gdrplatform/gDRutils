@@ -6,6 +6,7 @@
 #' @param obj2 second object with dimnames to compare
 #' @param skip_empty a logical indicating whether to skip comparison
 #'        if a given dimname is empty in the case of both objects
+#' @keywords experiment
 #' @return \code{NULL}
 #'
 validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
@@ -29,6 +30,7 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 #'
 #' @param se A \linkS4class{SummarizedExperiment} object.
 #' @param name String of name of the assay to validate.
+#' @keywords experiment
 #'
 #' @return \code{NULL} invisibly if the assay name is valid.
 #' Throws an error if the assay is not valid.
@@ -62,6 +64,7 @@ validate_se_assay_name <- function(se, name) {
 #' produced by the gDR pipeline
 #' @param expect_single_agent a logical indicating if the function
 #' should check whether the SummarizedExperiment is single-agent data
+#' @keywords experiment
 #'
 #' @return \code{NULL} invisibly if the SummarizedExperiment is valid.
 #' Throws an error if the SummarizedExperiment is not valid.
@@ -132,6 +135,7 @@ validate_SE <- function(se,
 #'
 #' @param mae MultiAssayExperiment object
 #' produced by the gDR pipeline
+#' @keywords experiment
 #'
 #' @return \code{NULL} invisibly if the MultiAssayExperiment is valid.
 #' Throws an error if the MultiAssayExperiment is not valid.

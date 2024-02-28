@@ -23,3 +23,4 @@ assert choices
 assert_choices("x", c("x","y"))
 
 }
+\keyword{package_utils}

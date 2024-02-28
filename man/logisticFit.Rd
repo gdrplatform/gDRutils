@@ -96,3 +96,4 @@ priors = c(2, 0.4, 1, 0.00658113883008419)
 )
 
 }
+\keyword{fit_curves}

@@ -1,5 +1,5 @@
 #' @import SummarizedExperiment
-#' @importFrom data.table ":=" .N .SD
+#' @importFrom data.table := .N .SD
 #' @importFrom methods is
 
 .datatable.aware <- TRUE

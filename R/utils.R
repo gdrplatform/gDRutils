@@ -1,3 +1,4 @@
+#' @keywords package_utils
 #' @export
 .clean_key_inputs <- function(keys, cols) {
   dropped <- setdiff(keys, cols)
@@ -35,6 +36,7 @@ assert_equal_input_len <- function(outlier, ...) {
 #' @examples 
 #' shorten_normalization_type_name("GRvalue")
 #' 
+#' @keywords package_utils
 #' @export
 shorten_normalization_type_name <- function(x) {
   checkmate::assert_choice(x, c("RelativeViability", "GRvalue"))
@@ -51,6 +53,7 @@ shorten_normalization_type_name <- function(x) {
 #' @examples 
 #' extend_normalization_type_name("GR")
 #' 
+#' @keywords package_utils
 #' @export
 extend_normalization_type_name <- function(x) {
   checkmate::assert_choice(x, c("RV", "GR"))
@@ -69,6 +72,7 @@ extend_normalization_type_name <- function(x) {
 #' @examples 
 #' assert_choices("x", c("x","y"))
 #' 
+#' @keywords package_utils
 #' @export
 assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
@@ -93,6 +97,7 @@ assert_choices <- function(x, choices, ...) {
 #' @param unify logical indicating if the output should be a unlisted object of unique
 #' values across all the experiments
 #' @param ... Additional args to be passed to teh \code{FUN}.
+#' @keywords package_utils
 #' @export
 #'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
@@ -103,6 +108,7 @@ assert_choices <- function(x, choices, ...) {
 #' mae <- get_synthetic_data("finalMAE_small.qs")
 #' MAEpply(mae, SummarizedExperiment::assayNames)
 #' 
+#' @keywords package_utils
 #' @export
 MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -139,6 +145,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' @examples 
 #' loop(list(c(1,2), c(2,3)), sum, parallelize = FALSE)
 #' 
+#' @keywords package_utils
 #' @export
 loop <- function(x, FUN, parallelize = TRUE, ...) {
   if (parallelize) {
@@ -174,6 +181,7 @@ loop <- function(x, FUN, parallelize = TRUE, ...) {
 #'   out_assay_name = "CorrectedReadout"
 #' )
 #' 
+#' @keywords package_utils
 #' @export
 apply_bumpy_function <- function(se,
                                  FUN,
@@ -233,6 +241,7 @@ apply_bumpy_function <- function(se,
 #' mae <- get_synthetic_data("finalMAE_small.qs")
 #' is_mae_empty(mae)
 #' 
+#' @keywords package_utils
 #' @export
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -253,6 +262,7 @@ is_mae_empty <- function(mae) {
 #' mae <- get_synthetic_data("finalMAE_small.qs")
 #' is_any_exp_empty(mae)
 #' 
+#' @keywords package_utils
 #' @export
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -274,6 +284,7 @@ is_any_exp_empty <- function(mae) {
 #' se <- mae[[1]]
 #' is_exp_empty(se)
 #' 
+#' @keywords package_utils
 #' @export
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
@@ -304,6 +315,7 @@ is_exp_empty <- function(exp) {
 #' mae <- get_synthetic_data("finalMAE_small.qs")
 #' get_non_empty_assays(mae)
 #' 
+#' @keywords package_utils
 #' @export
 get_non_empty_assays <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -325,6 +337,7 @@ get_non_empty_assays <- function(mae) {
 #'
 #' @return data.table with all-experiments colData
 #'
+#' @keywords package_utils
 #' @export
 mcolData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -336,6 +349,7 @@ mcolData <- function(mae) {
 #'
 #' get rowData of all experiments
 #' @param mae MultiAssayExperiment object
+#' @keywords package_utils
 #' @export
 #'
 #' @return data.table with all-experiments rowData
@@ -355,6 +369,7 @@ mrowData <- function(mae) {
 #'
 #' @param qs qs filename
 #' 
+#' @keywords package_utils
 #' @export
 #' 
 #' @examples 
@@ -392,6 +407,7 @@ get_synthetic_data <- function(qs) {
 #' @examples 
 #' geometric_mean(c(2, 8))
 #' 
+#' @keywords package_utils
 #' @export
 #' 
 #' @keywords internal
@@ -426,6 +442,7 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' average_biological_replicates_dt(dt, var = "a")
 #' 
 #' @return data.table without replicates
+#' @keywords package_utils
 #' @export
 average_biological_replicates_dt <- function(
     dt,
@@ -462,6 +479,7 @@ average_biological_replicates_dt <- function(
 #' @examples
 #' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
 #' get_duplicated_rows(dt, "b")
+#' @keywords package_utils
 #' @export
 get_duplicated_rows <- function(x, col_names = NULL) {
   checkmate::assertMultiClass(x, c("data.table", "DataFrame"))

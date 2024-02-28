@@ -26,3 +26,4 @@ assay <- SummarizedExperiment::assay(se)
 aggregate_assay(assay, FUN = mean, by = c("Barcode"))
 
 }
+\keyword{SE_operators}

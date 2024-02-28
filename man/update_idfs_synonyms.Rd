@@ -23,3 +23,4 @@ iv <- c("Time", "Duration", "time")
 update_idfs_synonyms(iv, dict = mdict)
 
 }
+\keyword{identifiers}

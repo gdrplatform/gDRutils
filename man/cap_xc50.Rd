@@ -33,3 +33,4 @@ cap_xc50(xc50 = 2, max_conc = 5, min_conc = 1)
 cap_xc50(xc50 = 26, max_conc = 5, capping_fold = 5)
 
 }
+\keyword{fit_curves}

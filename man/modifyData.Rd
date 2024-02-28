@@ -63,3 +63,4 @@ dt <- addClass(dt, "a")
 modifyData(dt, "average", keep = "b")
 
 }
+\keyword{metadata_management}

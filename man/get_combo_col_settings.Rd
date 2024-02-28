@@ -21,3 +21,4 @@ Get colorscale data for given combo assay and growth metric
 get_combo_col_settings("GR", "excess")
 
 }
+\keyword{combination_data}

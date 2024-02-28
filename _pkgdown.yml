@@ -1,4 +1,44 @@
-url: https://gdrplatform.github.io/gDRutils/
+url: https://gdrplatform.github.io/gDRstyle/
 template:
   bootstrap: 5
 
+reference:
+- title: SE operators
+- contents:
+  - has_keyword("SE_operators")
+- title: Converters
+- contents:
+  - has_keyword("convert")
+- title: Identifiers helpers/operators
+- contents:
+  - has_keyword("identifiers")
+- title: Experiment helpers 
+- contents:
+  - has_keyword("experiment")
+- title: Assay names
+- contents:
+  - has_keyword("assay_names")
+- title: Combination data
+- contents:
+  - has_keyword("combination_data")
+- title: Fit curves
+- contents:
+  - has_keyword("fit_curves")
+- title: JSON conversion
+- contents:
+  - has_keyword("json_convert")
+- title: JSON validation
+- contents:
+  - has_keyword("json_validate")
+- title: Metadata management
+- contents:
+  - has_keyword("metadata_management")
+- title: Standardize MAE
+- contents:
+  - has_keyword("standardize_MAE")
+- title: Utils
+- contents:
+  - has_keyword("package_utils")
+- title: Test helpers
+- contents:
+  - has_keyword("test_helpers")

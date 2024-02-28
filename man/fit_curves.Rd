@@ -73,3 +73,4 @@ x = c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482))
 fit_curves(df_, "Concentration", normalization_type = "RV")
 
 }
+\keyword{fit_curves}

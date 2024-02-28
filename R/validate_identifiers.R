@@ -9,6 +9,7 @@
 #' @param exp_one_ids Character vector of standardized identifiers names
 #' where only one identifier value is expected.
 #' If not passed, defaults to \code{get_expect_one_identifiers()}.
+#' @keywords identifiers
 #'
 #' @return Named list of identifiers modified to pass validation against the input data.
 #' Errors with explanatory message if validation cannot pass with the given identifiers and data.
