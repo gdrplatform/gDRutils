@@ -72,6 +72,8 @@
                                       "log2_CI",
                                       "log10_ratio_conc")
   
+  HEADERS_LIST[["fit_source"]] <- "fit_source"
+  
   HEADERS_LIST[["obsolete"]] <- c("RV",
                                   "GR",
                                   "Excess")

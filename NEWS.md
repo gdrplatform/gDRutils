@@ -1,4 +1,7 @@
-## gDRstyle 1.1.7 - 2024-02-26
+## gDRutils 1.1.8 - 2024-02-28
+- add fit_source to header list
+
+## gDRutils 1.1.7 - 2024-02-26
 * improve pkgdown site
   * improved references
   * valid NEWS.md
