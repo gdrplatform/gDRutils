@@ -34,7 +34,7 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'  currently only experiment names
 #'
 #' @param mae MultiAssayExperiment object.
-#' @keywords @internal json_convert
+#' @keywords internal
 #'
 #' @return String representation of a JSON document.
 #'
