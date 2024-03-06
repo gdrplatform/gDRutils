@@ -307,7 +307,7 @@ logisticFit <-
     if (!is.na(x_0)) {
       warning(sprintf("overriding original x_0 argument '%s' with '%s' (%s)", x_0, mean_norm_value, e$message))
     }
-    out <- .set_constant_fit_params(out, mean_norm_value)
+    out <- set_constant_fit_params(out, mean_norm_value)
   }, invalid_fit = function(e) {
     warning(sprintf("fitting failed with: '%s'", e))
     out <- .set_invalid_fit_params(out, df_$norm_values)
@@ -571,10 +571,10 @@ average_dups <- function(dt, col) {
 #' 
 #' @examples 
 #' na <- list(x_0 = NA)
-#' gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
+#' set_constant_fit_params(na, mean_norm_value = 0.6)
 #' 
 #' @export
-.set_constant_fit_params <- function(out, mean_norm_value) {
+set_constant_fit_params <- function(out, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
   out$ec50 <- 0
   out$h <- 0.0001

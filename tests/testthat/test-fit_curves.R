@@ -252,24 +252,24 @@ test_that("predict_conc_from_efficacy works as expected", {
 ###################
 
 test_that(".setup_metric_output works as expected", {
-  obs <- gDRutils:::.setup_metric_output()
+  obs <- .setup_metric_output()
   expect_true(is.list(obs))
   expect_equal(length(obs), 14)
 })
 
 
 test_that(".estimate_xc50 works as expected", {
-  expect_equal(gDRutils:::.estimate_xc50(c(NA, NA, NA, NA)), NA)
-  expect_equal(gDRutils:::.estimate_xc50(c(0.6, 0.7, 0.8, 0.9)), Inf)
-  expect_equal(gDRutils:::.estimate_xc50(c(0.1, 0.2, 0.3, 0.4)), -Inf)
-  expect_equal(gDRutils:::.estimate_xc50(c(0.1, 0.2, 0.6, 0.7)), NA)
+  expect_equal(.estimate_xc50(c(NA, NA, NA, NA)), NA)
+  expect_equal(.estimate_xc50(c(0.6, 0.7, 0.8, 0.9)), Inf)
+  expect_equal(.estimate_xc50(c(0.1, 0.2, 0.3, 0.4)), -Inf)
+  expect_equal(.estimate_xc50(c(0.1, 0.2, 0.6, 0.7)), NA)
 })
 
 
 test_that("average_dups works as expected", {
   df <- data.table::data.table(concs = rep(seq(5), each = 2),
                                norm_value = seq(10))
-  expect_equal(gDRutils:::average_dups(df, "concs"), 
+  expect_equal(average_dups(df, "concs"), 
                data.table::data.table(concs = seq(5), norm_value = seq(1.5, 9.5, 2)))
 })
 
@@ -283,26 +283,26 @@ test_that(".set_mean_params works as expected", {
 
   # Above 0.5.
   v <- 0.6
-  above <- gDRutils:::.set_mean_params(out, mean_norm_value = v)
+  above <- .set_mean_params(out, mean_norm_value = v)
   expect_true(all(c(above$x_0, above$x_inf, above$x_mean) == v))
   expect_true(all(c(above$x_AOC, above$x_AOC_range) == (1 - v)))
   expect_equal(above$xc50, Inf)
 
   # Below 0.5.
   v <- 0.4
-  below <- gDRutils:::.set_mean_params(out, mean_norm_value = v)
+  below <- .set_mean_params(out, mean_norm_value = v)
   expect_true(all(c(below$x_0, below$x_inf, below$x_mean) == v))
   expect_equal(below$xc50, -Inf)
 
   v <- seq(3)
-  expect_error(gDRutils:::.set_mean_params(out, mean_norm_value = v))
+  expect_error(.set_mean_params(out, mean_norm_value = v))
 })
 
 
-test_that(".set_constant_fit_params works as expected", {
+test_that("set_constant_fit_params works as expected", {
   x_0 <- NA
   na <- list(x_0 = x_0)
-  na <- gDRutils:::.set_constant_fit_params(na, mean_norm_value = 0.6)
+  na <- set_constant_fit_params(na, mean_norm_value = 0.6)
 
   expect_equal(na$ec50, 0)
   expect_equal(na$r2, 0)
@@ -314,7 +314,7 @@ test_that(".set_constant_fit_params works as expected", {
 
   x_0 <- 1
   out <- list(x_0 = x_0)
-  one <- gDRutils:::.set_constant_fit_params(out, mean_norm_value = 0.6)
+  one <- set_constant_fit_params(out, mean_norm_value = 0.6)
 
   expect_equal(one$ec50, 0)
   expect_equal(na$r2, 0)
@@ -353,10 +353,10 @@ test_that(".set_invalid_fit_params works as expected", {
 test_that(".calculate_x_max works as expected", {
   n <- 4
   df <- data.frame(concs = c(0.01, 1, 0.03, 5), norm_values = seq(n))
-  expect_equal(gDRutils:::.calculate_x_max(df), 2)
+  expect_equal(.calculate_x_max(df), 2)
 
   df$norm_values <- rep(NA, n)
-  expect_equal(gDRutils:::.calculate_x_max(df), NA)
+  expect_equal(.calculate_x_max(df), NA)
 })
 
 
@@ -365,7 +365,7 @@ test_that(".calculate_xc50 works as expected", {
   V0 <- 1
   h <- 2
   EC50 <- 0.5
-  obs <- gDRutils:::.calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
+  obs <- .calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
   expect_equal(obs, 0.559017)
 })
 

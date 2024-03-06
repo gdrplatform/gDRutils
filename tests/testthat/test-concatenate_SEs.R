@@ -8,9 +8,9 @@ test_that("has_nested_field works as expected", {
                              IC_50 = rep(seq(m), length(LETTERS))
   )
   asy <- BumpyMatrix::splitAsBumpyMatrix(df[, c("group", "GR_50", "IC_50")], row = df$drugs, column = df$clids)
-  expect_true(gDRutils:::has_nested_field(asy, "GR_50"))
-  expect_true(gDRutils:::has_nested_field(asy, c("GR_50", "group")))
-  expect_false(gDRutils:::has_nested_field(asy, c("clids", "GR_50", "group")))
+  expect_true(has_nested_field(asy, "GR_50"))
+  expect_true(has_nested_field(asy, c("GR_50", "group")))
+  expect_false(has_nested_field(asy, c("clids", "GR_50", "group")))
 })
 
 
@@ -27,14 +27,14 @@ test_that(".transform_df_to_matrix works as expected", {
   )
   column_fields <- c("clids", "cellline_name")
   row_fields <- c("drugs", "drug_name")
-  obs <- gDRutils:::.transform_df_to_matrix(df,
+  obs <- .transform_df_to_matrix(df,
                                             row_fields = row_fields,
                                             column_fields = column_fields,
                                             nested_fields = c("group", "GR_50", "IC_50")
   )
   expect_equal(dim(obs$mat), c(n, length(LETTERS)))
 
-  expect_error(gDRutils:::.transform_df_to_matrix(df, # TODO: FIX ME.
+  expect_error(.transform_df_to_matrix(df, # TODO: FIX ME.
                                                   row_fields = row_fields,
                                                   column_fields = c(column_fields, row_fields[1]),
                                                   nested_fields = c("group", "GR_50", "IC_50")
@@ -58,7 +58,7 @@ test_that("demote_fields works as expected", {
   column_fields <- c("clids", "cellline_name")
   row_fields <- c("drugs", "drug_name", "group")
   nested_fields <- c("GR_50", "IC_50")
-  out <- gDRutils:::.transform_df_to_matrix(df,
+  out <- .transform_df_to_matrix(df,
                                             row_fields = row_fields,
                                             column_fields = column_fields,
                                             nested_fields = nested_fields
@@ -77,7 +77,7 @@ test_that("demote_fields works as expected", {
   # Demoting fields in colData.
   column_fields <- c("clids", "cellline_name", "group")
   row_fields <- c("drugs", "drug_name")
-  out <- gDRutils:::.transform_df_to_matrix(df,
+  out <- .transform_df_to_matrix(df,
                                             row_fields = row_fields,
                                             column_fields = column_fields,
                                             nested_fields = c("GR_50", "IC_50")
@@ -107,7 +107,7 @@ test_that("promote_fields works as expected", {
   column_fields <- c("clids", "cellline_name")
   row_fields <- c("drugs", "drug_name")
   nested_fields <- c("group", "GR_50", "IC_50")
-  out <- gDRutils:::.transform_df_to_matrix(df,
+  out <- .transform_df_to_matrix(df,
                                             row_fields = row_fields,
                                             column_fields = column_fields,
                                             nested_fields = nested_fields
@@ -146,7 +146,7 @@ test_that("promote_fields and demote_fields are reversible operations", {
   column_fields <- c("clids", "cellline_name")
   row_fields <- c("drugs", "drug_name")
   nested_fields <- c("group", "GR_50", "IC_50")
-  out <- gDRutils:::.transform_df_to_matrix(df,
+  out <- .transform_df_to_matrix(df,
                                             row_fields = row_fields,
                                             column_fields = column_fields,
                                             nested_fields = nested_fields

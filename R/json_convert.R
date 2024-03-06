@@ -80,17 +80,17 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'                     duration = "Duration")
 #' se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
 #'                                                  colData = cdata)
-#' se <- gDRutils::set_SE_experiment_metadata(se, md)
-#' se <- gDRutils::set_SE_identifiers(se, identifiers)
+#' se <- set_SE_experiment_metadata(se, md)
+#' se <- set_SE_identifiers(se, identifiers)
 #' convert_se_to_json(se)
 #'
 #' @export
 convert_se_to_json <- function(se) {
   
   ml <- list(
-    mjson = .convert_metadata_to_json(se),
-    rjson = .convert_rowData_to_json(rowData(se), get_SE_identifiers(se)),
-    cjson = .convert_colData_to_json(colData(se), get_SE_identifiers(se))
+    mjson = convert_metadata_to_json(se),
+    rjson = convert_rowData_to_json(rowData(se), get_SE_identifiers(se)),
+    cjson = convert_colData_to_json(colData(se), get_SE_identifiers(se))
   )
 
   # filter out empty strings
@@ -120,10 +120,10 @@ convert_se_to_json <- function(se) {
 #'   description = "description of experiment",
 #'   sources = list(list(name = "GeneData_Screener", id = "QCS-12345")))
 #' se <- SummarizedExperiment::SummarizedExperiment(metadata = md)
-#' gDRutils:::.convert_metadata_to_json(se)
+#' convert_metadata_to_json(se)
 #'
-#' @keywords internal
-.convert_metadata_to_json <- function(se) {
+#' @export
+convert_metadata_to_json <- function(se) {
 
   md <- get_SE_experiment_metadata(se)
 
@@ -155,13 +155,13 @@ convert_se_to_json <- function(se) {
 #'   Duration = 1)
 #' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa",
 #' duration = "Duration")
-#' gDRutils:::.convert_rowData_to_json(rdata, identifiers)
+#' convert_rowData_to_json(rdata, identifiers)
 #'
 #' @details Standardizes the \code{rdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
-#' @keywords internal
-.convert_rowData_to_json <-
+#' @export
+convert_rowData_to_json <-
   function(rdata,
            identifiers,
            req_cols = c("drug", "drug_name", "drug_moa", "duration")) {
@@ -191,13 +191,13 @@ convert_se_to_json <- function(se) {
 #'                     cellline_name = "mycelllinename",
 #'                     cellline_ref_div_time = "cellline_ref_div_time",
 #'                     cellline_tissue = "mycelllinetissue")
-#' gDRutils:::.convert_colData_to_json(cdata, identifiers)
+#' convert_colData_to_json(cdata, identifiers)
 #'
 #' @details Standardizes the \code{cdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
 #' @keywords internal
-.convert_colData_to_json <-
+convert_colData_to_json <-
   function(cdata,
            identifiers,
            req_cols = c("cellline", "cellline_name", "cellline_tissue", "cellline_ref_div_time")) {
