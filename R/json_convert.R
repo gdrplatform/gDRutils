@@ -196,7 +196,7 @@ convert_rowData_to_json <-
 #' @details Standardizes the \code{cdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
-#' @keywords internal
+#' @export
 convert_colData_to_json <-
   function(cdata,
            identifiers,
