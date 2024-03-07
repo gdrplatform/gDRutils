@@ -1,8 +1,11 @@
-## gDRutils 1.1.9 - 2024-03-06
-- cleanup package
+## gDRutils 1.1.10 - 2024-03-07
+- cleanup the package
+
+## gDRutils 1.1.9 - 2024-03-07
+* simplify keywords
 
 ## gDRutils 1.1.8 - 2024-02-28
-- add fit_source to header list
+* add fit_source to header list
 
 ## gDRutils 1.1.7 - 2024-02-26
 * improve pkgdown site
