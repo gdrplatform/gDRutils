@@ -8,7 +8,7 @@ test_that("get_env_identifiers and set_env_identifier work", {
 
   set_env_identifier("cellline", "my_personal_cell_line_identifiers")
   expect_equal(get_env_identifiers("cellline", simplify = TRUE), "my_personal_cell_line_identifiers")
-  vals <- gDRutils:::IDENTIFIERS_LIST
+  vals <- IDENTIFIERS_LIST
   vals[["cellline"]] <- "my_personal_cell_line_identifiers"
 
   expect_equal(get_env_identifiers(simplify = TRUE), vals)

@@ -51,7 +51,7 @@ test_that("add_rownames_to_metadata works as expected", {
   cols <- c("a", "b")
   md <- data.frame(a = LETTERS, b = letters, c = paste0(LETTERS, letters))
   expect_true(all(rownames(md) == as.character(seq(nrow(md)))))
-  out <- gDRutils:::add_rownames_to_metadata(md, cols)
+  out <- add_rownames_to_metadata(md, cols)
   expect_true(all(rownames(out) != as.character(seq(nrow(md)))))
   expect_equal(colnames(out), cols)
 })

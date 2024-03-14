@@ -36,8 +36,8 @@ identifiers <- list(cellline = "mycellline",
                     duration = "Duration")
 se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
                                                  colData = cdata)
-se <- gDRutils::set_SE_experiment_metadata(se, md)
-se <- gDRutils::set_SE_identifiers(se, identifiers)
+se <- set_SE_experiment_metadata(se, md)
+se <- set_SE_identifiers(se, identifiers)
 convert_se_to_json(se)
 
 }
