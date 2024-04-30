@@ -1,3 +1,6 @@
+## gDRutils 1.1.12 - 2024-04-30
+* move validator functions from `gDRcomponents` to `gDRutils`
+
 ## gDRutils 1.1.11 - 2024-04-15
 * add `get_testdata_combo` and `get_testdata_codilution`
 
