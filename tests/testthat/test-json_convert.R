@@ -55,13 +55,13 @@ test_that("convert_se_to_json works with diferent types of metadata", {
                       duration = "Duration")
   se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata,
                                                    colData = cdata)
-  se <- gDRutils::set_SE_identifiers(se, identifiers)
+  se <- set_SE_identifiers(se, identifiers)
 
   # list
   md <- list(title = "my awesome experiment",
              description = "description of experiment",
              source = list(name = "GeneData_Screener", id = "QCS-12345"))
-  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  se <- set_SE_experiment_metadata(se, md)
   # check if there is no error
   expect_error(convert_se_to_json(se), NA)
 
@@ -70,7 +70,7 @@ test_that("convert_se_to_json works with diferent types of metadata", {
                        description = "description of experiment",
                        source = "GeneData_Screener")
   expect_warning(
-    se <- gDRutils::set_SE_experiment_metadata(se, md),
+    se <- set_SE_experiment_metadata(se, md),
     "overwriting existing metadata entry: 'experiment_metadata'"
   )
 
@@ -82,7 +82,7 @@ test_that("convert_se_to_json works with diferent types of metadata", {
           description = "description of experiment",
           source = "GeneData_Screener")
   expect_warning(
-    se <- gDRutils::set_SE_experiment_metadata(se, md),
+    se <- set_SE_experiment_metadata(se, md),
     "overwriting existing metadata entry: 'experiment_metadata'"
   )
   expect_error(convert_se_to_json(se), "jsonlite::validate(json) is not TRUE", fixed = TRUE)

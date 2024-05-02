@@ -193,7 +193,7 @@ apply_bumpy_function <- function(se,
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(req_assay_name)
   checkmate::assert_string(out_assay_name)
-  gDRutils::validate_se_assay_name(se, req_assay_name)
+  validate_se_assay_name(se, req_assay_name)
 
   asy <- SummarizedExperiment::assay(se, req_assay_name)
   checkmate::assert_class(asy, "BumpyDataFrameMatrix")
@@ -496,11 +496,11 @@ get_duplicated_rows <- function(x, col_names = NULL) {
 #' @param se SummarizedExperiment
 #' 
 #' @examples
-#' se <- gDRutils::get_synthetic_data("combo_matrix")[[1]]
+#' se <- get_synthetic_data("combo_matrix")[[1]]
 #' is_combo_data(se)
-#' se <- gDRutils::get_synthetic_data("combo_matrix")[[2]]
+#' se <- get_synthetic_data("combo_matrix")[[2]]
 #' is_combo_data(se)
-#' se <- gDRutils::get_synthetic_data("small")[[1]]
+#' se <- get_synthetic_data("small")[[1]]
 #' is_combo_data(se)
 #'
 #' @return logical
@@ -510,7 +510,7 @@ get_duplicated_rows <- function(x, col_names = NULL) {
 is_combo_data <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
   
-  all(gDRutils::get_combo_assay_names() %in% SummarizedExperiment::assayNames(se))
+  all(get_combo_assay_names() %in% SummarizedExperiment::assayNames(se))
 }
 
 #' Has Single Codrug Data
@@ -524,7 +524,7 @@ is_combo_data <- function(se) {
 #' has_single_codrug_data(c("Drug Name", "Cell Lines"))
 #' has_single_codrug_data(c("Drug Name 2", "Concentration 2"))
 #' has_single_codrug_data(
-#'   gDRutils::get_prettified_identifiers(
+#'   get_prettified_identifiers(
 #'     c("concentration2", "drug_name2"), 
 #'     simplify = FALSE
 #'   )
@@ -539,13 +539,13 @@ has_single_codrug_data <-
            prettify_identifiers = TRUE,
            codrug_identifiers = c("drug_name2", "concentration2")) {
     
-    checkmate::assert_true(all(codrug_identifiers %in% names(gDRutils::get_env_identifiers(simplify = TRUE))))
+    checkmate::assert_true(all(codrug_identifiers %in% names(get_env_identifiers(simplify = TRUE))))
     checkmate::assert_flag(prettify_identifiers)
     
     codrug_colnames <- if (prettify_identifiers) {
-      gDRutils::get_prettified_identifiers(codrug_identifiers, simplify = FALSE)
+      get_prettified_identifiers(codrug_identifiers, simplify = FALSE)
     } else {
-      unname(unlist(gDRutils::get_env_identifiers(codrug_identifiers, simplify = FALSE)))
+      unname(unlist(get_env_identifiers(codrug_identifiers, simplify = FALSE)))
     }
     checkmate::assert_character(cols, any.missing = FALSE)
     checkmate::assert_character(codrug_colnames, any.missing = FALSE)
@@ -590,9 +590,9 @@ has_valid_codrug_data <-
     checkmate::assert_string(codrug_conc_identifier)
     
     idfs <- if (prettify_identifiers) {
-      gDRutils::get_prettified_identifiers(simplify = TRUE)
+      get_prettified_identifiers(simplify = TRUE)
     } else {
-      gDRutils::get_env_identifiers()
+      get_env_identifiers()
     }
     
     codrug_v <- c(codrug_name_identifier, codrug_conc_identifier)
@@ -642,14 +642,14 @@ remove_codrug_data <-
            prettify_identifiers = TRUE,
            codrug_identifiers = c("drug_name2", "concentration2")) {
     
-    checkmate::assert_true(all(codrug_identifiers %in% names(gDRutils::get_env_identifiers())))
+    checkmate::assert_true(all(codrug_identifiers %in% names(get_env_identifiers())))
     checkmate::assert_data_table(data)
     checkmate::assert_flag(prettify_identifiers)
     
     codrug_colnames <- if (prettify_identifiers) {
-      vapply(codrug_identifiers, function(x) gDRutils::get_prettified_identifiers(x), character(1))
+      vapply(codrug_identifiers, function(x) get_prettified_identifiers(x), character(1))
     } else {
-      vapply(codrug_identifiers, function(x) gDRutils::get_env_identifiers(x), character(1))
+      vapply(codrug_identifiers, function(x) get_env_identifiers(x), character(1))
     }
     checkmate::assert_character(codrug_colnames, any.missing = FALSE)
     
@@ -679,7 +679,7 @@ remove_codrug_data <-
 #' @keywords utils
 #' @export
 get_additional_variables <- function(dt_list,
-                                     pidfs = gDRutils::get_prettified_identifiers(),
+                                     pidfs = get_prettified_identifiers(),
                                      unique = FALSE) {
   
   
@@ -689,9 +689,9 @@ get_additional_variables <- function(dt_list,
   checkmate::assert_list(pidfs)
   checkmate::assert_flag(unique)
   
-  headers <- gDRutils::prettify_flat_metrics(unlist(gDRutils::get_header()), human_readable = TRUE)
+  headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
   idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
-  idfs <- setdiff(unique(c(headers, gDRutils::get_prettified_identifiers())), idf2keep)
+  idfs <- setdiff(unique(c(headers, get_prettified_identifiers())), idf2keep)
   
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
     setdiff(names(x), idfs)

@@ -11,8 +11,8 @@
 #' @export
 get_testdata <- function() {
   
-  mae <- gDRutils::get_synthetic_data("finalMAE_small")
-  raw_data <- gDRutils::convert_mae_assay_to_dt(mae, "Metrics")
+  mae <- get_synthetic_data("finalMAE_small")
+  raw_data <- convert_mae_assay_to_dt(mae, "Metrics")
   drug_names <- unique(raw_data$DrugName)
   cell_line_names <- unique(raw_data$CellLineName)
   
@@ -51,8 +51,8 @@ get_testdata <- function() {
 #' @export
 get_testdata_combo <- function() {
   
-  mae <- gDRutils::get_synthetic_data("finalMAE_combo_matrix")
-  raw_data <- gDRutils::convert_mae_assay_to_dt(mae, "Metrics")
+  mae <- get_synthetic_data("finalMAE_combo_matrix")
+  raw_data <- convert_mae_assay_to_dt(mae, "Metrics")
   drug_names <- unique(raw_data$DrugName)
   cell_line_names <- unique(raw_data$CellLineName)
   
@@ -91,8 +91,8 @@ get_testdata_combo <- function() {
 #' @export
 get_testdata_codilution <- function() {
   
-  mae <- gDRutils::get_synthetic_data("finalMAE_combo_codilution_small")
-  raw_data <- gDRutils::convert_mae_assay_to_dt(mae, "Metrics")
+  mae <- get_synthetic_data("finalMAE_combo_codilution_small")
+  raw_data <- convert_mae_assay_to_dt(mae, "Metrics")
   drug_names <- unique(raw_data$DrugName)
   cell_line_names <- unique(raw_data$CellLineName)
   

@@ -95,7 +95,7 @@ test_that("'get_synonyms works", {
 
 test_that("'update_synonyms works", {
   mdict <- list(duration = "time")
-  dval <- gDRutils::get_env_identifiers("duration")
+  dval <- get_env_identifiers("duration")
   iv <- c("Time", dval, "time")
   out <- update_idfs_synonyms(iv, dict = mdict)
   expect_identical(unique(out), dval)
@@ -107,7 +107,7 @@ test_that("'update_synonyms works", {
 
 test_that("update_env_identifers_from_mae works as expected", {
   mae_idfs <- list()
-  mae_idfs[["first_SE"]] <- gDRutils::get_env_identifiers()
+  mae_idfs[["first_SE"]] <- get_env_identifiers()
   mae_idfs[["first_SE"]][["barcode"]] <- "my_barcode"
 
   mae_idfs1 <- mae_idfs
@@ -122,27 +122,27 @@ test_that("update_env_identifers_from_mae works as expected", {
   mae_idfs4 <- mae_idfs
   mae_idfs4[["second_SE"]] <- mae_idfs1[["first_SE"]]
 
-  gDRutils::reset_env_identifiers()
-  gDRutils::update_env_idfs_from_mae(mae_idfs)
-  expect_equal(gDRutils::get_env_identifiers("barcode"), "my_barcode")
+  reset_env_identifiers()
+  update_env_idfs_from_mae(mae_idfs)
+  expect_equal(get_env_identifiers("barcode"), "my_barcode")
 
-  gDRutils::reset_env_identifiers()
-  gDRutils::update_env_idfs_from_mae(mae_idfs1)
-  expect_equal(gDRutils::get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
+  reset_env_identifiers()
+  update_env_idfs_from_mae(mae_idfs1)
+  expect_equal(get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
 
-  gDRutils::reset_env_identifiers()
-  gDRutils::update_env_idfs_from_mae(mae_idfs2)
-  expect_equal(gDRutils::get_env_identifiers("barcode"), "my_barcode")
+  reset_env_identifiers()
+  update_env_idfs_from_mae(mae_idfs2)
+  expect_equal(get_env_identifiers("barcode"), "my_barcode")
 
-  gDRutils::reset_env_identifiers()
-  gDRutils::update_env_idfs_from_mae(mae_idfs3)
-  expect_equal(gDRutils::get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
+  reset_env_identifiers()
+  update_env_idfs_from_mae(mae_idfs3)
+  expect_equal(get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
 
-  gDRutils::reset_env_identifiers()
-  expect_error(gDRutils::update_env_idfs_from_mae(mae_idfs4),
+  reset_env_identifiers()
+  expect_error(update_env_idfs_from_mae(mae_idfs4),
                "identical(mae_idfs[[1]], mae_idfs[[2]]) is not TRUE",
                fixed = TRUE)
-  expect_error(gDRutils::update_env_idfs_from_mae("test"),
+  expect_error(update_env_idfs_from_mae("test"),
                "Assertion on 'mae_idfs' failed: Must be of type 'list', not 'character'.",
                fixed = TRUE)
 

@@ -150,7 +150,7 @@ validate_MAE <- function(mae) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(mae, "MultiAssayExperiment")
   experiments <- names(mae)
-  checkmate::assert_subset(experiments, unlist(gDRutils::get_experiment_groups()))
+  checkmate::assert_subset(experiments, unlist(get_experiment_groups()))
   for (experiment in experiments) {
     if (experiment %in% get_experiment_groups("single-agent")[["single-agent"]]) {
       expect_single_agent <- TRUE

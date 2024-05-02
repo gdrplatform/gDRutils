@@ -19,13 +19,13 @@ test_that("validate works as expected", {
                                 row.names = seq(2))
 
   se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata, colData = cdata)
-  se <- gDRutils::set_SE_identifiers(se, identifiers)
+  se <- set_SE_identifiers(se, identifiers)
   md <- list(sources = list(list(name = "Screen Gene Data", id = "ID-12345"),
              list(name = "University_of_Genes", id = "UT-1234")),
              description = "description test",
              title = "title test",
              experimentalist = "abcde")
-  se <- gDRutils::set_SE_experiment_metadata(se, md)
+  se <- set_SE_experiment_metadata(se, md)
   sejson <- convert_se_to_json(se)
   schema_path <- file.path(system.file("schemas", package = "gDRutils"), "se.json")
   expect_true(validate_json(sejson, schema_path = schema_path))

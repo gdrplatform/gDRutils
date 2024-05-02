@@ -6,7 +6,7 @@
 \usage{
 get_additional_variables(
   dt_list,
-  pidfs = gDRutils::get_prettified_identifiers(),
+  pidfs = get_prettified_identifiers(),
   unique = FALSE
 )
 }

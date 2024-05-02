@@ -28,7 +28,7 @@ has_single_codrug_data("Drug Name")
 has_single_codrug_data(c("Drug Name", "Cell Lines"))
 has_single_codrug_data(c("Drug Name 2", "Concentration 2"))
 has_single_codrug_data(
-  gDRutils::get_prettified_identifiers(
+  get_prettified_identifiers(
     c("concentration2", "drug_name2"), 
     simplify = FALSE
   )

@@ -16,11 +16,11 @@ logical
 Checks if \code{se} is combo dataset.
 }
 \examples{
-se <- gDRutils::get_synthetic_data("combo_matrix")[[1]]
+se <- get_synthetic_data("combo_matrix")[[1]]
 is_combo_data(se)
-se <- gDRutils::get_synthetic_data("combo_matrix")[[2]]
+se <- get_synthetic_data("combo_matrix")[[2]]
 is_combo_data(se)
-se <- gDRutils::get_synthetic_data("small")[[1]]
+se <- get_synthetic_data("small")[[1]]
 is_combo_data(se)
 
 }

@@ -203,7 +203,7 @@ test_that("geometric_mean works as expected", {
 
 
 test_that("average_biological_replicates_dt works as expected", {
-  ligand_data <- gDRutils::get_synthetic_data("finalMAE_wLigand")
+  ligand_data <- get_synthetic_data("finalMAE_wLigand")
   metrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
   data.table::setnames(metrics_data,
                        prettify_flat_metrics(names(metrics_data),
@@ -250,7 +250,7 @@ test_that("get_duplicated_rows works as expected", {
 
 test_that("has_single_codrug_data works as expected", {
   expect_false(has_single_codrug_data("un_col"))
-  expect_true(has_single_codrug_data(gDRutils::get_prettified_identifiers(c(
+  expect_true(has_single_codrug_data(get_prettified_identifiers(c(
     "concentration2", "drug_name2"
   ), simplify = FALSE)))
   expect_true(
@@ -276,7 +276,7 @@ test_that("has_single_codrug_data works as expected", {
   )
   expect_error(
     has_single_codrug_data(c("drug", "conc"), codrug_identifiers = c(1, 2)),
-    "Assertion on 'all(codrug_identifiers %in% names(gDRutils::get_env_identifiers(simplify = TRUE)))'",
+    "Assertion on 'all(codrug_identifiers %in% names(get_env_identifiers(simplify = TRUE)))'",
     fixed = TRUE
   )
 })
