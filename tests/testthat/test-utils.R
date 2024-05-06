@@ -203,7 +203,7 @@ test_that("geometric_mean works as expected", {
 
 
 test_that("average_biological_replicates_dt works as expected", {
-  ligand_data <- gDRutils::get_synthetic_data("finalMAE_wLigand")
+  ligand_data <- get_synthetic_data("finalMAE_wLigand")
   metrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
   data.table::setnames(metrics_data,
                        prettify_flat_metrics(names(metrics_data),
@@ -246,4 +246,222 @@ test_that("get_duplicated_rows works as expected", {
   
   expect_error(get_duplicated_rows(DF1co, c("DrugName", "Fake Column")),
                "Assertion on 'all(col_names %in% colnames(x))' failed: Must be TRUE.", fixed = TRUE)
+})
+
+test_that("has_single_codrug_data works as expected", {
+  expect_false(has_single_codrug_data("un_col"))
+  expect_true(has_single_codrug_data(get_prettified_identifiers(c(
+    "concentration2", "drug_name2"
+  ), simplify = FALSE)))
+  expect_true(
+    has_single_codrug_data(c("Concentration 2", "Drug Name 2", "anything")))
+  expect_true(
+    has_single_codrug_data(c("Concentration_2", "DrugName_2", "anything"), 
+                           prettify_identifiers = FALSE))
+  expect_true(
+    has_single_codrug_data(c("Concentration 3", "Drug Name 3", "tissue"),
+                           codrug_identifiers = c("concentration3", "drug_name3")))
+  expect_true(
+    has_single_codrug_data(c("Concentration_3", "DrugName_3", "tissue"),
+                           prettify_identifiers = FALSE,
+                           codrug_identifiers = c("concentration3", "drug_name3")))
+  
+  expect_error(
+    has_single_codrug_data(list(drug = "test")),
+    "Assertion on 'cols' failed: Must be of type 'character', not 'list'."
+  )
+  expect_error(
+    has_single_codrug_data(c("Concentration 2", "Drug Name 2"), prettify_identifiers = "str"),
+    "Assertion on 'prettify_identifiers' failed: Must be of type 'logical flag', not 'character'."
+  )
+  expect_error(
+    has_single_codrug_data(c("drug", "conc"), codrug_identifiers = c(1, 2)),
+    "Assertion on 'all(codrug_identifiers %in% names(get_env_identifiers(simplify = TRUE)))'",
+    fixed = TRUE
+  )
+})
+
+test_that("has_valid_codrug_data works as expected", {
+  dt1 <-
+    data.table::data.table(
+      "Drug Name" = letters[seq_len(3)],
+      "Concentration" = seq_len(3),
+      "Drug Name 2" = "untreated",
+      "Concentration 2" = NA,
+      "Drug Name 3" = "untreated",
+      "Concentration 3" = NA
+    )
+  dt2 <-
+    data.table::data.table(
+      "Drug Name" = letters[seq_len(3)],
+      "Concentration" = seq_len(3),
+      "Drug Name 2" = letters[4:6],
+      "Concentration 2" = 4:6,
+      "Drug Name 3" = letters[7:9],
+      "Concentration 3" = 7:9
+    )
+  
+  dt3 <-
+    data.table::data.table(
+      "DrugName" = letters[seq_len(3)],
+      "Concentration" = seq_len(3),
+      "DrugName_2" = letters[4:6],
+      "Concentration_2" = 4:6,
+      "DrugName_3" = letters[7:9],
+      "Concentration_3" = 7:9
+    )
+  
+  expect_true(has_valid_codrug_data(dt2))
+  expect_false(has_valid_codrug_data(dt2, prettify_identifiers = FALSE))
+  expect_true(
+    has_valid_codrug_data(
+      dt2,
+      codrug_name_identifier = "drug_name3",
+      codrug_conc_identifier = "concentration3"
+    )
+  )
+  
+  expect_false(has_valid_codrug_data(dt3))
+  expect_true(has_valid_codrug_data(dt3, prettify_identifiers = FALSE))
+  expect_true(
+    has_valid_codrug_data(
+      dt3,
+      prettify_identifiers = FALSE,
+      codrug_name_identifier = "drug_name3",
+      codrug_conc_identifier = "concentration3"
+    )
+  )
+  
+  expect_false(has_valid_codrug_data(dt2[, c("Drug Name", "Concentration")]))
+  
+  dt2[["Concentration 2"]] <- NA
+  expect_false(has_valid_codrug_data(dt2))
+  
+  dt2[["Drug Name 3"]] <- "untreated"
+  expect_false(
+    has_valid_codrug_data(
+      dt2,
+      codrug_name_identifier = "drug_name3",
+      codrug_conc_identifier = "concentration3"
+    )
+  )
+  
+  expect_error(
+    has_valid_codrug_data(colnames(dt1)),
+    "Assertion on 'data' failed: Must be a data.table, not character."
+  )
+  expect_error(
+    has_valid_codrug_data(dt1, prettify_identifiers = "str"),
+    "Assertion on 'prettify_identifiers' failed: Must be of type 'logical flag', not 'character'."
+  )
+  expect_error(
+    has_valid_codrug_data(dt1, codrug_name_identifier = c("id1", "id2")),
+    "Assertion on 'codrug_name_identifier' failed: Must have length 1."
+  )
+  expect_error(
+    has_valid_codrug_data(dt1, codrug_conc_identifier = c("id1", "id2")),
+    "Assertion on 'codrug_conc_identifier' failed: Must have length 1."
+  )
+  
+})
+
+test_that("remove_codrug_data works as expected", {
+  dt1 <-
+    data.table::data.table(
+      "Drug Name" = letters[seq_len(3)],
+      "Concentration" = seq_len(3),
+      "Drug Name 2" = "untreated",
+      "Concentration 2" = NA,
+      "Drug Name 3" = "untreated",
+      "Concentration 3" = NA
+    )
+  
+  sdt <- remove_codrug_data(dt1)
+  exp_cols <- c("Drug Name", "Concentration", "Drug Name 3", "Concentration 3")
+  expect_identical(colnames(sdt), exp_cols)
+  
+  sdt <- remove_codrug_data(dt1, codrug_identifiers = c("drug_name3", "concentration3"))
+  exp_cols <- c("Drug Name", "Concentration", "Drug Name 2", "Concentration 2")
+  expect_identical(colnames(sdt), exp_cols)
+  
+  dt2 <-
+    data.table::data.table(
+      "DrugName" = letters[seq_len(3)],
+      "Concentration" = seq_len(3),
+      "DrugName_2" = "untreated",
+      "Concentration_2" = NA,
+      "DrugName_3" = "untreated",
+      "Concentration_3" = NA
+    )
+  
+  sdt <- remove_codrug_data(dt2, prettify_identifiers = FALSE)
+  exp_cols <-  c("DrugName", "Concentration", "DrugName_3", "Concentration_3")
+  expect_identical(colnames(sdt), exp_cols)
+  
+  expect_error(
+    remove_codrug_data(colnames(dt1)),
+    "Assertion on 'data' failed: Must be a data.table, not character."
+  )
+  expect_error(
+    remove_codrug_data(dt1, prettify_identifiers = 1),
+    "Assertion on 'prettify_identifiers' failed: Must be of type 'logical flag', not 'double'."
+  )
+  expect_error(
+    remove_codrug_data(dt1, codrug_identifiers = "str"),
+    "failed: Must be TRUE."
+  )
+})
+
+test_that("is_combo_data works fine", {
+  rdata <- data.table::data.table(Gnumber = seq_len(10),
+                                  Concentration = runif(10), Ligand = c(rep(0.5, 5), rep(0, 5)))
+  se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata)
+  expect_false(is_combo_data(se))
+  
+  nrows <- 10
+  ncols <- 6
+  mx <- matrix(runif(nrows * ncols, 1, 1e4), nrows)
+  se <- SummarizedExperiment::SummarizedExperiment(
+    rowData = rdata, 
+    assays = list(excess = mx, scores = mx, isobolograms = mx))
+  expect_true(is_combo_data(se))
+  
+  expect_error(is_combo_data(list()), "Must inherit from class 'SummarizedExperiment'")
+})
+
+test_that("get_additional_variables works as expected", {
+  rdata1 <- data.table::data.table(Gnumber = seq_len(10),
+                                   Concentration = runif(10), 
+                                   Ligand = c(rep(0.5, 5), rep(0, 5)))
+  rdata2 <- data.table::data.table(`Drug Name` = seq_len(10),
+                                   Concentration = runif(10), 
+                                   Ligand = c(rep(0.5, 10)),
+                                   Replicate = seq_len(2))
+  rdata3 <- data.table::data.table(Gnumber = seq_len(10),
+                                   Concentration = runif(10))
+  rdata4 <- data.table::data.table(Gnumber = seq_len(10),
+                                   Concentration = runif(10), 
+                                   Concentration_2 = runif(10), 
+                                   Ligand = c(rep(0.5, 10)),
+                                   Ligand = c(rep(0.1, 5), rep(0, 5)))
+  
+  add_var1 <- get_additional_variables(rdata1)
+  add_var2_nonunique <- get_additional_variables(rdata2)
+  add_var2_unique <- get_additional_variables(rdata2, unique = TRUE)
+  add_var3 <- get_additional_variables(rdata3)
+  add_var4_nonunique <- get_additional_variables(rdata4)
+  add_var4_unique <- get_additional_variables(rdata4, unique = TRUE)
+  
+  expect_equal(add_var1, "Ligand")
+  expect_equal(add_var2_nonunique, NULL)
+  expect_equal(add_var2_unique, "Ligand")
+  expect_equal(add_var3, NULL)
+  expect_equal(add_var4_nonunique, "Concentration_2")
+  expect_equal(add_var4_unique, c("Concentration_2", "Ligand"))
+  
+  expect_equal(get_additional_variables(FALSE), NULL)
+  expect_equal(get_additional_variables(NA), NULL)
+  expect_equal(get_additional_variables(c(1, 2, 3)), NULL)
+  expect_equal(get_additional_variables(unlist(rdata1)), NULL)
+  
 })

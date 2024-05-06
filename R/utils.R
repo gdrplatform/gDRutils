@@ -193,7 +193,7 @@ apply_bumpy_function <- function(se,
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(req_assay_name)
   checkmate::assert_string(out_assay_name)
-  gDRutils::validate_se_assay_name(se, req_assay_name)
+  validate_se_assay_name(se, req_assay_name)
 
   asy <- SummarizedExperiment::assay(se, req_assay_name)
   checkmate::assert_class(asy, "BumpyDataFrameMatrix")
@@ -490,3 +490,225 @@ get_duplicated_rows <- function(x, col_names = NULL) {
   }
   which(duplicated(x) | duplicated(x, fromLast = TRUE))
 }
+
+#' Checks if \code{se} is combo dataset.
+#'
+#' @param se SummarizedExperiment
+#' 
+#' @examples
+#' se <- get_synthetic_data("combo_matrix")[[1]]
+#' is_combo_data(se)
+#' se <- get_synthetic_data("combo_matrix")[[2]]
+#' is_combo_data(se)
+#' se <- get_synthetic_data("small")[[1]]
+#' is_combo_data(se)
+#'
+#' @return logical
+#' @keywords utils
+#' 
+#' @export
+is_combo_data <- function(se) {
+  checkmate::assert_class(se, "SummarizedExperiment")
+  
+  all(get_combo_assay_names() %in% SummarizedExperiment::assayNames(se))
+}
+
+#' Has Single Codrug Data
+#'
+#' @param cols character vector with the columns of the input data
+#' @param prettify_identifiers logical flag specifying if identifiers are expected to be prettified
+#' @param codrug_identifiers character vector with identifiers for the codrug columns
+#' 
+#' @examples
+#' has_single_codrug_data("Drug Name")
+#' has_single_codrug_data(c("Drug Name", "Cell Lines"))
+#' has_single_codrug_data(c("Drug Name 2", "Concentration 2"))
+#' has_single_codrug_data(
+#'   get_prettified_identifiers(
+#'     c("concentration2", "drug_name2"), 
+#'     simplify = FALSE
+#'   )
+#' )
+#'
+#' @keywords utils
+#' @return logical flag
+#' 
+#' @export
+has_single_codrug_data <-
+  function(cols,
+           prettify_identifiers = TRUE,
+           codrug_identifiers = c("drug_name2", "concentration2")) {
+    
+    checkmate::assert_true(all(codrug_identifiers %in% names(get_env_identifiers(simplify = TRUE))))
+    checkmate::assert_flag(prettify_identifiers)
+    
+    codrug_colnames <- if (prettify_identifiers) {
+      get_prettified_identifiers(codrug_identifiers, simplify = FALSE)
+    } else {
+      unname(unlist(get_env_identifiers(codrug_identifiers, simplify = FALSE)))
+    }
+    checkmate::assert_character(cols, any.missing = FALSE)
+    checkmate::assert_character(codrug_colnames, any.missing = FALSE)
+    
+    all(codrug_colnames %in% cols)
+  }
+
+
+#' Has Valid Codrug Data
+#'
+#' @param data data.table with input data
+#' @param prettify_identifiers logical flag specifying if identifiers are expected to be prettified
+#' @param codrug_name_identifier string with the identifiers for the codrug drug_name column
+#' @param codrug_conc_identifier string with the identifiers for the codrug concentration column
+#' 
+#' @examples
+#' dt <-
+#'   data.table::data.table(
+#'     "Drug Name" = letters[seq_len(3)],
+#'     "Concentration" = seq_len(3),
+#'     "Drug Name 2" = letters[4:6],
+#'     "Concentration 2" = 4:6
+#'   )
+#' has_valid_codrug_data(dt)
+#' 
+#' dt$`Concentration 2` <- NULL
+#' has_valid_codrug_data(dt)
+#'
+#' @keywords utils
+#' @return logical flag
+#' 
+#' @export
+has_valid_codrug_data <-
+  function(data,
+           prettify_identifiers = TRUE,
+           codrug_name_identifier = "drug_name2",
+           codrug_conc_identifier = "concentration2") {
+    checkmate::assert_data_table(data)
+    dcols <- colnames(data)
+    checkmate::assert_flag(prettify_identifiers)
+    checkmate::assert_string(codrug_name_identifier)
+    checkmate::assert_string(codrug_conc_identifier)
+    
+    idfs <- if (prettify_identifiers) {
+      get_prettified_identifiers(simplify = TRUE)
+    } else {
+      get_env_identifiers()
+    }
+    
+    codrug_v <- c(codrug_name_identifier, codrug_conc_identifier)
+    
+    status <-
+      # codrug data not present for drug_name and/or concentration data
+      if (!has_single_codrug_data(dcols, prettify_identifiers, codrug_v)) {
+        FALSE
+      }  else {
+        codrug_cols <- as.character(idfs[codrug_v])
+        
+        # codrug data not valid (for drug names and/or concentration data)
+        if (all(data[[codrug_cols[1]]] %in% idfs[["untreated_tag"]]) ||
+            all(is.na(data[[codrug_cols[2]]]))) {
+          FALSE
+        } else {
+          TRUE
+        }
+      }
+    status
+  }
+
+#' Remove Codrug Data
+#'
+#' @param data data.table with input data
+#' @param prettify_identifiers logical flag specifying if identifiers are expected to be prettified
+#' @param codrug_identifiers character vector with identifiers for the codrug columns
+#' 
+#' @examples
+#' 
+#' dt <-
+#'   data.table::data.table(
+#'     "Drug Name" = letters[seq_len(3)],
+#'     "Concentration" = seq_len(3),
+#'     "Drug Name 2" = letters[4:6],
+#'     "Concentration 2" = 4:6
+#'   )
+#' dt
+#' remove_codrug_data(dt)
+#'
+#' @keywords utils
+#' @return data.table without combination columns
+#' 
+#' @export
+remove_codrug_data <-
+  function(data,
+           prettify_identifiers = TRUE,
+           codrug_identifiers = c("drug_name2", "concentration2")) {
+    
+    checkmate::assert_true(all(codrug_identifiers %in% names(get_env_identifiers())))
+    checkmate::assert_data_table(data)
+    checkmate::assert_flag(prettify_identifiers)
+    
+    codrug_colnames <- if (prettify_identifiers) {
+      vapply(codrug_identifiers, function(x) get_prettified_identifiers(x), character(1))
+    } else {
+      vapply(codrug_identifiers, function(x) get_env_identifiers(x), character(1))
+    }
+    checkmate::assert_character(codrug_colnames, any.missing = FALSE)
+    
+    idx <- which(!colnames(data) %in% codrug_colnames)
+    
+    # support both: data.table and data.frame
+    subset(data, select = idx)
+  }
+
+#' Identify and return additional variables in list of dt
+#'
+#' @param dt_list list of data.table or data.table containing additional variables
+#' @param pidfs list of prettified identifiers
+#' @param unique logical flag indicating if all variables should be returned 
+#' or only those containing more than one unique value
+#' 
+#' @examples
+#' dt <- data.table::data.table(
+#'   Gnumber = seq_len(10), 
+#'   Concentration = runif(10), 
+#'   Ligand = c(rep(0.5, 5), rep(0, 5))
+#' )
+#' get_additional_variables(dt)
+#'
+#' @return vector of variable names with additional variables
+#' 
+#' @keywords utils
+#' @export
+get_additional_variables <- function(dt_list,
+                                     pidfs = get_prettified_identifiers(),
+                                     unique = FALSE) {
+  
+  
+  if (data.table::is.data.table(dt_list)) {
+    dt_list <- list(dt_list)
+  }
+  checkmate::assert_list(pidfs)
+  checkmate::assert_flag(unique)
+  
+  headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
+  idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
+  idfs <- setdiff(unique(c(headers, get_prettified_identifiers())), idf2keep)
+  
+  additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
+    setdiff(names(x), idfs)
+  })))
+  
+  if (unique) {
+    additional_perturbations
+  } else {
+    unlist(lapply(additional_perturbations, function(x) {
+      if (any(vapply(dt_list, function(y) {
+        length(unique(y[[x]])) > 1
+      }, FUN.VALUE = logical(1)))) {
+        x
+      } else {
+        NULL
+      }
+    }))
+  }
+}
+

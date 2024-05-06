@@ -29,7 +29,7 @@ merge_SE <- function(SElist,
   
   SE_identifiers <- unique(lapply(SElist, get_SE_identifiers))[[1]]
   lapply(names(SE_identifiers), function(x) {
-    gDRutils::set_env_identifier(x, SE_identifiers[[x]])
+    set_env_identifier(x, SE_identifiers[[x]])
   })
 
   discard_keys <- c(discard_keys, unique(unlist(

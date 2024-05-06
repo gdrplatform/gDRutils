@@ -154,7 +154,7 @@ update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
     for (idfs in names(dict)) {
       idx <- which(toupper(data) %in% toupper(dict[[idfs]]))
       if (length(idx) > 0) {
-        data[idx] <- gDRutils::get_env_identifiers(idfs)
+        data[idx] <- get_env_identifiers(idfs)
       }
     }
     data
@@ -270,8 +270,8 @@ update_env_idfs_from_mae <- function(mae_idfs) {
 
   mae_idfs <- mae_idfs[[1]]
   for (i in names(mae_idfs)) {
-    if (!identical(mae_idfs[[i]], gDRutils::get_env_identifiers(i))) {
-      gDRutils::set_env_identifier(i, mae_idfs[[i]])
+    if (!identical(mae_idfs[[i]], get_env_identifiers(i))) {
+      set_env_identifier(i, mae_idfs[[i]])
     }
   }
 

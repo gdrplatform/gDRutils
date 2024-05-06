@@ -65,13 +65,13 @@ convert_se_assay_to_dt <- function(se,
     dt$id <- gsub("_.*", "", dt[[id_col]])
     dt[[id_col]] <- NULL
     normalization_cols <- c(grep("^x$|x_+", names(dt), value = TRUE),
-                            intersect(unlist(gDRutils::get_header()[c("excess", "scores")]), names(dt)))
+                            intersect(unlist(get_header()[c("excess", "scores")]), names(dt)))
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
     dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
                                 paste, sep = "_"))
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
-      x[length(x)] <- gDRutils::extend_normalization_type_name(x[length(x)])
+      x[length(x)] <- extend_normalization_type_name(x[length(x)])
       paste(x[-1], collapse = "_")
       }))
     dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols)

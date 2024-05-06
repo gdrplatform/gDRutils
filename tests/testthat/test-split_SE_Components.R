@@ -60,7 +60,7 @@ test_that("split_SE_components returns rowData in a proper order", {
   md <- split_SE_components(test_df)
   expect_true(all(gsub("_.*", "",
                        rownames(md$treatment_md)) ==
-                    md$treatment_md[[gDRutils::get_env_identifiers("drug")]]))
+                    md$treatment_md[[get_env_identifiers("drug")]]))
 })
 
 test_that("split_SE_components works with colnames with -", {

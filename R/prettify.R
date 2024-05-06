@@ -69,8 +69,8 @@ prettify_flat_metrics <- function(x,
     if (!sum(is_norm)) next # to skip loop below (nothing to change)
     
     # to do not touch combo metrics
-    combo_pattern <- paste(c(names(gDRutils::get_combo_score_field_names()), 
-                             names(gDRutils::get_combo_excess_field_names())), collapse = "|")
+    combo_pattern <- paste(c(names(get_combo_score_field_names()), 
+                             names(get_combo_excess_field_names())), collapse = "|")
     is_combo <- grepl(combo_pattern, x)
     
     if (!sum(is_norm & !is_combo)) next # to skip loop below (nothing to change)

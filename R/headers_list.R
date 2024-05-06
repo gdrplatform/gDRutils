@@ -62,10 +62,10 @@
                                       "pos_x_ref",
                                       "pos_y_ref")
   
-  HEADERS_LIST[["excess"]] <- names(gDRutils::get_combo_excess_field_names())
+  HEADERS_LIST[["excess"]] <- names(get_combo_excess_field_names())
   
   
-  HEADERS_LIST[["scores"]] <- names(gDRutils::get_combo_score_field_names())
+  HEADERS_LIST[["scores"]] <- names(get_combo_score_field_names())
   
   HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
                                       HEADERS_LIST[["iso_position"]],

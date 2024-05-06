@@ -116,6 +116,8 @@ assay(se, "Normalized") <- NULL
 validate_SE(se)
 ```
 
+There is also a group of functions to validate data used in the gDR application like **is_combo_data**, 
+**has_single_codrug_data**, **has_valid_codrug_data**, **get_additional_variables**.
 
 
 # SessionInfo {-}
