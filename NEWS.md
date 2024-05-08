@@ -1,3 +1,6 @@
+## gDRutils 1.1.13 - 2024-05-08
+* fix typo
+
 ## gDRutils 1.1.12 - 2024-04-30
 * move validator functions from `gDRcomponents` to `gDRutils`
 
