@@ -15,7 +15,7 @@ df_to_bm_assay(data, discard_keys = NULL)
 BumpyMatrix object
 }
 \description{
-Convert data.table with dose-reponse data into a BumpyMatrix assay.
+Convert data.table with dose-response data into a BumpyMatrix assay.
 }
 \details{
 The 'assay' is simply a BumpyMatrix object with rownames being the treatment ids,

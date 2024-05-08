@@ -1,7 +1,7 @@
 
 #' df_to_bm_assay
 #'
-#' Convert data.table with dose-reponse data into a BumpyMatrix assay.
+#' Convert data.table with dose-response data into a BumpyMatrix assay.
 #'
 #' The 'assay' is simply a BumpyMatrix object with rownames being the treatment ids,
 #' colnames being the ids of the cell lines and values with

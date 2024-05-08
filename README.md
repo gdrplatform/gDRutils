@@ -1,5 +1,5 @@
 # gDRutils
-A package with utility functions for munging and analyzing drug reponse data.
+A package with utility functions for munging and analyzing drug response data.
 
 # General info
 Its main responsibilities are to provide:
