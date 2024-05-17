@@ -2,7 +2,7 @@
 % Please edit documentation in R/json_convert.R
 \name{convert_se_to_json}
 \alias{convert_se_to_json}
-\title{Create JSON document.}
+\title{Convert a SummarizedExperiment object to a JSON document.}
 \usage{
 convert_se_to_json(se)
 }

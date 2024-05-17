@@ -2,7 +2,7 @@
 % Please edit documentation in R/json_convert.R
 \name{convert_metadata_to_json}
 \alias{convert_metadata_to_json}
-\title{Convert experiment metadata to JSON}
+\title{Convert experiment metadata to JSON format for elasticsearch indexing.}
 \usage{
 convert_metadata_to_json(se)
 }
@@ -23,3 +23,4 @@ se <- SummarizedExperiment::SummarizedExperiment(metadata = md)
 convert_metadata_to_json(se)
 
 }
+\keyword{json_convert}

@@ -41,3 +41,4 @@ identifiers <- list(cellline = "mycellline",
 convert_colData_to_json(cdata, identifiers)
 
 }
+\keyword{json_convert}

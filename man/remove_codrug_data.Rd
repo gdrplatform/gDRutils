@@ -36,4 +36,4 @@ dt
 remove_codrug_data(dt)
 
 }
-\keyword{utils}
+\keyword{combination_data}
