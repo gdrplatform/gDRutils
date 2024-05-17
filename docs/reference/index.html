@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.14</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -305,6 +305,16 @@ i.e. set of assay types, assay groups and assay data types</dd>
         <dd>get combo assay names based on the field name</dd>
       </dl><dl><dt>
           
+          <code><a href="define_matrix_grid_positions.html">define_matrix_grid_positions()</a></code> 
+        </dt>
+        <dd>Define matrix grid positions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_additional_variables.html">get_additional_variables()</a></code> 
+        </dt>
+        <dd>Identify and return additional variables in list of dt</dd>
+      </dl><dl><dt>
+          
           <code><a href="get_combo_col_settings.html">get_combo_col_settings()</a></code> 
         </dt>
         <dd>Get colorscale data for given combo assay and growth metric</dd>
@@ -323,6 +333,31 @@ i.e. set of assay types, assay groups and assay data types</dd>
           <code><a href="get_iso_colors.html">get_iso_colors()</a></code> 
         </dt>
         <dd>get_iso_colors</dd>
+      </dl><dl><dt>
+          
+          <code><a href="has_single_codrug_data.html">has_single_codrug_data()</a></code> 
+        </dt>
+        <dd>Has Single Codrug Data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="has_valid_codrug_data.html">has_valid_codrug_data()</a></code> 
+        </dt>
+        <dd>Has Valid Codrug Data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="is_combo_data.html">is_combo_data()</a></code> 
+        </dt>
+        <dd>Checks if <code>se</code> is combo dataset.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="remove_codrug_data.html">remove_codrug_data()</a></code> 
+        </dt>
+        <dd>Remove Codrug Data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="round_concentration.html">round_concentration()</a></code> 
+        </dt>
+        <dd>Round concentration to ndigit significant digits</dd>
       </dl></div><div class="section level2">
       <h2 id="fit-curves">Fit curves<a class="anchor" aria-label="anchor" href="#fit-curves"></a></h2>
       
@@ -339,11 +374,6 @@ i.e. set of assay types, assay groups and assay data types</dd>
           <code><a href="cap_xc50.html">cap_xc50()</a></code> 
         </dt>
         <dd>Cap XC50 value.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dot-set_constant_fit_params.html">.set_constant_fit_params()</a></code> 
-        </dt>
-        <dd>Set fit parameters for a constant fit.</dd>
       </dl><dl><dt>
           
           <code><a href="dot-set_invalid_fit_params.html">.set_invalid_fit_params()</a></code> 
@@ -369,6 +399,11 @@ i.e. set of assay types, assay groups and assay data types</dd>
           <code><a href="predict_efficacy_from_conc.html">predict_efficacy_from_conc()</a></code> 
         </dt>
         <dd>Predict efficacy values given fit parameters and a concentration.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="set_constant_fit_params.html">set_constant_fit_params()</a></code> 
+        </dt>
+        <dd>Set fit parameters for a constant fit.</dd>
       </dl></div><div class="section level2">
       <h2 id="json-conversion">JSON conversion<a class="anchor" aria-label="anchor" href="#json-conversion"></a></h2>
       
@@ -382,14 +417,29 @@ i.e. set of assay types, assay groups and assay data types</dd>
 
       <dl><dt>
           
+          <code><a href="convert_colData_to_json.html">convert_colData_to_json()</a></code> 
+        </dt>
+        <dd>Convert colData to JSON</dd>
+      </dl><dl><dt>
+          
           <code><a href="convert_mae_to_json.html">convert_mae_to_json()</a></code> 
         </dt>
         <dd>Create JSON document.</dd>
       </dl><dl><dt>
           
+          <code><a href="convert_metadata_to_json.html">convert_metadata_to_json()</a></code> 
+        </dt>
+        <dd>Convert experiment metadata to JSON format for elasticsearch indexing.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="convert_rowData_to_json.html">convert_rowData_to_json()</a></code> 
+        </dt>
+        <dd>Convert rowData to JSON</dd>
+      </dl><dl><dt>
+          
           <code><a href="convert_se_to_json.html">convert_se_to_json()</a></code> 
         </dt>
-        <dd>Create JSON document.</dd>
+        <dd>Convert a SummarizedExperiment object to a JSON document.</dd>
       </dl><dl><dt>
           
           <code><a href="strip_first_and_last_char.html">strip_first_and_last_char()</a></code> 
@@ -600,6 +650,16 @@ i.e. set of assay types, assay groups and assay data types</dd>
           <code><a href="get_testdata.html">get_testdata()</a></code> 
         </dt>
         <dd>get_testdata</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_testdata_codilution.html">get_testdata_codilution()</a></code> 
+        </dt>
+        <dd>get_testdata_codilution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_testdata_combo.html">get_testdata_combo()</a></code> 
+        </dt>
+        <dd>get_testdata_combo</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

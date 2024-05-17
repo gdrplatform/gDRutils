@@ -46,6 +46,9 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/cap_xc50.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_colData_to_json.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_combo_data_to_dt.html</loc>
   </url>
   <url>
@@ -58,10 +61,19 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_mae_to_json.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_metadata_to_json.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_rowData_to_json.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_se_assay_to_dt.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_se_to_json.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/define_matrix_grid_positions.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/demote_fields.html</loc>
@@ -70,22 +82,10 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/df_to_bm_assay.html</loc>
   </url>
   <url>
-    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_colData_to_json.html</loc>
-  </url>
-  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_mae_summary_to_json.html</loc>
   </url>
   <url>
-    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_metadata_to_json.html</loc>
-  </url>
-  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_norm_specific_metrics.html</loc>
-  </url>
-  <url>
-    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_rowData_to_json.html</loc>
-  </url>
-  <url>
-    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-set_constant_fit_params.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-set_invalid_fit_params.html</loc>
@@ -110,6 +110,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_MAE_identifiers.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_additional_variables.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_assay_names.html</loc>
@@ -175,6 +178,18 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_testdata.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_testdata_codilution.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_testdata_combo.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/has_single_codrug_data.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/has_valid_codrug_data.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/headers.html</loc>
   </url>
   <url>
@@ -188,6 +203,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/is_any_exp_empty.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/is_combo_data.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/is_exp_empty.html</loc>
@@ -238,10 +256,19 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/refine_rowdata.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/remove_codrug_data.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/rename_DFrame.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/rename_bumpy.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/round_concentration.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/set_constant_fit_params.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/shorten_normalization_type_name.html</loc>

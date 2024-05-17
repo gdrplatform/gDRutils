@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.14</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -375,6 +375,11 @@ operation. Custom changes can be validated using
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">se</span>, <span class="st">"Normalized"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="fu"><a href="../reference/validate_SE.html">validate_SE</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in validate_SE(se): Assertion on 'exp_assay_names' failed: Must be a subset of {'RawTreated','Controls','Averaged','excess','all_iso_points','isobolograms','scores','Metrics'}, but has additional elements {'Normalized'}.</span></span></code></pre></div>
+<p>There is also a group of functions to validate data used in the gDR
+application like <strong>is_combo_data</strong>,
+<strong>has_single_codrug_data</strong>,
+<strong>has_valid_codrug_data</strong>,
+<strong>get_additional_variables</strong>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -408,15 +413,15 @@ operation. Custom changes can be validated using
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] BumpyMatrix_1.10.0          MultiAssayExperiment_1.28.0</span></span>
 <span><span class="co">#&gt;  [3] SummarizedExperiment_1.32.0 Biobase_2.62.0             </span></span>
-<span><span class="co">#&gt;  [5] GenomicRanges_1.54.1        GenomeInfoDb_1.38.7        </span></span>
+<span><span class="co">#&gt;  [5] GenomicRanges_1.54.1        GenomeInfoDb_1.38.8        </span></span>
 <span><span class="co">#&gt;  [7] IRanges_2.36.0              S4Vectors_0.40.2           </span></span>
 <span><span class="co">#&gt;  [9] BiocGenerics_0.48.1         MatrixGenerics_1.14.0      </span></span>
-<span><span class="co">#&gt; [11] matrixStats_1.2.0           gDRutils_1.1.9             </span></span>
+<span><span class="co">#&gt; [11] matrixStats_1.3.0           gDRutils_1.1.14            </span></span>
 <span><span class="co">#&gt; [13] BiocStyle_2.30.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] sass_0.4.8              SparseArray_1.2.4       bitops_1.0-7           </span></span>
-<span><span class="co">#&gt;  [4] stringi_1.8.3           lattice_0.21-8          digest_0.6.34          </span></span>
+<span><span class="co">#&gt;  [4] stringi_1.8.4           lattice_0.21-8          digest_0.6.35          </span></span>
 <span><span class="co">#&gt;  [7] magrittr_2.0.3          evaluate_0.23           grid_4.3.0             </span></span>
 <span><span class="co">#&gt; [10] bookdown_0.37           fastmap_1.1.1           jsonlite_1.8.8         </span></span>
 <span><span class="co">#&gt; [13] Matrix_1.6-5            backports_1.4.1         BiocManager_1.30.22    </span></span>
@@ -424,13 +429,13 @@ operation. Custom changes can be validated using
 <span><span class="co">#&gt; [19] RApiSerialize_0.1.2     abind_1.4-5             cli_3.6.2              </span></span>
 <span><span class="co">#&gt; [22] rlang_1.1.3             crayon_1.5.2            XVector_0.42.0         </span></span>
 <span><span class="co">#&gt; [25] cachem_1.0.8            DelayedArray_0.28.0     yaml_2.3.8             </span></span>
-<span><span class="co">#&gt; [28] S4Arrays_1.2.1          qs_0.25.7               tools_4.3.0            </span></span>
+<span><span class="co">#&gt; [28] S4Arrays_1.2.1          qs_0.26.3               tools_4.3.0            </span></span>
 <span><span class="co">#&gt; [31] checkmate_2.3.1         memoise_2.0.1           GenomeInfoDbData_1.2.11</span></span>
 <span><span class="co">#&gt; [34] vctrs_0.6.5             R6_2.5.1                lifecycle_1.0.4        </span></span>
-<span><span class="co">#&gt; [37] zlibbioc_1.48.0         stringr_1.5.1           stringfish_0.16.0      </span></span>
-<span><span class="co">#&gt; [40] fs_1.6.3                ragg_1.2.7              desc_1.4.3             </span></span>
+<span><span class="co">#&gt; [37] zlibbioc_1.48.2         stringr_1.5.1           stringfish_0.16.0      </span></span>
+<span><span class="co">#&gt; [40] fs_1.6.4                ragg_1.2.7              desc_1.4.3             </span></span>
 <span><span class="co">#&gt; [43] RcppParallel_5.1.7      pkgdown_2.0.7           bslib_0.6.1            </span></span>
-<span><span class="co">#&gt; [46] Rcpp_1.0.12             data.table_1.15.2       glue_1.7.0             </span></span>
+<span><span class="co">#&gt; [46] Rcpp_1.0.12             data.table_1.15.4       glue_1.7.0             </span></span>
 <span><span class="co">#&gt; [49] systemfonts_1.0.5       xfun_0.42               knitr_1.45             </span></span>
 <span><span class="co">#&gt; [52] htmltools_0.5.7         rmarkdown_2.25          compiler_4.3.0         </span></span>
 <span><span class="co">#&gt; [55] RCurl_1.98-1.14</span></span></code></pre></div>
