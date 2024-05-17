@@ -2,12 +2,15 @@
 % Please edit documentation in R/experiments.R
 \name{get_supported_experiments}
 \alias{get_supported_experiments}
-\title{get_experiment_groups}
+\title{get_supported_experiments}
 \usage{
-get_supported_experiments()
+get_supported_experiments(type = NULL)
+}
+\arguments{
+\item{type}{String indicating the type of experiment}
 }
 \value{
-charvec with supported experiment names
+charvec with supported experiment name(s)
 }
 \description{
 get supported experiments
