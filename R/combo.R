@@ -272,7 +272,7 @@ define_matrix_grid_positions <- function(conc1, conc2) {
 #' round_concentration(x = c(0.00175,0.00324,0.0091), ndigit = 1)
 #'
 #' @return rounded x
-#' @keywords utils
+#' @keywords combination_data
 #' @export
 round_concentration <- function(x, ndigit = 3) {
   checkmate::assert_numeric(x)
