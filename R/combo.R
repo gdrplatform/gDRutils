@@ -227,7 +227,7 @@ define_matrix_grid_positions <- function(conc1, conc2) {
     2 * x[2] - x[3] - log10(1.5)
   } 
   
-  conc_1 <- sort(unique(gDRcore::round_concentration(conc1)))
+  conc_1 <- sort(unique(round_concentration(conc1)))
   pos_y <- log10conc_1 <- log10(conc_1)
   pos_y[1] <- .generate_gap_for_single_agent(log10conc_1)
   axis_1 <- data.table::data.table(conc_1 = conc_1,
@@ -236,7 +236,7 @@ define_matrix_grid_positions <- function(conc1, conc2) {
                                    marks_y = sprintf("%.2g", conc_1)
   )
   
-  conc_2 <- sort(unique(gDRcore::round_concentration(conc2)))
+  conc_2 <- sort(unique(round_concentration(conc2)))
   pos_x <- log10conc_2 <- log10(conc_2)
   pos_x[1] <- .generate_gap_for_single_agent(log10conc_2)
   axis_2 <- data.table::data.table(conc_2 = conc_2,
@@ -246,4 +246,35 @@ define_matrix_grid_positions <- function(conc1, conc2) {
   )
   
   list(axis_1 = axis_1, axis_2 = axis_2)
+}
+
+
+#' Round concentration to ndigit significant digits
+#'
+#' @param x value to be rounded.
+#' @param ndigit number of significant digits (default = 4).
+#' 
+#' @examples 
+#' round_concentration(x = c(0.00175,0.00324,0.0091), ndigit = 1)
+#'
+#' @return rounded x
+#' @keywords utils
+#' @export
+round_concentration <- function(x, ndigit = 3) {
+  round(10 ^ (round(log10(x), ndigit)), ndigit - 1 - floor(log10(x)))
+}
+
+#' @keywords internal
+#' @noRd
+rbindParallelList <- function(x, name) {
+  S4Vectors::DataFrame(
+    do.call(
+      rbind, 
+      c(lapply(x, function(x) {
+        dt <- data.table::as.data.table("[[" (x, name))
+        data.table::setorder(dt)
+        dt
+      }), fill = TRUE)
+    )
+  )
 }
