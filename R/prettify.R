@@ -54,6 +54,8 @@ prettify_flat_metrics <- function(x,
 #' names in the wide format table. 
 #' It works for metrics: \code{colnames(get_header("metrics_names"))}
 #' 
+#' @return object with more descriptive names
+#' 
 #' @keywords internal
 .convert_norm_specific_metrics <- function(x, normalization_type) {
   
