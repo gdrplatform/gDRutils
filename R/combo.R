@@ -234,6 +234,9 @@ convert_combo_field_to_assay <- function(field) {
 #' 
 #' @export
 define_matrix_grid_positions <- function(conc1, conc2) {
+  checkmate::assert_numeric(conc1)
+  checkmate::assert_numeric(conc2)
+  
   .generate_gap_for_single_agent <- function(x) {
     2 * x[2] - x[3] - log10(1.5)
   } 
@@ -272,5 +275,8 @@ define_matrix_grid_positions <- function(conc1, conc2) {
 #' @keywords utils
 #' @export
 round_concentration <- function(x, ndigit = 3) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_integerish(ndigit)
+  
   round(10 ^ (round(log10(x), ndigit)), ndigit - 1 - floor(log10(x)))
 }
