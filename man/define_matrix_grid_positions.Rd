@@ -21,4 +21,16 @@ Define matrix grid positions
 \code{drug_1} is diluted along the rows as the y-axis and
 \code{drug_2} is diluted along the columns and will be the x-axis.
 }
+\examples{
+cl_name <- "cellline_BC"
+drug1_name <- "drug_001"
+drug2_name <- "drug_026"
+
+se <- gDRutils::get_synthetic_data("combo_matrix_small")[["combination"]]
+dt_average = gDRutils::convert_se_assay_to_dt(se, "Averaged")[normalization_type == "GR"]
+
+ls_axes <- gDRutils::define_matrix_grid_positions(
+   dt_average[["Concentration"]], dt_average[["Concentration_2"]])
+
+}
 \keyword{combination_data}

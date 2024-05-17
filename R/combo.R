@@ -221,6 +221,17 @@ convert_combo_field_to_assay <- function(field) {
 #' @keywords combination_data
 #' @return list with axis grid positions
 #' 
+#' @examples
+#' cl_name <- "cellline_BC"
+#' drug1_name <- "drug_001"
+#' drug2_name <- "drug_026"
+#' 
+#' se <- gDRutils::get_synthetic_data("combo_matrix_small")[["combination"]]
+#' dt_average = gDRutils::convert_se_assay_to_dt(se, "Averaged")[normalization_type == "GR"]
+#' 
+#' ls_axes <- gDRutils::define_matrix_grid_positions(
+#'    dt_average[["Concentration"]], dt_average[["Concentration_2"]])
+#' 
 #' @export
 define_matrix_grid_positions <- function(conc1, conc2) {
   .generate_gap_for_single_agent <- function(x) {
