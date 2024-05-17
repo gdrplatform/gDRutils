@@ -33,4 +33,4 @@ dt <- data.table::data.table(
 get_additional_variables(dt)
 
 }
-\keyword{utils}
+\keyword{combination_data}

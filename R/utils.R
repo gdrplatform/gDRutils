@@ -504,7 +504,7 @@ get_duplicated_rows <- function(x, col_names = NULL) {
 #' is_combo_data(se)
 #'
 #' @return logical
-#' @keywords utils
+#' @keywords combination_data
 #' 
 #' @export
 is_combo_data <- function(se) {
@@ -530,7 +530,7 @@ is_combo_data <- function(se) {
 #'   )
 #' )
 #'
-#' @keywords utils
+#' @keywords combination_data
 #' @return logical flag
 #' 
 #' @export
@@ -574,7 +574,7 @@ has_single_codrug_data <-
 #' dt$`Concentration 2` <- NULL
 #' has_valid_codrug_data(dt)
 #'
-#' @keywords utils
+#' @keywords combination_data
 #' @return logical flag
 #' 
 #' @export
@@ -633,7 +633,7 @@ has_valid_codrug_data <-
 #' dt
 #' remove_codrug_data(dt)
 #'
-#' @keywords utils
+#' @keywords combination_data
 #' @return data.table without combination columns
 #' 
 #' @export
@@ -676,7 +676,7 @@ remove_codrug_data <-
 #'
 #' @return vector of variable names with additional variables
 #' 
-#' @keywords utils
+#' @keywords combination_data
 #' @export
 get_additional_variables <- function(dt_list,
                                      pidfs = get_prettified_identifiers(),

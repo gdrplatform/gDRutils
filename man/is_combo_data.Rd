@@ -24,4 +24,4 @@ se <- get_synthetic_data("small")[[1]]
 is_combo_data(se)
 
 }
-\keyword{utils}
+\keyword{combination_data}

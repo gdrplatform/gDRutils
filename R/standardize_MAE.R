@@ -52,15 +52,12 @@ standardize_se <- function(se, use_default = TRUE) {
     from_idfs <- idfs
     to_idfs <- idfs_se
   }
-  
   # Extract matching names of identifiers
   matching_idfs <- .extract_matching_identifiers(to_idfs,
                                                  from_idfs)
-  
   # Extract changed identifiers
   diff_identifiers <- .extract_diff_identifiers(matching_idfs$default,
                                                 matching_idfs$se)
-  
   diff_names <- unique(unlist(lapply(diff_identifiers, names)))
   
   if ("untreated_tag" %in% diff_names) {
@@ -68,7 +65,6 @@ standardize_se <- function(se, use_default = TRUE) {
                                           to_idfs,
                                           from_idfs)
   }
-  
   # Create mapping vector
   mapping_df <- do.call(rbind,
                         lapply(seq_along(diff_names),
@@ -78,11 +74,9 @@ standardize_se <- function(se, use_default = TRUE) {
                                }
                         )
   )
-  
   if (length(mapping_df)) {
     mapping_vector <- mapping_df$x
     names(mapping_vector) <- mapping_df$y
-    
     # Replace rowData, colData and assays
     rowData(se) <- rename_DFrame(rowData(se), mapping_vector)
     colData(se) <- rename_DFrame(colData(se), mapping_vector)

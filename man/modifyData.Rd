@@ -24,6 +24,9 @@ modifyData(x, ...)
 
 \item{keep}{character string specifying the value of the active variable that will be kept}
 }
+\value{
+modified object
+}
 \description{
 Reduce dimensionality of an assay by dropping extra data or combining variables.
 }

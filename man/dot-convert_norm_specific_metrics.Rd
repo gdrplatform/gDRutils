@@ -8,6 +8,9 @@ It works for metrics: \code{colnames(get_header("metrics_names"))}}
 \usage{
 .convert_norm_specific_metrics(x, normalization_type)
 }
+\value{
+object with more descriptive names
+}
 \description{
 This function change raw names of metric from long format table into more descriptive
 names in the wide format table.

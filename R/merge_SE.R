@@ -26,24 +26,19 @@ merge_SE <- function(SElist,
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   
-  
   SE_identifiers <- unique(lapply(SElist, get_SE_identifiers))[[1]]
   lapply(names(SE_identifiers), function(x) {
     set_env_identifier(x, SE_identifiers[[x]])
   })
-
+  
   discard_keys <- c(discard_keys, unique(unlist(
     lapply(SElist, get_SE_identifiers,
            c("barcode",
              "concentration",
              "concentration2"),
            simplify = FALSE))))
-  
-  
-  
   se_assays <- unique(unlist(lapply(SElist,
                                     SummarizedExperiment::assayNames)))
-  
   merged_assays <- lapply(se_assays, function(x) {
     merge_assay(SElist = SElist,
                 assay_name = x,
@@ -52,7 +47,7 @@ merge_SE <- function(SElist,
   })
   
   names(merged_assays) <- se_assays
-
+  
   if (!is.null(additional_col_name)) {
     data.table::set(merged_assays$Averaged$DT, ,
                     intersect(names(merged_assays$Averaged$DT),
@@ -121,7 +116,7 @@ merge_assay <- function(SElist,
   checkmate::assert_string(assay_name)
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
-
+  
   SElist <- lapply(SElist, function(x) {
     if (assay_name %in% SummarizedExperiment::assayNames(x)) {
       x
@@ -132,14 +127,14 @@ merge_assay <- function(SElist,
       x
     }
   })
-    
+  
   DT <- data.table::rbindlist(lapply(stats::setNames(names(SElist),
                                                      names(SElist)),
                                      function(y) {
-      convert_se_assay_to_dt(SElist[[y]], assay_name)
-    }),  fill = TRUE, idcol = additional_col_name)
+                                       convert_se_assay_to_dt(SElist[[y]], assay_name)
+                                     }),  fill = TRUE, idcol = additional_col_name)
   
-
+  
   DT$rId <- DT$cId <- NULL
   discard_keys <- intersect(names(DT), c(discard_keys, additional_col_name))
   BM <- df_to_bm_assay(DT, discard_keys = discard_keys)

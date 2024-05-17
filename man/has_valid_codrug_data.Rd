@@ -40,4 +40,4 @@ dt$`Concentration 2` <- NULL
 has_valid_codrug_data(dt)
 
 }
-\keyword{utils}
+\keyword{combination_data}

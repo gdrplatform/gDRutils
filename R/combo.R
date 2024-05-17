@@ -207,3 +207,76 @@ convert_combo_field_to_assay <- function(field) {
   checkmate::assert_string(field)
   DATA_COMBO_INFO_TBL[name == field, ][["type"]]
 }
+
+
+#' Define matrix grid positions
+#'
+#' @param conc1 drug_1 concentration
+#' @param conc2 drug_2 concentration
+#'
+#' @details
+#' \code{drug_1} is diluted along the rows as the y-axis and
+#' \code{drug_2} is diluted along the columns and will be the x-axis.
+#' 
+#' @keywords combination_data
+#' @return list with axis grid positions
+#' 
+#' @examples
+#' cl_name <- "cellline_BC"
+#' drug1_name <- "drug_001"
+#' drug2_name <- "drug_026"
+#' 
+#' se <- get_synthetic_data("combo_matrix_small")[["combination"]]
+#' dt_average <- convert_se_assay_to_dt(se, "Averaged")[normalization_type == "GR"]
+#' 
+#' ls_axes <- define_matrix_grid_positions(
+#'    dt_average[["Concentration"]], dt_average[["Concentration_2"]])
+#' 
+#' @export
+define_matrix_grid_positions <- function(conc1, conc2) {
+  checkmate::assert_numeric(conc1)
+  checkmate::assert_numeric(conc2)
+  
+  .generate_gap_for_single_agent <- function(x) {
+    2 * x[2] - x[3] - log10(1.5)
+  } 
+  
+  conc_1 <- sort(unique(round_concentration(conc1)))
+  pos_y <- log10conc_1 <- log10(conc_1)
+  pos_y[1] <- .generate_gap_for_single_agent(log10conc_1)
+  axis_1 <- data.table::data.table(conc_1 = conc_1,
+                                   log10conc_1 = log10conc_1,
+                                   pos_y = pos_y,
+                                   marks_y = sprintf("%.2g", conc_1)
+  )
+  
+  conc_2 <- sort(unique(round_concentration(conc2)))
+  pos_x <- log10conc_2 <- log10(conc_2)
+  pos_x[1] <- .generate_gap_for_single_agent(log10conc_2)
+  axis_2 <- data.table::data.table(conc_2 = conc_2,
+                                   log10conc_2 = log10conc_2,
+                                   pos_x = pos_x,
+                                   marks_x = sprintf("%.2g", conc_2)
+  )
+  
+  list(axis_1 = axis_1, axis_2 = axis_2)
+}
+
+
+#' Round concentration to ndigit significant digits
+#'
+#' @param x value to be rounded.
+#' @param ndigit number of significant digits (default = 4).
+#' 
+#' @examples 
+#' round_concentration(x = c(0.00175,0.00324,0.0091), ndigit = 1)
+#'
+#' @return rounded x
+#' @keywords combination_data
+#' @export
+round_concentration <- function(x, ndigit = 3) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_integerish(ndigit)
+  
+  round(10 ^ (round(log10(x), ndigit)), ndigit - 1 - floor(log10(x)))
+}

@@ -56,6 +56,8 @@ addClass <- function(x, newClass) {
 #' @param keep character string specifying the value of the active variable that will be kept
 #' @keywords metadata_management
 #'
+#' @return modified object
+#'
 #' @examples
 #' dt <- data.table::data.table(a = as.character(1:10), b = "data")
 #' dt <- addClass(dt, "a")

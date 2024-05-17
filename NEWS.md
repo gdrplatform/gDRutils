@@ -1,3 +1,6 @@
+## gDRutils 1.1.14 - 2024-05-16
+* move `define_matrix_grid_positions` and `round_concentration` functions from `gDRcore` package
+
 ## gDRutils 1.1.13 - 2024-05-08
 * fix typo
 

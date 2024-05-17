@@ -50,8 +50,6 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 }
 
 
-#' Create JSON document.
-#'
 #' Convert a SummarizedExperiment object to a JSON document.
 #'
 #' @param se SummarizedExperiment object.
@@ -106,9 +104,6 @@ convert_se_to_json <- function(se) {
   json
 }
 
-
-#' Convert experiment metadata to JSON
-#'
 #' Convert experiment metadata to JSON format for elasticsearch indexing.
 #'
 #' @param se SummarizedExperiment object.
@@ -122,6 +117,7 @@ convert_se_to_json <- function(se) {
 #' se <- SummarizedExperiment::SummarizedExperiment(metadata = md)
 #' convert_metadata_to_json(se)
 #'
+#' @keywords json_convert
 #' @export
 convert_metadata_to_json <- function(se) {
 
@@ -160,6 +156,8 @@ convert_metadata_to_json <- function(se) {
 #' @details Standardizes the \code{rdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
+#' 
+#' @keywords json_convert
 #' @export
 convert_rowData_to_json <-
   function(rdata,
@@ -196,6 +194,8 @@ convert_rowData_to_json <-
 #' @details Standardizes the \code{cdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
+#' 
+#' @keywords json_convert
 #' @export
 convert_colData_to_json <-
   function(cdata,
