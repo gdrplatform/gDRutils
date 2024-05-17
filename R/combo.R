@@ -226,10 +226,10 @@ convert_combo_field_to_assay <- function(field) {
 #' drug1_name <- "drug_001"
 #' drug2_name <- "drug_026"
 #' 
-#' se <- gDRutils::get_synthetic_data("combo_matrix_small")[["combination"]]
-#' dt_average = gDRutils::convert_se_assay_to_dt(se, "Averaged")[normalization_type == "GR"]
+#' se <- get_synthetic_data("combo_matrix_small")[["combination"]]
+#' dt_average <- convert_se_assay_to_dt(se, "Averaged")[normalization_type == "GR"]
 #' 
-#' ls_axes <- gDRutils::define_matrix_grid_positions(
+#' ls_axes <- define_matrix_grid_positions(
 #'    dt_average[["Concentration"]], dt_average[["Concentration_2"]])
 #' 
 #' @export
