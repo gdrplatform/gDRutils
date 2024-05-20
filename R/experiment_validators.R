@@ -152,7 +152,7 @@ validate_MAE <- function(mae) {
   experiments <- names(mae)
   checkmate::assert_subset(experiments, get_supported_experiments())
   for (experiment in experiments) {
-    if (experiment == "single-agent") {
+    if (experiment == get_supported_experiments("sa")) {
       expect_single_agent <- TRUE
     } else {
       expect_single_agent <- FALSE
