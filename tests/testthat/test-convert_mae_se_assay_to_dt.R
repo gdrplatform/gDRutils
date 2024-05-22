@@ -5,7 +5,7 @@ test_that("convert_se_assay_to_dt works as expected", {
   cnames <- letters[1:n]
   
   # Normal matrix.
-  ref_gr_value <-  matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
+  ref_gr_value <- matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value),
                                                    rowData = S4Vectors::DataFrame(rnames),
                                                    colData = S4Vectors::DataFrame(cnames))
@@ -203,7 +203,7 @@ test_that("convert_se_assay_to_custom_dt works fine", {
   json_path <- system.file(package = "gDRcomponents", "settings.json")
   s <- get_settings_from_json(json_path = json_path)
   
-  se <- gDRutils::get_synthetic_data("finalMAE_small")[[1]]
+  se <- get_synthetic_data("finalMAE_small")[[1]]
   dt1 <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
   checkmate::expect_data_table(dt1, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt1)))
