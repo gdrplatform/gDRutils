@@ -1,5 +1,8 @@
-## gDRutils 1.1.15 - 2024-05-20
+## gDRutils 1.1.16 - 2024-05-22
 * fix check notes
+
+## gDRutils 1.1.15 - 2024-05-17
+* simplify logic of supported experiments
 
 ## gDRutils 1.1.14 - 2024-05-16
 * move `define_matrix_grid_positions` and `round_concentration` functions from `gDRcore` package
