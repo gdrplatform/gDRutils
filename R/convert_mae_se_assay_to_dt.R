@@ -239,7 +239,7 @@ convert_mae_assay_to_dt <- function(mae,
 #'   - Metrics_initial (conversion to data.table only, with `wide_structure` = FALSE)
 #'   - Metrics_raw: same as Metrics_initial followed by:
 #'     * fix for 'EC50' and 'Metrics_rownames'
-#'     * gDRutils::flatten
+#'     * flatten
 #'     * prettifying and dropping excess variables
 #'   - Metrics (same as Metrics_raw + capVals)
 #' 3. 'Normalization' and 'Averaged' asssay:
