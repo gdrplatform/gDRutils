@@ -24,4 +24,10 @@ Get settings from JSON file
 In most common scenario the settings are stored in JSON file
 to avoid hardcoding
 }
+\examples{
+if (!nchar(system.file(package="gDRutils"))) {
+   get_settings_from_json()
+}
+
+}
 \keyword{json_const}

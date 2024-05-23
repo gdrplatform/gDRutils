@@ -8,6 +8,11 @@
 #'
 #' @return value/values for entry/entries from JSON file
 #' 
+#' @examples
+#' if (!nchar(system.file(package="gDRutils"))) {
+#'    get_settings_from_json()
+#' }
+#' 
 #' @keywords json_const
 #' @export
 #'
