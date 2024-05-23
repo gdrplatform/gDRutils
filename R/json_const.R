@@ -1,5 +1,4 @@
-
-#' get settings from JSON file
+#' Get settings from JSON file
 
 #' In most common scenario the settings are stored in JSON file 
 #' to avoid hardcoding
@@ -8,6 +7,12 @@
 #' @param json_path string with the path to the JSON file
 #'
 #' @return value/values for entry/entries from JSON file
+#' 
+#' @examples
+#' get_settings_from_json("ISOBOLOGRAM_COLUMNS", system.file(package = "gDRutils", "settings.json")
+#' 
+#' 
+#' 
 #' @keywords json_const
 #' @export
 #'
