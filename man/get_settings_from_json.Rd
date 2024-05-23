@@ -25,7 +25,9 @@ In most common scenario the settings are stored in JSON file
 to avoid hardcoding
 }
 \examples{
+\dontrun{
 get_settings_from_json()
+}
 
 }
 \keyword{json_const}

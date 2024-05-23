@@ -9,7 +9,9 @@
 #' @return value/values for entry/entries from JSON file
 #' 
 #' @examples
+#' \dontrun{
 #' get_settings_from_json()
+#' }
 #' 
 #' @keywords json_const
 #' @export
