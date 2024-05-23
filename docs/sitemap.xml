@@ -43,6 +43,9 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/average_biological_replicates_dt.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/capVals.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/cap_xc50.html</loc>
   </url>
   <url>
@@ -65,6 +68,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_rowData_to_json.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_se_assay_to_custom_dt.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/convert_se_assay_to_dt.html</loc>
@@ -160,6 +166,9 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_iso_colors.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_isobologram_columns.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_non_empty_assays.html</loc>
   </url>
   <url>
@@ -170,6 +179,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_required_identifiers.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_settings_from_json.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_supported_experiments.html</loc>
