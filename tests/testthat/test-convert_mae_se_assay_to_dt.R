@@ -225,15 +225,14 @@ test_that("convert_se_assay_to_custom_dt works fine", {
   dt5 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Metrics")
   expect_true(identical(dt4, dt5))
   
-  se2 <-
-    gDRutils::get_synthetic_data("finalMAE_combo_matrix")[[1]]
+  se2 <- get_synthetic_data("finalMAE_combo_matrix")[[1]]
   dt6 <- convert_se_assay_to_custom_dt(se2, assay_name = "Metrics")
   checkmate::expect_data_table(dt6, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt6)))
   dt7 <-
     convert_se_assay_to_custom_dt(se2, assay_name = gDRutils::get_combo_assay_names()[1])
   checkmate::expect_data_table(dt7, min.rows = 2, min.cols = 2)
-  expect_true(all(names(gDRutils::get_combo_excess_field_names()) %in% names(dt7)))
+  expect_true(all(names(get_combo_excess_field_names()) %in% names(dt7)))
   
   expect_error(convert_se_assay_to_custom_dt(as.list(se), assay_name = "Metrics"))
   expect_error(convert_se_assay_to_custom_dt(as.list(se), output_table = "Averaged"))
