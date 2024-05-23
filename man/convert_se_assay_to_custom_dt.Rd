@@ -31,7 +31,7 @@ Current strategy is per-assay specific.
 \item Metrics_raw: same as Metrics_initial followed by:
 \itemize{
 \item fix for 'EC50' and 'Metrics_rownames'
-\item gDRutils::flatten
+\item flatten
 \item prettifying and dropping excess variables
 }
 \item Metrics (same as Metrics_raw + capVals)

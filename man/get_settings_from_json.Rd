@@ -2,7 +2,7 @@
 % Please edit documentation in R/json_const.R
 \name{get_settings_from_json}
 \alias{get_settings_from_json}
-\title{get settings from JSON file
+\title{Get settings from JSON file
 In most common scenario the settings are stored in JSON file
 to avoid hardcoding}
 \usage{
@@ -20,8 +20,14 @@ get_settings_from_json(
 value/values for entry/entries from JSON file
 }
 \description{
-get settings from JSON file
+Get settings from JSON file
 In most common scenario the settings are stored in JSON file
 to avoid hardcoding
+}
+\examples{
+get_settings_from_json("ISOBOLOGRAM_COLUMNS", system.file(package = "gDRutils", "settings.json")
+
+
+
 }
 \keyword{json_const}
