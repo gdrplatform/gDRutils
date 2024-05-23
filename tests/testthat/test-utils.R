@@ -465,3 +465,95 @@ test_that("get_additional_variables works as expected", {
   expect_equal(get_additional_variables(unlist(rdata1)), NULL)
   
 })
+
+
+test_that("convert_se_assay_to_custom_dt works fine", {
+  json_path <- system.file(package = "gDRcomponents", "settings.json")
+  s <- get_settings_from_json(json_path = json_path)
+  
+  se <- get_synthetic_data("finalMAE_small")[[1]]
+  dt1 <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
+  checkmate::expect_data_table(dt1, min.rows = 2, min.cols = 2)
+  expect_true(all(s$METRIC_WISH_LIST %in% names(dt1)))
+  dt2 <-
+    convert_se_assay_to_custom_dt(se, assay_name = "Metrics", output_table = "Metrics_raw")
+  checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
+  expect_true(all(s$METRIC_WISH_LIST %in% names(dt2)))
+  dt3 <-
+    convert_se_assay_to_custom_dt(se, assay_name = "Metrics", output_table = "Metrics_initial")
+  checkmate::expect_data_table(dt3, min.rows = 2, min.cols = 2)
+  expect_false(identical(dt2, dt3))
+  checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
+  expect_true(all(c("x_mean", "x_AOC", "x_AOC_range", "xc50", "x_max", "ec50", 
+                    "x_inf", "x_0", "h", "r2", "x_sd_avg", "fit_type") %in% names(dt3)))
+  dt4 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged")
+  checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
+  expect_true(
+    all(c("GR value", "Relative Viability", "Std GR value", "Std Relative Viability") %in% names(dt4)))
+  dt5 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Metrics")
+  expect_true(identical(dt4, dt5))
+  
+  se2 <- get_synthetic_data("finalMAE_combo_matrix")[[1]]
+  dt6 <- convert_se_assay_to_custom_dt(se2, assay_name = "Metrics")
+  checkmate::expect_data_table(dt6, min.rows = 2, min.cols = 2)
+  expect_true(all(s$METRIC_WISH_LIST %in% names(dt6)))
+  dt7 <-
+    convert_se_assay_to_custom_dt(se2, assay_name = get_combo_assay_names()[1])
+  checkmate::expect_data_table(dt7, min.rows = 2, min.cols = 2)
+  expect_true(all(names(get_combo_excess_field_names()) %in% names(dt7)))
+  
+  expect_error(convert_se_assay_to_custom_dt(as.list(se), assay_name = "Metrics"))
+  expect_error(convert_se_assay_to_custom_dt(as.list(se), output_table = "Averaged"))
+  expect_error(
+    convert_se_assay_to_custom_dt(as.list(se), assay_name = "Averaged", output_table = "Metrics_raw"))
+  expect_error(convert_se_assay_to_custom_dt(se, "xxx"))
+  expect_error(convert_se_assay_to_custom_dt(se, "Metrics", "xxx"))
+})
+
+
+test_that("capVals works as expected", {
+  dt1 <- data.table::data.table(
+    `E Max` = c(-0.1, 0, 0.5, 1.2),
+    `GR Max` = c(-1.1, -1, 0.5, 1.2),
+    `RV AOC within set range` = c(-0.2, -0.1, 0, 3),
+    `GR AOC within set range` = c(-0.2, -0.1, 0, 3),
+    `GR50` = c(0, 1e-7, 10, 34),
+    `IC50` = c(0, 1e-7, 10, 34),
+    `EC50` = c(0, 1e-7, 10, 34),
+    check.names = FALSE
+  )
+  dt2 <- data.table::data.table(
+    `E Max` = c(0, 0, 0.5, 1.1),
+    `GR Max` = c(-1, -1, 0.5, 1.1),
+    `RV AOC within set range` = c(-0.1, -0.1, 0, 3),
+    `GR AOC within set range` = c(-0.1, -0.1, 0, 3),
+    `GR50` = c(1e-4, 1e-4, 10, 30),
+    `IC50` = c(1e-4, 1e-4, 10, 30),
+    `EC50` = c(NA, 1e-4, 10, 30),
+    check.names = FALSE
+  )
+  dt3 <- data.table::data.table(
+    A = LETTERS[1:10],
+    B = letters[1:10],
+    C = 1:10
+  )
+  dt1c <- capVals(dt1)
+  dt2c <- capVals(dt2)
+  dt2c_2 <- capVals(dt2[, 1:4])
+  dt3c <- capVals(dt3)
+  # remove index attribute, created inside capVals (for comparison purposes)
+  attr(dt1c, "index") <- NULL
+  attr(dt2c, "index") <- NULL
+  attr(dt2c_2, "index") <- NULL
+  attr(dt3c, "index") <- NULL
+  
+  expect_false(identical(dt1c, dt1))
+  expect_identical(dt2c, dt2)
+  expect_identical(dt2c_2, dt2[, 1:4])
+  expect_identical(dt3c, dt3)
+  
+  # values are capped correctly
+  expect_equal(dt1c, dt2)
+  
+  expect_error(capVals(as.list(dt1)), "Must be a data.table")
+})

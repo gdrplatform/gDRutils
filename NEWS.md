@@ -1,5 +1,8 @@
-## gDRutils 1.1.16 - 2024-05-22
+## gDRutils 1.1.17 - 2024-05-22
 * fix check notes
+
+## gDRutils 1.1.16 - 2024-05-22
+* move `convert_se_assay_to_custom_dt`, `capVals` and `get_settings_from_json` from `gDRcomponents` package
 
 ## gDRutils 1.1.15 - 2024-05-17
 * simplify logic of supported experiments

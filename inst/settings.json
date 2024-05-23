@@ -1,0 +1,26 @@
+{
+    "CAP_VALS_COLS": [
+      "E Max", 
+      "GR Max", 
+      "RV AOC within set range", 
+      "GR AOC within set range", 
+      "GR50", 
+      "IC50", 
+      "EC50"
+    ],
+    "capVals": {
+        "fifty_lower_limit": 0.0001,
+        "fifty_upper_limit": 30,
+        "max_upper_limit": 1.1,
+        "range_lower_limit": -0.1
+    },
+    "ISOBOLOGRAM_COLUMNS": {
+        "iso_level": "iso_level",
+        "pos_x": "pos_x",
+        "pos_x_ref": "pos_x_ref",
+        "pos_y": "pos_y",
+        "pos_y_ref": "pos_y_ref",
+        "log10_ratio": "log10_ratio_conc",
+        "log2_CI": "log2_CI"
+    }
+}

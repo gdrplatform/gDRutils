@@ -1,7 +1,7 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.1.16
+Version: 1.1.17
 Date: 2024-05-22
 Authors@R: c(person("Bartosz", "Czech", role=c("aut"),
                    comment = c(ORCID = "0000-0002-9908-3007")),
@@ -50,6 +50,7 @@ Suggests:
     qs,
     rcmdcheck,
     rmarkdown,
+    scales,
     testthat,
     tools,
     yaml
