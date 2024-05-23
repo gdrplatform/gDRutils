@@ -30,6 +30,9 @@ reference:
 - title: JSON validation
 - contents:
   - has_keyword("json_validate")
+- title: JSON const getters
+- contents:
+  - has_keyword("json_const")
 - title: Metadata management
 - contents:
   - has_keyword("metadata_management")
