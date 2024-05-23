@@ -471,7 +471,7 @@ test_that("convert_se_assay_to_custom_dt works fine", {
   json_path <- system.file(package = "gDRcomponents", "settings.json")
   s <- get_settings_from_json(json_path = json_path)
   
-  se <- gDRutils::get_synthetic_data("finalMAE_small")[[1]]
+  se <- get_synthetic_data("finalMAE_small")[[1]]
   dt1 <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
   checkmate::expect_data_table(dt1, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt1)))
@@ -493,15 +493,14 @@ test_that("convert_se_assay_to_custom_dt works fine", {
   dt5 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Metrics")
   expect_true(identical(dt4, dt5))
   
-  se2 <-
-    gDRutils::get_synthetic_data("finalMAE_combo_matrix")[[1]]
+  se2 <- get_synthetic_data("finalMAE_combo_matrix")[[1]]
   dt6 <- convert_se_assay_to_custom_dt(se2, assay_name = "Metrics")
   checkmate::expect_data_table(dt6, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt6)))
   dt7 <-
-    convert_se_assay_to_custom_dt(se2, assay_name = gDRutils::get_combo_assay_names()[1])
+    convert_se_assay_to_custom_dt(se2, assay_name = get_combo_assay_names()[1])
   checkmate::expect_data_table(dt7, min.rows = 2, min.cols = 2)
-  expect_true(all(names(gDRutils::get_combo_excess_field_names()) %in% names(dt7)))
+  expect_true(all(names(get_combo_excess_field_names()) %in% names(dt7)))
   
   expect_error(convert_se_assay_to_custom_dt(as.list(se), assay_name = "Metrics"))
   expect_error(convert_se_assay_to_custom_dt(as.list(se), output_table = "Averaged"))
