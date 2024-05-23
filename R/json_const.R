@@ -9,9 +9,7 @@
 #' @return value/values for entry/entries from JSON file
 #' 
 #' @examples
-#' get_settings_from_json("ISOBOLOGRAM_COLUMNS", system.file(package = "gDRutils", "settings.json")
-#' 
-#' 
+#' get_settings_from_json()
 #' 
 #' @keywords json_const
 #' @export

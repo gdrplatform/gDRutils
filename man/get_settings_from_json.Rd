@@ -25,9 +25,7 @@ In most common scenario the settings are stored in JSON file
 to avoid hardcoding
 }
 \examples{
-get_settings_from_json("ISOBOLOGRAM_COLUMNS", system.file(package = "gDRutils", "settings.json")
-
-
+get_settings_from_json()
 
 }
 \keyword{json_const}
