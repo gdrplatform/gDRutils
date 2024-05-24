@@ -14,7 +14,7 @@ to identify the different components of a SummarizedExperiment object."><!-- mat
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.17</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,12 +89,23 @@ see details.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Named list containing the following elements:</p><ul><li><p>"treatment_md": treatment metadata</p></li>
-<li><p>"condition_md": condition metadata</p></li>
-<li><p>"data_fields": all data.table column names corresponding to fields nested within a BumpyMatrix cell</p></li>
-<li><p>"experiment_md": metadata that is constant for all entries of the data.table</p></li>
-<li><p>"identifiers_md": key identifier mappings</p></li>
-</ul><p>The <code>nested_keys</code> provides the user the opportunity to specify that they would not
+    <p>Named list containing the following elements:</p><dl><dt>"treatment_md": </dt>
+<dd><p>treatment metadata</p></dd>
+
+<dt>"condition_md": </dt>
+<dd><p>condition metadata</p></dd>
+
+<dt>"data_fields": </dt>
+<dd><p>all data.table column names corresponding to fields nested within a BumpyMatrix cell</p></dd>
+
+<dt>"experiment_md": </dt>
+<dd><p>metadata that is constant for all entries of the data.table</p></dd>
+
+<dt>"identifiers_md": </dt>
+<dd><p>key identifier mappings</p></dd>
+
+
+</dl><p>The <code>nested_keys</code> provides the user the opportunity to specify that they would not
 like to use that metadata field as a differentiator of the treatments, and instead, incorporate it
 into a nested <code>DataFrame</code> in the BumpyMatrix matrix object.</p>
 <p>In the event that if any of the <code>nested_keys</code> are constant throughout the whole data.table,
