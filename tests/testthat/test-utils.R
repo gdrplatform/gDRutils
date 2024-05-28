@@ -468,7 +468,7 @@ test_that("get_additional_variables works as expected", {
 
 
 test_that("convert_se_assay_to_custom_dt works fine", {
-  json_path <- system.file(package = "gDRcomponents", "settings.json")
+  json_path <- system.file(package = "gDRutils", "test_settings_2.json")
   s <- get_settings_from_json(json_path = json_path)
   
   se <- get_synthetic_data("finalMAE_small")[[1]]

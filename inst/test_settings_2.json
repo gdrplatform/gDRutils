@@ -1,0 +1,129 @@
+{
+    "FILTERED_OUT_COLS_COMBOS": [
+        "rId",
+        "cId",
+        "r Id",
+        "c Id"
+    ],
+    "FIXED_PREFIX": "fixed",
+    "METRIC_WISH_LIST": [
+        "GR50",
+        "IC50",
+        "GR Max",
+        "E Max",
+        "EC50",
+        "GR Mean",
+        "RV Mean",
+        "GR AOC within set range",
+        "RV AOC within set range"
+    ],
+    "METRIC_WISH_LIST_CURVE": [
+        "GR value",
+        "Relative Viability"
+    ],
+    "METRICS_TRANSFORMED": [
+        "GR50",
+        "IC50",
+        "EC50"
+    ],
+    "SUPPORTED_FILE_TYPES_AUTO": [
+        "text/tsv",
+        "text/tab-separated-values",
+        ".csv",
+        ".xlsx",
+        ".tsv"
+    ],
+    "SUPPORTED_FILE_TYPES_MANIFEST": [
+        "text/tsv",
+        "text/tab-separated-values",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "SUPPORTED_FILE_TYPES_TREATMENT": [
+        "text/tsv",
+        "text/tab-separated-values",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "SUPPORTED_FILE_TYPES_RAWDATA": [
+        "text/csv",
+        "text/tsv",
+        "text/tab-separated-values",
+        "text/tab-separated-values,text/plain",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "VIS_COLS_NORM": [
+        "drug_name",
+        "drug_moa",
+        "drug_name2",
+        "drug_moa2",
+        "drug_name3",
+        "drug_moa3",
+        "cellline_name",
+        "cellline_tissue",
+        "cellline_subtype",
+        "UserCellLineDesignation",
+        "GR value",
+        "Relative Viability",
+        "CorrectedReadout",
+        "drug",
+        "drug2",
+        "drug3",
+        "cellline",
+        "cellline_ref_div_time",
+        "concentration",
+        "concentration2",
+        "concentration3"
+    ],
+    "VIS_COLS_AVG": [
+        "drug_name",
+        "drug_moa",
+        "drug_name2",
+        "drug_moa2",
+        "drug_name3",
+        "drug_moa3",
+        "cellline_name",
+        "cellline_tissue",
+        "cellline_subtype",
+        "UserCellLineDesignation",
+        "GR value",
+        "Relative Viability",
+        "Std GR value",
+        "Std Relative Viability",
+        "drug",
+        "drug2",
+        "drug3",
+        "cellline",
+        "cellline_ref_div_time",
+        "concentration",
+        "concentration2",
+        "concentration3"
+    ],
+    "VIS_COLS_METRICS": [
+        "drug_name",
+        "drug_moa",
+        "drug_name2",
+        "drug_moa2",
+        "drug_name3",
+        "drug_moa3",
+        "cellline_name",
+        "cellline_tissue",
+        "cellline_subtype",
+        "UserCellLineDesignation",
+        "Data Source",
+        "GR AOC",
+        "RV AOC",
+        "RV Mean",
+        "GR Mean",
+        "IC50",
+        "GR50",
+        "E Max",
+        "GR Max",
+        "E Inf",
+        "GR Inf",
+        "drug",
+        "drug2",
+        "drug3",
+        "cellline",
+        "cellline_ref_div_time",
+        "Highest log10(conc.)"
+    ]
+}

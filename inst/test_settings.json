@@ -1,0 +1,29 @@
+{
+    "DICT": {
+        "fifty_lower_limit": 0.0001,
+        "fifty_upper_limit": 30,
+        "max_upper_limit": 1.1,
+        "range_lower_limit": -0.1
+    },
+    "DICT_WITH_LOGICAL": {
+        "axisTitleText": true,
+        "titleText": true
+    },
+    "DICT_WITH_LISTS": {
+        "GR AOC within set range": [
+            0,
+            1
+        ],
+        "RV AOC within set range": [
+            0,
+            1
+        ]
+    },
+    "LIST": [
+        "rId",
+        "cId",
+        "r Id",
+        "c Id"
+    ],
+    "STRING": "fixed"
+}
