@@ -5,7 +5,7 @@ test_that("get_settings_from_json works as expected", {
     "Assertion on 'json_path' failed"
   )
   json_path <-
-    system.file(package = "gDRcomponents", "test_settings.json")
+    system.file(package = "gDRutils", "test_settings.json")
   expect_error(
     get_settings_from_json(s = "no_such_entry", json_path = json_path),
     "Assertion on 's' failed"

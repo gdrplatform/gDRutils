@@ -1,3 +1,6 @@
+## gDRutils 1.3.1 - 2024-05-27
+* synchronize Bioconductor and GitHub versioning
+
 ## gDRutils 1.1.17 - 2024-05-22
 * fix check notes
 
