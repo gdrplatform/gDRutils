@@ -1,5 +1,5 @@
 ## gDRutils 1.3.2 - 2024-06-24
-* fixed issue in vignette
+* fixed issue in vignette 
 
 ## gDRutils 1.3.1 - 2024-05-27
 * synchronize Bioconductor and GitHub versioning
