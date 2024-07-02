@@ -21,7 +21,8 @@ suppressPackageStartupMessages(library(MultiAssayExperiment))
 ```
 
 # Overview
-`gDRutils` is the part of `gDR` suite. This package provides bunch of tools for, among others:
+`gDRutils` is the part of `gDR` suite. This package provides a bunch of tools for, among others:
+
 * data manipulation, especially output of the `gDRcore` package (`MultiAssayExperiments` and `SummarizedExperiment`),
 * data extraction,
 * managing identifiers used for creating `gDR` experiments,
@@ -32,7 +33,6 @@ suppressPackageStartupMessages(library(MultiAssayExperiment))
 ## Data manipulation
 
 The basic output of `gDRcore` package is the `MultiAssayExperiment` object. Function `MAEpply` allows for the data manipulation of this object, and can be used in a similar way as a basic function `lapply`.
-
 
 ```{r}
 mae <- get_synthetic_data("finalMAE_combo_matrix_small")
@@ -51,7 +51,13 @@ MAEpply(mae, rowData, unify = TRUE)
 
 All the metrics data are stored inside `assays` of `SummarizedExperiment`. For the downstream analyses we provide tools allowing for the extraction of the data into user-friendly `data.table` style.
 
-There are two functions working on `MultiAssayExperiment` object (`convert_mae_assay_to_dt`) and for `SummarizedExperiment` (`convert_se_assay_to_dt`).
+There is a function working on the `MultiAssayExperiment` object as well as a set of functions working on the `SummarizedExperiment` object:
+
+* convert_mae_assay_to_dt
+* convert_se_assay_to_dt
+* convert_se_assay_to_custom_dt
+* convert_combo_data_to_dt
+
 
 ```{r}
 mdt <- convert_mae_assay_to_dt(mae, "Metrics")
@@ -66,6 +72,8 @@ head(sdt, 3)
 ```
 
 ## Managing gDR identifiers
+
+### Overview
 
 In `gDR` we require standard identifiers that should be visible in the input data, such as e.g. `Gnumber`, `CLID`, `Concentration`. However, user can define their own custom identifiers.
 
@@ -97,9 +105,50 @@ reset_env_identifiers()
 get_env_identifiers("concentration")
 ```
 
+### Validating identifiers
+
+The `validate_identifiers` function checks if the specified identifier values exist in the data and (if needed) tries to modify them to pass validation.
+
+```{r}
+# Example data.table
+dt <- data.table::data.table(
+  Barcode = c("A1", "A2", "A3"),
+  Duration = c(24, 48, 72),
+  Template = c("T1", "T2", "T3"),
+  clid = c("C1", "C2", "C3")
+)
+
+# Validate identifiers
+validated_identifiers <- validate_identifiers(
+  dt,
+  req_ids = c("barcode", "duration", "template", "cellline")
+)
+
+print(validated_identifiers)
+```
+
+In detail, `validate_identifiers` wraps the following steps:
+
+* modify identifier values to reflect the data, handling many-to-one mappings via the `.modify_polymapped_identifiers` function
+* ensure that all required identifiers are present in the data via  the `.check_required_identifiers` function 
+* check for polymapped identifiers in the data via the `.check_polymapped_identifiers` function
+ 
+### Prettifying identifiers
+
+Prettifying identifiers means making them more user-friendly and human-readable and is handled by the `prettify_flat_metrics` function. Please see [the relevant section](#prettifying) for more details.
+
+```{r}
+# Example of prettifying identifiers
+x <- c("CellLineName", "Tissue", "Concentration_2")
+prettified_names <- prettify_flat_metrics(x, human_readable = TRUE)
+print(prettified_names)
+```
+
+
+
 ## Data validation
 
-Applied custom changes in the gDR output can upset internal functions operation. Custom changes can be validated using `validate_MAE`
+Applied custom changes in the gDR output can disrupt internal functions operation. Custom changes can be validated using `validate_MAE`
 
 ```{r}
 validate_MAE(mae)
@@ -116,8 +165,57 @@ assay(se, "Normalized") <- NULL
 validate_SE(se)
 ```
 
-There is also a group of functions to validate data used in the gDR application like **is_combo_data**, 
-**has_single_codrug_data**, **has_valid_codrug_data**, **get_additional_variables**.
+There is also a group of functions to validate data used in the gDR application:
+
+* is_combo_data
+* has_single_codrug_data
+* has_valid_codrug_data
+* get_additional_variables
+
+## Prettifying
+
+Prettifying involves transforming data into more descriptive and human-readable version. This is particularly useful for front-end applications where user-friendly names are preferred over technical or abbreviated terms.
+
+In gdrplatform there are two entities that can be prettified:
+
+* colnames of data.tables 
+* assay names
+
+### Colnames of data.table(s)
+
+One can prettify the columns of the data.table(s) with a single function called `prettify_flat_metrics`.
+
+```
+dt <- get_testdata()[["raw_data"]]
+colnames(dt)
+prettify_flat_metrics(colnames(dt), human_readable = TRUE)
+```
+
+The `prettify_flat_metrics` function is in fact a wrapper of the following actions:
+
+* conversion of the normalization-specific metric names via the `.convert_norm_specific_metrics` function
+* moving the GDS source info to the end of the column name via the `.prettify_GDS_columns` 
+* prettifying the metadata columns via the `.prettify_metadata_columns` function 
+* prettifying the metric columns via the `.prettify_metric_columns` function 
+* prettifying the co-treatment column names. via the `.prettify_cotreatment_columns` 
+* minor corrections (removal of 'gDR' and  "_" prefixes, removal of spaces at the end/beginning, other)
+
+In case of data.table(s) with combo excess and score assays some of the columns are prettified with the dedicated helper functions instead of using `prettify_flat_metrics`:
+
+* get_combo_excess_field_names()
+* get_combo_score_field_names() 
+
+These helpers depend on the DATA_COMBO_INFO_TBL, (gDRutils) internal data.table.
+
+### Assay names
+
+The function 'get_assay_names' is the primary solution that allows getting prettified version of the assay names. It wraps the `get_env_assay_names` function which is dependent on ASSAY_INFO_TBL, (gDRutils) internal data.table.
+
+There are some functions that wrap the `get_assay_names` function in case of the combo data:
+
+* get_combo_assay_names
+* get_combo_score_assay_names
+* get_combo_base_assay_names
 
 
 # SessionInfo {-}
@@ -125,3 +223,4 @@ There is also a group of functions to validate data used in the gDR application 
 ```{r sessionInfo}
 sessionInfo()
 ```
+
