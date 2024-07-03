@@ -209,7 +209,7 @@ These helpers depend on the DATA_COMBO_INFO_TBL, (gDRutils) internal data.table.
 
 ### Assay names
 
-The function `get_assay_names` is the primary solution that allows getting prettified version of the assay names. It wraps the `get_env_assay_names` function which is dependent on ASSAY_INFO_TBL, (gDRutils) internal data.table.
+The function `get_assay_names` is the primary solution for obtaining prettified versions of the assay names. It wraps the `get_env_assay_names` function which depends on ASSAY_INFO_TBL, (gDRutils) internal data.table.
 
 There are some functions that wrap the `get_assay_names` function in case of the combo data:
 
