@@ -21,7 +21,7 @@ suppressPackageStartupMessages(library(MultiAssayExperiment))
 ```
 
 # Overview
-`gDRutils` is the part of `gDR` suite. This package provides a bunch of tools for, among others:
+`gDRutils` is part of the `gDR` suite. This package provides a bunch of tools for, among others:
 
 * data manipulation, especially output of the `gDRcore` package (`MultiAssayExperiments` and `SummarizedExperiment`),
 * data extraction,
