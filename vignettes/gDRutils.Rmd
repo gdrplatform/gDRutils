@@ -174,7 +174,7 @@ There is also a group of functions to validate data used in the gDR application:
 
 ## Prettifying
 
-Prettifying involves transforming data into more descriptive and human-readable version. This is particularly useful for front-end applications where user-friendly names are preferred over technical or abbreviated terms.
+Prettifying involves transforming data into a more descriptive and human-readable version. This is particularly useful for front-end applications where user-friendly names are preferred over technical or abbreviated terms.
 
 In gdrplatform there are two entities that can be prettified:
 
