@@ -191,7 +191,7 @@ colnames(dt)
 prettify_flat_metrics(colnames(dt), human_readable = TRUE)
 ```
 
-The `prettify_flat_metrics` function is in fact a wrapper of the following actions:
+The `prettify_flat_metrics` function is in fact a wrapper for the following actions:
 
 * conversion of the normalization-specific metric names via the `.convert_norm_specific_metrics` function
 * moving the GDS source info to the end of the column name via the `.prettify_GDS_columns` 
