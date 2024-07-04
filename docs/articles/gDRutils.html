@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,13 +84,17 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><code>gDRutils</code> is the part of <code>gDR</code> suite. This
-package provides bunch of tools for, among others: * data manipulation,
-especially output of the <code>gDRcore</code> package
-(<code>MultiAssayExperiments</code> and
-<code>SummarizedExperiment</code>), * data extraction, * managing
-identifiers used for creating <code>gDR</code> experiments, * data
-validation.</p>
+<p><code>gDRutils</code> is part of the <code>gDR</code> suite. This
+package provides a bunch of tools for, among others:</p>
+<ul>
+<li>data manipulation, especially output of the <code>gDRcore</code>
+package (<code>MultiAssayExperiments</code> and
+<code>SummarizedExperiment</code>),</li>
+<li>data extraction,</li>
+<li>managing identifiers used for creating <code>gDR</code>
+experiments,</li>
+<li>data validation.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="use-cases">Use cases<a class="anchor" aria-label="anchor" href="#use-cases"></a>
@@ -182,10 +186,15 @@ the <code>SummarizedExperiment</code>s inside
 <code>SummarizedExperiment</code>. For the downstream analyses we
 provide tools allowing for the extraction of the data into user-friendly
 <code>data.table</code> style.</p>
-<p>There are two functions working on <code>MultiAssayExperiment</code>
-object (<code>convert_mae_assay_to_dt</code>) and for
-<code>SummarizedExperiment</code>
-(<code>convert_se_assay_to_dt</code>).</p>
+<p>There is a function working on the <code>MultiAssayExperiment</code>
+object as well as a set of functions working on the
+<code>SummarizedExperiment</code> object:</p>
+<ul>
+<li>convert_mae_assay_to_dt</li>
+<li>convert_se_assay_to_dt</li>
+<li>convert_se_assay_to_custom_dt</li>
+<li>convert_combo_data_to_dt</li>
+</ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mdt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convert_mae_assay_to_dt.html">convert_mae_assay_to_dt</a></span><span class="op">(</span><span class="va">mae</span>, <span class="st">"Metrics"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: BumpyMatrix</span></span>
@@ -259,6 +268,9 @@ object (<code>convert_mae_assay_to_dt</code>) and for
 <div class="section level3">
 <h3 id="managing-gdr-identifiers">Managing gDR identifiers<a class="anchor" aria-label="anchor" href="#managing-gdr-identifiers"></a>
 </h3>
+<div class="section level4">
+<h4 id="overview-1">Overview<a class="anchor" aria-label="anchor" href="#overview-1"></a>
+</h4>
 <p>In <code>gDR</code> we require standard identifiers that should be
 visible in the input data, such as e.g. <code>Gnumber</code>,
 <code>CLID</code>, <code>Concentration</code>. However, user can define
@@ -360,32 +372,225 @@ their own custom identifiers.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/identifiers.html">get_env_identifiers</a></span><span class="op">(</span><span class="st">"concentration"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Concentration"</span></span></code></pre></div>
 </div>
+<div class="section level4">
+<h4 id="validating-identifiers">Validating identifiers<a class="anchor" aria-label="anchor" href="#validating-identifiers"></a>
+</h4>
+<p>The <code>validate_identifiers</code> function checks if the
+specified identifier values exist in the data and (if needed) tries to
+modify them to pass validation.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Example data.table</span></span>
+<span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span></span>
+<span>  Barcode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A1"</span>, <span class="st">"A2"</span>, <span class="st">"A3"</span><span class="op">)</span>,</span>
+<span>  Duration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">24</span>, <span class="fl">48</span>, <span class="fl">72</span><span class="op">)</span>,</span>
+<span>  Template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"T1"</span>, <span class="st">"T2"</span>, <span class="st">"T3"</span><span class="op">)</span>,</span>
+<span>  clid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C1"</span>, <span class="st">"C2"</span>, <span class="st">"C3"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Validate identifiers</span></span>
+<span><span class="va">validated_identifiers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_identifiers.html">validate_identifiers</a></span><span class="op">(</span></span>
+<span>  <span class="va">dt</span>,</span>
+<span>  req_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"duration"</span>, <span class="st">"template"</span>, <span class="st">"cellline"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">validated_identifiers</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $duration</span></span>
+<span><span class="co">#&gt; [1] "Duration"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cellline</span></span>
+<span><span class="co">#&gt; [1] "clid"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cellline_name</span></span>
+<span><span class="co">#&gt; [1] "CellLineName"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cellline_tissue</span></span>
+<span><span class="co">#&gt; [1] "Tissue"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cellline_ref_div_time</span></span>
+<span><span class="co">#&gt; [1] "ReferenceDivisionTime"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cellline_parental_identifier</span></span>
+<span><span class="co">#&gt; [1] "parental_identifier"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $cellline_subtype</span></span>
+<span><span class="co">#&gt; [1] "subtype"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug</span></span>
+<span><span class="co">#&gt; [1] "Gnumber"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug_name</span></span>
+<span><span class="co">#&gt; [1] "DrugName"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug_moa</span></span>
+<span><span class="co">#&gt; [1] "drug_moa"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $untreated_tag</span></span>
+<span><span class="co">#&gt; [1] "vehicle"   "untreated"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $masked_tag</span></span>
+<span><span class="co">#&gt; [1] "masked"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $well_position</span></span>
+<span><span class="co">#&gt; [1] "WellRow"    "WellColumn"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $concentration</span></span>
+<span><span class="co">#&gt; [1] "Concentration"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $template</span></span>
+<span><span class="co">#&gt; [1] "Template"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $barcode</span></span>
+<span><span class="co">#&gt; [1] "Barcode"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug2</span></span>
+<span><span class="co">#&gt; [1] "Gnumber_2"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug_name2</span></span>
+<span><span class="co">#&gt; [1] "DrugName_2"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug_moa2</span></span>
+<span><span class="co">#&gt; [1] "drug_moa_2"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $concentration2</span></span>
+<span><span class="co">#&gt; [1] "Concentration_2"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug3</span></span>
+<span><span class="co">#&gt; [1] "Gnumber_3"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug_name3</span></span>
+<span><span class="co">#&gt; [1] "DrugName_3"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $drug_moa3</span></span>
+<span><span class="co">#&gt; [1] "drug_moa_3"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $concentration3</span></span>
+<span><span class="co">#&gt; [1] "Concentration_3"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $data_source</span></span>
+<span><span class="co">#&gt; [1] "data_source"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $replicate</span></span>
+<span><span class="co">#&gt; [1] "Replicate"</span></span></code></pre></div>
+<p>In detail, <code>validate_identifiers</code> wraps the following
+steps:</p>
+<ul>
+<li>modify identifier values to reflect the data, handling many-to-one
+mappings via the <code>.modify_polymapped_identifiers</code>
+function</li>
+<li>ensure that all required identifiers are present in the data via the
+<code>.check_required_identifiers</code> function</li>
+<li>check for polymapped identifiers in the data via the
+<code>.check_polymapped_identifiers</code> function</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="prettifying-identifiers">Prettifying identifiers<a class="anchor" aria-label="anchor" href="#prettifying-identifiers"></a>
+</h4>
+<p>Prettifying identifiers means making them more user-friendly and
+human-readable and is handled by the <code>prettify_flat_metrics</code>
+function. Please see <a href="#prettifying">the relevant section</a> for
+more details.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Example of prettifying identifiers</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CellLineName"</span>, <span class="st">"Tissue"</span>, <span class="st">"Concentration_2"</span><span class="op">)</span></span>
+<span><span class="va">prettified_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prettify_flat_metrics.html">prettify_flat_metrics</a></span><span class="op">(</span><span class="va">x</span>, human_readable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">prettified_names</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Cell Line Name"  "Tissue"          "Concentration 2"</span></span></code></pre></div>
+</div>
+</div>
 <div class="section level3">
 <h3 id="data-validation">Data validation<a class="anchor" aria-label="anchor" href="#data-validation"></a>
 </h3>
-<p>Applied custom changes in the gDR output can upset internal functions
-operation. Custom changes can be validated using
+<p>Applied custom changes in the gDR output can disrupt internal
+functions operation. Custom changes can be validated using
 <code>validate_MAE</code></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/validate_MAE.html">validate_MAE</a></span><span class="op">(</span><span class="va">mae</span><span class="op">)</span></span></code></pre></div>
 <p>or <code>validate_SE</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/validate_SE.html">validate_SE</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">se</span>, <span class="st">"Normalized"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="fu"><a href="../reference/validate_SE.html">validate_SE</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in validate_SE(se): Assertion on 'exp_assay_names' failed: Must be a subset of {'RawTreated','Controls','Averaged','excess','all_iso_points','isobolograms','scores','Metrics'}, but has additional elements {'Normalized'}.</span></span></code></pre></div>
 <p>There is also a group of functions to validate data used in the gDR
-application like <strong>is_combo_data</strong>,
-<strong>has_single_codrug_data</strong>,
-<strong>has_valid_codrug_data</strong>,
-<strong>get_additional_variables</strong>.</p>
+application:</p>
+<ul>
+<li>is_combo_data</li>
+<li>has_single_codrug_data</li>
+<li>has_valid_codrug_data</li>
+<li>get_additional_variables</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="prettifying">Prettifying<a class="anchor" aria-label="anchor" href="#prettifying"></a>
+</h3>
+<p>Prettifying involves transforming data into a more descriptive and
+human-readable version. This is particularly useful for front-end
+applications where user-friendly names are preferred over technical or
+abbreviated terms.</p>
+<p>In gdrplatform there are two entities that can be prettified:</p>
+<ul>
+<li>colnames of data.tables</li>
+<li>assay names</li>
+</ul>
+<div class="section level4">
+<h4 id="colnames-of-data-tables">Colnames of data.table(s)<a class="anchor" aria-label="anchor" href="#colnames-of-data-tables"></a>
+</h4>
+<p>One can prettify the columns of the data.table(s) with a single
+function called <code>prettify_flat_metrics</code>.</p>
+<pre><code><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_testdata.html">get_testdata</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"raw_data"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/prettify_flat_metrics.html">prettify_flat_metrics</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span>, human_readable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
+<p>The <code>prettify_flat_metrics</code> function is in fact a wrapper
+for the following actions:</p>
+<ul>
+<li>conversion of the normalization-specific metric names via the
+<code>.convert_norm_specific_metrics</code> function</li>
+<li>moving the GDS source info to the end of the column name via the
+<code>.prettify_GDS_columns</code>
+</li>
+<li>prettifying the metadata columns via the
+<code>.prettify_metadata_columns</code> function</li>
+<li>prettifying the metric columns via the
+<code>.prettify_metric_columns</code> function</li>
+<li>prettifying the co-treatment column names. via the
+<code>.prettify_cotreatment_columns</code>
+</li>
+<li>minor corrections (removal of ‘gDR’ and “_” prefixes, removal of
+spaces at the end/beginning, other)</li>
+</ul>
+<p>In case of data.table(s) with combo excess and score assays some of
+the columns are prettified with the dedicated helper functions instead
+of using <code>prettify_flat_metrics</code>:</p>
+<ul>
+<li>get_combo_excess_field_names()</li>
+<li>get_combo_score_field_names()</li>
+</ul>
+<p>These helpers depend on the DATA_COMBO_INFO_TBL, (gDRutils) internal
+data.table.</p>
+</div>
+<div class="section level4">
+<h4 id="assay-names">Assay names<a class="anchor" aria-label="anchor" href="#assay-names"></a>
+</h4>
+<p>The function <code>get_assay_names</code> is the primary solution for
+obtaining prettified versions of the assay names. It wraps the
+<code>get_env_assay_names</code> function which depends on
+ASSAY_INFO_TBL, (gDRutils) internal data.table.</p>
+<p>There are some functions that wrap the <code>get_assay_names</code>
+function for combo data:</p>
+<ul>
+<li>get_combo_assay_names</li>
+<li>get_combo_score_assay_names</li>
+<li>get_combo_base_assay_names</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="sessioninfo">SessionInfo<a class="anchor" aria-label="anchor" href="#sessioninfo"></a>
 </h2>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
@@ -416,7 +621,7 @@ application like <strong>is_combo_data</strong>,
 <span><span class="co">#&gt;  [5] GenomicRanges_1.54.1        GenomeInfoDb_1.38.8        </span></span>
 <span><span class="co">#&gt;  [7] IRanges_2.36.0              S4Vectors_0.40.2           </span></span>
 <span><span class="co">#&gt;  [9] BiocGenerics_0.48.1         MatrixGenerics_1.14.0      </span></span>
-<span><span class="co">#&gt; [11] matrixStats_1.3.0           gDRutils_1.3.2             </span></span>
+<span><span class="co">#&gt; [11] matrixStats_1.3.0           gDRutils_1.3.3             </span></span>
 <span><span class="co">#&gt; [13] BiocStyle_2.30.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
