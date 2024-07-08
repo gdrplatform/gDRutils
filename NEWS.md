@@ -1,5 +1,8 @@
-## gDRutils 1.3.3 - 2024-07-03
+## gDRutils 1.3.4 - 2024-07-08
 * add residual sum of square and p-value to Metrics assay
+
+## gDRutils 1.3.3 - 2024-07-03
+* add vignette section about prettifying logic
 
 ## gDRutils 1.3.2 - 2024-06-24
 * fixed issue in vignette 
