@@ -137,7 +137,7 @@ fit_curves <- function(df_,
       n_point_cutoff = n_point_cutoff
     )
     df_gr$normalization_type <- "GR"
-    df_metrics <- rbind(df_metrics, df_gr)
+    df_metrics <- data.table::rbindlist(list(df_metrics, df_gr), fill = TRUE)
   }
   
   df_metrics$fit_source <- "gDR"
