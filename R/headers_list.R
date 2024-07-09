@@ -129,6 +129,8 @@
     "x_0",
     "h",
     "r2",
+    "p_value",
+    "rss",
     "x_sd_avg",
     "fit_type"
   )
@@ -148,6 +150,8 @@
       "E_0",
       "h_RV",
       "RV_r2",
+      "RV_p_value",
+      "RV_rss",
       "RV_sd_avg",
       "fit_type_RV"
     ),
@@ -162,6 +166,8 @@
       "GR_0",
       "h_GR",
       "GR_r2",
+      "GR_p_value",
+      "GR_rss",
       "GR_sd_avg",
       "fit_type_GR"
     )
