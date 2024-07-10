@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,58 +140,58 @@ To extract the reference data in to same format as 'Averaged' use <code>convert_
 <span class="r-out co"><span class="r-pr">#&gt;</span> 198: 0.8008496   0.8915995 0.096729600 -0.78626667 0.146270629 -0.74430401</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 199: 0.5882195   0.6900581 0.027440547  0.08603333 0.024485958  0.09662172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 200: 1.1148134   1.3059605 0.016239553 -0.76026667 0.026434030 -0.73401896</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        x_0        h        r2   x_sd_avg               fit_type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      &lt;num&gt;    &lt;num&gt;     &lt;num&gt;      &lt;num&gt;                 &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:     1 1.827031 0.9924695 0.02424423 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:     1 1.911901 0.9884406 0.03203268 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:     1 2.349599 0.9958511 0.02195104 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:     1 2.270093 0.9905292 0.03075240 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:     1 3.159939 0.9918874 0.02315049 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 196:     1 1.970723 0.9955609 0.04602459 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 197:     1 2.245643 0.9988156 0.03151223 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 198:     1 2.204685 0.9985705 0.06333498 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 199:     1 1.884916 0.9986615 0.03335063 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 200:     1 1.854308 0.9987249 0.07007818 DRC3pHillFitModelFixS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      maxlog10Concentration N_conc normalization_type fit_source Gnumber</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      &lt;num&gt;  &lt;int&gt;             &lt;char&gt;     &lt;char&gt;  &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:                     1      9                 RV        gDR  G00002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:                     1      9                 GR        gDR  G00002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:                     1      9                 RV        gDR  G00003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:                     1      9                 GR        gDR  G00003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:                     1      9                 RV        gDR  G00004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        x_0        h        r2      p_value         rss   x_sd_avg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1:     1 1.827031 0.9924695 3.705769e-08 0.002778822 0.02424423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2:     1 1.911901 0.9884406 1.660656e-07 0.004530345 0.03203268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3:     1 2.349599 0.9958511 4.600131e-09 0.002182340 0.02195104</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4:     1 2.270093 0.9905292 8.267143e-08 0.005670066 0.03075240</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5:     1 3.159939 0.9918874 4.809026e-08 0.001162341 0.02315049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196:     1 1.970723 0.9955609 5.828304e-09 0.017400921 0.04602459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197:     1 2.245643 0.9988156 5.718652e-11 0.001842420 0.03151223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198:     1 2.204685 0.9985705 1.104466e-10 0.008161064 0.06333498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199:     1 1.884916 0.9986615 8.773134e-11 0.001844621 0.03335063</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200:     1 1.854308 0.9987249 7.403286e-11 0.006484241 0.07007818</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    fit_type maxlog10Concentration N_conc normalization_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      &lt;char&gt;                 &lt;num&gt;  &lt;int&gt;             &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1: DRC3pHillFitModelFixS0                     1      9                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2: DRC3pHillFitModelFixS0                     1      9                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3: DRC3pHillFitModelFixS0                     1      9                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4: DRC3pHillFitModelFixS0                     1      9                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5: DRC3pHillFitModelFixS0                     1      9                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196: DRC3pHillFitModelFixS0                     1      9                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197: DRC3pHillFitModelFixS0                     1      9                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198: DRC3pHillFitModelFixS0                     1      9                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199: DRC3pHillFitModelFixS0                     1      9                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200: DRC3pHillFitModelFixS0                     1      9                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fit_source Gnumber DrugName drug_moa Duration    clid CellLineName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;   &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;       &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1:        gDR  G00002 drug_002    moa_A       72 CL00011  cellline_BA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2:        gDR  G00002 drug_002    moa_A       72 CL00011  cellline_BA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3:        gDR  G00003 drug_003    moa_A       72 CL00011  cellline_BA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4:        gDR  G00003 drug_003    moa_A       72 CL00011  cellline_BA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5:        gDR  G00004 drug_004    moa_A       72 CL00011  cellline_BA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 196:                     1      9                 GR        gDR  G00009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 197:                     1      9                 RV        gDR  G00010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 198:                     1      9                 GR        gDR  G00010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 199:                     1      9                 RV        gDR  G00011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 200:                     1      9                 GR        gDR  G00011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      DrugName drug_moa Duration    clid CellLineName   Tissue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;       &lt;char&gt;   &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1: drug_002    moa_A       72 CL00011  cellline_BA tissue_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2: drug_002    moa_A       72 CL00011  cellline_BA tissue_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3: drug_003    moa_A       72 CL00011  cellline_BA tissue_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4: drug_003    moa_A       72 CL00011  cellline_BA tissue_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5: drug_004    moa_A       72 CL00011  cellline_BA tissue_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 196: drug_009    moa_A       72 CL00020  cellline_KB tissue_z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 197: drug_010    moa_A       72 CL00020  cellline_KB tissue_z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 198: drug_010    moa_A       72 CL00020  cellline_KB tissue_z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 199: drug_011    moa_B       72 CL00020  cellline_KB tissue_z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 200: drug_011    moa_B       72 CL00020  cellline_KB tissue_z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      ReferenceDivisionTime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1:                    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2:                    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3:                    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4:                    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5:                    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 196:                    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 197:                    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 198:                    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 199:                    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 200:                    62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196:        gDR  G00009 drug_009    moa_A       72 CL00020  cellline_KB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197:        gDR  G00010 drug_010    moa_A       72 CL00020  cellline_KB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198:        gDR  G00010 drug_010    moa_A       72 CL00020  cellline_KB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199:        gDR  G00011 drug_011    moa_B       72 CL00020  cellline_KB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200:        gDR  G00011 drug_011    moa_B       72 CL00020  cellline_KB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue ReferenceDivisionTime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                 &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1: tissue_x                    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2: tissue_x                    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3: tissue_x                    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4: tissue_x                    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5: tissue_x                    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ---                               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196: tissue_z                    62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197: tissue_z                    62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198: tissue_z                    62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199: tissue_z                    62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200: tissue_z                    62</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
