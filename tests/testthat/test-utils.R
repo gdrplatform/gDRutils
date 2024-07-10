@@ -210,8 +210,8 @@ test_that("average_biological_replicates_dt works as expected", {
                                              human_readable = TRUE))
   avg_metrics_data <- average_biological_replicates_dt(dt = metrics_data,
                                                        var = "Ligand")
-  expect_equal(dim(metrics_data), c(60, 27))
-  expect_equal(dim(avg_metrics_data), c(40, 26))
+  expect_equal(dim(metrics_data), c(60, 29))
+  expect_equal(dim(avg_metrics_data), c(40, 28))
   expect_true(!"Ligand" %in% names(avg_metrics_data))
 })
 

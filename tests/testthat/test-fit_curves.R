@@ -254,7 +254,7 @@ test_that("predict_conc_from_efficacy works as expected", {
 test_that(".setup_metric_output works as expected", {
   obs <- .setup_metric_output()
   expect_true(is.list(obs))
-  expect_equal(length(obs), 14)
+  expect_equal(length(obs), 16)
 })
 
 

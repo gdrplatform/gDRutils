@@ -137,7 +137,7 @@ fit_curves <- function(df_,
       n_point_cutoff = n_point_cutoff
     )
     df_gr$normalization_type <- "GR"
-    df_metrics <- rbind(df_metrics, df_gr)
+    df_metrics <- data.table::rbindlist(list(df_metrics, df_gr), fill = TRUE)
   }
   
   df_metrics$fit_source <- "gDR"
@@ -283,7 +283,7 @@ logisticFit <-
     out$x_AOC <- 1 - out$x_mean
     out$x_AOC_range <- 1 - .predict_mean_from_model(fit_model, range_conc[1], range_conc[2])
     # F-test for the significance of the sigmoidal fit.
-    RSS2 <- sum(stats::residuals(fit_model) ^ 2, na.rm = TRUE)
+    out$rss <- RSS2 <- sum(stats::residuals(fit_model) ^ 2, na.rm = TRUE)
     RSS1 <- sum((df_$norm_values - mean(df_$norm_values, na.rm = TRUE)) ^ 2, na.rm = TRUE)
     out$r2 <- 1 - RSS2 / RSS1
     out$xc50 <- .calculate_xc50(ec50 = out$ec50, x0 = out$x_0, xInf = out$x_inf, h = out$h)
@@ -291,7 +291,7 @@ logisticFit <-
     nparam <- 3 + (is.na(x_0) * 1) # N of parameters in the growth curve; if (x0 = NA) {4}
     df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
     df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
-    f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
+    out$p_value <- f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
     if (all((!force_fit), 
            any(all(exists("f_pval"), !is.na(f_pval), f_pval >= pcutoff), is.na(out$ec50)))) {
       stop(fitting_handler(
