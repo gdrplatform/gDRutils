@@ -1,3 +1,6 @@
+## gDRutils 1.3.5 - 2024-07-12
+* move `get_combo_col_settings` and `get_iso_colors` to `gDRplots` package
+
 ## gDRutils 1.3.4 - 2024-07-08
 * add residual sum of square and p-value to Metrics assay
 
