@@ -130,9 +130,6 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_combo_base_assay_names.html</loc>
   </url>
   <url>
-    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_combo_col_settings.html</loc>
-  </url>
-  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_combo_excess_field_names.html</loc>
   </url>
   <url>
@@ -161,9 +158,6 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_idfs_synonyms.html</loc>
-  </url>
-  <url>
-    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_iso_colors.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_isobologram_columns.html</loc>
