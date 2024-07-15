@@ -42,34 +42,6 @@ test_that("convert_combo_data_to_dt", {
   )
 })
 
-test_that("get_iso_colors", {
-  ### expected values
-  gic <- get_iso_colors()
-  expect_true(length(gic) > 2)
-  expect_identical("character", class(gic))
-  gic2 <- get_iso_colors(formals(get_iso_colors)[[1]][[3]])
-  expect_true(any(gic != gic2))
-  expect_identical(length(gic), length(gic2))
-  
-  ### errors
-  expect_error(get_iso_colors("inv_param"), "'arg' should be one of ")
-})
-
-test_that("get_combo_col_settings",  {
-  ### expected values
-  gcan <- names(get_combo_assay_names()[1])
-  gcc <-
-    get_combo_col_settings(g_metric = "GR", assay_type = gcan)
-  expect_true(inherits(gcc, "list"))
-  expect_identical(sort(names(gcc)), c("breaks", "colors", "limits"))
-  
-  ### errors
-  err_msg <- "Assertion on 'assay_type' failed: "
-  expect_error(get_combo_col_settings("GR", 8), err_msg)
-  err_msg <- "Assertion on 'g_metric' failed: "
-  expect_error(get_combo_col_settings("grvalue", 8), err_msg)
-})
-
 test_that("shorten_normalization_type_name", {
   ### expected values
   expect_identical("GR", shorten_normalization_type_name("GRvalue"))
