@@ -176,7 +176,7 @@ fit_curves <- function(df_,
 #'
 #' @details
 #' Implementation of the genedata approach for curve fit:
-#' https://screener.genedata.com/documentation/display/DOC15/Business+Rules+for+Dose-Response+Curve+Fitting+Model+Selection+and+Fit+Validity #nolint
+#' https://screener.genedata.com/documentation/display/DOC21/Business-Rules-for-Dose-Response-Curve-Fitting,-Model-Selection,-and-Fit-Validity.html #nolint
 #'
 #' The output parameter names correspond to the following definitions:
 #' \describe{
