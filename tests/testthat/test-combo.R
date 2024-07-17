@@ -82,6 +82,16 @@ test_that("define_matrix_grid_positions", {
   expect_equal(res_2$axis_1, res$axis_1)
   expect_equal(dim(res_2$axis_2), c(0, 4))
   
+  res_3 <-  define_matrix_grid_positions(conc, c(1.2))
+  expect_is(res_3, "list")
+  expect_length(res_3, 2)
+  expect_equal(res_3[["axis_2"]]$pos_x, log10(1.2))
+  
+  res_4 <-  define_matrix_grid_positions(conc, c(0, 1.2))
+  expect_is(res_4, "list")
+  expect_length(res_4, 2)
+  expect_equal(res_4[["axis_2"]][conc_2 == 0, ]$pos_x, log10(1.2) - 0.5)
+  
   expect_error(define_matrix_grid_positions(conc, LETTERS[1:5]))
   expect_error(define_matrix_grid_positions(NULL, conc))
 })
