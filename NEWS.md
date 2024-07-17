@@ -1,3 +1,6 @@
+## gDRutils 1.3.6 - 2024-07-17
+* update `define_matrix_grid_positions`
+
 ## gDRutils 1.3.5 - 2024-07-12
 * move `get_combo_col_settings` and `get_iso_colors` to `gDRplots` package
 

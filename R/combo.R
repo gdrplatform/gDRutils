@@ -132,7 +132,13 @@ define_matrix_grid_positions <- function(conc1, conc2) {
   checkmate::assert_numeric(conc2)
   
   .generate_gap_for_single_agent <- function(x) {
+    if (NROW(x) == 1) {
+      x
+    } else if (NROW(x) > 2) {
     2 * x[2] - x[3] - log10(1.5)
+    } else {
+      x[2] - 0.5
+    }
   } 
   
   conc_1 <- sort(unique(round_concentration(conc1)))
