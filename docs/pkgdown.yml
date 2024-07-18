@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   gDRutils: gDRutils.html
-last_built: 2024-07-15T13:37Z
+last_built: 2024-07-18T08:38Z
 urls:
   reference: https://gdrplatform.github.io/gDRstyle/reference
   article: https://gdrplatform.github.io/gDRstyle/articles
