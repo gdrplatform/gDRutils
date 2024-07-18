@@ -137,7 +137,7 @@ define_matrix_grid_positions <- function(conc1, conc2) {
     } else if (NROW(x) > 2) {
     2 * x[2] - x[3] - log10(1.5)
     } else {
-      x[2] - 0.5 # diff(log10(c(0, 10^(seq(-3, 1, 0.5)))))
+      x[2] - 0.5 # diff(log10(c(0, 10^(seq(-3, 1, 0.5))))) # nolint
     }
   } 
   
