@@ -34,7 +34,7 @@
 #'  \item{"drug_name": String of column name containing human-friendly drug names}
 #'  \item{"drug_moa": String of column name containing metadata for drug mode of action}
 #'  \item{"duration": String of column name containing metadata on duration that cells were treated (in hours)}
-#'  \item{"template": String of collumn name containing template metadata}
+#'  \item{"template": String of column name containing template metadata}
 #'  \item{"untreated_tag": Character vector of entries that identify control, untreated wells}
 #'  \item{"well_position": Character vector of column names containing metadata on well positions on a plate}
 #' }
