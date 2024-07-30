@@ -698,14 +698,14 @@ get_additional_variables <- function(dt_list,
   if (data.table::is.data.table(dt_list)) {
     dt_list <- list(dt_list)
   }
-  checkmate::assert_list(pidfs)
   checkmate::assert_flag(unique)
+  checkmate::assert_flag(prettified)
   
   if (prettified) {
     headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
     pidfs <- get_prettified_identifiers()
     idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
-    idfs <- setdiff(unique(c(headers, pidfs), idf2keep))
+    idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
   } else {
     headers <- unlist(get_header())
     pidfs <- get_env_identifiers()
