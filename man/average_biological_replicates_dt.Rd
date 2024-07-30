@@ -7,7 +7,7 @@
 average_biological_replicates_dt(
   dt,
   var,
-  pidfs = get_prettified_identifiers(),
+  prettified = FALSE,
   fixed = TRUE,
   geometric_average_fields = get_header("metric_average_fields")$geometric_mean
 )
@@ -17,9 +17,9 @@ average_biological_replicates_dt(
 
 \item{var}{String representing additional metadata of replicates}
 
-\item{pidfs}{list of prettified identifiers}
+\item{prettified}{Flag indicating if the provided identifiers in the dt are prettified}
 
-\item{fixed}{Flag should be add fix for -Inf in geometric mean.}
+\item{fixed}{Flag indicating whether to add a fix for -Inf in the geometric mean.}
 
 \item{geometric_average_fields}{Character vector of column names in \code{dt}
 to take the geometric average of.}

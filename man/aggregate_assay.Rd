@@ -2,7 +2,7 @@
 % Please edit documentation in R/concatentate_SEs.R
 \name{aggregate_assay}
 \alias{aggregate_assay}
-\title{Aggregate a \code{BumpyMatrix} assay by a given aggreation function.}
+\title{Aggregate a \code{BumpyMatrix} assay by a given aggregation function.}
 \usage{
 aggregate_assay(asy, by, FUN)
 }
