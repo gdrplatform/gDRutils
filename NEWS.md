@@ -1,3 +1,6 @@
+## gDRutils 1.3.7 - 2024-07-30
+* refactor `average_biological_replicates_dt` and `get_additional_variables` to support unprettified identifiers
+
 ## gDRutils 1.3.6 - 2024-07-17
 * update `define_matrix_grid_positions`
 
@@ -180,7 +183,7 @@
 * make linter happy
 
 ## gDRutils 0.99.2 - 2023-04-12
-* add licence
+* add license
 
 ## gDRutils 0.99.1 - 2023-04-07
 * update maintainer
@@ -248,7 +251,7 @@
   * convert and validate MAE summary next to the SE experiments
 
 ## gDRutils 0.1.3.3 - 2022-07-25
-* move json validation/convertion logic from gDRelastic
+* move json validation/conversion logic from gDRelastic
 
 ## gDRutils 0.1.3.2 - 2022-07-11
 * standardize MAE using default gDR identifiers
@@ -350,7 +353,7 @@
 * add unit tests for combo-related functions
 
 ## gDRutils 0.1.0.19 - 2021-11-04
-* do not create a nested list of identifiers during mergin SE
+* do not create a nested list of identifiers during merging SE
 
 ## gDRutils 0.1.0.18 - 2021-11-01
 * fix issued with new SummarizedExperiment
