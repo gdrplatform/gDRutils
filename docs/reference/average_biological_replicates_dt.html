@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">average_biological_replicates_dt</span><span class="op">(</span></span>
 <span>  <span class="va">dt</span>,</span>
 <span>  <span class="va">var</span>,</span>
-<span>  pidfs <span class="op">=</span> <span class="fu"><a href="identifiers.html">get_prettified_identifiers</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  prettified <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  fixed <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  geometric_average_fields <span class="op">=</span> <span class="fu"><a href="headers.html">get_header</a></span><span class="op">(</span><span class="st">"metric_average_fields"</span><span class="op">)</span><span class="op">$</span><span class="va">geometric_mean</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -73,12 +73,12 @@
 <dd><p>String representing additional metadata of replicates</p></dd>
 
 
-<dt>pidfs</dt>
-<dd><p>list of prettified identifiers</p></dd>
+<dt>prettified</dt>
+<dd><p>Flag indicating if the provided identifiers in the dt are prettified</p></dd>
 
 
 <dt>fixed</dt>
-<dd><p>Flag should be add fix for -Inf in geometric mean.</p></dd>
+<dd><p>Flag indicating whether to add a fix for -Inf in the geometric mean.</p></dd>
 
 
 <dt>geometric_average_fields</dt>
