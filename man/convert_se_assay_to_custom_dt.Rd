@@ -24,7 +24,7 @@ condcut some post processing steps.
 Current strategy is per-assay specific.
 \enumerate{
 \item combo assays: conversion to data.table only (with \code{wide_structure} = FALSE)
-\item 'Metrics' asssay can be converted to three types of outputs:
+\item 'Metrics' assay can be converted to three types of outputs:
 }
 \itemize{
 \item Metrics_initial (conversion to data.table only, with \code{wide_structure} = FALSE)
@@ -37,7 +37,7 @@ Current strategy is per-assay specific.
 \item Metrics (same as Metrics_raw + capVals)
 }
 \enumerate{
-\item 'Normalization' and 'Averaged' asssay:
+\item 'Normalization' and 'Averaged' assay:
 }
 \itemize{
 \item conversion to data.table (with \code{wide_structure} = TRUE)

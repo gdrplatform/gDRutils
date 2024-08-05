@@ -431,8 +431,8 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #'
 #' @param dt data.table with Metric data
 #' @param var String representing additional metadata of replicates
-#' @param pidfs list of prettified identifiers
-#' @param fixed Flag should be add fix for -Inf in geometric mean.
+#' @param prettified Flag indicating if the provided identifiers in the dt are prettified
+#' @param fixed Flag indicating whether to add a fix for -Inf in the geometric mean.
 #' @param geometric_average_fields Character vector of column names in \code{dt} 
 #' to take the geometric average of.
 #' 
@@ -447,17 +447,29 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 average_biological_replicates_dt <- function(
     dt,
     var,
-    pidfs = get_prettified_identifiers(),
+    prettified = FALSE,
     fixed = TRUE,
     geometric_average_fields = get_header("metric_average_fields")$geometric_mean) {
   data <- data.table::copy(dt)
+  
+  if (prettified) {
+    pidfs <- get_prettified_identifiers()
+    iso_cols <- prettify_flat_metrics(get_header("iso_position"),
+                                      human_readable = TRUE)
+    id_cols <- prettify_flat_metrics(get_header("id"), human_readable = TRUE)
+    
+  } else {
+    pidfs <- get_env_identifiers()
+    iso_cols <- get_header("iso_position")
+    id_cols <- prettify_flat_metrics(get_header("id"))
+  }
+  
   average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs),
                                                                var,
-                                                               prettify_flat_metrics(get_header("iso_position"),
-                                                                                     human_readable = TRUE)))
+                                                               iso_cols))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
   group_by <- setdiff(names(data),
-                      c(average_fields, var, prettify_flat_metrics(get_header("id"), human_readable = TRUE)))
+                      c(average_fields, var, id_cols))
   group_by <- grep("Fit Type", group_by, invert = TRUE, value = TRUE)
   data <- data[, (var) := NULL][, 
                                 (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
@@ -662,9 +674,9 @@ remove_codrug_data <-
 #' Identify and return additional variables in list of dt
 #'
 #' @param dt_list list of data.table or data.table containing additional variables
-#' @param pidfs list of prettified identifiers
 #' @param unique logical flag indicating if all variables should be returned 
 #' or only those containing more than one unique value
+#' @param prettified Flag indicating if the provided identifiers in the dt are prettified
 #' 
 #' @examples
 #' dt <- data.table::data.table(
@@ -679,20 +691,29 @@ remove_codrug_data <-
 #' @keywords combination_data
 #' @export
 get_additional_variables <- function(dt_list,
-                                     pidfs = get_prettified_identifiers(),
-                                     unique = FALSE) {
+                                     unique = FALSE,
+                                     prettified = FALSE) {
   
   
   if (data.table::is.data.table(dt_list)) {
     dt_list <- list(dt_list)
   }
-  checkmate::assert_list(pidfs)
   checkmate::assert_flag(unique)
+  checkmate::assert_flag(prettified)
   
-  headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
-  idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
-  idfs <- setdiff(unique(c(headers, get_prettified_identifiers())), idf2keep)
+  if (prettified) {
+    headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
+    pidfs <- get_prettified_identifiers()
+    idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
+    idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
+  } else {
+    headers <- unlist(get_header())
+    pidfs <- get_env_identifiers()
+    idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
+    idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
+  }
   
+
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
     setdiff(names(x), idfs)
   })))

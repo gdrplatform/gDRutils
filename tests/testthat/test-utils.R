@@ -209,7 +209,8 @@ test_that("average_biological_replicates_dt works as expected", {
                        prettify_flat_metrics(names(metrics_data),
                                              human_readable = TRUE))
   avg_metrics_data <- average_biological_replicates_dt(dt = metrics_data,
-                                                       var = "Ligand")
+                                                       var = "Ligand",
+                                                       prettified = TRUE)
   expect_equal(dim(metrics_data), c(60, 29))
   expect_equal(dim(avg_metrics_data), c(40, 28))
   expect_true(!"Ligand" %in% names(avg_metrics_data))
@@ -445,12 +446,12 @@ test_that("get_additional_variables works as expected", {
                                    Ligand = c(rep(0.5, 10)),
                                    Ligand = c(rep(0.1, 5), rep(0, 5)))
   
-  add_var1 <- get_additional_variables(rdata1)
-  add_var2_nonunique <- get_additional_variables(rdata2)
-  add_var2_unique <- get_additional_variables(rdata2, unique = TRUE)
-  add_var3 <- get_additional_variables(rdata3)
-  add_var4_nonunique <- get_additional_variables(rdata4)
-  add_var4_unique <- get_additional_variables(rdata4, unique = TRUE)
+  add_var1 <- get_additional_variables(rdata1, prettified = TRUE)
+  add_var2_nonunique <- get_additional_variables(rdata2, prettified = TRUE)
+  add_var2_unique <- get_additional_variables(rdata2, unique = TRUE, prettified = TRUE)
+  add_var3 <- get_additional_variables(rdata3, prettified = TRUE)
+  add_var4_nonunique <- get_additional_variables(rdata4, prettified = TRUE)
+  add_var4_unique <- get_additional_variables(rdata4, unique = TRUE, prettified = TRUE)
   
   expect_equal(add_var1, "Ligand")
   expect_equal(add_var2_nonunique, NULL)

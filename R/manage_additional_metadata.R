@@ -87,7 +87,7 @@ modifyData.drug_name2 <- function(x, option, keep, ...) {
   
   if (option == "average") {
     # drop data and keep only the requested value
-    x <- average_biological_replicates_dt(x, drug_name2)
+    x <- average_biological_replicates_dt(x, drug_name2, prettified = TRUE)
   } else {
     # ensure concentration of co-drug is a numeric value
     if (is.factor(x[[conc2]])) {
@@ -133,7 +133,7 @@ modifyData.data_source <- function(x, option, keep, ...) {
   
   if (option == "average") {
     # drop data and keep only the requested value
-    x <- average_biological_replicates_dt(x, dt_src)
+    x <- average_biological_replicates_dt(x, dt_src, prettified = TRUE)
   } else {
     duplicated_rows <- get_duplicated_rows(x, c(drug, clid))
     if (option == "toDrug") {
@@ -177,7 +177,7 @@ modifyData.default <- function(x, option, keep, ...) {
   
   if (option == "average") {
     # drop data and keep only the requested value
-    x <- average_biological_replicates_dt(x, additional_var)
+    x <- average_biological_replicates_dt(x, additional_var, prettified = TRUE)
   } else {
     if (option == "toDrug") {
       x <- modify_label(x, drug_name, additional_var)

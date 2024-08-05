@@ -206,7 +206,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
        colData = colData[, setdiff(colnames(colData), "column")])
 }
 
-#' Aggregate a \code{BumpyMatrix} assay by a given aggreation function.
+#' Aggregate a \code{BumpyMatrix} assay by a given aggregation function.
 #'
 #' Aggregation can only be performed on nested variables.
 #'

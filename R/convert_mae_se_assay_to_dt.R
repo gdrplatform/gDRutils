@@ -235,14 +235,14 @@ convert_mae_assay_to_dt <- function(mae,
 #'
 #' Current strategy is per-assay specific.
 #' 1. combo assays: conversion to data.table only (with `wide_structure` = FALSE)
-#' 2. 'Metrics' asssay can be converted to three types of outputs:
+#' 2. 'Metrics' assay can be converted to three types of outputs:
 #'   - Metrics_initial (conversion to data.table only, with `wide_structure` = FALSE)
 #'   - Metrics_raw: same as Metrics_initial followed by:
 #'     * fix for 'EC50' and 'Metrics_rownames'
 #'     * flatten
 #'     * prettifying and dropping excess variables
 #'   - Metrics (same as Metrics_raw + capVals)
-#' 3. 'Normalization' and 'Averaged' asssay:
+#' 3. 'Normalization' and 'Averaged' assay:
 #'   - conversion to data.table (with `wide_structure` = TRUE)
 #'   - prettifying and dropping excess variables
 #'
