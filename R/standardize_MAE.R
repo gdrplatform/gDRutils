@@ -277,3 +277,122 @@ refine_rowdata <- function(rd, se, default_v = "Undefined") {
   }
   rd
 }
+
+
+#' Set Unique Parental Identifiers
+#'
+#' This function sets the `CellLineName` field in 
+#' `colData` to be unique by appending the `clid` in parentheses for duplicates.
+#'
+#' @param se A SummarizedExperiment object.
+#' @return A SummarizedExperiment object with unique `CellLineName` in `colData`.
+#' @examples
+#' se <- SummarizedExperiment::SummarizedExperiment(
+#'   assays = list(counts = matrix(1:4, ncol = 2)),
+#'   colData = S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
+#' )
+#' se <- set_unique_cl_names(se)
+#' @export
+#' @keywords standardize_MAE
+set_unique_cl_names <- function(se) {
+  checkmate::assertClass(se, "SummarizedExperiment")
+  
+  col_data <- SummarizedExperiment::colData(se)
+  cl_name_idf <- get_env_identifiers("cellline_name")
+  clid_idf <- get_env_identifiers("cellline")
+  
+  if (!is.null(col_data[[cl_name_idf]])) {
+    duplicated_ids <- col_data[[cl_name_idf]][duplicated(col_data[[cl_name_idf]])]
+    if (length(duplicated_ids) > 0) {
+      for (dup_id in unique(duplicated_ids)) {
+        dup_indices <- which(col_data[[cl_name_idf]] == dup_id)
+        col_data[[cl_name_idf]][dup_indices] <- paste0(col_data[[cl_name_idf]][dup_indices],
+                                                       " (", col_data[[clid_idf]][dup_indices], ")")
+      }
+      SummarizedExperiment::colData(se) <- col_data
+    }
+  }
+  return(se)
+}
+
+#' Set Unique Drug Names
+#'
+#' This function sets the `DrugName`, `DrugName_2`, and `DrugName_3` fields in `rowData`
+#' to be unique by appending the corresponding `Gnumber`, `Gnumber_2`, and `Gnumber_3` in parentheses for duplicates.
+#'
+#' @param se A SummarizedExperiment object.
+#' @return A SummarizedExperiment object with unique `DrugName` fields in `rowData`.
+#' @examples
+#' se <- SummarizedExperiment::SummarizedExperiment(
+#'   assays = list(counts = matrix(1:9, ncol = 3)),
+#'   rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA", "DrugB"),
+#'   Gnumber = c("G1", "G2", "G5"),
+#'   DrugName_2 = c("DrugC", "DrugC", "DrugD"),
+#'   Gnumber_2 = c("G3", "G4", "G5")
+#' ))
+#' se <- set_unique_drug_names(se)
+#' @export
+#' @keywords standardize_MAE
+set_unique_drug_names <- function(se) {
+  checkmate::assertClass(se, "SummarizedExperiment")
+  
+  row_data <- SummarizedExperiment::rowData(se)
+  drug_columns <- unlist(get_env_identifiers(c("drug_name", "drug_name2", "drug_name3"), simplify = FALSE))
+  gnumber_columns <- unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE))
+  
+  for (i in seq_along(drug_columns)) {
+    drug_col <- drug_columns[i]
+    gnumber_col <- gnumber_columns[i]
+    
+    if (!is.null(row_data[[drug_col]])) {
+      duplicated_drugs <- row_data[[drug_col]][duplicated(row_data[[drug_col]])]
+      if (length(duplicated_drugs) > 0) {
+        for (dup_drug in unique(duplicated_drugs)) {
+          dup_indices <- which(row_data[[drug_col]] == dup_drug)
+          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices], " (", row_data[[gnumber_col]][dup_indices], ")")
+        }
+        SummarizedExperiment::rowData(se) <- row_data
+      }
+    }
+  }
+  return(se)
+}
+
+#' Set Unique Identifiers in MultiAssayExperiment
+#'
+#' This function sets the `CellLineName` in `colData` and `DrugName` fields in `rowData`
+#' to be unique for each `SummarizedExperiment` in a `MultiAssayExperiment`.
+#'
+#' @param mae A MultiAssayExperiment object.
+#' @return A MultiAssayExperiment object with unique identifiers.
+#' @examples
+#' se1 <- SummarizedExperiment::SummarizedExperiment(
+#'   assays = list(counts = matrix(1:4, ncol = 2)),
+#'   colData = S4Vectors::DataFrame(parental_identifier = c("ID1", "ID1"), clid = c("C1", "C2")),
+#'   rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
+#' )
+#' rownames(SummarizedExperiment::colData(se1)) <- c("cl1", "cl2")
+#' rownames(SummarizedExperiment::rowData(se1)) <- c("g1", "g")
+#' se2 <- SummarizedExperiment::SummarizedExperiment(
+#'   assays = list(counts = matrix(5:8, ncol = 2)),
+#'   colData = S4Vectors::DataFrame(parental_identifier = c("ID2", "ID2"), clid = c("C3", "C4")),
+#'   rowData = S4Vectors::DataFrame(DrugName = c("DrugB", "DrugB"), Gnumber = c("G3", "G4"))
+#' )
+#' rownames(SummarizedExperiment::colData(se2)) <- c("cl3", "cl4")
+#' rownames(SummarizedExperiment::rowData(se2)) <- c("g3", "g4")
+#' mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list(se1 = se1, se2 = se2))
+#' mae <- set_unique_identifiers(mae)
+#' @export
+#' @keywords standardize_MAE
+set_unique_identifiers <- function(mae) {
+  checkmate::assertClass(mae, "MultiAssayExperiment")
+  
+  for (name in names(MultiAssayExperiment::experiments(mae))) {
+    se <- MultiAssayExperiment::experiments(mae)[[name]]
+    se <- set_unique_cl_names(se)
+    se <- set_unique_drug_names(se)
+    MultiAssayExperiment::experiments(mae)[[name]] <- se
+  }
+  
+  return(mae)
+}
