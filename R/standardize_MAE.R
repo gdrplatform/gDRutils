@@ -349,7 +349,8 @@ set_unique_drug_names <- function(se) {
       if (length(duplicated_drugs) > 0) {
         for (dup_drug in unique(duplicated_drugs)) {
           dup_indices <- which(row_data[[drug_col]] == dup_drug)
-          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices], " (", row_data[[gnumber_col]][dup_indices], ")")
+          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices],
+                                                      " (", row_data[[gnumber_col]][dup_indices], ")")
         }
         SummarizedExperiment::rowData(se) <- row_data
       }
