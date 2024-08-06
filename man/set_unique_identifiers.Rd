@@ -13,7 +13,7 @@ set_unique_identifiers(mae)
 A MultiAssayExperiment object with unique identifiers.
 }
 \description{
-This function sets the \code{parental_identifier} in \code{colData} and \code{DrugName} fields in \code{rowData}
+This function sets the \code{CellLineName} in \code{colData} and \code{DrugName} fields in \code{rowData}
 to be unique for each \code{SummarizedExperiment} in a \code{MultiAssayExperiment}.
 }
 \examples{
@@ -22,11 +22,15 @@ se1 <- SummarizedExperiment::SummarizedExperiment(
   colData = S4Vectors::DataFrame(parental_identifier = c("ID1", "ID1"), clid = c("C1", "C2")),
   rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
 )
+rownames(SummarizedExperiment::colData(se1)) <- c("cl1", "cl2")
+rownames(SummarizedExperiment::rowData(se1)) <- c("g1", "g")
 se2 <- SummarizedExperiment::SummarizedExperiment(
   assays = list(counts = matrix(5:8, ncol = 2)),
   colData = S4Vectors::DataFrame(parental_identifier = c("ID2", "ID2"), clid = c("C3", "C4")),
   rowData = S4Vectors::DataFrame(DrugName = c("DrugB", "DrugB"), Gnumber = c("G3", "G4"))
 )
+rownames(SummarizedExperiment::colData(se2)) <- c("cl3", "cl4")
+rownames(SummarizedExperiment::rowData(se2)) <- c("g3", "g4")
 mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list(se1 = se1, se2 = se2))
 mae <- set_unique_identifiers(mae)
 }

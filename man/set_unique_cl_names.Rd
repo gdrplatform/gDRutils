@@ -10,16 +10,16 @@ set_unique_cl_names(se)
 \item{se}{A SummarizedExperiment object.}
 }
 \value{
-A SummarizedExperiment object with unique \code{parental_identifier} in \code{colData}.
+A SummarizedExperiment object with unique \code{CellLineName} in \code{colData}.
 }
 \description{
-This function sets the \code{parental_identifier} field in
+This function sets the \code{CellLineName} field in
 \code{colData} to be unique by appending the \code{clid} in parentheses for duplicates.
 }
 \examples{
 se <- SummarizedExperiment::SummarizedExperiment(
   assays = list(counts = matrix(1:4, ncol = 2)),
-  colData = S4Vectors::DataFrame(parental_identifier = c("ID1", "ID1"), clid = c("C1", "C2"))
+  colData = S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
 )
 se <- set_unique_cl_names(se)
 }
