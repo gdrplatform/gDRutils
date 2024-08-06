@@ -93,3 +93,48 @@ test_that("get_optional_rowdata_fields works as expected", {
   opt_idfs2 <- get_optional_rowdata_fields(se2)
   expect_equal(opt_idfs2, idfs[["drug_moa"]])
 })
+
+
+test_that("set_unique_cl_names works correctly", {
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = matrix(1:4, ncol = 2)),
+    colData = S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
+  )
+  se <- set_unique_cl_names(se)
+  
+  expect_equal(SummarizedExperiment::colData(se)$CellLineName, c("ID1 (C1)", "ID1 (C2)"))
+})
+
+test_that("set_unique_drug_names works correctly", {
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = matrix(1:4, ncol = 2)),
+    rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
+  )
+  se <- set_unique_drug_names(se)
+  
+  expect_equal(SummarizedExperiment::rowData(se)$DrugName, c("DrugA (G1)", "DrugA (G2)"))
+})
+
+test_that("set_unique_identifiers works correctly", {
+  se1 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = matrix(1:4, ncol = 2)),
+    colData = S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2")),
+    rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
+  )
+  rownames(SummarizedExperiment::colData(se1)) <- c("Sample1", "Sample2")
+  rownames(SummarizedExperiment::rowData(se1)) <- c("Gene1", "Gene2")
+  se2 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = matrix(5:8, ncol = 2)),
+    colData = S4Vectors::DataFrame(CellLineName = c("ID2", "ID2"), clid = c("C3", "C4")),
+    rowData = S4Vectors::DataFrame(DrugName = c("DrugB", "DrugB"), Gnumber = c("G3", "G4"))
+  )
+  rownames(SummarizedExperiment::colData(se2)) <- c("Sample3", "Sample4")
+  rownames(SummarizedExperiment::rowData(se2)) <- c("Gene3", "Gene4")
+  mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list(se1 = se1, se2 = se2))
+  mae <- set_unique_identifiers(mae)
+  
+  expect_equal(SummarizedExperiment::colData(mae[[1]])$CellLineName, c("ID1 (C1)", "ID1 (C2)"))
+  expect_equal(SummarizedExperiment::rowData(mae[[1]])$DrugName, c("DrugA (G1)", "DrugA (G2)"))
+  expect_equal(SummarizedExperiment::colData(mae[[2]])$CellLineName, c("ID2 (C3)", "ID2 (C4)"))
+  expect_equal(SummarizedExperiment::rowData(mae[[2]])$DrugName, c("DrugB (G3)", "DrugB (G4)"))
+})
