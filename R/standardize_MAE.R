@@ -354,7 +354,8 @@ set_unique_drug_names <- function(se) {
       for (dup_drug in unique_drugs) {
         dup_indices <- which(row_data[[drug_col]] == dup_drug)
         if (length(unique(row_data[[gnumber_col]][dup_indices])) > 1) {
-          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices], " (", row_data[[gnumber_col]][dup_indices], ")")
+          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices],
+                                                      " (", row_data[[gnumber_col]][dup_indices], ")")
         }
       }
     }
