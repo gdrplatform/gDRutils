@@ -295,19 +295,19 @@ refine_rowdata <- function(rd, se, default_v = "Undefined") {
 #' @export
 #' @keywords standardize_MAE
 set_unique_cl_names <- function(se) {
-  checkmate::assertClass(se, "SummarizedExperiment")
+  checkmate::assert_class(se, "SummarizedExperiment")
   
   col_data <- SummarizedExperiment::colData(se)
-  cl_name_idf <- get_env_identifiers("cellline_name")
-  clid_idf <- get_env_identifiers("cellline")
+  cellline_name <- get_env_identifiers("cellline_name")
+  clid <- get_env_identifiers("cellline")
   
-  if (!is.null(col_data[[cl_name_idf]])) {
-    duplicated_ids <- col_data[[cl_name_idf]][duplicated(col_data[[cl_name_idf]])]
+  if (!is.null(col_data[[cellline_name]])) {
+    duplicated_ids <- col_data[[cellline_name]][duplicated(col_data[[cellline_name]])]
     if (length(duplicated_ids) > 0) {
       for (dup_id in unique(duplicated_ids)) {
-        dup_indices <- which(col_data[[cl_name_idf]] == dup_id)
-        col_data[[cl_name_idf]][dup_indices] <- paste0(col_data[[cl_name_idf]][dup_indices],
-                                                       " (", col_data[[clid_idf]][dup_indices], ")")
+        dup_indices <- which(col_data[[cellline_name]] == dup_id)
+        col_data[[cellline_name]][dup_indices] <- paste0(col_data[[cellline_name]][dup_indices],
+                                                       " (", col_data[[clid]][dup_indices], ")")
       }
       SummarizedExperiment::colData(se) <- col_data
     }
@@ -334,23 +334,27 @@ set_unique_cl_names <- function(se) {
 #' @export
 #' @keywords standardize_MAE
 set_unique_drug_names <- function(se) {
-  checkmate::assertClass(se, "SummarizedExperiment")
+  checkmate::assert_class(se, "SummarizedExperiment")
   
   row_data <- SummarizedExperiment::rowData(se)
-  drug_columns <- unlist(get_env_identifiers(c("drug_name", "drug_name2", "drug_name3"), simplify = FALSE))
-  gnumber_columns <- unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE))
+  drug_columns <- intersect(unlist(get_env_identifiers(c("drug_name", "drug_name2", "drug_name3"), simplify = FALSE)),
+                            names(row_data))
+  gnumber_columns <- intersect(unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE)),
+                               names(row_data))
   
   for (i in seq_along(drug_columns)) {
     drug_col <- drug_columns[i]
     gnumber_col <- gnumber_columns[i]
     
-    if (!is.null(row_data[[drug_col]])) {
-      duplicated_drugs <- row_data[[drug_col]][duplicated(row_data[[drug_col]])]
+    if (!is.null(row_data[[drug_col]]) & length(drug_col)) {
+      # Create a unique identifier for each row based on the combination of drug columns
+      combined_drug_names <- apply(row_data[, drug_columns, drop = FALSE], 1, paste, collapse = "_")
+      duplicated_drugs <- combined_drug_names[duplicated(combined_drug_names)]
+      
       if (length(duplicated_drugs) > 0) {
         for (dup_drug in unique(duplicated_drugs)) {
-          dup_indices <- which(row_data[[drug_col]] == dup_drug)
-          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices],
-                                                      " (", row_data[[gnumber_col]][dup_indices], ")")
+          dup_indices <- which(combined_drug_names == dup_drug)
+          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices], " (", row_data[[gnumber_col]][dup_indices], ")")
         }
         SummarizedExperiment::rowData(se) <- row_data
       }
@@ -386,7 +390,7 @@ set_unique_drug_names <- function(se) {
 #' @export
 #' @keywords standardize_MAE
 set_unique_identifiers <- function(mae) {
-  checkmate::assertClass(mae, "MultiAssayExperiment")
+  checkmate::assert_class(mae, "MultiAssayExperiment")
   
   for (name in names(MultiAssayExperiment::experiments(mae))) {
     se <- MultiAssayExperiment::experiments(mae)[[name]]
