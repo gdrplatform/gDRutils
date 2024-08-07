@@ -1,3 +1,6 @@
+## gDRutils 1.3.8 - 2024-08-06
+* add functions for setting unique identifiers in the colData and rowData of SE
+
 ## gDRutils 1.3.7 - 2024-07-30
 * refactor `average_biological_replicates_dt` and `get_additional_variables` to support unprettified identifiers
 
