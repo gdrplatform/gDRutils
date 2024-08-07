@@ -346,7 +346,7 @@ set_unique_drug_names <- function(se) {
     drug_col <- drug_columns[i]
     gnumber_col <- gnumber_columns[i]
     
-    if (!is.null(row_data[[drug_col]]) & length(drug_col)) {
+    if (!is.null(row_data[[drug_col]])) {
       # Create a unique identifier for each row based on the combination of drug columns
       combined_drug_names <- apply(row_data[, drug_columns, drop = FALSE], 1, paste, collapse = "_")
       duplicated_drugs <- combined_drug_names[duplicated(combined_drug_names)]
