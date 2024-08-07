@@ -347,19 +347,20 @@ set_unique_drug_names <- function(se) {
     gnumber_col <- gnumber_columns[i]
     
     if (!is.null(row_data[[drug_col]])) {
-      # Create a unique identifier for each row based on the combination of drug columns
-      combined_drug_names <- apply(row_data[, drug_columns, drop = FALSE], 1, paste, collapse = "_")
-      duplicated_drugs <- combined_drug_names[duplicated(combined_drug_names)]
+      # Find duplicated drug names
+      duplicated_drugs <- row_data[[drug_col]][duplicated(row_data[[drug_col]])]
+      unique_drugs <- unique(duplicated_drugs)
       
-      if (length(duplicated_drugs) > 0) {
-        for (dup_drug in unique(duplicated_drugs)) {
-          dup_indices <- which(combined_drug_names == dup_drug)
+      for (dup_drug in unique_drugs) {
+        dup_indices <- which(row_data[[drug_col]] == dup_drug)
+        if (length(unique(row_data[[gnumber_col]][dup_indices])) > 1) {
           row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices], " (", row_data[[gnumber_col]][dup_indices], ")")
         }
-        SummarizedExperiment::rowData(se) <- row_data
       }
     }
   }
+  
+  SummarizedExperiment::rowData(se) <- row_data
   return(se)
 }
 
