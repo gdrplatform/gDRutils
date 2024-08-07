@@ -113,6 +113,18 @@ test_that("set_unique_drug_names works correctly", {
   se <- set_unique_drug_names(se)
   
   expect_equal(SummarizedExperiment::rowData(se)$DrugName, c("DrugA (G1)", "DrugA (G2)"))
+  
+  se2 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = matrix(1:9, ncol = 3)),
+    rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA", "DrugB"),
+                                   Gnumber = c("G1", "G2", "G5"),
+                                   DrugName_2 = c("DrugC", "DrugC", "DrugD"),
+                                   Gnumber_2 = c("G3", "G3", "G5")
+    ))
+  
+  se2 <- set_unique_drug_names(se2)
+  expect_equal(SummarizedExperiment::rowData(se2)$DrugName, c("DrugA (G1)", "DrugA (G2)", "DrugB"))
+  expect_equal(SummarizedExperiment::rowData(se2)$DrugName_2, c("DrugC", "DrugC", "DrugD"))
 })
 
 test_that("set_unique_identifiers works correctly", {
