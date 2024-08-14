@@ -214,6 +214,13 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_equal(dim(metrics_data), c(60, 29))
   expect_equal(dim(avg_metrics_data), c(40, 28))
   expect_true(!"Ligand" %in% names(avg_metrics_data))
+  
+  avg_metrics_data2 <- average_biological_replicates_dt(dt = metrics_data,
+                                                        var = "Ligand",
+                                                        prettified = TRUE,
+                                                        add_sd = TRUE)
+  
+  expect_equal(dim(avg_metrics_data2), c(40, 44))
 })
 
 test_that("get_duplicated_rows works as expected", {
