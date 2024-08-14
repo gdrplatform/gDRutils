@@ -465,8 +465,7 @@ average_biological_replicates_dt <- function(
   
   average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var, iso_cols))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
-  group_by <- setdiff(names(data), c(average_fields, var, id_cols))
-  group_by <- grep("Fit Type", group_by, invert = TRUE, value = TRUE)
+  group_by <- setdiff(names(data), c(average_fields, var, id_cols, "fit_type", "Fit Type"))
   
   if (add_sd) {
     # Calculate standard deviation for both average_fields and geometric_average_fields
