@@ -9,7 +9,8 @@ average_biological_replicates_dt(
   var,
   prettified = FALSE,
   fixed = TRUE,
-  geometric_average_fields = get_header("metric_average_fields")$geometric_mean
+  geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
+  add_sd = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ average_biological_replicates_dt(
 
 \item{geometric_average_fields}{Character vector of column names in \code{dt}
 to take the geometric average of.}
+
+\item{add_sd}{Flag indicating whether to add standard deviation and count columns.}
 }
 \value{
 data.table without replicates
