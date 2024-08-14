@@ -425,8 +425,6 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
   exp(mean(log(x)))
 }
 
-#' Average biological replicates.
-#'
 #' Average biological replicates on the data table side. 
 #'
 #' @param dt data.table with Metric data
@@ -435,6 +433,7 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' @param fixed Flag indicating whether to add a fix for -Inf in the geometric mean.
 #' @param geometric_average_fields Character vector of column names in \code{dt} 
 #' to take the geometric average of.
+#' @param add_sd Flag indicating whether to add standard deviation and count columns.
 #' 
 #' @examples
 #' dt <- data.table::data.table(a = c(1:10, 1),
@@ -449,28 +448,44 @@ average_biological_replicates_dt <- function(
     var,
     prettified = FALSE,
     fixed = TRUE,
-    geometric_average_fields = get_header("metric_average_fields")$geometric_mean) {
+    geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
+    add_sd = FALSE) {
+  
   data <- data.table::copy(dt)
   
   if (prettified) {
     pidfs <- get_prettified_identifiers()
-    iso_cols <- prettify_flat_metrics(get_header("iso_position"),
-                                      human_readable = TRUE)
+    iso_cols <- prettify_flat_metrics(get_header("iso_position"), human_readable = TRUE)
     id_cols <- prettify_flat_metrics(get_header("id"), human_readable = TRUE)
-    
   } else {
     pidfs <- get_env_identifiers()
     iso_cols <- get_header("iso_position")
     id_cols <- prettify_flat_metrics(get_header("id"))
   }
   
-  average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs),
-                                                               var,
-                                                               iso_cols))
+  average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var, iso_cols))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
-  group_by <- setdiff(names(data),
-                      c(average_fields, var, id_cols))
+  group_by <- setdiff(names(data), c(average_fields, var, id_cols))
   group_by <- grep("Fit Type", group_by, invert = TRUE, value = TRUE)
+  
+  if (add_sd) {
+    # Calculate standard deviation for both average_fields and geometric_average_fields
+    sd_fields <- paste0(average_fields, "_sd")
+    geo_sd_fields <- paste0(geometric_average_fields, "_sd")
+    
+    data <- data[, (sd_fields) := lapply(.SD,
+                                         function(x) ifelse(length(x) > 1,
+                                                                 sd(x, na.rm = TRUE), 0)),
+                 .SDcols = average_fields, by = group_by]
+    data <- data[, (geo_sd_fields) := lapply(.SD,
+                                             function(x) ifelse(length(x) > 1,
+                                                                sd(x, na.rm = TRUE), 0)),
+                 .SDcols = geometric_average_fields, by = group_by]
+    
+    # Calculate count and add as a single column
+    data <- data[, count := .N, by = group_by]
+  }
+  
   data <- data[, (var) := NULL][, 
                                 (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
                                 .SDcols = average_fields, 
@@ -480,9 +495,9 @@ average_biological_replicates_dt <- function(
                                                }), 
                                                .SDcols = geometric_average_fields, 
                                                by = group_by]
+  
   unique(data, by = group_by)
 }
-
 #' Helper function to find duplicated rows
 #'
 #' @param x data frame
