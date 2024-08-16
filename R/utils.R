@@ -475,7 +475,7 @@ average_biological_replicates_dt <- function(
     data <- data[, (sd_fields) := lapply(.SD,
                                          function(x) {
                                            ifelse(length(x) > 1,
-                                                  stas::sd(x, na.rm = TRUE), 0)
+                                                  stats::sd(x, na.rm = TRUE), 0)
                                            }),
                  .SDcols = average_fields, by = group_by]
     data <- data[, (geo_sd_fields) := lapply(.SD,
