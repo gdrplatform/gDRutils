@@ -473,12 +473,16 @@ average_biological_replicates_dt <- function(
     geo_sd_fields <- paste0(geometric_average_fields, "_sd")
     
     data <- data[, (sd_fields) := lapply(.SD,
-                                         function(x) ifelse(length(x) > 1,
-                                                                 sd(x, na.rm = TRUE), 0)),
+                                         function(x) {
+                                           ifelse(length(x) > 1,
+                                                  sd(x, na.rm = TRUE), 0)
+                                           }),
                  .SDcols = average_fields, by = group_by]
     data <- data[, (geo_sd_fields) := lapply(.SD,
-                                             function(x) ifelse(length(x) > 1,
-                                                                sd(x, na.rm = TRUE), 0)),
+                                             function(x) {
+                                               ifelse(length(x) > 1,
+                                                      sd(x, na.rm = TRUE), 0)
+                                               }),
                  .SDcols = geometric_average_fields, by = group_by]
     
     # Calculate count and add as a single column
