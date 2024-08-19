@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{average_biological_replicates_dt}
 \alias{average_biological_replicates_dt}
-\title{Average biological replicates.}
+\title{Average biological replicates on the data table side.}
 \usage{
 average_biological_replicates_dt(
   dt,

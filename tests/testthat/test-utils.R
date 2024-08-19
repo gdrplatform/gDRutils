@@ -221,6 +221,8 @@ test_that("average_biological_replicates_dt works as expected", {
                                                         add_sd = TRUE)
   
   expect_equal(dim(avg_metrics_data2), c(40, 44))
+  expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 15)
+  expect_true("count" %in% names(avg_metrics_data2))
 })
 
 test_that("get_duplicated_rows works as expected", {
@@ -564,4 +566,27 @@ test_that("capVals works as expected", {
   expect_equal(dt1c, dt2)
   
   expect_error(capVals(as.list(dt1)), "Must be a data.table")
+})
+
+test_that("calc_sd returns correct standard deviation for vectors with length > 1", {
+  expect_equal(calc_sd(c(1, 2, 3, 4, 5)), sd(c(1, 2, 3, 4, 5), na.rm = TRUE))
+  expect_equal(calc_sd(c(10, 20, 30)), sd(c(10, 20, 30), na.rm = TRUE))
+})
+
+test_that("calc_sd returns 0 for vectors with length == 1 and numeric", {
+  expect_equal(calc_sd(c(1)), 0)
+})
+
+test_that("calc_sd returns NA for vectors with length == 1 and non-numeric", {
+  expect_true(is.na(calc_sd("2")))
+  expect_true(is.na(calc_sd(TRUE)))
+})
+
+test_that("calc_sd returns NA for empty vectors", {
+  expect_true(is.na(calc_sd(numeric(0))))
+})
+
+test_that("calc_sd handles NA values correctly", {
+  expect_equal(calc_sd(c(1, 2, NA, 4, 5)), sd(c(1, 2, NA, 4, 5), na.rm = TRUE))
+  expect_true(is.na(calc_sd(c(NA, NA, NA))))
 })

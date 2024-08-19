@@ -470,19 +470,11 @@ average_biological_replicates_dt <- function(
   if (add_sd) {
     # Calculate standard deviation for both average_fields and geometric_average_fields
     sd_fields <- paste0(average_fields, "_sd")
-    geo_sd_fields <- paste0(geometric_average_fields, "_sd")
+    geom_sd_fields <- paste0(geometric_average_fields, "_sd")
     
-    data <- data[, (sd_fields) := lapply(.SD,
-                                         function(x) {
-                                           ifelse(length(x) > 1,
-                                                  stats::sd(x, na.rm = TRUE), 0)
-                                           }),
+    data <- data[, (sd_fields) := lapply(.SD, calc_sd),
                  .SDcols = average_fields, by = group_by]
-    data <- data[, (geo_sd_fields) := lapply(.SD,
-                                             function(x) {
-                                               ifelse(length(x) > 1,
-                                                      stats::sd(x, na.rm = TRUE), 0)
-                                               }),
+    data <- data[, (geom_sd_fields) := lapply(.SD, calc_sd),
                  .SDcols = geometric_average_fields, by = group_by]
     
     # Calculate count and add as a single column
@@ -748,6 +740,26 @@ get_additional_variables <- function(dt_list,
         NULL
       }
     }))
+  }
+}
+
+#' Calculate Standard Deviation or Return Zero
+#'
+#' This function calculates the standard deviation of a numeric vector. If the vector has a length of 1 and it is numeric, it returns 0.
+#'
+#' @param x A numeric vector.
+#' @return The standard deviation of the vector if its length is greater than 1 or it is not numeric, otherwise 0.
+#' @examples
+#' calc_sd(c(1, 2, 3, 4, 5)) # Should return the standard deviation
+#' calc_sd(c(1)) # Should return 0
+#' calc_sd(numeric(0)) # Should return NA
+#' calc_sd(c("a", "b", "c")) # Should return NA
+#' @export
+calc_sd <- function(x) {
+  if (length(x) == 1 && is.numeric(x)) {
+    return(0)
+  } else {
+    return(stats::sd(x, na.rm = TRUE))
   }
 }
 
