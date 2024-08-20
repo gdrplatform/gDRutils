@@ -745,7 +745,8 @@ get_additional_variables <- function(dt_list,
 
 #' Calculate Standard Deviation or Return Zero
 #'
-#' This function calculates the standard deviation of a numeric vector. If the vector has a length of 1 and it is numeric, it returns 0.
+#' This function calculates the standard deviation of a numeric vector.
+#' If the vector has a length of 1 and it is numeric, it returns 0.
 #'
 #' @param x A numeric vector.
 #' @return The standard deviation of the vector if its length is greater than 1 or it is not numeric, otherwise 0.

@@ -13,7 +13,8 @@ calc_sd(x)
 The standard deviation of the vector if its length is greater than 1 or it is not numeric, otherwise 0.
 }
 \description{
-This function calculates the standard deviation of a numeric vector. If the vector has a length of 1 and it is numeric, it returns 0.
+This function calculates the standard deviation of a numeric vector.
+If the vector has a length of 1 and it is numeric, it returns 0.
 }
 \examples{
 calc_sd(c(1, 2, 3, 4, 5)) # Should return the standard deviation
