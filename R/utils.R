@@ -754,6 +754,7 @@ get_additional_variables <- function(dt_list,
 #' calc_sd(c(1)) # Should return 0
 #' calc_sd(numeric(0)) # Should return NA
 #' calc_sd(c("a", "b", "c")) # Should return NA
+#' @keywords package_utils
 #' @export
 calc_sd <- function(x) {
   if (length(x) == 1 && is.numeric(x)) {
