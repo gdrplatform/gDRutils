@@ -214,6 +214,15 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_equal(dim(metrics_data), c(60, 29))
   expect_equal(dim(avg_metrics_data), c(40, 28))
   expect_true(!"Ligand" %in% names(avg_metrics_data))
+  
+  avg_metrics_data2 <- average_biological_replicates_dt(dt = metrics_data,
+                                                        var = "Ligand",
+                                                        prettified = TRUE,
+                                                        add_sd = TRUE)
+  
+  expect_equal(dim(avg_metrics_data2), c(40, 44))
+  expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 15)
+  expect_true("count" %in% names(avg_metrics_data2))
 })
 
 test_that("get_duplicated_rows works as expected", {
@@ -557,4 +566,15 @@ test_that("capVals works as expected", {
   expect_equal(dt1c, dt2)
   
   expect_error(capVals(as.list(dt1)), "Must be a data.table")
+})
+
+test_that("calc_sd works as expected", {
+  expect_equal(calc_sd(c(1, 2, 3, 4, 5)), sd(c(1, 2, 3, 4, 5), na.rm = TRUE))
+  expect_equal(calc_sd(c(10, 20, 30)), sd(c(10, 20, 30), na.rm = TRUE))
+  expect_equal(calc_sd(c(1)), 0)
+  expect_true(is.na(calc_sd("2")))
+  expect_true(is.na(calc_sd(TRUE)))
+  expect_true(is.na(calc_sd(numeric(0))))
+  expect_equal(calc_sd(c(1, 2, NA, 4, 5)), sd(c(1, 2, NA, 4, 5), na.rm = TRUE))
+  expect_true(is.na(calc_sd(c(NA, NA, NA))))
 })

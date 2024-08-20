@@ -33,7 +33,8 @@ if (getRversion() >= "2.15.1") {
       "cId",
       "concs",
       "type",
-      "name"
+      "name",
+      "count"
     ),
     utils::packageName())
 }

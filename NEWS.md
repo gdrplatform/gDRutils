@@ -1,3 +1,6 @@
+## gDRutils 1.3.9 - 2024-08-14
+* extend the logic of `average_biological_replicates_dt` to calculate standard deviation
+
 ## gDRutils 1.3.8 - 2024-08-06
 * add functions for setting unique identifiers in the colData and rowData of SE
 
