@@ -757,7 +757,7 @@ get_additional_variables <- function(dt_list,
 #' @keywords package_utils
 #' @export
 calc_sd <- function(x) {
-  if (length(x) == 1 && is.numeric(x)) {
+  if (length(x) == 1 && is.numeric(x) && !is.na(x)) {
     return(0)
   } else {
     return(stats::sd(x, na.rm = TRUE))
