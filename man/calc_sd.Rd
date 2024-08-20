@@ -21,3 +21,4 @@ calc_sd(c(1)) # Should return 0
 calc_sd(numeric(0)) # Should return NA
 calc_sd(c("a", "b", "c")) # Should return NA
 }
+\keyword{package_utils}
