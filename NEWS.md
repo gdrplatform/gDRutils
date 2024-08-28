@@ -1,3 +1,6 @@
+## gDRutils 1.3.10 - 2024-08-28
+* extend the logic of `get_additional_variables` to support other sources of fitting metrics
+
 ## gDRutils 1.3.9 - 2024-08-14
 * extend the logic of `average_biological_replicates_dt` to calculate standard deviation
 
