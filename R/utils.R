@@ -725,7 +725,7 @@ get_additional_variables <- function(dt_list,
   
 
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
-    setdiff(names(x), idfs)
+    setdiff(sub(" \\(.*\\)$", "", names(x)), idfs)
   })))
   
   if (unique) {
