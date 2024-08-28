@@ -474,6 +474,12 @@ test_that("get_additional_variables works as expected", {
   expect_equal(get_additional_variables(c(1, 2, 3)), NULL)
   expect_equal(get_additional_variables(unlist(rdata1)), NULL)
   
+  
+  rdata5 <- data.table::data.table(Gnumber = seq_len(10),
+                                   Concentration = runif(10), 
+                                   Concentration_2 = runif(10), 
+                                   `IC50 (GDS)` = runif(10))
+  expect_equal(get_additional_variables(rdata5), NULL)
 })
 
 
