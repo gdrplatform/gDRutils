@@ -1,3 +1,6 @@
+## gDRutils 1.3.11 - 2024-08-30
+* remove GDS fit_source from gDRviz
+
 ## gDRutils 1.3.10 - 2024-08-28
 * extend the logic of `get_additional_variables` to support other sources of fitting metrics
 
