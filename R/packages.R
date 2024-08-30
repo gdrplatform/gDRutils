@@ -34,7 +34,8 @@ if (getRversion() >= "2.15.1") {
       "concs",
       "type",
       "name",
-      "count"
+      "count",
+      "fit_source"
     ),
     utils::packageName())
 }
