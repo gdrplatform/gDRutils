@@ -40,6 +40,11 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   checkmate::assert_character(wide_cols)
   checkmate::assert_string(sep)
   checkmate::assert_class(tbl, "data.table")
+  
+  if ("fit_source" %in% names(tbl)) {
+    tbl <- tbl[fit_source == "gDR", ]
+    groups <- setdiff(groups, "fit_source")
+  }
 
   if (!all(groups %in% colnames(tbl))) {
     stop(sprintf("missing expected uniquifying groups: '%s'",
