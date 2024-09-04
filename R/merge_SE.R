@@ -70,18 +70,13 @@ merge_SE <- function(SElist,
       assays = lapply(merged_assays, "[[", "BM"),
       colData = data$condition_md,
       rowData = data$treatment_md,
-      metadata = metadata,
-      checkDimnames = FALSE
+      metadata = metadata
     )
   av_pnames <-
     names(formals(SummarizedExperiment::SummarizedExperiment))
   f_list <- p_list[intersect(names(p_list), av_pnames)]
   do.call(SummarizedExperiment, f_list)
 }
-
-# 2021.11.01 - param checkDimnames was added to Summarized Experiment in Bioc 3.14, 
-# to make it compatible with previous solution we re filtering it 'checkDimnames' if not present
-# TODO: remove once all our envs are with Bioc 3.14
 
 #' Merge assay data
 #'
