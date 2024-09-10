@@ -1,3 +1,6 @@
+## gDRutils 1.3.12 - 2024-09-04
+* remove hack with checkDimnames
+
 ## gDRutils 1.3.11 - 2024-08-30
 * remove GDS fit_source from gDRviz
 
