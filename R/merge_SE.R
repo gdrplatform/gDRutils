@@ -66,12 +66,15 @@ merge_SE <- function(SElist,
   metadata <- merge_metadata(SElist, metadataNames)
   metadata <- c(metadata, identifiers)
   
-  assays = lapply(merged_assays, FUN = function(x) {
-    bm_assay <- x[["BM"]]
-    colnames(bm_assay) <- rownames(data$condition_md)
-    rownames(bm_assay) <- rownames(data$treatment_md)
-    bm_assay
-  })
+  assays <- lapply(
+    merged_assays,
+    FUN = function(x) {
+      bm_assay <- x[["BM"]]
+      colnames(bm_assay) <- rownames(data$condition_md)
+      rownames(bm_assay) <- rownames(data$treatment_md)
+      bm_assay
+    }
+  )
   
   p_list <-
     list(
