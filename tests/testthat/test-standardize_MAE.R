@@ -95,6 +95,24 @@ test_that("get_optional_rowdata_fields works as expected", {
 })
 
 
+test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly", {
+  col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
+  res_1 <- set_unique_drug_names_dt(col_data)
+  res_2 <- set_unique_cl_names_dt(col_data)
+  expect_equal(col_data, res_1)
+  expect_false(identical(col_data, res_2))
+  expect_equal(c("ID1 (C1)", "ID1 (C2)"), res_2$CellLineName)
+  
+  row_data <- S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
+  res_3 <- set_unique_drug_names_dt(row_data)
+  res_4 <- set_unique_cl_names_dt(row_data)
+  expect_false(identical(row_data, res_3))
+  expect_equal(row_data, res_4)
+  expect_equal(c("DrugA (G1)", "DrugA (G2)"), res_3$DrugName)
+  
+})
+
+
 test_that("set_unique_cl_names works correctly", {
   se <- SummarizedExperiment::SummarizedExperiment(
     assays = list(counts = matrix(1:4, ncol = 2)),
@@ -104,6 +122,7 @@ test_that("set_unique_cl_names works correctly", {
   
   expect_equal(SummarizedExperiment::colData(se)$CellLineName, c("ID1 (C1)", "ID1 (C2)"))
 })
+
 
 test_that("set_unique_drug_names works correctly", {
   se <- SummarizedExperiment::SummarizedExperiment(
