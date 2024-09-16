@@ -298,6 +298,28 @@ set_unique_cl_names <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
   
   col_data <- SummarizedExperiment::colData(se)
+  col_data_new <- set_unique_cl_names_dt(col_data)
+  SummarizedExperiment::colData(se) <- col_data_new
+  
+  se
+}
+
+#' Set Unique Parental Identifiers in table
+#'
+#' This function sets the `CellLineName` field in 
+#' `colData` to be unique by appending the `clid` in parentheses for duplicates.
+#'
+#' @param col_data data.table or DFrame with row data
+#' @return fixed input table with unique `CellLineName` in `colData`.
+#' @examples
+#' col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
+#' col_data <- set_unique_cl_names_dt(col_data)
+#' @export
+#' @keywords standardize_MAE
+#' 
+set_unique_cl_names_dt <- function(col_data) {
+  stopifnot(any(inherits(col_data, "data.table") || inherits(col_data, "DFrame")))
+  
   cellline_name <- get_env_identifiers("cellline_name")
   clid <- get_env_identifiers("cellline")
   
@@ -307,12 +329,12 @@ set_unique_cl_names <- function(se) {
       for (dup_id in unique(duplicated_ids)) {
         dup_indices <- which(col_data[[cellline_name]] == dup_id)
         col_data[[cellline_name]][dup_indices] <- paste0(col_data[[cellline_name]][dup_indices],
-                                                       " (", col_data[[clid]][dup_indices], ")")
+                                                         " (", col_data[[clid]][dup_indices], ")")
       }
-      SummarizedExperiment::colData(se) <- col_data
     }
   }
-  return(se)
+  
+  col_data
 }
 
 #' Set Unique Drug Names
@@ -337,6 +359,35 @@ set_unique_drug_names <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
   
   row_data <- SummarizedExperiment::rowData(se)
+  row_data_new <- set_unique_drug_names_dt(row_data)
+  
+  SummarizedExperiment::rowData(se) <- row_data_new
+  se
+}
+
+
+#' Set Unique Drug Names in table
+#'
+#' This function sets the `DrugName`, `DrugName_2`, and `DrugName_3` fields in 
+#' `rowData` to be unique by appending the corresponding `Gnumber`, `Gnumber_2`, 
+#' and `Gnumber_3` in parentheses for duplicates.
+#'
+#' @param row_data data.table or DFrame with row data
+#' @return fixed input table with unique `DrugName` fields in `rowData`.
+#' @examples
+#' row_data <- S4Vectors::DataFrame(
+#'   DrugName = c("DrugA", "DrugA", "DrugB"),
+#'   Gnumber = c("G1", "G2", "G5"),
+#'   DrugName_2 = c("DrugC", "DrugC", "DrugD"),
+#'   Gnumber_2 = c("G3", "G4", "G5")
+#' )
+#' row_data <- set_unique_drug_names_dt(row_data)
+#' @export
+#' @keywords standardize_MAE
+#' 
+set_unique_drug_names_dt <- function(row_data) {
+  stopifnot(any(inherits(row_data, "data.table") || inherits(row_data, "DFrame")))
+  
   drug_columns <- intersect(unlist(get_env_identifiers(c("drug_name", "drug_name2", "drug_name3"), simplify = FALSE)),
                             names(row_data))
   gnumber_columns <- intersect(unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE)),
@@ -361,8 +412,7 @@ set_unique_drug_names <- function(se) {
     }
   }
   
-  SummarizedExperiment::rowData(se) <- row_data
-  return(se)
+  row_data
 }
 
 #' Set Unique Identifiers in MultiAssayExperiment
