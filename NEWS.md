@@ -1,3 +1,6 @@
+## gDRutils 1.3.13 - 2024-09-16
+* add functions set_unique_cl_names_dt and set_unique_drug_names_dt
+
 ## gDRutils 1.3.12 - 2024-09-04
 * remove hack with checkDimnames
 
