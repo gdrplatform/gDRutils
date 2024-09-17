@@ -317,7 +317,7 @@ set_unique_cl_names <- function(se) {
 #' @export
 #' @keywords standardize_MAE
 #' 
-set_unique_cl_names_dt <- function(col_data) {
+set_unique_cl_names_dt <- function(col_data, sep = " ") {
   stopifnot(any(inherits(col_data, "data.table") || inherits(col_data, "DFrame")))
   
   cellline_name <- get_env_identifiers("cellline_name")
@@ -328,8 +328,14 @@ set_unique_cl_names_dt <- function(col_data) {
     if (length(duplicated_ids) > 0) {
       for (dup_id in unique(duplicated_ids)) {
         dup_indices <- which(col_data[[cellline_name]] == dup_id)
-        col_data[[cellline_name]][dup_indices] <- paste0(col_data[[cellline_name]][dup_indices],
-                                                         " (", col_data[[clid]][dup_indices], ")")
+        col_data[[cellline_name]][dup_indices] <- 
+          paste0(
+            col_data[[cellline_name]][dup_indices],
+            sep,
+            "(", 
+            col_data[[clid]][dup_indices], 
+            ")"
+          )
       }
     }
   }
@@ -385,7 +391,7 @@ set_unique_drug_names <- function(se) {
 #' @export
 #' @keywords standardize_MAE
 #' 
-set_unique_drug_names_dt <- function(row_data) {
+set_unique_drug_names_dt <- function(row_data, sep = " ") {
   stopifnot(any(inherits(row_data, "data.table") || inherits(row_data, "DFrame")))
   
   drug_columns <- intersect(unlist(get_env_identifiers(c("drug_name", "drug_name2", "drug_name3"), simplify = FALSE)),
@@ -405,8 +411,14 @@ set_unique_drug_names_dt <- function(row_data) {
       for (dup_drug in unique_drugs) {
         dup_indices <- which(row_data[[drug_col]] == dup_drug)
         if (length(unique(row_data[[gnumber_col]][dup_indices])) > 1) {
-          row_data[[drug_col]][dup_indices] <- paste0(row_data[[drug_col]][dup_indices],
-                                                      " (", row_data[[gnumber_col]][dup_indices], ")")
+          row_data[[drug_col]][dup_indices] <- 
+            paste0(
+              row_data[[drug_col]][dup_indices],
+              sep,
+              "(", 
+              row_data[[gnumber_col]][dup_indices], 
+              ")"
+            )
         }
       }
     }
