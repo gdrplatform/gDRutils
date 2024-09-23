@@ -96,6 +96,9 @@ test_that("get_optional_rowdata_fields works as expected", {
 
 
 test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly", {
+  
+  # DataFrame
+  ## Duplicated CellLineName
   col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
   res_1 <- set_unique_drug_names_dt(col_data)
   res_2 <- set_unique_cl_names_dt(col_data)
@@ -103,12 +106,56 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   expect_false(identical(col_data, res_2))
   expect_equal(c("ID1 (C1)", "ID1 (C2)"), res_2$CellLineName)
   
+  ## Duplicated DrugName
   row_data <- S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
   res_3 <- set_unique_drug_names_dt(row_data)
   res_4 <- set_unique_cl_names_dt(row_data)
   expect_false(identical(row_data, res_3))
   expect_equal(row_data, res_4)
   expect_equal(c("DrugA (G1)", "DrugA (G2)"), res_3$DrugName)
+  
+  # data.table
+  ## All different
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD"), 
+    Gnumber = c("G1", "G2", "G3", "G4"),
+    CellLineName = c("ID1", "ID2", "ID3", "ID4"), 
+    clid = c("C1", "C2", "C3", "C4")
+  )
+  res_5 <- set_unique_drug_names_dt(dt)
+  res_6 <- set_unique_cl_names_dt(dt)
+  
+  ## Duplicated CellLineName
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD"), 
+    Gnumber = c("G1", "G2", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2"), 
+    clid = c("C1", "C2", "C3", "C4")
+  )
+  res_7 <- set_unique_drug_names_dt(dt)
+  res_8 <- set_unique_cl_names_dt(dt)
+  
+  ## Duplicated DrugName
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB"), 
+    Gnumber = c("G1", "G2", "G3", "G4"),
+    CellLineName = c("ID1", "ID2", "ID3", "ID4"), 
+    clid = c("C1", "C2", "C3", "C4")
+  )
+  res_9 <- set_unique_drug_names_dt(dt)
+  res_10 <- set_unique_cl_names_dt(dt)
+  
+  ## Duplicated both
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB"), 
+    Gnumber = c("G1", "G2", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2"), 
+    clid = c("C1", "C2", "C3", "C4")
+  )
+  res_11 <- set_unique_drug_names_dt(dt)
+  res_12 <- set_unique_cl_names_dt(dt)
+  
+  ##
   
 })
 
