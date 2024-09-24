@@ -150,7 +150,7 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   res_9 <- set_unique_drug_names_dt(dt)
   res_10 <- set_unique_cl_names_dt(dt)
   expect_false(identical(res_9, dt))
-  expect_equal(length(unique(res_9$DrugName)), 5)
+  expect_equal(length(unique(res_9$DrugName)), 6)
   expect_equal(res_10, dt)
   
   ## Duplicated both
