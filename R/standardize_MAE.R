@@ -309,7 +309,7 @@ set_unique_cl_names <- function(se) {
 #' This function sets the `CellLineName` field in 
 #' `colData` to be unique by appending the `clid` in parentheses for duplicates.
 #'
-#' @param col_data data.table or DFrame with row data
+#' @param col_data data.table or DFrame with col data
 #' @param sep string with separator added before suffix
 #' @return fixed input table with unique `CellLineName` in `colData`.
 #' @examples
