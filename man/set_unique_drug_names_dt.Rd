@@ -4,10 +4,12 @@
 \alias{set_unique_drug_names_dt}
 \title{Set Unique Drug Names in table}
 \usage{
-set_unique_drug_names_dt(row_data)
+set_unique_drug_names_dt(row_data, sep = " ")
 }
 \arguments{
 \item{row_data}{data.table or DFrame with row data}
+
+\item{sep}{string with separator added before suffix}
 }
 \value{
 fixed input table with unique \code{DrugName} fields in \code{rowData}.

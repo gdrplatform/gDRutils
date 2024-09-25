@@ -4,10 +4,12 @@
 \alias{set_unique_cl_names_dt}
 \title{Set Unique Parental Identifiers in table}
 \usage{
-set_unique_cl_names_dt(col_data)
+set_unique_cl_names_dt(col_data, sep = " ")
 }
 \arguments{
 \item{col_data}{data.table or DFrame with row data}
+
+\item{sep}{string with separator added before suffix}
 }
 \value{
 fixed input table with unique \code{CellLineName} in \code{colData}.

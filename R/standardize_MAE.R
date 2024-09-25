@@ -310,6 +310,7 @@ set_unique_cl_names <- function(se) {
 #' `colData` to be unique by appending the `clid` in parentheses for duplicates.
 #'
 #' @param col_data data.table or DFrame with row data
+#' @param sep string with separator added before suffix
 #' @return fixed input table with unique `CellLineName` in `colData`.
 #' @examples
 #' col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
@@ -393,6 +394,7 @@ set_unique_drug_names <- function(se) {
 #' and `Gnumber_3` in parentheses for duplicates.
 #'
 #' @param row_data data.table or DFrame with row data
+#' @param sep string with separator added before suffix
 #' @return fixed input table with unique `DrugName` fields in `rowData`.
 #' @examples
 #' row_data <- S4Vectors::DataFrame(
