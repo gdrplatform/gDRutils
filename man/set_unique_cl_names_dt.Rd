@@ -7,7 +7,7 @@
 set_unique_cl_names_dt(col_data, sep = " ")
 }
 \arguments{
-\item{col_data}{data.table or DFrame with row data}
+\item{col_data}{data.table or DFrame with col data}
 
 \item{sep}{string with separator added before suffix}
 }
