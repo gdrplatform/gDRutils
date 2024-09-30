@@ -95,6 +95,100 @@ test_that("get_optional_rowdata_fields works as expected", {
 })
 
 
+test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly", {
+  
+  # DataFrame
+  ## Duplicated CellLineName
+  col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
+  res_1 <- set_unique_drug_names_dt(col_data)
+  res_2 <- set_unique_cl_names_dt(col_data)
+  expect_equal(col_data, res_1)
+  expect_false(identical(col_data, res_2))
+  expect_equal(c("ID1 (C1)", "ID1 (C2)"), res_2$CellLineName)
+  
+  ## Duplicated DrugName
+  row_data <- S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
+  res_3 <- set_unique_drug_names_dt(row_data)
+  res_4 <- set_unique_cl_names_dt(row_data)
+  expect_false(identical(row_data, res_3))
+  expect_equal(row_data, res_4)
+  expect_equal(c("DrugA (G1)", "DrugA (G2)"), res_3$DrugName)
+  
+  # data.table
+  ## All different
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD"), 
+    Gnumber = c("G1", "G2", "G3", "G4"),
+    CellLineName = c("ID1", "ID2", "ID3", "ID4"), 
+    clid = c("C1", "C2", "C3", "C4")
+  )
+  res_5 <- set_unique_drug_names_dt(dt)
+  res_6 <- set_unique_cl_names_dt(dt)
+  expect_equal(res_5, dt)
+  expect_equal(res_6, dt)
+  
+  ## Duplicated CellLineName
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"), 
+    Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"), 
+    clid = c("C1", "C2", "C3", "C4", "C5", "C6")
+  )
+  res_7 <- set_unique_drug_names_dt(dt)
+  res_8 <- set_unique_cl_names_dt(dt)
+  expect_equal(res_7, dt)
+  expect_false(identical(res_8, dt))
+  expect_equal(length(unique(res_8$CellLineName)), 5)
+
+  ## Duplicated DrugName
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB", "DrugB", "DrugB"), 
+    Gnumber = c("G1", "G2", "G3", "G4", "G5", "G6"),
+    CellLineName = c("ID1", "ID2", "ID3", "ID4", "ID3", "ID4"), 
+    clid = c("C1", "C2", "C3", "C4", "C3", "C4")
+  )
+  res_9 <- set_unique_drug_names_dt(dt)
+  res_10 <- set_unique_cl_names_dt(dt)
+  expect_false(identical(res_9, dt))
+  expect_equal(length(unique(res_9$DrugName)), 6)
+  expect_equal(res_10, dt)
+  
+  ## Duplicated both
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB"), 
+    Gnumber = c("G1", "G2", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2"), 
+    clid = c("C1", "C2", "C3", "C4")
+  )
+  res_11 <- set_unique_drug_names_dt(dt)
+  res_12 <- set_unique_cl_names_dt(dt)
+  expect_false(identical(res_11, dt))
+  expect_equal(length(unique(res_11$DrugName)), 4)
+  expect_equal(length(unique(res_11$CellLineName)), 2)
+  expect_false(identical(res_12, dt))
+  expect_equal(length(unique(res_12$DrugName)), 2)
+  expect_equal(length(unique(res_12$CellLineName)), 4)
+  
+  ## Function works in the same way for data.table and DataFrame
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
+    Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
+    clid = c("C1", "C2", "C3", "C4", "C5", "C6")
+  )
+  res_dt <- set_unique_cl_names_dt(dt) 
+  df <- S4Vectors::DataFrame(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
+    Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
+    clid = c("C1", "C2", "C3", "C4", "C5", "C6") 
+  )
+  res_S4 <- set_unique_cl_names_dt(df)
+  expect_equivalent(res_dt, res_S4)
+
+})
+
+
 test_that("set_unique_cl_names works correctly", {
   se <- SummarizedExperiment::SummarizedExperiment(
     assays = list(counts = matrix(1:4, ncol = 2)),
@@ -104,6 +198,7 @@ test_that("set_unique_cl_names works correctly", {
   
   expect_equal(SummarizedExperiment::colData(se)$CellLineName, c("ID1 (C1)", "ID1 (C2)"))
 })
+
 
 test_that("set_unique_drug_names works correctly", {
   se <- SummarizedExperiment::SummarizedExperiment(
