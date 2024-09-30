@@ -169,6 +169,23 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   expect_equal(length(unique(res_12$DrugName)), 2)
   expect_equal(length(unique(res_12$CellLineName)), 4)
   
+  ## Function works in the same way for data.table and DataFrame
+  dt <- data.table::data.table(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
+    Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
+    clid = c("C1", "C2", "C3", "C4", "C5", "C6")
+  )
+  res_dt <- set_unique_cl_names_dt(dt) 
+  df <- S4Vectors::DataFrame(
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
+    Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
+    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
+    clid = c("C1", "C2", "C3", "C4", "C5", "C6") 
+  )
+  res_S4 <- set_unique_cl_names_dt(df)
+  expect_equivalent(res_dt, res_S4)
+
 })
 
 

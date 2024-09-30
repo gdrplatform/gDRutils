@@ -325,20 +325,20 @@ set_unique_cl_names_dt <- function(col_data, sep = " ") {
   clid <- get_env_identifiers("cellline")
   
   if (!is.null(col_data[[cellline_name]])) {
+    unique_col_names <- c(unlist(get_default_identifiers()[
+      c("cellline_name", "drug_name", "drug_name2",
+        "concentration2", "duration", "data_source")
+    ]), "normalization_type")
+    unique_col_names <- intersect(unique_col_names, names(col_data))
+    unique_col_names_clid <- c(unique_col_names, get_default_identifiers()$cellline)
     if (data.table::is.data.table(col_data)) {
-      # for data.table check multiple columns; and update cl names only if adding clid suffix can make them different
-      unique_col_names <- c(unlist(get_default_identifiers()[
-        c("cellline_name", "drug_name", "drug_name2",
-          "concentration2", "duration", "data_source")
-      ]), "normalization_type")
-      unique_col_names <- intersect(unique_col_names, names(col_data))
       duplicated_ids <- col_data[[cellline_name]][duplicated(col_data, by = unique_col_names)]
-      unique_col_names_clid <- c(unique_col_names, get_default_identifiers()$cellline)
       duplicated_ids_with_clid <- col_data[[cellline_name]][duplicated(col_data, by = unique_col_names_clid)]
-      duplicated_ids <- setdiff(duplicated_ids, duplicated_ids_with_clid)
     } else {
-      duplicated_ids <- col_data[[cellline_name]][duplicated(col_data[[cellline_name]])]
+      duplicated_ids <- col_data[[cellline_name]][duplicated(col_data[unique_col_names])]
+      duplicated_ids_with_clid <- col_data[[cellline_name]][duplicated(col_data[unique_col_names_clid])]
     }
+    duplicated_ids <- setdiff(duplicated_ids, duplicated_ids_with_clid)
     
     if (length(duplicated_ids) > 0) {
      for (dup_id in unique(duplicated_ids)) {
