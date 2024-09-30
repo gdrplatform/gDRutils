@@ -286,7 +286,13 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_cl_names.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_cl_names_dt.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_drug_names.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_drug_names_dt.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_identifiers.html</loc>
