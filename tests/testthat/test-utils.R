@@ -223,6 +223,36 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_equal(dim(avg_metrics_data2), c(40, 44))
   expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 15)
   expect_true("count" %in% names(avg_metrics_data2))
+  
+  # protection against regression
+  # fit_type correctly recognized in wide and long format
+  sdata <- get_synthetic_data("finalMAE_small")
+  smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+  tdata <- smetrics_data[1:8, ]
+  tdata$Gnumber <- tdata$Gnumber[1]
+  tdata$DrugName <- tdata$DrugName[1]
+  tdata$source_id <- paste0("DS", rep(1:4, each = 2))
+  tdata$fit_type <- letters[1:8]
+  
+  av1b <- average_biological_replicates_dt(tdata, var = "source_id")
+  av1f <- gDRutils::flatten(
+    av1b,
+    groups = c("normalization_type", "fit_source"),
+    wide_cols = gDRutils::get_header("response_metrics")
+  )
+  
+  av2f <- gDRutils::flatten(
+    tdata,
+    groups = c("normalization_type", "fit_source"),
+    wide_cols = gDRutils::get_header("response_metrics")
+  )
+  av2b <- average_biological_replicates_dt(av2f, var = "source_id")
+  expect_true(all.equal(av1f, av2b))
+  expect_true(nrow(av1f) == 1)
+  av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
+  expect_true(nrow(av1i) == 8)
+  
+  
 })
 
 test_that("get_duplicated_rows works as expected", {

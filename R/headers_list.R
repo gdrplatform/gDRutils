@@ -191,8 +191,20 @@
       "GR50",
       "GEC50",
       "IC50",
-      "EC50"
-    )
+      "EC50",
+      "GR_xc50",
+      "RV_xc50",
+      "GR_ec50",
+      "RV_ec50"
+    ),
+    fit_type = c(
+      "fit_type",
+      "Fit Type",
+      "Fit Type RV",
+      "Fit Type GR",
+      "RV_fit_type",
+      "GR_fit_type"
+   )
   )
 }
 

@@ -433,6 +433,8 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' @param fixed Flag indicating whether to add a fix for -Inf in the geometric mean.
 #' @param geometric_average_fields Character vector of column names in \code{dt} 
 #' to take the geometric average of.
+#' @param fit_type_average_fields Character vector of column names in \code{dt} 
+#' that should be treated as a column with fit type data
 #' @param add_sd Flag indicating whether to add standard deviation and count columns.
 #' 
 #' @examples
@@ -449,7 +451,15 @@ average_biological_replicates_dt <- function(
     prettified = FALSE,
     fixed = TRUE,
     geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
+    fit_type_average_fields = get_header("metric_average_fields")$fit_type,
     add_sd = FALSE) {
+  
+  checkmate::assert_data_table(dt)
+  checkmate::assert_string(var)
+  checkmate::assert_flag(prettified)
+  checkmate::assert_character(geometric_average_fields)
+  checkmate::assert_character(fit_type_average_fields)
+  checkmate::assert_flag(add_sd)
   
   data <- data.table::copy(dt)
   
@@ -465,7 +475,8 @@ average_biological_replicates_dt <- function(
   
   average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var, iso_cols))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
-  group_by <- setdiff(names(data), c(average_fields, var, id_cols, "fit_type", "Fit Type"))
+  fit_type_average_fields <- intersect(fit_type_average_fields, names(dt))
+  group_by <- setdiff(names(data), c(average_fields, var, id_cols, fit_type_average_fields))
   
   if (add_sd) {
     # Calculate standard deviation for both average_fields and geometric_average_fields
