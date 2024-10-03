@@ -236,7 +236,7 @@ test_that("average_biological_replicates_dt works as expected", {
   
   av1b <- average_biological_replicates_dt(tdata, var = "source_id")
   av1f <- gDRutils::flatten(
-    av1,
+    av1b,
     groups = c("normalization_type", "fit_source"),
     wide_cols = gDRutils::get_header("response_metrics")
   )
