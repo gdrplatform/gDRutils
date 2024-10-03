@@ -225,7 +225,7 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_true("count" %in% names(avg_metrics_data2))
   
   # protection against regression
-  # (GDR-2591, fit_type correctly recognized in wide and long format)
+  # fit_type correctly recognized in wide and long format
   sdata <- get_synthetic_data("finalMAE_small")
   smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
   tdata <- smetrics_data[1:8, ]
