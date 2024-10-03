@@ -10,6 +10,7 @@ average_biological_replicates_dt(
   prettified = FALSE,
   fixed = TRUE,
   geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
+  fit_type_average_fields = get_header("metric_average_fields")$fit_type,
   add_sd = FALSE
 )
 }
@@ -24,6 +25,9 @@ average_biological_replicates_dt(
 
 \item{geometric_average_fields}{Character vector of column names in \code{dt}
 to take the geometric average of.}
+
+\item{fit_type_average_fields}{Character vector of column names in \code{dt}
+that should be treated as a column with fit type data}
 
 \item{add_sd}{Flag indicating whether to add standard deviation and count columns.}
 }
