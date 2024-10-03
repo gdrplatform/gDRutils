@@ -1,3 +1,6 @@
+## gDRutils 1.3.14 - 2024-10-03
+* fixed issue in average_biological_replicated (fit_type)
+
 ## gDRutils 1.3.13 - 2024-09-16
 * add functions set_unique_cl_names_dt and set_unique_drug_names_dt
 
