@@ -454,6 +454,13 @@ average_biological_replicates_dt <- function(
     fit_type_average_fields = get_header("metric_average_fields")$fit_type,
     add_sd = FALSE) {
   
+  checkmate::assert_data_table(dt)
+  checkmate::assert_string(var)
+  checkmate::assert_flag(prettified)
+  checkmate::assert_character(geometric_average_fields)
+  checkmate::assert_character(fit_type_average_fields)
+  checkmate::assert_flag(add_sd)
+  
   data <- data.table::copy(dt)
   
   if (prettified) {
