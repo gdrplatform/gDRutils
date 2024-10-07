@@ -504,25 +504,6 @@ average_biological_replicates_dt <- function(
   
   unique(data, by = group_by)
 }
-#' Helper function to find duplicated rows
-#'
-#' @param x data frame
-#' @param col_names character vector, columns in which duplication are searched for
-#' @return integer vector
-#' @examples
-#' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
-#' get_duplicated_rows(dt, "b")
-#' @keywords package_utils
-#' @export
-get_duplicated_rows <- function(x, col_names = NULL) {
-  checkmate::assertMultiClass(x, c("data.table", "DataFrame"))
-  checkmate::assert_true(all(col_names %in% colnames(x)))
-  
-  if (!is.null(col_names)) {
-    x <- subset(x, select = col_names)
-  }
-  which(duplicated(x) | duplicated(x, fromLast = TRUE))
-}
 
 #' Checks if \code{se} is combo dataset.
 #'
