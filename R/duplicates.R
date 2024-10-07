@@ -108,7 +108,7 @@ get_duplicated_rows <- function(x, col_names = NULL, output = "index") {
     if (length(idx)) {
       x[idx, ]
     } else {
-      data.table::data.table()
+      x[0, ]
     }
   }
   out
