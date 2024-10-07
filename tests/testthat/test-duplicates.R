@@ -1,4 +1,4 @@
-test_that("has_dt_duplicated_rows", {
+test_that("has_dt_duplicated_rows works as expected", {
   
   dt_iris <- data.table::data.table(iris)
   expect_true(has_dt_duplicated_rows(dt_iris))
@@ -51,7 +51,7 @@ test_that("get_duplicated_rows works as expected", {
                "Assertion on 'all(col_names %in% colnames(x))' failed: Must be TRUE.", fixed = TRUE)
 })
 
-test_that("[has|get]_assay_dt_duplicated_rows", {
+test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
   
   sdata <- get_synthetic_data("finalMAE_small")
   smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
@@ -71,7 +71,7 @@ test_that("[has|get]_assay_dt_duplicated_rows", {
   expect_class(empty_dt, "data.table")
 })
 
-test_that("throw_msg_if_duplicates", {
+test_that("throw_msg_if_duplicates works as expected", {
  
   sdata <- get_synthetic_data("finalMAE_small")
   smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
