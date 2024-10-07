@@ -120,7 +120,7 @@ get_duplicated_rows <- function(x,
 #'
 #' @param dt data.table
 #' @param output string with the output format to be returned
-#' @return integer vector
+#' @return integer vector or data.table with duplicated rows
 #' @examples
 #' sdata <- get_synthetic_data("finalMAE_small")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")

@@ -11,10 +11,10 @@ get_duplicated_rows(x, col_names = NULL, output = "index")
 
 \item{col_names}{character vector, columns in which duplication are searched for}
 
-\item{output}{string with the output format to be returned}
+\item{output}{string with the output format to be returned - one of "index" (index of duplicates) or "data" (subset of input data with duplicates)}
 }
 \value{
-integer vector or data.frame with duplicated rows
+integer vector or data.table with duplicated rows
 }
 \description{
 Helper function to find duplicated rows

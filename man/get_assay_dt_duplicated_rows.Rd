@@ -12,7 +12,7 @@ get_assay_dt_duplicated_rows(dt, output = "index")
 \item{output}{string with the output format to be returned}
 }
 \value{
-integer vector
+integer vector or data.table with duplicated rows
 }
 \description{
 Helper function to find duplicated rows in assay data
