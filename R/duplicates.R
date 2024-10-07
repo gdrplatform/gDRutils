@@ -145,7 +145,6 @@ get_assay_dt_duplicated_rows <- function(dt, output = "index") {
 #' The message function can be customized with `msg_f` parameter
 #' 
 #' @param dt data.table with assay data
-#' @param assay_name string with the assay name
 #' @param assay_name string with the name of the assay
 #' @param msg_f function to be used to throw the message
 #' @param preview_max_numb number of rows to preview if duplicates found
