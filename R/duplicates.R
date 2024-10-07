@@ -82,15 +82,17 @@ has_assay_dt_duplicated_rows <- function(dt) {
 #'
 #' @param x DataFrame or data.table
 #' @param col_names character vector, columns in which duplication are searched for
-#' @param output string with the output format to be returned
+#' @param output string with the output format to be returned - one of "index" (index of duplicates) or "data" (subset of input data with duplicates)
 #' @examples
 #' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
 #' get_duplicated_rows(dt, "b")
 #' get_duplicated_rows(dt, "b", output = "data")
-#' @return integer vector or data.frame with duplicated rows
+#' @return integer vector or data.table with duplicated rows
 #' @keywords duplicates
 #' @export
-get_duplicated_rows <- function(x, col_names = NULL, output = "index") {
+get_duplicated_rows <- function(x, 
+                                col_names = NULL, 
+                                output = "index") {
   
   checkmate::assertMultiClass(x, c("data.table", "DataFrame"))
   checkmate::assert_true(all(col_names %in% colnames(x)))
