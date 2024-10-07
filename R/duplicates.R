@@ -7,7 +7,7 @@
 #' @examples
 #' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
 #' has_dt_duplicated_rows(dt, "b")
-#' @return logical flag
+#' @return logical flag indicating if a dt contains duplicated rows or not
 #' @keywords duplicates
 #'
 #' @export

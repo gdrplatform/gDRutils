@@ -12,7 +12,7 @@ has_dt_duplicated_rows(dt, col_names = NULL)
 \item{col_names}{charvec with columns to be used for subsetting}
 }
 \value{
-logical flag
+logical flag indicating if a dt contains duplicated rows or not
 }
 \description{
 An auxiliary function that checks for duplicates in the data.table (or its subset)
