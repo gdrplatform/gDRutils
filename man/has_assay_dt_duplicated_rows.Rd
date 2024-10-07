@@ -10,7 +10,7 @@ has_assay_dt_duplicated_rows(dt)
 \item{dt}{data.table with assay data}
 }
 \value{
-logical flag
+logical flag indicating if a dt contains duplicated rows or not
 }
 \description{
 An auxiliary function that checks for duplicates in the assay data

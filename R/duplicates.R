@@ -60,7 +60,7 @@ get_assay_req_uniq_cols <- function(dt) {
 #' 
 #' @param dt data.table with assay data
 #' 
-#' @return logical flag
+#' @return logical flag indicating if a dt contains duplicated rows or not
 #' @keywords duplicates
 #' @examples
 #' sdata <- get_synthetic_data("finalMAE_small")
