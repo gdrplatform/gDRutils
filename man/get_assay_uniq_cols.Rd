@@ -7,15 +7,17 @@
 get_assay_uniq_cols(dt)
 }
 \arguments{
-\item{dt}{data.table with assay data
-sdata <- get_synthetic_data("finalMAE_small")
-smetrics_data <- convert_se_assay_to_dt(sdata[\link{1}], "Metrics")
-get_assay_uniq_cols(smetrics_data)}
+\item{dt}{data.table with assay data}
 }
 \value{
 charvec with columns required to have unique data
 }
 \description{
 get columns in the assay data required to have unique (non-duplicated) data
+}
+\examples{
+sdata <- get_synthetic_data("finalMAE_small")
+smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+get_assay_uniq_cols(smetrics_data)
 }
 \keyword{duplicates}

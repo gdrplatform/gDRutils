@@ -30,6 +30,7 @@ has_dt_duplicated_rows <- function(dt, col_names = NULL) {
 #' get columns in the assay data required to have unique (non-duplicated) data
 #' 
 #' @param dt data.table with assay data
+#' @examples
 #' sdata <- get_synthetic_data("finalMAE_small")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 #' get_assay_uniq_cols(smetrics_data)
