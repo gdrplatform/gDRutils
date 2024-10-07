@@ -1,3 +1,6 @@
+## gDRutils 1.3.15 - 2024-10-07
+* refactor the logic for dealing with duplicates in assay data
+
 ## gDRutils 1.3.14 - 2024-10-03
 * fixed issue in average_biological_replicated (fit_type)
 
