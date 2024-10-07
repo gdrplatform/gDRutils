@@ -39,6 +39,9 @@ reference:
 - title: Standardize MAE
 - contents:
   - has_keyword("standardize_MAE")
+- title: Duplicates
+- contents:
+  - has_keyword("duplicates")
 - title: Utils
 - contents:
   - has_keyword("package_utils")
