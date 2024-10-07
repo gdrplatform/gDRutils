@@ -33,12 +33,12 @@ has_dt_duplicated_rows <- function(dt, col_names = NULL) {
 #' @examples
 #' sdata <- get_synthetic_data("finalMAE_small")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
-#' get_assay_uniq_cols(smetrics_data)
+#' get_assay_req_uniq_cols(smetrics_data)
 #' @return charvec with columns required to have unique data
 #' @keywords duplicates
 #' @export
 #' 
-get_assay_uniq_cols <- function(dt) {
+get_assay_req_uniq_cols <- function(dt) {
   
   checkmate::assert_data_table(dt)
   col_ids <- get_settings_from_json(
@@ -72,7 +72,7 @@ has_assay_dt_duplicated_rows <- function(dt) {
 
   checkmate::assert_data_table(dt)
   
-  col_names <- get_assay_uniq_cols(dt)
+  col_names <- get_assay_req_uniq_cols(dt)
   has_dt_duplicated_rows(dt, col_names)
 
 }
@@ -130,7 +130,7 @@ get_assay_dt_duplicated_rows <- function(dt, output = "index") {
   
   checkmate::assert_data_table(dt)
   
-  col_names <- get_assay_uniq_cols(dt)
+  col_names <- get_assay_req_uniq_cols(dt)
   
   get_duplicated_rows(dt, col_names, output = output)
 }
@@ -166,7 +166,7 @@ throw_msg_if_duplicates <- function(dt, assay_name = "unknown", msg_f = stop, pr
           NROW(dt),
           assay_name)
      msg2 <- sprintf(" when checking uniquness with the following set of columns: '%s'. ",
-          toString(get_assay_uniq_cols(dt)))
+          toString(get_assay_req_uniq_cols(dt)))
      msg3 <- sprintf("Here is the preview of the first %i duplicated rows in JSON format: '%s'",
           preview_numb,
           jsonlite::toJSON(dup_dt[seq(preview_numb), ]))
