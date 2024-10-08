@@ -101,7 +101,9 @@ get_duplicated_rows <- function(x,
   
   if (!is.null(col_names)) {
     sub_x <- subset(x, select = col_names)
-  }
+  } else {
+  sub_x <- x
+ }
   idx <- which(duplicated(sub_x) | duplicated(sub_x, fromLast = TRUE))
   
   out <- if (output == "index") {
