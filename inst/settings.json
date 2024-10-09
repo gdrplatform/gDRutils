@@ -22,5 +22,13 @@
         "pos_y_ref": "pos_y_ref",
         "log10_ratio": "log10_ratio_conc",
         "log2_CI": "log2_CI"
-    }
+    },
+    "assay_dt_req_uniq_col_ids": [
+        "drug_name",
+        "drug_name2",
+        "cellline_name",
+        "concentration2",
+        "duration",
+        "data_source"
+    ]
 }
