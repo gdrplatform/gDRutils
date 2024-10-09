@@ -151,7 +151,11 @@ get_assay_dt_duplicated_rows <- function(dt, output = "index") {
 #' @param assay_name string with the name of the assay
 #' @param msg_f function to be used to throw the message
 #' @param preview_max_numb number of rows to preview if duplicates found
-#' 
+#' @examples
+#' sdata <- get_synthetic_data("finalMAE_small")
+#' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+#' throw_msg_if_duplicates(smetrics_data, assay_name = "Metrics")
+#' throw_msg_if_duplicates(smetrics_data, assay_name = "Metrics", msg_f = futile.logger::flog.info)
 #' @return NULL
 #' @keywords duplicates
 #'

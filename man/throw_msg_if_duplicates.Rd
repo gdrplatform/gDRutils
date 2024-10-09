@@ -25,4 +25,10 @@ An auxiliary function that checks for duplicated rows in assay data.table,
 In case of duplicates it throws a message. The messsage function is by default \code{stop()}
 The message function can be customized with \code{msg_f} parameter
 }
+\examples{
+sdata <- get_synthetic_data("finalMAE_small")
+smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+throw_msg_if_duplicates(smetrics_data, assay_name = "Metrics")
+throw_msg_if_duplicates(smetrics_data, assay_name = "Metrics", msg_f = futile.logger::flog.info)
+}
 \keyword{duplicates}
