@@ -160,7 +160,7 @@ throw_msg_if_duplicates <- function(dt, assay_name = "unknown", msg_f = stop, pr
 
   checkmate::assert_data_table(dt)
   checkmate::assert_string(assay_name)
-  checkmate::assert_functiong(msg_f)
+  checkmate::assert_function(msg_f)
   checkmate::assert_number(preview_max_numb)
 
   if (has_assay_dt_duplicated_rows(dt)) { 
