@@ -68,7 +68,7 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
   expect_equal(get_assay_dt_duplicated_rows(smetrics_data_f), integer(0))
   empty_dt <- get_assay_dt_duplicated_rows(smetrics_data_f, output = "data")
   expect_true(nrow(empty_dt) == 0)
-  expect_class(empty_dt, "data.table")
+  expect_is(empty_dt, "data.table")
 })
 
 test_that("throw_msg_if_duplicates works as expected", {
