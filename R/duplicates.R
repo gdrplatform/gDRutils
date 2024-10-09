@@ -82,7 +82,8 @@ has_assay_dt_duplicated_rows <- function(dt) {
 #'
 #' @param x DataFrame or data.table
 #' @param col_names character vector, columns in which duplication are searched for
-#' @param output string with the output format to be returned - one of "index" (index of duplicates) or "data" (subset of input data with duplicates)
+#' @param output string with the output format to be returned - 
+#' one of "index" (index of duplicates) or "data" (subset of input data with duplicates)
 #' @examples
 #' dt <- data.table::data.table(a = c(1, 2, 3), b = c(3, 2, 2))
 #' get_duplicated_rows(dt, "b")
