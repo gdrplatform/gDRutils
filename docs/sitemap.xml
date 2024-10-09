@@ -124,7 +124,13 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_additional_variables.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_assay_dt_duplicated_rows.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_assay_names.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/get_assay_req_uniq_cols.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_combo_assay_names.html</loc>
@@ -194,6 +200,12 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/get_testdata_combo.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/has_assay_dt_duplicated_rows.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/has_dt_duplicated_rows.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/has_single_codrug_data.html</loc>
@@ -311,6 +323,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/strip_first_and_last_char.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/throw_msg_if_duplicates.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/update_env_idfs_from_mae.html</loc>
