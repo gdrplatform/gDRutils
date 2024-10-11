@@ -43,7 +43,10 @@ IDENTIFIERS_LIST <- list(
   data_source = "data_source",
   
   # replicate
-  replicate = "Replicate"
+  replicate = "Replicate",
+
+  # normalization type
+  normalization_type = "normalization_type"
 )
 
 REQ_COL_IDENTIFIERS <- c(
@@ -79,7 +82,8 @@ EXPECT_ONE_IDENTIFIERS <- c(
   "drug_name3",
   "drug_moa3",
   "concentration3",
-  "data_source"
+  "data_source",
+  "normalization_type"
 )
 
 SYNONYMS_LIST <- list(

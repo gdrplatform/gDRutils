@@ -29,6 +29,7 @@
         "cellline_name",
         "concentration2",
         "duration",
-        "data_source"
+        "data_source",
+        "normalization_type"
     ]
 }
