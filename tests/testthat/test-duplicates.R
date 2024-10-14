@@ -73,7 +73,7 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
   
   # combo data
   cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
-  cscores_data <- convert_se_assay_to_dt(cdata[[1]], "scores")
+  cscores_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "scores")
   cscores_dup_data <- rbind(cscores_data, cscores_data[1:10, ])
   expect_false(has_assay_dt_duplicated_rows(cscores_data))
   expect_true(has_assay_dt_duplicated_rows(cscores_dup_data))
