@@ -55,7 +55,7 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
  
   # single-agent data
   sdata <- get_synthetic_data("finalMAE_small")
-  smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+  smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
   smetrics_dup_data <- rbind(smetrics_data, smetrics_data[1:10, ])
   expect_false(has_assay_dt_duplicated_rows(smetrics_data))
   expect_true(has_assay_dt_duplicated_rows(smetrics_dup_data))
