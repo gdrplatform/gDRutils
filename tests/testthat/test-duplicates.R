@@ -93,7 +93,7 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
 test_that("throw_msg_if_duplicates works as expected", {
  
   sdata <- get_synthetic_data("finalMAE_small")
-  smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+  smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
   smetrics_dup_data <- rbind(smetrics_data, smetrics_data[1:10, ])
   
   exp_msg <- "rows are duplicated"
