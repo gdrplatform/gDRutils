@@ -185,3 +185,61 @@ throw_msg_if_duplicates <- function(dt, assay_name = "unknown", msg_f = stop, pr
      msg_f(paste0(msg, msg2, msg3))
   }
 }
+
+#' send email if assay data.table contains duplicated rows
+#' 
+#' An auxiliary function to send email if duplicated rows in assay data.table are found
+#' 
+#' @param dt data.table with assay data
+#' @param by charvec with notification methods (currently 'email' supported)
+#' @param assay_name string with the name of the assay
+#' @param preview_max_numb number of rows to preview if duplicates found
+#' @param metadata list with the additional metadata to send via email
+#' @examples
+#' sdata <- get_synthetic_data("finalMAE_small")
+#' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+#' throw_msg_if_duplicates(smetrics_data, assay_name = "Metrics", msg_f = futile.logger::flog.info)
+#' @return NULL
+#' @keywords duplicates
+#'
+#' @export
+#' 
+notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", preview_max_numb = 4, metadata = NULL) {
+
+  checkmate::assert_data_table(dt)
+  checkmate::assert_subset(by, c("email", "slack"))
+  checkmate::assert_string(assay_name)
+  checkmate::assert_number(preview_max_numb)
+  checkmate::assert_list(metadata, null.ok = TRUE)
+
+  dup_dt <- get_assay_dt_duplicated_rows(dt, output = "data")
+   
+     msg <- sprintf(
+          "The %i ouf of %i rows are duplicated in the assay '%s'",
+          NROW(dup_dt),
+          NROW(dt),
+          assay_name)
+     msg2 <- sprintf(" when checking uniquness with the following set of columns: '%s'. ",
+          toString(get_assay_req_uniq_cols(dt)))
+     msg3 <- sprintf("Here is the preview of the first %i duplicated rows in JSON format: '%s'",
+          preview_numb,
+          jsonlite::toJSON(dup_dt[seq(preview_numb), ]))
+     msg <- paste0(msg, msg2, msg3)
+
+     if ("mail" %in% by) { 
+     att_l <- list(c(dup_dt = dupt_dt, metadata))
+     att_f <- tempfile()
+     qs::qsave(att_l, att_f)
+     m_to <- get_env_var("EMAIL_RECIPIENT")
+     stopifnot(nchar(m_to) > 0)
+     send_email(body = msg, to = m_to, from = from, attached_files = att_f)
+     }    
+     
+     if ("slack" %in% by) { 
+     s_to <- get_env_var("EMAIL_SLACK_NOTIFICATION")
+     stopifnot(nchar(s_to) > 0)
+     send_email(body = msg, to = s_to, from = from)
+     }    
+
+    
+  }

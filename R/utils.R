@@ -757,3 +757,67 @@ calc_sd <- function(x) {
   }
 }
 
+
+#' send email by wrapping `mailR::send.mail`
+#'
+#' send email by wrapping `mailR::send.mail`
+#'
+#' @param body a body content of the email
+#' @param to a string with the recipient
+#' @param subject a string with the subject
+#' @param from a string with the sender
+#' @param html a logical flag indicating whether the body of the email should be parsed as HTML
+#' @param inline a logical flag indicating whether images in the HTML file should be embedded inline
+#' @param host_name a string with the hostname
+#' @param attached_files a character with file paths to be attached to the email
+#'
+#' @keywords utils
+#' @export
+send_email <-
+  function(body,
+           subject,
+           to = get_env_var("EMAIL_RECIPIENT"),
+           from = get_env_var("EMAIL_SENDER"),
+           html = TRUE,
+           inline = FALSE,
+           host_name = get_env_var("EMAIL_HOSTNAME"),
+           attached_files = NULL) {
+
+    checkmate::assert_character(body)
+    checkmate::assert_string(subject, min.chars = 1)
+    checkmate::assert_string(to, min.chars = 1)
+    checkmate::assert_from(from, min.chars = 1)
+    checkmate::assert_flag(html)
+    checkmate::assert_flag(inline)
+    checkmate::assert_from(host_name, min.chars = 1)
+    checkmate::assert_character(attached_files)
+    checkmate::assert_file_exists(attached_files)
+
+    mailR::send.mail(
+      from = from,
+      to = to,
+      subject = subject,
+      body = html_data,
+      smtp = list(host.name = host_name),
+      html = html,
+      inline = inline,
+      attach.files = attached_files
+    )
+  }
+
+
+#' safe wrapper of Sys.getenv()
+#' 
+#' So far the helper is needed to handle env vars containing `:` 
+#' for which the backslash  is automatically added in some contexts
+#' and R could not get the original value for these env vars.
+#' 
+#' @param x string with the name of the environemntal variable
+#' @param ... additional params for Sys.getenev
+#' @keywords utils
+#
+#' @export 
+#' @return sanitized value of the env variable
+get_env_var <- function(x, ...) {
+  gsub("\\\\", "", Sys.getenv(x, ...))
+}
