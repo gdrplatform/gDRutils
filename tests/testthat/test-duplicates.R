@@ -52,21 +52,40 @@ test_that("get_duplicated_rows works as expected", {
 })
 
 test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
-  
+ 
+  # single-agent data
   sdata <- get_synthetic_data("finalMAE_small")
-  smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
-  smetrics_data_f <- gDRutils::flatten(
-    smetrics_data,
-    groups = c("normalization_type", "fit_source"),
-    wide_cols = gDRutils::get_header("response_metrics")
-  )
-  expect_true(has_assay_dt_duplicated_rows(smetrics_data))
-  expect_false(has_assay_dt_duplicated_rows(smetrics_data_f))
+  smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
+  smetrics_dup_data <- rbind(smetrics_data, smetrics_data[1:10, ])
+  expect_false(has_assay_dt_duplicated_rows(smetrics_data))
+  expect_true(has_assay_dt_duplicated_rows(smetrics_dup_data))
   
-  expect_equal(get_assay_dt_duplicated_rows(smetrics_data), 1:200)
-  expect_equal(dim(smetrics_data), dim(get_assay_dt_duplicated_rows(smetrics_data, output = "data")))
-  expect_equal(get_assay_dt_duplicated_rows(smetrics_data_f), integer(0))
-  empty_dt <- get_assay_dt_duplicated_rows(smetrics_data_f, output = "data")
+  expect_equal(get_assay_dt_duplicated_rows(smetrics_dup_data),
+               c(1:10, 201:210))
+  expect_equal(
+    rbind(smetrics_data[1:10, ], smetrics_data[1:10, ]),
+    get_assay_dt_duplicated_rows(smetrics_dup_data, output = "data")
+  )
+  expect_equal(get_assay_dt_duplicated_rows(smetrics_data), integer(0))
+  empty_dt <- get_assay_dt_duplicated_rows(smetrics_data, output = "data")
+  expect_true(nrow(empty_dt) == 0)
+  expect_is(empty_dt, "data.table")
+  
+  # combo data
+  cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+  cscores_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "scores")
+  cscores_dup_data <- rbind(cscores_data, cscores_data[1:10, ])
+  expect_false(has_assay_dt_duplicated_rows(cscores_data))
+  expect_true(has_assay_dt_duplicated_rows(cscores_dup_data))
+  
+  expect_equal(get_assay_dt_duplicated_rows(cscores_dup_data),
+               c(1:10, 25:34))
+  expect_equal(
+    rbind(cscores_data[1:10, ], cscores_data[1:10, ]),
+    get_assay_dt_duplicated_rows(cscores_dup_data, output = "data")
+  )
+  expect_equal(get_assay_dt_duplicated_rows(cscores_data), integer(0))
+  empty_dt <- get_assay_dt_duplicated_rows(cscores_data, output = "data")
   expect_true(nrow(empty_dt) == 0)
   expect_is(empty_dt, "data.table")
 })
@@ -74,15 +93,10 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
 test_that("throw_msg_if_duplicates works as expected", {
  
   sdata <- get_synthetic_data("finalMAE_small")
-  smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
-  smetrics_data_f <- gDRutils::flatten(
-    smetrics_data,
-    groups = c("normalization_type", "fit_source"),
-    wide_cols = gDRutils::get_header("response_metrics")
-  )
-  
+  smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
+  smetrics_dup_data <- rbind(smetrics_data, smetrics_data[1:10, ])
   
   exp_msg <- "rows are duplicated"
-  expect_error(throw_msg_if_duplicates(smetrics_data, "Metrics"), exp_msg)
-  expect_warning(throw_msg_if_duplicates(smetrics_data, "Metrics", msg_f = warning), exp_msg)
+  expect_error(throw_msg_if_duplicates(smetrics_dup_data, "Metrics"), exp_msg)
+  expect_warning(throw_msg_if_duplicates(smetrics_dup_data, "Metrics", msg_f = warning), exp_msg)
 })
