@@ -761,9 +761,9 @@ calc_sd <- function(x) {
 #' send email by wrapping `mailR::send.mail`
 #'
 #' @param body a character containing the body content of the email
-#' @param to a string with the recipient
-#' @param subject a string with the subject
-#' @param from a string with the sender
+#' @param subject A string with the subject of the email
+#' @param to a string with the recipient's email address
+#' @param string with the sender's email address
 #' @param html a logical flag indicating whether the body of the email should be parsed as HTML
 #' @param inline a logical flag indicating whether images in the HTML file should be embedded inline
 #' @param host_name a string with the hostname
@@ -787,7 +787,7 @@ send_email <-
     checkmate::assert_from(from, min.chars = 1)
     checkmate::assert_flag(html)
     checkmate::assert_flag(inline)
-    checkmate::assert_from(host_name, min.chars = 1)
+    checkmate::assert_string(host_name, min.chars = 1)
     if (!is.null(attached_files)) {
       checkmate::assert_character(attached_files)
       checkmate::assert_file_exists(attached_files)
