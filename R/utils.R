@@ -758,7 +758,6 @@ calc_sd <- function(x) {
 }
 
 
-#' send email by wrapping `mailR::send.mail`
 #'
 #' send email by wrapping `mailR::send.mail`
 #'
