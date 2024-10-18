@@ -215,11 +215,11 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
   dup_dt <- get_assay_dt_duplicated_rows(dt, output = "data")
    
      msg <- sprintf(
-          "The %i ouf of %i rows are duplicated in the assay '%s'",
+          "The %i out of %i rows are duplicated in the assay '%s'",
           NROW(dup_dt),
           NROW(dt),
           assay_name)
-     msg2 <- sprintf(" when checking uniquness with the following set of columns: '%s'. ",
+     msg2 <- sprintf(" when checking uniqueness with the following set of columns: '%s'. ",
           toString(get_assay_req_uniq_cols(dt)))
      msg3 <- sprintf("Here is the preview of the first %i duplicated rows in JSON format: '%s'",
           preview_numb,
@@ -227,8 +227,8 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
      msg <- paste0(msg, msg2, msg3)
      m_sbj <- "[gDR] Error - unexpected duplicates found"
 
-     if ("mail" %in% by) { 
-     att_l <- list(c(dup_dt = dupt_dt, metadata))
+     if ("email" %in% by) { 
+     att_l <- list(c(dup_dt = dup_dt, metadata))
      att_f <- tempfile()
      qs::qsave(att_l, att_f)
      m_to <- get_env_var("EMAIL_RECIPIENT")
