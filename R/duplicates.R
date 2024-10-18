@@ -215,7 +215,7 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
   dup_dt <- get_assay_dt_duplicated_rows(dt, output = "data")
    
      msg <- sprintf(
-          "The %i ouf of %i rows are duplicated in the assay '%s'",
+          "The %i out of %i rows are duplicated in the assay '%s'",
           NROW(dup_dt),
           NROW(dt),
           assay_name)
