@@ -232,13 +232,13 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
      qs::qsave(att_l, att_f)
      m_to <- get_env_var("EMAIL_RECIPIENT")
      stopifnot(nchar(m_to) > 0)
-     send_email(body = msg, to = m_to, from = from, attached_files = att_f)
+     send_email(body = msg, to = m_to, attached_files = att_f)
      }    
      
      if ("slack" %in% by) { 
      s_to <- get_env_var("EMAIL_SLACK_NOTIFICATION")
      stopifnot(nchar(s_to) > 0)
-     send_email(body = msg, to = s_to, from = from)
+     send_email(body = msg, to = s_to)
      }    
 
     
