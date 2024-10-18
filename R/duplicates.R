@@ -228,7 +228,7 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
      m_sbj <- "[gDR] Error - unexpected duplicates found"
 
      if ("email" %in% by) { 
-     att_l <- list(c(dup_dt = dup_dt, metadata))
+     att_l <- c(list(dup_dt = dup_dt), metadata)
      att_f <- tempfile()
      qs::qsave(att_l, att_f)
      m_to <- get_env_var("EMAIL_RECIPIENT")
