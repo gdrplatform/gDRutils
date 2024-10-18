@@ -763,7 +763,7 @@ calc_sd <- function(x) {
 #' @param body a character containing the body content of the email
 #' @param subject A string with the subject of the email
 #' @param to a string with the recipient's email address
-#' @param string with the sender's email address
+#' @param from string with the sender's email address
 #' @param html a logical flag indicating whether the body of the email should be parsed as HTML
 #' @param inline a logical flag indicating whether images in the HTML file should be embedded inline
 #' @param host_name a string with the hostname

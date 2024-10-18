@@ -5,27 +5,32 @@
 \title{send email by wrapping \code{mailR::send.mail}}
 \usage{
 send_email(
-  html_data,
-  to,
+  body,
   subject,
-  from = get_env_var("EMAIL_SENDER", "gdr-support-d@gene.com"),
-  inline = FALSE
+  to = get_env_var("EMAIL_RECIPIENT"),
+  from = get_env_var("EMAIL_SENDER"),
+  html = TRUE,
+  inline = FALSE,
+  host_name = get_env_var("EMAIL_HOSTNAME"),
+  attached_files = NULL
 )
 }
 \arguments{
-\item{to}{string with the recipient}
+\item{body}{a character containing the body content of the email}
 
-\item{subject}{string with the subject}
+\item{subject}{A string with the subject of the email}
 
-\item{from}{string with the sender}
+\item{to}{a string with the recipient's email address}
 
-\item{inline}{A boolean indicating whether images in the HTML file should be embedded inline}
+\item{from}{string with the sender's email address}
 
-\item{body}{body content of the email}
+\item{html}{a logical flag indicating whether the body of the email should be parsed as HTML}
 
-\item{html}{A boolean indicating whether the body of the email should be parsed as HTML}
+\item{inline}{a logical flag indicating whether images in the HTML file should be embedded inline}
 
-\item{attached_files}{A character with file paths to be attached to the email}
+\item{host_name}{a string with the hostname}
+
+\item{attached_files}{a character with file paths to be attached to the email}
 }
 \description{
 send email by wrapping \code{mailR::send.mail}
