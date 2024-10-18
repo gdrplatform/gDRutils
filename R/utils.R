@@ -790,8 +790,11 @@ send_email <-
     checkmate::assert_flag(html)
     checkmate::assert_flag(inline)
     checkmate::assert_from(host_name, min.chars = 1)
-    checkmate::assert_character(attached_files)
-    checkmate::assert_file_exists(attached_files)
+    if (!is.null(attached_files)) {
+      checkmate::assert_character(attached_files)
+      checkmate::assert_file_exists(attached_files)
+    }
+    
 
     mailR::send.mail(
       from = from,
