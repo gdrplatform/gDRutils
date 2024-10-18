@@ -219,7 +219,7 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
           NROW(dup_dt),
           NROW(dt),
           assay_name)
-     msg2 <- sprintf(" when checking uniquness with the following set of columns: '%s'. ",
+     msg2 <- sprintf(" when checking uniqueness with the following set of columns: '%s'. ",
           toString(get_assay_req_uniq_cols(dt)))
      msg3 <- sprintf("Here is the preview of the first %i duplicated rows in JSON format: '%s'",
           preview_numb,
