@@ -226,7 +226,7 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
           jsonlite::toJSON(dup_dt[seq(preview_numb), ]))
      msg <- paste0(msg, msg2, msg3)
 
-     if ("mail" %in% by) { 
+     if ("email" %in% by) { 
      att_l <- list(c(dup_dt = dup_dt, metadata))
      att_f <- tempfile()
      qs::qsave(att_l, att_f)
