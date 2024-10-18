@@ -223,7 +223,7 @@ notify_if_duplicates <- function(dt, by = "email", assay_name = "unknown", previ
           toString(get_assay_req_uniq_cols(dt)))
      msg3 <- sprintf("Here is the preview of the first %i duplicated rows in JSON format: '%s'",
           preview_max_numb,
-          jsonlite::toJSON(dup_dt[seq(preview_numb), ]))
+          jsonlite::toJSON(dup_dt[seq(preview_max_numb), ]))
      msg <- paste0(msg, msg2, msg3)
      m_sbj <- "[gDR] Error - unexpected duplicates found"
 
