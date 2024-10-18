@@ -800,7 +800,7 @@ send_email <-
       from = from,
       to = to,
       subject = subject,
-      body = html_data,
+      body = body,
       smtp = list(host.name = host_name),
       html = html,
       inline = inline,
