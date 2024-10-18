@@ -760,7 +760,7 @@ calc_sd <- function(x) {
 
 #' send email by wrapping `mailR::send.mail`
 #'
-#' @param body a body content of the email
+#' @param body a character containing the body content of the email
 #' @param to a string with the recipient
 #' @param subject a string with the subject
 #' @param from a string with the sender
