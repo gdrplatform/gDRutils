@@ -1,3 +1,6 @@
+## gDRutils 1.3.17 - 2024-10-18
+* add notification helpers
+
 ## gDRutils 1.3.16 - 2024-10-11
 * make duplicates' helpers supporting combo assays as well
 
