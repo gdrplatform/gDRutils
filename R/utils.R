@@ -784,7 +784,7 @@ send_email <-
     checkmate::assert_character(body)
     checkmate::assert_string(subject, min.chars = 1)
     checkmate::assert_string(to, min.chars = 1)
-    checkmate::assert_from(from, min.chars = 1)
+    checkmate::assert_string(from, min.chars = 1)
     checkmate::assert_flag(html)
     checkmate::assert_flag(inline)
     checkmate::assert_string(host_name, min.chars = 1)
