@@ -11,6 +11,7 @@ average_biological_replicates_dt(
   fixed = TRUE,
   geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
   fit_type_average_fields = get_header("metric_average_fields")$fit_type,
+  blacklisted_fields = get_header("metric_average_fields")$blacklisted,
   add_sd = FALSE
 )
 }
@@ -28,6 +29,9 @@ to take the geometric average of.}
 
 \item{fit_type_average_fields}{Character vector of column names in \code{dt}
 that should be treated as a column with fit type data}
+
+\item{blacklisted_fields}{Character vector of column names in \code{dt}
+that should be skipped in averaging}
 
 \item{add_sd}{Flag indicating whether to add standard deviation and count columns.}
 }

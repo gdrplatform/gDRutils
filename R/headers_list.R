@@ -204,6 +204,11 @@
       "Fit Type GR",
       "RV_fit_type",
       "GR_fit_type"
+   ),
+   blacklisted = c(
+     "Tissue", # sometimes this field is missing
+     "Reference Division Time", # sometimes this field is missing
+     "Parental Identifier" # sometimes suffixes incorrectly differentiate this field
    )
   )
 }

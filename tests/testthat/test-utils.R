@@ -249,9 +249,8 @@ test_that("average_biological_replicates_dt works as expected", {
   av2b <- average_biological_replicates_dt(av2f, var = "source_id")
   expect_true(all.equal(av1f, av2b))
   expect_true(nrow(av1f) == 1)
-  # even for an incorrect column name we check the differentiating columns
   av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
-  expect_true(nrow(av1i) == 2)
+  expect_true(nrow(av1i) == 8)
   
 })
 

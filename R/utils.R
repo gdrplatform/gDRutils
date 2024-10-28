@@ -435,6 +435,8 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' to take the geometric average of.
 #' @param fit_type_average_fields Character vector of column names in \code{dt} 
 #' that should be treated as a column with fit type data
+#' @param blacklisted_fields Character vector of column names in \code{dt} 
+#' that should be skipped in averaging
 #' @param add_sd Flag indicating whether to add standard deviation and count columns.
 #' 
 #' @examples
@@ -452,6 +454,7 @@ average_biological_replicates_dt <- function(
     fixed = TRUE,
     geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
     fit_type_average_fields = get_header("metric_average_fields")$fit_type,
+    blacklisted_fields = get_header("metric_average_fields")$blacklisted,
     add_sd = FALSE) {
   
   checkmate::assert_data_table(dt)
@@ -476,7 +479,8 @@ average_biological_replicates_dt <- function(
   average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var, iso_cols))
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
   fit_type_average_fields <- intersect(fit_type_average_fields, names(dt))
-  group_by <- get_assay_req_uniq_cols(dt)
+  blacklisted_fields <- intersect(blacklisted_fields, names(dt))
+  group_by <- setdiff(names(data), c(average_fields, var, id_cols, fit_type_average_fields, blacklisted_fields))
   
   if (add_sd) {
     # Calculate standard deviation for both average_fields and geometric_average_fields
