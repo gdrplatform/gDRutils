@@ -205,10 +205,16 @@
       "RV_fit_type",
       "GR_fit_type"
    ),
+   # due to the fact that there is some freedom in what values are in individual fields, 
+   # in order to avoid duplicates in the application we have to exclude some fields from 
+   # recognizing duplicates in averaging
    blacklisted = c(
      "Tissue", # sometimes this field is missing
-     "Reference Division Time", # sometimes this field is missing
-     "Parental Identifier" # sometimes suffixes incorrectly differentiate this field
+     "cellline_tissue",
+     "Reference Division Time", # sometimes this field has `NA`s
+     "cellline_ref_div_time",
+     "Parental Identifier", # sometimes suffixes incorrectly differentiate this field
+     "cellline_parental_identifier"
    )
   )
 }
