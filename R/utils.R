@@ -762,54 +762,6 @@ calc_sd <- function(x) {
 }
 
 
-#' send email by wrapping `mailR::send.mail`
-#'
-#' @param body a character containing the body content of the email
-#' @param subject A string with the subject of the email
-#' @param to a string with the recipient's email address
-#' @param from string with the sender's email address
-#' @param html a logical flag indicating whether the body of the email should be parsed as HTML
-#' @param inline a logical flag indicating whether images in the HTML file should be embedded inline
-#' @param host_name a string with the hostname
-#' @param attached_files a character with file paths to be attached to the email
-#'
-#' @keywords utils
-#' @export
-send_email <-
-  function(body,
-           subject,
-           to = get_env_var("EMAIL_RECIPIENT"),
-           from = get_env_var("EMAIL_SENDER"),
-           html = TRUE,
-           inline = FALSE,
-           host_name = get_env_var("EMAIL_HOSTNAME"),
-           attached_files = NULL) {
-
-    checkmate::assert_character(body)
-    checkmate::assert_string(subject, min.chars = 1)
-    checkmate::assert_string(to, min.chars = 1)
-    checkmate::assert_string(from, min.chars = 1)
-    checkmate::assert_flag(html)
-    checkmate::assert_flag(inline)
-    checkmate::assert_string(host_name, min.chars = 1)
-    if (!is.null(attached_files)) {
-      checkmate::assert_character(attached_files)
-      checkmate::assert_file_exists(attached_files)
-    }
-    
-
-    mailR::send.mail(
-      from = from,
-      to = to,
-      subject = subject,
-      body = body,
-      smtp = list(host.name = host_name),
-      html = html,
-      inline = inline,
-      attach.files = attached_files
-    )
-  }
-
 
 #' safe wrapper of Sys.getenv()
 #' 
