@@ -1,5 +1,8 @@
-## gDRutils 1.3.17 - 2024-10-18
+## gDRutils 1.3.18 - 2024-11-04
 * add notification helpers
+
+## gDRutils 1.3.17 - 2024-10-24
+* make average_biological_replicates_dt more restrictive - fewer columns to check for duplicates
 
 ## gDRutils 1.3.16 - 2024-10-11
 * make duplicates' helpers supporting combo assays as well

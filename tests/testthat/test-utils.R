@@ -252,7 +252,6 @@ test_that("average_biological_replicates_dt works as expected", {
   av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
   expect_true(nrow(av1i) == 8)
   
-  
 })
 
 test_that("has_single_codrug_data works as expected", {
