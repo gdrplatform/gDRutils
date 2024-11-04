@@ -771,7 +771,7 @@ calc_sd <- function(x) {
 #' 
 #' @param x string with the name of the environemntal variable
 #' @param ... additional params for Sys.getenev
-#' @keywords utils
+#' @keywords package_utils
 #
 #' @export 
 #' @return sanitized value of the env variable
