@@ -1,5 +1,5 @@
 ## gDRutils 1.3.18 - 2024-11-04
-* add notification helpers
+* add `get_env_var` helper
 
 ## gDRutils 1.3.17 - 2024-10-24
 * make average_biological_replicates_dt more restrictive - fewer columns to check for duplicates
