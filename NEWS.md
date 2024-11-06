@@ -1,5 +1,8 @@
-## gDRutils 1.3.18 - 2024-11-04
+## gDRutils 1.5.2 - 2024-11-05
 * add `get_env_var` helper
+
+## gDRutils 1.5.1 - 2024-11-05
+* synchronize Bioconductor and GitHub versioning
 
 ## gDRutils 1.3.17 - 2024-10-24
 * make average_biological_replicates_dt more restrictive - fewer columns to check for duplicates
