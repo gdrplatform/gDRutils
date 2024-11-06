@@ -19,4 +19,7 @@ So far the helper is needed to handle env vars containing \code{:}
 for which the backslash  is automatically added in some contexts
 and R could not get the original value for these env vars.
 }
+\examples{
+get_env_var("HOME")
+}
 \keyword{package_utils}
