@@ -761,3 +761,23 @@ calc_sd <- function(x) {
   }
 }
 
+
+
+#' safe wrapper of Sys.getenv()
+#' 
+#' So far the helper is needed to handle env vars containing `:` 
+#' for which the backslash  is automatically added in some contexts
+#' and R could not get the original value for these env vars.
+#' 
+#' @param x string with the name of the environemntal variable
+#' @param ... additional params for Sys.getenev
+#' @keywords package_utils
+#' 
+#' @examples 
+#' get_env_var("HOME")
+#
+#' @export 
+#' @return sanitized value of the env variable
+get_env_var <- function(x, ...) {
+  gsub("\\\\", "", Sys.getenv(x, ...))
+}

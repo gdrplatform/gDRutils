@@ -185,3 +185,4 @@ throw_msg_if_duplicates <- function(dt, assay_name = "unknown", msg_f = stop, pr
      msg_f(paste0(msg, msg2, msg3))
   }
 }
+

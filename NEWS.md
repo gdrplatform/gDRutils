@@ -1,3 +1,6 @@
+## gDRutils 1.5.2 - 2024-11-05
+* add `get_env_var` helper
+
 ## gDRutils 1.5.1 - 2024-11-05
 * synchronize Bioconductor and GitHub versioning
 
