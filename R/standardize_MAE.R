@@ -278,6 +278,44 @@ refine_rowdata <- function(rd, se, default_v = "Undefined") {
   rd
 }
 
+#' Set unique primary identifiers in the data.frame-like objects
+#'
+#' This function sets the primary field in the data.frame-like objects to be unique 
+#' by appending the secondary field in parentheses for duplicates.
+#'
+#' @param dt data.table, data.frame or DFrame with data
+#' @param primary_name string with the name of the primary field
+#' @param secondary_name string with the name of the secondary field
+#' @param sep string with separator added before suffix
+#' @return fixed input table with unique primary field in the table
+#' @examples
+#' col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
+#' col_data <- set_unique_names_dt(col_data, primary_name = "CellLineName", secondary_name = "clid")
+#' @keywords standardize_MAE
+#' 
+set_unique_names_dt <- function(dt, primary_name, secondary_name, sep = " ") {
+  
+  stopifnot(any(
+    inherits(col_data, "data.table") ||
+      inherits(col_data, "DFrame") || inherits(col_data, "data.frame")
+  )) 
+  
+  checkmate::assert_choice(primary_name, names(dt))
+  checkmate::assert_choice(secondary_name, names(dt))
+  
+  if (!is.null(dt[[primary_name]])) {
+    unique_sets <- if (inherits(dt, "data.table")) {
+      unique(dt[, c(primary_name, secondary_name), with = FALSE])
+    } else  {
+      unique(dt[, c(primary_name, secondary_name)])
+    }
+    dup_tbl <- table(unique_sets[[primary_name]])
+    duplicated_ids <- names(dup_tbl[dup_tbl >= 2])
+    dup_idx <- which(dt[[primary_name]] %in% duplicated_ids)
+    dt[[primary_name]][dup_idx] <- paste0(dt[[primary_name]][dup_idx], sep, "(", dt[[secondary_name]][dup_idx], ")")
+  }
+  dt
+}
 
 #' Set Unique Parental Identifiers
 #'
@@ -304,58 +342,35 @@ set_unique_cl_names <- function(se) {
   se
 }
 
-#' Set Unique Parental Identifiers in table
+#' Set unique primary cell line identifiers in the table
 #'
-#' This function sets the `CellLineName` field in 
-#' `colData` to be unique by appending the `clid` in parentheses for duplicates.
+#' This function sets the primary cell line field in data.frame-like object to be unique 
+#' by appending the secondary cell line field in parentheses for duplicates.
 #'
-#' @param col_data data.table or DFrame with col data
+#' @param dt data.table, data.frame or DFrame with the data
+#' @param primary_name string with the name of the primary cell line field
+#' @param secondary_name string with the name of the secondary cell line field
 #' @param sep string with separator added before suffix
-#' @return fixed input table with unique `CellLineName` in `colData`.
+#' @return fixed input table with unique primary cell line field in dt
 #' @examples
 #' col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
 #' col_data <- set_unique_cl_names_dt(col_data)
 #' @export
 #' @keywords standardize_MAE
 #' 
-set_unique_cl_names_dt <- function(col_data, sep = " ") {
-  stopifnot(any(inherits(col_data, "data.table") || inherits(col_data, "DFrame")))
-  
-  cellline_name <- get_env_identifiers("cellline_name")
-  clid <- get_env_identifiers("cellline")
-  
-  if (!is.null(col_data[[cellline_name]])) {
-    unique_col_names <- c(unlist(get_default_identifiers()[
-      c("cellline_name", "drug_name", "drug_name2",
-        "concentration2", "duration", "data_source")
-    ]), "normalization_type")
-    unique_col_names <- intersect(unique_col_names, names(col_data))
-    unique_col_names_clid <- c(unique_col_names, get_default_identifiers()$cellline)
-    if (data.table::is.data.table(col_data)) {
-      duplicated_ids <- col_data[[cellline_name]][duplicated(col_data, by = unique_col_names)]
-      duplicated_ids_with_clid <- col_data[[cellline_name]][duplicated(col_data, by = unique_col_names_clid)]
-    } else {
-      duplicated_ids <- col_data[[cellline_name]][duplicated(col_data[unique_col_names])]
-      duplicated_ids_with_clid <- col_data[[cellline_name]][duplicated(col_data[unique_col_names_clid])]
-    }
-    duplicated_ids <- setdiff(duplicated_ids, duplicated_ids_with_clid)
-    
-    if (length(duplicated_ids) > 0) {
-     for (dup_id in unique(duplicated_ids)) {
-      dup_indices <- which(col_data[[cellline_name]] == dup_id)
-      col_data[[cellline_name]][dup_indices] <- 
-        paste0(
-          col_data[[cellline_name]][dup_indices],
-          sep,
-          "(", 
-          col_data[[clid]][dup_indices], 
-          ")"
-        )
-      } 
-    }
+set_unique_cl_names_dt <- function(dt,
+                                   primary_name = get_env_identifiers("cellline_name"),
+                                   secondary_name = get_env_identifiers("cellline"),
+                                   sep = " ") {
+  checkmate::assert_string(primary_name)
+  checkmate::assert_string(secondary_name)
+  if (primary_name %in% names(dt)) {
+    dt <- set_unique_names_dt(dt, primary_name, secondary_name, sep = sep)
+  } else {
+    futile.logger::flog.trace("set_unique_cl_names_dt: \t there are no cell line fields in the data",
+                              name = "trace.logger")
   }
-  
-  col_data
+  dt
 }
 
 #' Set Unique Drug Names
@@ -386,16 +401,18 @@ set_unique_drug_names <- function(se) {
   se
 }
 
-
-#' Set Unique Drug Names in table
+#' Set unique primary drug identifiers in the table
 #'
-#' This function sets the `DrugName`, `DrugName_2`, and `DrugName_3` fields in 
-#' `rowData` to be unique by appending the corresponding `Gnumber`, `Gnumber_2`, 
-#' and `Gnumber_3` in parentheses for duplicates.
+#' This function sets the primary drug field(s) in data.frame-like object to be unique 
+#' by appending the secondary drug field(s) in parentheses for duplicates.
+#' By default `DrugName`, `DrugName_2`, and `DrugName_3` are primary drug fields,  
+#' while `Gnumber`, `Gnumber_2`, and `Gnumber_3` are their respective secondary drug fields.
 #'
-#' @param row_data data.table or DFrame with row data
+#' @param dt data.table, data.frame or DFrame with the data
+#' @param primary_names charvec with the names of the primary drug field(s)
+#' @param secondary_name charvec with the name of the secondary drug field(s)
 #' @param sep string with separator added before suffix
-#' @return fixed input table with unique `DrugName` fields in `rowData`.
+#' @return fixed input table with unique primary drug field in dt
 #' @examples
 #' row_data <- S4Vectors::DataFrame(
 #'   DrugName = c("DrugA", "DrugA", "DrugB"),
@@ -406,42 +423,30 @@ set_unique_drug_names <- function(se) {
 #' row_data <- set_unique_drug_names_dt(row_data)
 #' @export
 #' @keywords standardize_MAE
-#' 
-set_unique_drug_names_dt <- function(row_data, sep = " ") {
-  stopifnot(any(inherits(row_data, "data.table") || inherits(row_data, "DFrame")))
+set_unique_drug_names_dt <- function(dt,
+                                     primary_names = unlist(get_env_identifiers()[(c("drug_name", "drug_name2", "drug_name3"))]),
+                                     secondary_names = unlist(get_env_identifiers()[(c("drug", "drug2", "drug3"))]),
+                                     sep = " ") {
+ 
+  checkmate::assert_character(primary_names) 
+  checkmate::assert_character(secondary_names) 
   
-  drug_columns <- intersect(unlist(get_env_identifiers(c("drug_name", "drug_name2", "drug_name3"), simplify = FALSE)),
-                            names(row_data))
-  gnumber_columns <- intersect(unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE)),
-                               names(row_data))
+  primary_names <- intersect(primary_names, names(dt))
+  secondary_names <- intersect(secondary_names, names(dt))
+ 
+  stopifnot(NROW(primary_names) == NROW(secondary_names))
   
-  for (i in seq_along(drug_columns)) {
-    drug_col <- drug_columns[i]
-    gnumber_col <- gnumber_columns[i]
-    
-    if (!is.null(row_data[[drug_col]])) {
-      # Find duplicated drug names
-      duplicated_drugs <- row_data[[drug_col]][duplicated(row_data[[drug_col]])]
-      unique_drugs <- unique(duplicated_drugs)
-      
-      for (dup_drug in unique_drugs) {
-        dup_indices <- which(row_data[[drug_col]] == dup_drug)
-        if (length(unique(row_data[[gnumber_col]][dup_indices])) > 1) {
-          row_data[[drug_col]][dup_indices] <- 
-            paste0(
-              row_data[[drug_col]][dup_indices],
-              sep,
-              "(", 
-              row_data[[gnumber_col]][dup_indices], 
-              ")"
-            )
-        }
-      }
+  if (NROW(primary_names)) {
+    for (i in seq_along(primary_names)) {
+      dt <- set_unique_names_dt(dt, primary_names[i], secondary_names[i], sep = sep)
     }
+  } else {
+    futile.logger::flog.trace("set_unique_drug_names_dt: \t there are no drug fields in the data",
+                              name = "trace.logger")
   }
-  
-  row_data
+  dt
 }
+
 
 #' Set Unique Identifiers in MultiAssayExperiment
 #'
