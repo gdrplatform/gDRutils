@@ -297,7 +297,7 @@ set_unique_names_dt <- function(dt, primary_name, secondary_name, sep = " ") {
   
   stopifnot(any(
     inherits(dt, "data.table") ||
-      inherits(col_data, "DFrame") || inherits(col_data, "data.frame")
+      inherits(dt, "DFrame") || inherits(dt, "data.frame")
   )) 
   
   checkmate::assert_choice(primary_name, names(dt))
