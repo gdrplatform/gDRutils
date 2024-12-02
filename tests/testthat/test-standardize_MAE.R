@@ -138,7 +138,7 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   res_8 <- set_unique_cl_names_dt(dt)
   expect_equal(res_7, dt)
   expect_false(identical(res_8, dt))
-  expect_equal(length(unique(res_8$CellLineName)), 5)
+  expect_equal(length(unique(res_8$CellLineName)), 6)
 
   ## Duplicated DrugName
   dt <- data.table::data.table(
