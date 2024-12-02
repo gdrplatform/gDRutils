@@ -434,7 +434,7 @@ set_unique_drug_names_dt <- function(dt,
   primary_names <- intersect(primary_names, names(dt))
   secondary_names <- intersect(secondary_names, names(dt))
  
-  stopifnot(NROW(primary_names) == NROW(secondary_names))
+  checkmate::assert_true(NROW(primary_names) == NROW(secondary_names))
   
   if (NROW(primary_names)) {
     for (i in seq_along(primary_names)) {
