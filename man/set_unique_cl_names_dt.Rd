@@ -2,21 +2,30 @@
 % Please edit documentation in R/standardize_MAE.R
 \name{set_unique_cl_names_dt}
 \alias{set_unique_cl_names_dt}
-\title{Set Unique Parental Identifiers in table}
+\title{Set unique primary cell line identifiers in the table}
 \usage{
-set_unique_cl_names_dt(col_data, sep = " ")
+set_unique_cl_names_dt(
+  dt,
+  primary_name = get_env_identifiers("cellline_name"),
+  secondary_name = get_env_identifiers("cellline"),
+  sep = " "
+)
 }
 \arguments{
-\item{col_data}{data.table or DFrame with col data}
+\item{dt}{data.table, data.frame or DFrame with the data}
+
+\item{primary_name}{string with the name of the primary cell line field}
+
+\item{secondary_name}{string with the name of the secondary cell line field}
 
 \item{sep}{string with separator added before suffix}
 }
 \value{
-fixed input table with unique \code{CellLineName} in \code{colData}.
+fixed input table with unique primary cell line field in dt
 }
 \description{
-This function sets the \code{CellLineName} field in
-\code{colData} to be unique by appending the \code{clid} in parentheses for duplicates.
+This function sets the primary cell line field in data.frame-like object to be unique
+by appending the secondary cell line field in parentheses for duplicates.
 }
 \examples{
 col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))

@@ -2,22 +2,33 @@
 % Please edit documentation in R/standardize_MAE.R
 \name{set_unique_drug_names_dt}
 \alias{set_unique_drug_names_dt}
-\title{Set Unique Drug Names in table}
+\title{Set unique primary drug identifiers in the table}
 \usage{
-set_unique_drug_names_dt(row_data, sep = " ")
+set_unique_drug_names_dt(
+  dt,
+  primary_names = unlist(get_env_identifiers()[(c("drug_name", "drug_name2",
+    "drug_name3"))]),
+  secondary_names = unlist(get_env_identifiers()[(c("drug", "drug2", "drug3"))]),
+  sep = " "
+)
 }
 \arguments{
-\item{row_data}{data.table or DFrame with row data}
+\item{dt}{data.table, data.frame or DFrame with the data}
+
+\item{primary_names}{charvec with the names of the primary drug field(s)}
 
 \item{sep}{string with separator added before suffix}
+
+\item{secondary_name}{charvec with the name of the secondary drug field(s)}
 }
 \value{
-fixed input table with unique \code{DrugName} fields in \code{rowData}.
+fixed input table with unique primary drug field in dt
 }
 \description{
-This function sets the \code{DrugName}, \code{DrugName_2}, and \code{DrugName_3} fields in
-\code{rowData} to be unique by appending the corresponding \code{Gnumber}, \code{Gnumber_2},
-and \code{Gnumber_3} in parentheses for duplicates.
+This function sets the primary drug field(s) in data.frame-like object to be unique
+by appending the secondary drug field(s) in parentheses for duplicates.
+By default \code{DrugName}, \code{DrugName_2}, and \code{DrugName_3} are primary drug fields,
+while \code{Gnumber}, \code{Gnumber_2}, and \code{Gnumber_3} are their respective secondary drug fields.
 }
 \examples{
 row_data <- S4Vectors::DataFrame(
