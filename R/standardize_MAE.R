@@ -296,7 +296,7 @@ refine_rowdata <- function(rd, se, default_v = "Undefined") {
 set_unique_names_dt <- function(dt, primary_name, secondary_name, sep = " ") {
   
   stopifnot(any(
-    inherits(col_data, "data.table") ||
+    inherits(dt, "data.table") ||
       inherits(col_data, "DFrame") || inherits(col_data, "data.frame")
   )) 
   
