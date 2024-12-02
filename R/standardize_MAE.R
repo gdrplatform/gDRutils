@@ -295,10 +295,11 @@ refine_rowdata <- function(rd, se, default_v = "Undefined") {
 #' 
 set_unique_names_dt <- function(dt, primary_name, secondary_name, sep = " ") {
   
-  stopifnot(any(
-    inherits(dt, "data.table") ||
-      inherits(dt, "DFrame") || inherits(dt, "data.frame")
-  )) 
+  checkmate::assert(
+    checkmate::check_class(dt, "data.table"),
+    checkmate::check_class(dt, "DFrame"),
+    checkmate::check_class(dt, "data.frame")
+  )
   
   checkmate::assert_choice(primary_name, names(dt))
   checkmate::assert_choice(secondary_name, names(dt))
@@ -424,10 +425,10 @@ set_unique_drug_names <- function(se) {
 #' @export
 #' @keywords standardize_MAE
 set_unique_drug_names_dt <- function(dt,
-                                     primary_names = unlist(get_env_identifiers()[(c("drug_name", "drug_name2", "drug_name3"))]),
+                                     primary_names = unlist(get_env_identifiers()[(c("drug_name", "drug_name2", "drug_name3"))]), # nolint
                                      secondary_names = unlist(get_env_identifiers()[(c("drug", "drug2", "drug3"))]),
                                      sep = " ") {
- 
+  
   checkmate::assert_character(primary_names) 
   checkmate::assert_character(secondary_names) 
   
