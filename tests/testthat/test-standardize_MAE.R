@@ -94,6 +94,26 @@ test_that("get_optional_rowdata_fields works as expected", {
   expect_equal(opt_idfs2, idfs[["drug_moa"]])
 })
 
+test_that("set_unique_names works correctly", {
+  t_dframe <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"),
+                                   clid = c("C1", "C2"))
+  t_dt <- data.table::data.table(CellLineName = c("ID1", "ID1"),
+                                 clid = c("C1", "C2"))
+  t_df <- data.frame(CellLineName = c("ID1", "ID1"),
+                     clid = c("C1", "C2"))
+  
+  u_dframe <- set_unique_names_dt(t_dframe,
+                                  primary_name = "CellLineName",
+                                  secondary_name = "clid")
+  u_dt <- set_unique_names_dt(t_dt, primary_name = "CellLineName", secondary_name = "clid")
+  u_df <- set_unique_names_dt(t_df, primary_name = "CellLineName", secondary_name = "clid")
+  
+  expect_equal(data.table::as.data.table(u_df), u_dt)
+  expect_equal(data.table::as.data.table(u_dframe), u_dt)
+  
+  expect_error(set_unique_names_dt(list()), "Must inherit from")
+})
+
 
 test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly", {
   
@@ -138,7 +158,7 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   res_8 <- set_unique_cl_names_dt(dt)
   expect_equal(res_7, dt)
   expect_false(identical(res_8, dt))
-  expect_equal(length(unique(res_8$CellLineName)), 5)
+  expect_equal(length(unique(res_8$CellLineName)), 6)
 
   ## Duplicated DrugName
   dt <- data.table::data.table(

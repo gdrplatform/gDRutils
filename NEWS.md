@@ -1,3 +1,6 @@
+## gDRutils 1.5.3 - 2024-12-02
+* refactor `set_unique_*` functions
+
 ## gDRutils 1.5.2 - 2024-11-05
 * add `get_env_var` helper
 
