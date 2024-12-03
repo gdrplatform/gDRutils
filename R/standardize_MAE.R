@@ -292,6 +292,7 @@ refine_rowdata <- function(rd, se, default_v = "Undefined") {
 #' col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
 #' col_data <- set_unique_names_dt(col_data, primary_name = "CellLineName", secondary_name = "clid")
 #' @keywords standardize_MAE
+#' @export
 #' 
 set_unique_names_dt <- function(dt, primary_name, secondary_name, sep = " ") {
   
