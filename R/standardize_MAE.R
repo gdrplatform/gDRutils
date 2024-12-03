@@ -412,7 +412,7 @@ set_unique_drug_names <- function(se) {
 #'
 #' @param dt data.table, data.frame or DFrame with the data
 #' @param primary_names charvec with the names of the primary drug field(s)
-#' @param secondary_name charvec with the name of the secondary drug field(s)
+#' @param secondary_names charvec with the name of the secondary drug field(s)
 #' @param sep string with separator added before suffix
 #' @return fixed input table with unique primary drug field in dt
 #' @examples

@@ -17,9 +17,9 @@ set_unique_drug_names_dt(
 
 \item{primary_names}{charvec with the names of the primary drug field(s)}
 
-\item{sep}{string with separator added before suffix}
+\item{secondary_names}{charvec with the name of the secondary drug field(s)}
 
-\item{secondary_name}{charvec with the name of the secondary drug field(s)}
+\item{sep}{string with separator added before suffix}
 }
 \value{
 fixed input table with unique primary drug field in dt
