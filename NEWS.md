@@ -1,3 +1,6 @@
+## gDRutils 1.5.4 - 2024-12-09
+* minor improvement in the logic of `average_biological_replicates` (new blacklisted column)
+
 ## gDRutils 1.5.3 - 2024-12-02
 * refactor `set_unique_*` functions
 
