@@ -1,3 +1,6 @@
+## gDRutils 1.5.5 - 2024-12-10
+* make split_SE_components working correctly for sa assay data, modified with `avearge_biological_duplicates`
+
 ## gDRutils 1.5.4 - 2024-12-09
 * minor improvement in the logic of `average_biological_replicates` (new blacklisted column)
 

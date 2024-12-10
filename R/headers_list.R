@@ -112,7 +112,11 @@
     "x",
     "x_std",
     "std_RelativeViability",
-    "std_GRvalue"
+    "std_GRvalue",
+    # after averaging for biological replicates
+    "count",
+    "x_sd",
+    "x_std_sd"
   )
 }
 
@@ -132,7 +136,22 @@
     "p_value",
     "rss",
     "x_sd_avg",
-    "fit_type"
+    "fit_type",
+    # after averaging for biological replicates
+    "count",
+    "x_mean_sd",
+    "x_AOC_sd", 
+    "x_AOC_range_sd",
+    "xc50_sd",                
+    "x_max_sd",
+    "ec50_sd",
+    "x_inf_sd",
+    "x_0_sd", 
+    "h_sd",
+    "r2_sd",
+    "x_sd_avg_sd",
+    "maxlog10Concentration_sd",
+    "N_conc_sd"               
   )
 }
 
