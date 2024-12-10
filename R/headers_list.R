@@ -236,7 +236,7 @@
      "Reference Division Time", # sometimes this field has `NA`s
      "ReferenceDivisionTime",
      # parental identifier
-     "cellline_parental_identifier"
+     "cellline_parental_identifier",
      "Parental Identifier", # sometimes suffixes incorrectly differentiate this field
      "parental_identifier", # sometimes suffixes incorrectly differentiate this field
    )
