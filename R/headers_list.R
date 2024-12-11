@@ -201,7 +201,7 @@
       "fit_type_GR",
       "GR_mean_sd",
       "GR_AOC_sd",
-      "GR_AOC_range",
+      "GR_AOC_range_sd",
       "GR50_sd",
       "GR_max_sd",
       "GEC50_sd",
