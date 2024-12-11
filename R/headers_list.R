@@ -209,12 +209,17 @@
    # in order to avoid duplicates in the application we have to exclude some fields from 
    # recognizing duplicates in averaging
    blacklisted = c(
-     "Tissue", # sometimes this field is missing
+     # tissue
      "cellline_tissue",
-     "Reference Division Time", # sometimes this field has `NA`s
+     "Tissue", # sometimes this field is missing
+     # reference division time
      "cellline_ref_div_time",
+     "Reference Division Time", # sometimes this field has `NA`s
+     "ReferenceDivisionTime",
+     # parental identifier
+     "cellline_parental_identifier",
      "Parental Identifier", # sometimes suffixes incorrectly differentiate this field
-     "cellline_parental_identifier"
+     "parental_identifier" # sometimes suffixes incorrectly differentiate this field
    )
   )
 }
