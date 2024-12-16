@@ -491,7 +491,7 @@ logistic_metrics <- function(c, x_metrics) {
   # remove cols ending with "_sd"
   # they are not present in the primary assays 
   # but only with the assays followed by averaging of biological replicates
-  resp_metric_cols <- grep("_sd$", resp_metric_all_cols, invert = TRUE, value = TRUE) 
+  resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
   
   out <- as.list(rep(NA, length(resp_metric_cols)))
   names(out) <- resp_metric_cols
