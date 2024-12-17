@@ -21,9 +21,12 @@
 
   HEADERS_LIST[["metrics_results"]] <- c(
     "maxlog10Concentration",
+    "maxlog10Concentration_sd",
     "N_conc",
+    "N_conc_sd", 
     "cotrt_value",
     "source",
+    "count",
     HEADERS_LIST[["response_metrics"]],
     as.character(HEADERS_LIST[["metrics_names"]])
   )
@@ -112,7 +115,11 @@
     "x",
     "x_std",
     "std_RelativeViability",
-    "std_GRvalue"
+    "std_GRvalue",
+    # after averaging for biological replicates
+    "count",
+    "x_sd",
+    "x_std_sd"
   )
 }
 
@@ -132,7 +139,18 @@
     "p_value",
     "rss",
     "x_sd_avg",
-    "fit_type"
+    "fit_type",
+    "x_mean_sd",
+    "x_AOC_sd",
+    "x_AOC_range_sd",
+    "xc50_sd",
+    "x_max_sd",
+    "ec50_sd",
+    "x_inf_sd",
+    "x_0_sd",
+    "h_sd",
+    "r2_sd",
+    "x_sd_avg_sd"
   )
 }
 
@@ -153,7 +171,18 @@
       "RV_p_value",
       "RV_rss",
       "RV_sd_avg",
-      "fit_type_RV"
+      "fit_type_RV",
+      "RV_mean_sd",
+      "RV_AOC_sd",
+      "RV_AOC_range_sd",
+      "IC50_sd",
+      "E_max_sd",
+      "EC50_sd",
+      "E_inf_sd",
+      "E_0_sd",
+      "h_RV_sd",
+      "RV_r2_sd",
+      "RV_sd_avg_sd"
     ),
     GR = c(
       "GR_mean",
@@ -169,7 +198,18 @@
       "GR_p_value",
       "GR_rss",
       "GR_sd_avg",
-      "fit_type_GR"
+      "fit_type_GR",
+      "GR_mean_sd",
+      "GR_AOC_sd",
+      "GR_AOC_range_sd",
+      "GR50_sd",
+      "GR_max_sd",
+      "GEC50_sd",
+      "GR_inf_sd",
+      "GR_0_sd",
+      "h_GR_sd",
+      "GR_r2_sd",
+      "GR_sd_avg_sd"
     )
   )
 }

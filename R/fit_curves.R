@@ -78,7 +78,7 @@ fit_curves <- function(df_,
   if (length(setdiff(opt_fields, colnames(df_))) > 0L) {
     df_[, setdiff(opt_fields, colnames(df_))] <- NA
   }
-  df_metrics <- .apllyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
+  df_metrics <- .applyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
                                   pcutoff, cap, n_point_cutoff)
   
   is_unique_normalization_type_and_fit_source <- 
@@ -94,7 +94,7 @@ fit_curves <- function(df_,
 }
 
 #' @keywords internal
-.apllyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
+.applyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
                               pcutoff, cap, n_point_cutoff) {
   
   df_metrics <- NULL
@@ -487,7 +487,12 @@ logistic_metrics <- function(c, x_metrics) {
 #' @keywords fit_curves
 #' @export
 .setup_metric_output <- function() {
-  resp_metric_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+  resp_metric_all_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+  # remove cols ending with "_sd"
+  # they are not present in the primary assays 
+  # but only with the assays followed by averaging of biological replicates
+  resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
+  
   out <- as.list(rep(NA, length(resp_metric_cols)))
   names(out) <- resp_metric_cols
   out

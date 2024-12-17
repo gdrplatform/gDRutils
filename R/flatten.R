@@ -56,7 +56,9 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   uniquifying <- unique(uniquifying)
 
   out <- split(subset(tbl, select = -idx), subset(tbl, select = idx), sep = sep)
-  missing <- setdiff(wide_cols, colnames(tbl))
+  
+  # in original assays there are no columns with SD-related data (with names ending with "_sd")
+  missing <- setdiff(wide_cols[!grepl("_sd$", wide_cols)], colnames(tbl))
   if (length(missing) != 0L) {
     warning(sprintf("missing listed wide_cols columns: '%s'", paste0(missing, collapse = ", ")))
   }
