@@ -14,12 +14,12 @@ remove_drug_batch(
 \arguments{
 \item{v}{character vector with drug id(s)}
 
-\item{drug_p}{string with regex pattern for drug id. Set to Gnumber by default: "G[0-9]{8}".}
+\item{drug_p}{string with regex pattern for drug id. Set to Gnumber by default: "G[0-9]\{8\}".}
 
 \item{sep_p}{string with regex pattern for separator. Set to "\\." by default}
 
 \item{batch_p}{string with regex pattern for batch substring.
-By default Set tu multiple non-comma and non-semicolor chars: "\link{^;|^,}+"}
+By default Set tu multiple non-comma and non-semicolor chars: "[^;|^,]+"}
 }
 \value{
 charvec with Gnumber(s)
