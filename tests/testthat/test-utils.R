@@ -580,3 +580,38 @@ test_that("calc_sd works as expected", {
   expect_equal(calc_sd(c(1, 2, NA, 4, 5)), sd(c(1, 2, NA, 4, 5), na.rm = TRUE))
   expect_true(is.na(calc_sd(c(NA, NA, NA))))
 })
+
+test_that("remove_drug_batch", {
+  # no suffix - nothing changes
+  expect_equal(remove_drug_batch("G00060245"), "G00060245")
+  # expected suffix - remove
+  expect_equal(remove_drug_batch("G00060245.1-8"), "G00060245")
+  expect_equal(remove_drug_batch("G00060245.18"), "G00060245")
+  expect_equal(remove_drug_batch("G02948263.1-1.DMA"), "G02948263")
+  # unsupported suffix - nothing changes (codrug)
+  expect_equal(remove_drug_batch("G03252046.1-2;G00376771"),
+               "G03252046.1-2;G00376771")
+  # unsupported suffix - nothing changes (drug name)
+  expect_equal(remove_drug_batch("G00018838, Cisplatin"),
+               "G00018838, Cisplatin")
+  # unsupported suffix - nothing changes (two codrugs)
+  expect_equal(
+    remove_drug_batch("03256376.1-2;G00376771.1-19;G02557755"),
+    "03256376.1-2;G00376771.1-19;G02557755"
+  )
+  # suffix added by function - nothing changes (prevent duplication)
+  expect_equal(remove_drug_batch("G00060245_(G00060245.1-8)"),
+               "G00060245_(G00060245.1-8)")
+  
+  expect_equal(remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+"),
+               "DRUG_01")
+  
+  expect_error(remove_drug_batch(list(drug = "G00000001")), "Assertion on 'v' failed")
+  expect_error(remove_drug_batch("G00000001", drug_p = list(1)),
+               "Assertion on 'drug_p' failed")
+  expect_error(remove_drug_batch("G00000001", sep_p = list(1)),
+               "Assertion on 'sep_p' failed")
+  expect_error(remove_drug_batch("G00000001", batch_p = list(1)),
+               "Assertion on 'batch_p' failed")
+  
+})
