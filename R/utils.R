@@ -782,54 +782,56 @@ get_env_var <- function(x, ...) {
   gsub("\\\\", "", Sys.getenv(x, ...))
 }
 
-#' Remove batch from Gnumber
+#' Remove batch substring from drug id
+#'
+#' Gnumber, i.e. "G[0-9]{8}" is currently the default format of drug_id. It's also used as drug name in some cases.
+#'
+#' By default, Gnumber(s) followed by the batch substring are cleaned.
+#'   a) G00060245.18 => G00060245
+#'   b) G00060245.1-8 => G00060245
+#'   c) G02948263.1-1.DMA => G02948263
+#'
+#' By default, Gnumber(s) followed not only by the batch substring are not modified.
+#'   a) Gnumber followed by the codrug
+#'      G03252046.1-2;G00376771 => G03252046
+#'   b) Gnumber followed by the drug name
+#'     G00018838, Cisplatin => G00018838
+#'   c) Gnumber followed by the two codrugs
+#'      G03256376.1-2;G00376771.1-19;G02557755 => G03256376
+#'   d) Gnumber with suffix added to prevent duplicated ids
+#'      G00060245_(G00060245.1-8)
 #' 
-#' @param drug drug name
+#' @param v character vector with drug id(s)
+#' @param drug_p string with regex pattern for drug id. Set to Gnumber by default: "G[0-9]{8}".
+#' @param sep_p string with regex pattern for separator. Set to "\\." by default
+#' @param batch_p string with regex pattern for batch substring. 
+#'        By default Set tu multiple non-comma and non-semicolor chars: "[^;|^,]+"
 #'
 #' @examples
-#' remove_drug_batch("DRUG.123")
+#' remove_drug_batch("G00060245.18")
+#' remove_drug_batch("G00060245.1-8")
+#' remove_drug_batch("G00060245.1-1.DMA")
 #'
-#' @keywords annotation
-#' @return Gnumber without a batch
+#' remove_drug_batch("G03252046.1-2;G00376771")
+#' remove_drug_batch("G00018838, Cisplatin")
+#' remove_drug_batch("G03256376.1-2;G00376771.1-19;G02557755")
+#' remove_drug_batch("G00060245_(G00060245.1-8)")
+#'
+#' remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+")
+#'
+#' @return charvec with Gnumber(s)
 #' @export
-remove_drug_batch <- function(drug) {
-  gsub("\\.[0-9]+.*", "", drug)
-}
-
-# TODO -  GDR-2702: remove the function once the datasets' metadata is updated with the fixes (in DSDB)
-#' cleanup_gnumbers
-#' 
-#' Gnumber is currently our internal drug_id. It's also used as drug name in some cases
-#' There are few scenarios where Gnumber requires cleanup:
-#' 1. Gnumber with batch version: 
-#'     G00060245.1-8 => G00060245
-#' 2. Gnumber followed by the codrug
-#'     G03252046.1-2;G00376771 => G03252046
-#' 3. Gnumber followed by the drug name
-#'     G00018838, Cisplatin => G00018838
-#' 4. Gnumber followed by the batch version and comment
-#'     G02948263.1-1.DMA => G02948263
-#' 5. Gnumber followed by the two codrugs
-#'     G03256376.1-2;G00376771.1-19;G02557755 => G03256376
-#' 
-#' In current solution we cover only first scenario. Cleaning for all scenarios 
-#'   generate some issues with duplication.
-#'  
-#'  @param v character vector with Gnumber(s)
-#'  
-#' @keywords internal
-cleanup_gnumbers <- function(v) {
-  
+#' @keywords package_utils
+remove_drug_batch <- function(v,
+                              drug_p = "^G[0-9]{8}",
+                              sep_p = "\\.",
+                              batch_p = "[^;|^,]+") {
   checkmate::assert_character(v)
+  checkmate::assert_string(drug_p)
+  checkmate::assert_string(sep_p)
+  checkmate::assert_string(batch_p)
   
-  p <- "(^G[0-9]{8}).+[0-9]-[0-9]$"
-  r <- "\\1"
-  sub(p, r, v)
-}
-
-
-remove_drug_batch_new <- function(v) {
-  p <- "(^G[0-9]{8})\\.[^;|^,]+$"
+  p <- paste0("(", drug_p, ")", sep_p, batch_p, "$")
   r <- "\\1"
   sub(p, r, v)
 }
