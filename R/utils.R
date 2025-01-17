@@ -802,7 +802,7 @@ get_env_var <- function(x, ...) {
 #'      G00060245_(G00060245.1-8)
 #' 
 #' @param v character vector with drug id(s)
-#' @param drug_p string with regex pattern for drug id. Set to Gnumber by default: "G\[0-9\]\{8\}".
+#' @param drug_p string with regex pattern for drug id. Set to Gnumber format by default: "G\[0-9\]\{8\}".
 #' @param sep_p string with regex pattern for separator. Set to "\\." by default
 #' @param batch_p string with regex pattern for batch substring. 
 #'        By default set to multiple non-comma and non-semicolon chars: "\[^;|^,\]+"
