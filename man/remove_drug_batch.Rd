@@ -67,6 +67,8 @@ remove_drug_batch("G00060245_(G00060245.1-8)")
 remove_drug_batch(c("G00060245.18", "G00060245.1-8", "G00060245.1-1.DMA"))
 
 remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+")
+remove_drug_batch("G00001234:22-1", sep_p = ":")
+remove_drug_batch("G00001234.28", batch_p = "[0-9]+")
 
 }
 \keyword{package_utils}
