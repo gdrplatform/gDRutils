@@ -816,6 +816,7 @@ get_env_var <- function(x, ...) {
 #' remove_drug_batch("G00018838, Cisplatin")
 #' remove_drug_batch("G03256376.1-2;G00376771.1-19;G02557755")
 #' remove_drug_batch("G00060245_(G00060245.1-8)")
+#' remove_drug_batch(c("G00060245.18", "G00060245.1-8", "G00060245.1-1.DMA"))
 #'
 #' remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+")
 #'
