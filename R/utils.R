@@ -786,20 +786,20 @@ get_env_var <- function(x, ...) {
 #'
 #' Gnumber, i.e. "G12345678" is currently the default format of drug_id. It's also used as a drug name in some cases.
 #'
-#' By default, Gnumber(s) followed by the batch substring are cleaned.
-#'   a) G00060245.18 => G00060245
-#'   b) G00060245.1-8 => G00060245
-#'   c) G02948263.1-1.DMA => G02948263
+#' By default, Gnumber(s) followed by the batch substring are cleaned:
+#'  * G00060245.18 => G00060245
+#'  * G00060245.1-8 => G00060245
+#'  * G02948263.1-1.DMA => G02948263
 #'
-#' By default, Gnumber(s) followed not only by the batch substring are not modified.
-#'   a) Gnumber followed by the codrug
-#'      G03252046.1-2;G00376771 => G03252046
-#'   b) Gnumber followed by the drug name
-#'     G00018838, Cisplatin => G00018838
-#'   c) Gnumber followed by the two codrugs
-#'      G03256376.1-2;G00376771.1-19;G02557755 => G03256376
-#'   d) Gnumber with suffix added to prevent duplicated ids
-#'      G00060245_(G00060245.1-8)
+#' By default, Gnumber(s) followed not only by the batch substring are not modified:
+#'  * Gnumber followed by the codrug
+#'    * G03252046.1-2;G00376771 => G03252046
+#'  * Gnumber followed by the drug name
+#'    * G00018838, Cisplatin => G00018838
+#'  * Gnumber followed by the two codrugs
+#'    * G03256376.1-2;G00376771.1-19;G02557755 => G03256376
+#'  *  Gnumber with suffix added to prevent duplicated ids
+#'     * G00060245_(G00060245.1-8)
 #' 
 #' @param v character vector with drug id(s)
 #' @param drug_p string with regex pattern for drug id. Set to Gnumber format by default: "G\[0-9\]\{8\}".

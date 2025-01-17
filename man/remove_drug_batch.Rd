@@ -14,34 +14,46 @@ remove_drug_batch(
 \arguments{
 \item{v}{character vector with drug id(s)}
 
-\item{drug_p}{string with regex pattern for drug id. Set to Gnumber by default: "G[0-9]\{8\}".}
+\item{drug_p}{string with regex pattern for drug id. Set to Gnumber format by default: "G[0-9]\{8\}".}
 
 \item{sep_p}{string with regex pattern for separator. Set to "\\." by default}
 
 \item{batch_p}{string with regex pattern for batch substring.
-By default Set tu multiple non-comma and non-semicolor chars: "[^;|^,]+"}
+By default set to multiple non-comma and non-semicolon chars: "[^;|^,]+"}
 }
 \value{
 charvec with Gnumber(s)
 }
 \description{
-Gnumber, i.e. "G[0-9]{8}" is currently the default format of drug_id. It's also used as drug name in some cases.
+Gnumber, i.e. "G12345678" is currently the default format of drug_id. It's also used as a drug name in some cases.
 }
 \details{
-By default, Gnumber(s) followed by the batch substring are cleaned.
-a) G00060245.18 => G00060245
-b) G00060245.1-8 => G00060245
-c) G02948263.1-1.DMA => G02948263
+By default, Gnumber(s) followed by the batch substring are cleaned:
+\itemize{
+\item G00060245.18 => G00060245
+\item G00060245.1-8 => G00060245
+\item G02948263.1-1.DMA => G02948263
+}
 
-By default, Gnumber(s) followed not only by the batch substring are not modified.
-a) Gnumber followed by the codrug
-G03252046.1-2;G00376771 => G03252046
-b) Gnumber followed by the drug name
-G00018838, Cisplatin => G00018838
-c) Gnumber followed by the two codrugs
-G03256376.1-2;G00376771.1-19;G02557755 => G03256376
-d) Gnumber with suffix added to prevent duplicated ids
-G00060245_(G00060245.1-8)
+By default, Gnumber(s) followed not only by the batch substring are not modified:
+\itemize{
+\item Gnumber followed by the codrug
+\itemize{
+\item G03252046.1-2;G00376771 => G03252046
+}
+\item Gnumber followed by the drug name
+\itemize{
+\item G00018838, Cisplatin => G00018838
+}
+\item Gnumber followed by the two codrugs
+\itemize{
+\item G03256376.1-2;G00376771.1-19;G02557755 => G03256376
+}
+\item Gnumber with suffix added to prevent duplicated ids
+\itemize{
+\item G00060245_(G00060245.1-8)
+}
+}
 }
 \examples{
 remove_drug_batch("G00060245.18")
