@@ -805,7 +805,7 @@ get_env_var <- function(x, ...) {
 #' @param drug_p string with regex pattern for drug id. Set to Gnumber by default: "G\[0-9\]\{8\}".
 #' @param sep_p string with regex pattern for separator. Set to "\\." by default
 #' @param batch_p string with regex pattern for batch substring. 
-#'        By default Set tu multiple non-comma and non-semicolor chars: "\[^;|^,\]+"
+#'        By default set to multiple non-comma and non-semicolon chars: "\[^;|^,\]+"
 #'
 #' @examples
 #' remove_drug_batch("G00060245.18")
