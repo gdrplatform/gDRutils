@@ -784,7 +784,7 @@ get_env_var <- function(x, ...) {
 
 #' Remove batch substring from drug id
 #'
-#' Gnumber, i.e. "G[0-9]{8}" is currently the default format of drug_id. It's also used as a drug name in some cases.
+#' Gnumber, i.e. "G12345678" is currently the default format of drug_id. It's also used as a drug name in some cases.
 #'
 #' By default, Gnumber(s) followed by the batch substring are cleaned.
 #'   a) G00060245.18 => G00060245
