@@ -602,9 +602,13 @@ test_that("remove_drug_batch", {
   # suffix added by function - nothing changes (prevent duplication)
   expect_equal(remove_drug_batch("G00060245_(G00060245.1-8)"),
                "G00060245_(G00060245.1-8)")
-  
+ 
+  # test non-default values of other parameters
   expect_equal(remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+"),
                "DRUG_01")
+  expect_equal(remove_drug_batch("G00001234:22-1", sep_p = ":"), "G00001234")
+  expect_equal(remove_drug_batch("G00001234.28", batch_p = "[0-9]+"),
+               "G00001234")
   
   expect_error(remove_drug_batch(list(drug = "G00000001")), "Assertion on 'drug_vec' failed")
   expect_error(remove_drug_batch("G00000001", drug_p = list(1)),
