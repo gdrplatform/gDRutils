@@ -801,7 +801,7 @@ get_env_var <- function(x, ...) {
 #'  *  Gnumber with suffix added to prevent duplicated ids
 #'     * G00060245_(G00060245.1-8)
 #' 
-#' @param v character vector with drug id(s)
+#' @param drug_vec character vector with drug id(s)
 #' @param drug_p string with regex pattern for drug id. Set to Gnumber format by default: "G\[0-9\]\{8\}".
 #' @param sep_p string with regex pattern for separator. Set to "\\." by default
 #' @param batch_p string with regex pattern for batch substring. 
@@ -822,16 +822,16 @@ get_env_var <- function(x, ...) {
 #' @return charvec with Gnumber(s)
 #' @export
 #' @keywords package_utils
-remove_drug_batch <- function(v,
+remove_drug_batch <- function(drug_vec,
                               drug_p = "^G[0-9]{8}",
                               sep_p = "\\.",
                               batch_p = "[^;|^,]+") {
-  checkmate::assert_character(v)
+  checkmate::assert_character(drug_vec)
   checkmate::assert_string(drug_p)
   checkmate::assert_string(sep_p)
   checkmate::assert_string(batch_p)
   
   p <- paste0("(", drug_p, ")", sep_p, batch_p, "$")
   r <- "\\1"
-  sub(p, r, v)
+  sub(p, r, drug_vec)
 }

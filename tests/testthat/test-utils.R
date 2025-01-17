@@ -606,7 +606,7 @@ test_that("remove_drug_batch", {
   expect_equal(remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+"),
                "DRUG_01")
   
-  expect_error(remove_drug_batch(list(drug = "G00000001")), "Assertion on 'v' failed")
+  expect_error(remove_drug_batch(list(drug = "G00000001")), "Assertion on 'drug_vec' failed")
   expect_error(remove_drug_batch("G00000001", drug_p = list(1)),
                "Assertion on 'drug_p' failed")
   expect_error(remove_drug_batch("G00000001", sep_p = list(1)),

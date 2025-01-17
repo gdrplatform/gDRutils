@@ -5,14 +5,14 @@
 \title{Remove batch substring from drug id}
 \usage{
 remove_drug_batch(
-  v,
+  drug_vec,
   drug_p = "^G[0-9]{8}",
   sep_p = "\\\\.",
   batch_p = "[^;|^,]+"
 )
 }
 \arguments{
-\item{v}{character vector with drug id(s)}
+\item{drug_vec}{character vector with drug id(s)}
 
 \item{drug_p}{string with regex pattern for drug id. Set to Gnumber format by default: "G[0-9]\{8\}".}
 
