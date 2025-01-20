@@ -28,7 +28,8 @@ charvec with Gnumber(s)
 Gnumber, i.e. "G12345678" is currently the default format of drug_id. It's also used as a drug name in some cases.
 }
 \details{
-By default, Gnumber(s) followed by the "." and any batch substring are cleaned:
+By default, Gnumber(s) followed by any character (except for underscore and any digit)
+and any batch substring are cleaned:
 \itemize{
 \item G00060245.18 => G00060245
 \item G00060245.1-8 => G00060245
@@ -41,17 +42,21 @@ By default, Gnumber(s) followed by the "." and any batch substring are cleaned:
 \itemize{
 \item G03256376.1-2;G00376771.1-19;G02557755 => G03256376
 }
-}
-
-By default, Gnumber(s) not followed by the "." (regardless the batch substring) are not cleaned:
-\itemize{
 \item Gnumber followed by the drug name
 \itemize{
 \item G00018838, Cisplatin => G00018838
 }
+}
+
+By default, Gnumber(s) followed by the "_" or digit (regardless the batch substring) are not cleaned:
+\itemize{
 \item Gnumber with suffix added to prevent duplicated ids
 \itemize{
 \item G00060245_(G00060245.1-8)
+}
+\item too long Gnumber
+\itemize{
+\item G123456789.1-12
 }
 }
 }
