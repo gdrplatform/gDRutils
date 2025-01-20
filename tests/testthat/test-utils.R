@@ -588,18 +588,16 @@ test_that("remove_drug_batch", {
   expect_equal(remove_drug_batch("G00060245.1-8"), "G00060245")
   expect_equal(remove_drug_batch("G00060245.18"), "G00060245")
   expect_equal(remove_drug_batch("G02948263.1-1.DMA"), "G02948263")
-  # unsupported suffix - nothing changes (codrug)
-  expect_equal(remove_drug_batch("G03252046.1-2;G00376771"),
-               "G03252046.1-2;G00376771")
-  # unsupported suffix - nothing changes (drug name)
-  expect_equal(remove_drug_batch("G00018838, Cisplatin"),
-               "G00018838, Cisplatin")
-  # unsupported suffix - nothing changes (two codrugs)
+  # (single codrug) - remove
+  expect_equal(remove_drug_batch("G03252046.1-2;G00376771"), "G03252046")
+  # (two codrugs) - remove
   expect_equal(
-    remove_drug_batch("03256376.1-2;G00376771.1-19;G02557755"),
-    "03256376.1-2;G00376771.1-19;G02557755"
-  )
-  # suffix added by function - nothing changes (prevent duplication)
+    remove_drug_batch("G03256376.1-2;G00376771.1-19;G02557755"), "G03256376")
+  
+  # (Gnumber followed by the ",") -remove
+  expect_equal(remove_drug_batch("G00018838, Cisplatin"), "G00018838")
+  
+  # suffix added by gDRutils::set_unique_drug_names_dt function (prevent duplication) - nothing changes
   expect_equal(remove_drug_batch("G00060245_(G00060245.1-8)"),
                "G00060245_(G00060245.1-8)")
  

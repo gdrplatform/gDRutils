@@ -7,8 +7,8 @@
 remove_drug_batch(
   drug_vec,
   drug_p = "^G[0-9]{8}",
-  sep_p = "\\\\.",
-  batch_p = "[^;|^,]+"
+  sep_p = "[^0-9|^_]",
+  batch_p = ".+"
 )
 }
 \arguments{
@@ -16,10 +16,10 @@ remove_drug_batch(
 
 \item{drug_p}{string with regex pattern for drug id. Set to Gnumber format by default: "G[0-9]\{8\}".}
 
-\item{sep_p}{string with regex pattern for separator. Set to "\\." by default}
+\item{sep_p}{string with regex pattern for separator. Set to any character except for digit and space}
 
 \item{batch_p}{string with regex pattern for batch substring.
-By default set to multiple non-comma and non-semicolon chars: "[^;|^,]+"}
+By default set to any character(s): ".+"}
 }
 \value{
 charvec with Gnumber(s)
@@ -28,26 +28,26 @@ charvec with Gnumber(s)
 Gnumber, i.e. "G12345678" is currently the default format of drug_id. It's also used as a drug name in some cases.
 }
 \details{
-By default, Gnumber(s) followed by the batch substring are cleaned:
+By default, Gnumber(s) followed by the "." and any batch substring are cleaned:
 \itemize{
 \item G00060245.18 => G00060245
 \item G00060245.1-8 => G00060245
 \item G02948263.1-1.DMA => G02948263
-}
-
-By default, Gnumber(s) followed not only by the batch substring are not modified:
-\itemize{
 \item Gnumber followed by the codrug
 \itemize{
 \item G03252046.1-2;G00376771 => G03252046
 }
-\item Gnumber followed by the drug name
-\itemize{
-\item G00018838, Cisplatin => G00018838
-}
 \item Gnumber followed by the two codrugs
 \itemize{
 \item G03256376.1-2;G00376771.1-19;G02557755 => G03256376
+}
+}
+
+By default, Gnumber(s) not followed by the "." (regardless the batch substring) are not cleaned:
+\itemize{
+\item Gnumber followed by the drug name
+\itemize{
+\item G00018838, Cisplatin => G00018838
 }
 \item Gnumber with suffix added to prevent duplicated ids
 \itemize{
