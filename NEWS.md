@@ -1,3 +1,6 @@
+## gDRutils 1.5.6 - 2025-01-13
+* refactor `remove_drug_batch`
+
 ## gDRutils 1.5.5 - 2024-12-10
 * make split_SE_components working correctly for sa assay data, modified with `avearge_biological_duplicates`
 
