@@ -641,8 +641,8 @@ test_that("cap_assay_inifity", {
   inf_idx2 <- which(is.infinite(smetrics_data2$xc50))
   expect_true(NROW(inf_idx2) == 0)
   ##  Inf values
-  expect_identical(5 * max(smetrics_data2[inf_idx, "xc50"]) , max(smetrics_data3[inf_idx, "xc50"]))
-  expect_identical(min(smetrics_data2[inf_idx, "xc50"]) / 5 , min(smetrics_data3[inf_idx, "xc50"]))
+  expect_identical(5 * max(smetrics_data2[inf_idx, "xc50"]), max(smetrics_data3[inf_idx, "xc50"]))
+  expect_identical(min(smetrics_data2[inf_idx, "xc50"]) / 5, min(smetrics_data3[inf_idx, "xc50"]))
   
   ## data without infinities
   smetrics_data4 <- gDRutils::cap_assay_infinites(saveraged_data, smetrics_data2, experiment_name = "single-agent")
@@ -677,8 +677,8 @@ test_that("cap_assay_inifity", {
   infc_idx2 <- which(is.infinite(scmetrics_data2$xc50))
   expect_true(NROW(infc_idx2) == 0)
   ##  Inf values
-  expect_identical(5 * max(scmetrics_data2[infc_idx, "xc50"]) , max(scmetrics_data3[infc_idx, "xc50"]))
-  expect_identical(min(scmetrics_data2[infc_idx, "xc50"]) / 5 , min(scmetrics_data3[infc_idx, "xc50"]))
+  expect_identical(5 * max(scmetrics_data2[infc_idx, "xc50"]), max(scmetrics_data3[infc_idx, "xc50"]))
+  expect_identical(min(scmetrics_data2[infc_idx, "xc50"]) / 5, min(scmetrics_data3[infc_idx, "xc50"]))
   
   ## data without infinities
   scmetrics_data4 <- gDRutils::cap_assay_infinites(scaveraged_data, scmetrics_data2, experiment_name = "combination")

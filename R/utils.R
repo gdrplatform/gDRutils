@@ -896,7 +896,7 @@ cap_assay_infinites <- function(conc_assay_dt,
   }
   
   # remove records for 0 concentrations 
-  conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0,]
+  conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
   
   group_cols <- if (experiment_name == "single-agent") {
     as.character(gDRutils::get_env_identifiers(c("drug", "cellline"), simplify = FALSE))
