@@ -875,8 +875,6 @@ cap_assay_infinities <- function(conc_assay_dt,
                                scaling_factor = 1) {
   
   checkmate::assert_data_table(conc_assay_dt)
-  checkmate::assert_string(conc_col)
-  checkmate::assert_choice(conc_col, colnames(conc_assay_dt))
   checkmate::assert_data_table(assay_dt)
   checkmate::assert_string(experiment_name)
   checkmate::assert_choice(experiment_name, get_supported_experiments())
