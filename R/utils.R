@@ -911,7 +911,9 @@ cap_assay_infinites <- function(conc_assay_dt,
     mt <- merge(assay_dt, min_max_conc, by = group_cols)
     mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / scaling_factor
     mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * scaling_factor
+    data.table::setkey(mt, NULL)
     mt[, -c("min", "max")]
+    
   } else {
     assay_dt
   }
