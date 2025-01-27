@@ -843,7 +843,7 @@ remove_drug_batch <- function(drug_vec,
 }
 
 
-#' Cap ininity values (Inf, -Inf) in the assay data
+#' Cap infinity values (Inf, -Inf) in the assay data
 #'
 #' @param conc_assay_dt assay data in data.table format with Concentration data
 #' @param assay_dt assay data in data.table format with inifity values to be capped
