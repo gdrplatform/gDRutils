@@ -618,7 +618,7 @@ test_that("remove_drug_batch", {
   
 })
 
-test_that("cap_assay_inifity", {
+test_that("cap_assay_infinities", {
   # single-agent data - data expected tests
   sdata <- get_synthetic_data("finalMAE_small")
   smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
