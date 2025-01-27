@@ -895,9 +895,9 @@ cap_assay_infinities <- function(conc_assay_dt,
   # remove records for 0 concentrations 
   conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
   
-  group_cols <- if (experiment_name == "single-agent") {
+  group_cols <- if (experiment_name == get_experiment_groups("single-agent")[["single-agent"]]) {
     as.character(gDRutils::get_env_identifiers(c("drug", "cellline"), simplify = FALSE))
-  } else if (experiment_name == "combination") {
+  } else if (experiment_name == get_experiment_groups("combination")) {
     as.character(gDRutils::get_env_identifiers(c("drug", "drug2", "cellline"), simplify = FALSE))
   } else {
     sprintf("unsupported experiment:'%s'", experiment_name)
