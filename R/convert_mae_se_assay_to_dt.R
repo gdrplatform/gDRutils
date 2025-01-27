@@ -18,6 +18,8 @@
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
 #' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE`.
+#' @param unify_metadata Boolean indicating whether to unify DrugName and CellLineName in cases where DrugNames
+#' and CellLineNames are shared by more than one Gnumber and/or clid within the experiment.
 #' @keywords convert
 #'
 #' @return data.table representation of the data in \code{assay_name}.
@@ -33,7 +35,8 @@ convert_se_assay_to_dt <- function(se,
                                    assay_name,
                                    include_metadata = TRUE,
                                    retain_nested_rownames = FALSE,
-                                   wide_structure = FALSE) {
+                                   wide_structure = FALSE,
+                                   unify_metadata = FALSE) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
@@ -82,6 +85,10 @@ convert_se_assay_to_dt <- function(se,
     if (!any(duplicated(new_cols_rename))) {
       data.table::setnames(dt, new_cols, new_cols_rename, skip_absent = TRUE)
     }
+  }
+  if (unify_metadata) {
+    dt <- gDRutils::set_unique_drug_names_dt(dt)
+    dt <- gDRutils::set_unique_cl_names_dt(dt)
   }
   dt
 }

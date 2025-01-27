@@ -82,6 +82,13 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
   expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs2)))
+  
+  # unify_metadata works in covert_se_assay_to_dt
+  se <- get_synthetic_data("finalMAE_small")[[1]][c(seq_len(3)), 1]
+  rowData(se)$DrugName[[2]] <- rowData(se)$DrugName[[1]]
+  metrics_dt <- convert_se_assay_to_dt(se, "Metrics", unify_metadata = TRUE)
+  expect_equal(unique(metrics_dt$Gnumber), unique(rowData(se)$Gnumber))
+  expect_equal(unique(metrics_dt$DrugName), c("drug_002 (G00002)", "drug_002 (G00003)", "drug_004"))
 })
 
 
