@@ -1,5 +1,5 @@
 ## gDRutils 1.5.7 - 2025-01-24
-* add `cap_assay_infinites`
+* add `cap_assay_infinities`
 
 ## gDRutils 1.5.6 - 2025-01-13
 * refactor `remove_drug_batch`
