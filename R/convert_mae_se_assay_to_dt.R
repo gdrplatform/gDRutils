@@ -41,6 +41,8 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
+  checkmate::assert_flag(wide_structure)
+  checkmate::assert_flag(unify_metadata)
   validate_se_assay_name(se, assay_name)
   if (wide_structure) {
     # wide_structure works only with `normalization_type` column in the assay 
