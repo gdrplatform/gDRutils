@@ -880,7 +880,7 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_choice(experiment_name, get_supported_experiments())
   checkmate::assert_string(col)
   checkmate::assert_choice(col, colnames(assay_dt))
-  checkmate::assert_number(scaling_factor)
+  checkmate::assert_number(scaling_factor, lower = 1)
   
   conc_col <- if (experiment_name %in% c(get_experiment_groups("single-agent")[["single-agent"]],
                                          get_experiment_groups("combination"))) {
