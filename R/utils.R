@@ -879,9 +879,9 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_choice(experiment_name, get_supported_experiments())
   checkmate::assert_string(col)
   checkmate::assert_choice(col, colnames(assay_dt))
-  checkmate::assert_number(scaling_factor)
+  checkmate::assert_number(scaling_factor, lower = 1)
   
-  conc_col <- if (experiment_name %in% c(get_experiment_groups("single-agent")[["single-agent"]],
+  conc_col <- if (experiment_name %in% c(get_supported_experiments("sa"), get_supported_experiments("combo")) {
                                          get_experiment_groups("combination"))) {
     # in combination experiments there is a matrix of drug1 X drug2 concentrations
     # as the matrix is symmetric the values of concentrations for drug1 ("Concentration")
