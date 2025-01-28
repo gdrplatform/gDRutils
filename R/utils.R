@@ -853,27 +853,26 @@ remove_drug_batch <- function(drug_vec,
 #'                       final formulas are min / scaling_factor and max * scaling_factor
 #'        
 #' @examples
-#'  # single-agent data 
-#'  sdata <- get_synthetic_data("finalMAE_small")
-#'  smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
-#'  saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
-#'  smetrics_data_capped <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
-#'
-#'  # combination data 
-#'  cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
-#'  scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
-#'  scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
-#'  scmetrics_data_capped <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
+#' # single-agent data
+#' sdata <- get_synthetic_data("finalMAE_small")
+#' smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
+#' saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
+#' smetrics_data_capped <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
 #' 
-#' @return data.table without replicates
+#' # combination data
+#' cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+#' scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
+#' scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
+#' scmetrics_data_capped <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
+#'
+#' @return data.table without capped -Inf / Inf values
 #' @keywords package_utils
 #' @export
 cap_assay_infinities <- function(conc_assay_dt,
-                               assay_dt,
-                               experiment_name,
-                               col = "xc50",
-                               scaling_factor = 1) {
-  
+                                 assay_dt,
+                                 experiment_name,
+                                 col = "xc50",
+                                 scaling_factor = 1) {
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_data_table(assay_dt)
   checkmate::assert_string(experiment_name)
@@ -884,7 +883,6 @@ cap_assay_infinities <- function(conc_assay_dt,
   
   conc_col <- if (experiment_name %in% c(get_experiment_groups("single-agent")[["single-agent"]],
                                          get_experiment_groups("combination"))) {
-    
     # in combination experiments there is a matrix of drug1 X drug2 concentrations
     # as the matrix is symmetric the values of concentrations for drug1 ("Concentration")
     # and drug2 ("Concentration_2") are identical
@@ -894,13 +892,13 @@ cap_assay_infinities <- function(conc_assay_dt,
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
   
-  # remove records for 0 concentrations 
+  # remove records for 0 concentrations
   conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
   
   group_cols <- if (experiment_name == get_experiment_groups("single-agent")[["single-agent"]]) {
-    as.character(gDRutils::get_env_identifiers(c("drug", "cellline"), simplify = FALSE))
+    as.character(get_env_identifiers(c("drug", "cellline"), simplify = FALSE))
   } else if (experiment_name == get_experiment_groups("combination")) {
-    as.character(gDRutils::get_env_identifiers(c("drug", "drug2", "cellline"), simplify = FALSE))
+    as.character(get_env_identifiers(c("drug", "drug2", "cellline"), simplify = FALSE))
   } else {
     sprintf("unsupported experiment:'%s'", experiment_name)
   }

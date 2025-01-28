@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{cap_assay_infinities}
 \alias{cap_assay_infinities}
-\title{Cap ininity values (Inf, -Inf) in the assay data}
+\title{Cap infinity values (Inf, -Inf) in the assay data}
 \usage{
 cap_assay_infinities(
   conc_assay_dt,
@@ -15,7 +15,7 @@ cap_assay_infinities(
 \arguments{
 \item{conc_assay_dt}{assay data in data.table format with Concentration data}
 
-\item{assay_dt}{assay data in data.table format with inifity values to be capped}
+\item{assay_dt}{assay data in data.table format with infinity values to be capped}
 
 \item{experiment_name}{string with the name of the experiment}
 
@@ -25,23 +25,23 @@ cap_assay_infinities(
 final formulas are min / scaling_factor and max * scaling_factor}
 }
 \value{
-data.table without replicates
+data.table without capped -Inf / Inf values
 }
 \description{
-Cap ininity values (Inf, -Inf) in the assay data
+Cap infinity values (Inf, -Inf) in the assay data
 }
 \examples{
- # single-agent data 
- sdata <- get_synthetic_data("finalMAE_small")
- smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
- saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
- smetrics_data_capped <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
+# single-agent data
+sdata <- get_synthetic_data("finalMAE_small")
+smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
+saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
+smetrics_data_capped <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
 
- # combination data 
- cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
- scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
- scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
- scmetrics_data_capped <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
+# combination data
+cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
+scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
+scmetrics_data_capped <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
 
 }
 \keyword{package_utils}
