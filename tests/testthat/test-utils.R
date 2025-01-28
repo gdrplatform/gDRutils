@@ -626,7 +626,7 @@ test_that("cap_assay_infinities", {
   smetrics_data$xc50[1:3] <- -Inf
   smetrics_data$xc50[100:103] <- Inf
   saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
-  smetrics_data2 <- gDRutils::cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
+  smetrics_data2 <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
   smetrics_data3 <- gDRutils::cap_assay_infinities(
     saveraged_data,
     smetrics_data,
