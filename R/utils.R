@@ -881,23 +881,21 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_choice(col, colnames(assay_dt))
   checkmate::assert_number(scaling_factor, lower = 1)
   
-  conc_col <- if (experiment_name %in% c(get_supported_experiments("sa"), get_supported_experiments("combo")) {
-                                         get_experiment_groups("combination"))) {
-    # in combination experiments there is a matrix of drug1 X drug2 concentrations
-    # as the matrix is symmetric the values of concentrations for drug1 ("Concentration")
-    # and drug2 ("Concentration_2") are identical
-    # thus the logic for single-agent and combination experiment is identical in this case
+  conc_col <- if (experiment_name == get_supported_experiments("sa")) {
     get_env_identifiers("concentration")
-  } else {
+  } else if (experiment_name == get_supported_experiments("combo")) {
+    # TODO: improve logic for determining concentration column in combination data (GDR-2856)
+    get_env_identifiers("concentration")
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
   
+    
   # remove records for 0 concentrations
   conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
   
-  group_cols <- if (experiment_name == get_experiment_groups("single-agent")[["single-agent"]]) {
+  group_cols <- if (experiment_name == get_supported_experiments("sa")) {
     as.character(get_env_identifiers(c("drug", "cellline"), simplify = FALSE))
-  } else if (experiment_name == get_experiment_groups("combination")) {
+  } else if (experiment_name == get_supported_experiments("combo")) {
     as.character(get_env_identifiers(c("drug", "drug2", "cellline"), simplify = FALSE))
   } else {
     sprintf("unsupported experiment:'%s'", experiment_name)
