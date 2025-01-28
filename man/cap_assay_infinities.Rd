@@ -9,7 +9,7 @@ cap_assay_infinities(
   assay_dt,
   experiment_name,
   col = "xc50",
-  scaling_factor = 1
+  capping_fold = 1
 )
 }
 \arguments{
@@ -21,8 +21,8 @@ cap_assay_infinities(
 
 \item{col}{string with column name to be capped in assay_dt ("xc50" by default)}
 
-\item{scaling_factor}{number with scaling factor for min and max concentration values
-final formulas are min / scaling_factor and max * scaling_factor}
+\item{capping_fold}{number for min and max concentration values
+final formulas are min / capping_fold and max * capping_fold}
 }
 \value{
 data.table without capped -Inf / Inf values

@@ -849,8 +849,8 @@ remove_drug_batch <- function(drug_vec,
 #' @param assay_dt assay data in data.table format with infinity values to be capped
 #' @param experiment_name string with the name of the experiment
 #' @param col string with column name to be capped in assay_dt ("xc50" by default)
-#' @param scaling_factor number with scaling factor for min and max concentration values
-#'                       final formulas are min / scaling_factor and max * scaling_factor
+#' @param capping_fold number for min and max concentration values
+#'                     final formulas are min / capping_fold and max * capping_fold
 #'        
 #' @examples
 #' # single-agent data
@@ -872,14 +872,14 @@ cap_assay_infinities <- function(conc_assay_dt,
                                  assay_dt,
                                  experiment_name,
                                  col = "xc50",
-                                 scaling_factor = 1) {
+                                 capping_fold = 1) {
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_data_table(assay_dt)
   checkmate::assert_string(experiment_name)
   checkmate::assert_choice(experiment_name, get_supported_experiments())
   checkmate::assert_string(col)
   checkmate::assert_choice(col, colnames(assay_dt))
-  checkmate::assert_number(scaling_factor, lower = 1)
+  checkmate::assert_number(capping_fold, lower = 1)
   
   conc_col <- if (experiment_name == get_supported_experiments("sa")) {
     get_env_identifiers("concentration")
@@ -905,8 +905,8 @@ cap_assay_infinities <- function(conc_assay_dt,
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) {
     min_max_conc <- conc_assay_dt[, .(min = min(get(conc_col)), max = max(get(conc_col))), by = group_cols]
     mt <- merge(assay_dt, min_max_conc, by = group_cols)
-    mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / scaling_factor
-    mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * scaling_factor
+    mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / capping_fold
+    mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * capping_fold
     data.table::setkey(mt, NULL)
     mt[, -c("min", "max")]
     
