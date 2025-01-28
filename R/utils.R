@@ -882,7 +882,9 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_choice(col, colnames(assay_dt))
   checkmate::assert_number(scaling_factor)
   
-  conc_col <- if (experiment_name %in% c(get_experiment_groups("single-agent")[["single-agent"]], get_experiment_groups("combination"))) {
+  conc_col <- if (experiment_name %in% c(get_experiment_groups("single-agent")[["single-agent"]],
+                                         get_experiment_groups("combination"))) {
+    
     # in combination experiments there is a matrix of drug1 X drug2 concentrations
     # as the matrix is symmetric the values of concentrations for drug1 ("Concentration")
     # and drug2 ("Concentration_2") are identical
