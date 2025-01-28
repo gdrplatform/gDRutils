@@ -886,6 +886,7 @@ cap_assay_infinities <- function(conc_assay_dt,
   } else if (experiment_name == get_supported_experiments("combo")) {
     # TODO: improve logic for determining concentration column in combination data (GDR-2856)
     get_env_identifiers("concentration")
+  } else {
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
   
