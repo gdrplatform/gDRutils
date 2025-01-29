@@ -631,7 +631,7 @@ test_that("cap_assay_infinities", {
     saveraged_data,
     smetrics_data,
     experiment_name = "single-agent",
-    scaling_factor = 5
+    capping_fold = 5
   )
   
   ## data with inf/-inf values
@@ -667,7 +667,7 @@ test_that("cap_assay_infinities", {
     scaveraged_data,
     scmetrics_data,
     experiment_name = "combination",
-    scaling_factor = 5
+    capping_fold = 5
   )
   
   ## data with inf/-inf values
@@ -715,7 +715,7 @@ test_that("cap_assay_infinities", {
       saveraged_data,
       smetrics_data,
       experiment_name = "single-agent",
-      scaling_factor = "x"
+      capping_fold = "x"
     ),
     "Must be of type 'number'"
   )
