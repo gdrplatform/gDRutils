@@ -35,13 +35,17 @@ Cap infinity values (Inf, -Inf) in the assay data
 sdata <- get_synthetic_data("finalMAE_small")
 smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
 saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
-smetrics_data_capped <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
+smetrics_data_capped <- cap_assay_infinities(saveraged_data,
+                                             smetrics_data,
+                                             experiment_name = "single-agent")
 
 # combination data
 cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
 scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
 scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
-scmetrics_data_capped <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
+scmetrics_data_capped <- cap_assay_infinities(scaveraged_data,
+                                              scmetrics_data,
+                                              experiment_name = "combination")
 
 }
 \keyword{package_utils}
