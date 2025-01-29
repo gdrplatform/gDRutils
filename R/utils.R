@@ -841,3 +841,82 @@ remove_drug_batch <- function(drug_vec,
   r <- "\\1"
   sub(p, r, drug_vec)
 }
+
+
+#' Cap infinity values (Inf, -Inf) in the assay data
+#'
+#' @param conc_assay_dt assay data in data.table format with Concentration data
+#' @param assay_dt assay data in data.table format with infinity values to be capped
+#' @param experiment_name string with the name of the experiment
+#' @param col string with column name to be capped in assay_dt ("xc50" by default)
+#' @param capping_fold number for min and max concentration values
+#'                     final formulas are min / capping_fold and max * capping_fold
+#'        
+#' @examples
+#' # single-agent data
+#' sdata <- get_synthetic_data("finalMAE_small")
+#' smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
+#' saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
+#' smetrics_data_capped <- cap_assay_infinities(saveraged_data,
+#'                                              smetrics_data,
+#'                                              experiment_name = "single-agent")
+#' 
+#' # combination data
+#' cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+#' scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
+#' scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
+#' scmetrics_data_capped <- cap_assay_infinities(scaveraged_data,
+#'                                               scmetrics_data,
+#'                                               experiment_name = "combination")
+#'
+#' @return data.table without capped -Inf / Inf values
+#' @keywords package_utils
+#' @export
+cap_assay_infinities <- function(conc_assay_dt,
+                                 assay_dt,
+                                 experiment_name,
+                                 col = "xc50",
+                                 capping_fold = 1) {
+  checkmate::assert_data_table(conc_assay_dt)
+  checkmate::assert_data_table(assay_dt)
+  checkmate::assert_string(experiment_name)
+  checkmate::assert_choice(experiment_name, get_supported_experiments())
+  checkmate::assert_string(col)
+  checkmate::assert_choice(col, colnames(assay_dt))
+  checkmate::assert_number(capping_fold, lower = 1)
+  
+  conc_col <- if (experiment_name == get_supported_experiments("sa")) {
+    get_env_identifiers("concentration")
+  } else if (experiment_name == get_supported_experiments("combo")) {
+    # TODO: improve logic for determining concentration column in combination data (GDR-2856)
+    get_env_identifiers("concentration")
+  } else {
+    stop(sprintf("unsupported experiment:'%s'", experiment_name))
+  }
+  
+    
+  # remove records for 0 concentrations
+  conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
+  
+  group_cols <- if (experiment_name == get_supported_experiments("sa")) {
+    as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
+  } else if (experiment_name == get_supported_experiments("combo")) {
+    as.character(gDRutils::get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+  } else {
+    sprintf("unsupported experiment:'%s'", experiment_name)
+  }
+  
+  out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) {
+    min_max_conc <- conc_assay_dt[, .(min = min(get(conc_col)), max = max(get(conc_col))), by = group_cols]
+    mt <- merge(assay_dt, min_max_conc, by = group_cols)
+    mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / capping_fold
+    mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * capping_fold
+    data.table::setkey(mt, NULL)
+    mt[, -c("min", "max")]
+    
+  } else {
+    assay_dt
+  }
+  out_dt
+  
+}

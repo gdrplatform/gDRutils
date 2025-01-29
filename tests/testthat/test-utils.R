@@ -235,16 +235,16 @@ test_that("average_biological_replicates_dt works as expected", {
   tdata$fit_type <- letters[1:8]
   
   av1b <- average_biological_replicates_dt(tdata, var = "source_id")
-  av1f <- gDRutils::flatten(
+  av1f <- flatten(
     av1b,
     groups = c("normalization_type", "fit_source"),
-    wide_cols = gDRutils::get_header("response_metrics")
+    wide_cols = get_header("response_metrics")
   )
   
-  av2f <- gDRutils::flatten(
+  av2f <- flatten(
     tdata,
     groups = c("normalization_type", "fit_source"),
-    wide_cols = gDRutils::get_header("response_metrics")
+    wide_cols = get_header("response_metrics")
   )
   av2b <- average_biological_replicates_dt(av2f, var = "source_id")
   expect_true(all.equal(av1f, av2b))
@@ -597,7 +597,7 @@ test_that("remove_drug_batch", {
   # (Gnumber followed by the ",") -remove
   expect_equal(remove_drug_batch("G00018838, Cisplatin"), "G00018838")
   
-  # suffix added by gDRutils::set_unique_drug_names_dt function (prevent duplication) - nothing changes
+  # suffix added by set_unique_drug_names_dt function (prevent duplication) - nothing changes
   expect_equal(remove_drug_batch("G00060245_(G00060245.1-8)"),
                "G00060245_(G00060245.1-8)")
  
@@ -616,4 +616,107 @@ test_that("remove_drug_batch", {
   expect_error(remove_drug_batch("G00000001", batch_p = list(1)),
                "Assertion on 'batch_p' failed")
   
+})
+
+test_that("cap_assay_infinities", {
+  # single-agent data - data expected tests
+  sdata <- get_synthetic_data("finalMAE_small")
+  smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
+  ## add some Infs/-Infs
+  smetrics_data$xc50[1:3] <- -Inf
+  smetrics_data$xc50[100:103] <- Inf
+  saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
+  smetrics_data2 <- cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "single-agent")
+  smetrics_data3 <- cap_assay_infinities(
+    saveraged_data,
+    smetrics_data,
+    experiment_name = "single-agent",
+    capping_fold = 5
+  )
+  
+  ## data with inf/-inf values
+  inf_idx <- which(is.infinite(smetrics_data$xc50))
+  expect_true(NROW(inf_idx) > 0)
+  # no Inf/-Inf after running the function
+  inf_idx2 <- which(is.infinite(smetrics_data2$xc50))
+  expect_true(NROW(inf_idx2) == 0)
+  ##  Inf values
+  expect_identical(5 * max(smetrics_data2[inf_idx, "xc50"]), max(smetrics_data3[inf_idx, "xc50"]))
+  expect_identical(min(smetrics_data2[inf_idx, "xc50"]) / 5, min(smetrics_data3[inf_idx, "xc50"]))
+  
+  ## data without infinities
+  smetrics_data4 <- cap_assay_infinities(saveraged_data, smetrics_data2, experiment_name = "single-agent")
+  expect_identical(smetrics_data2, smetrics_data4)
+  
+  ## non-default column to be changed
+  smetrics_data5 <- smetrics_data
+  smetrics_data5$custom_col <- smetrics_data5$xc50
+  smetrics_data6 <- cap_assay_infinities(saveraged_data,
+                                                 smetrics_data5,
+                                                 experiment_name = "single-agent",
+                                                 col = "custom_col")
+  expect_identical(smetrics_data2$xc50, smetrics_data6$custom_col)
+  expect_true(any(smetrics_data6$xc50 != smetrics_data2$xc50))
+  
+  # combination data - data expected tests
+  cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+  scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
+  scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
+  scmetrics_data2 <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
+  scmetrics_data3 <- cap_assay_infinities(
+    scaveraged_data,
+    scmetrics_data,
+    experiment_name = "combination",
+    capping_fold = 5
+  )
+  
+  ## data with inf/-inf values
+  infc_idx <- which(is.infinite(scmetrics_data$xc50))
+  expect_true(NROW(infc_idx) > 0)
+  ## no Inf/-Inf after running the function
+  infc_idx2 <- which(is.infinite(scmetrics_data2$xc50))
+  expect_true(NROW(infc_idx2) == 0)
+  ##  Inf values
+  expect_identical(5 * max(scmetrics_data2[infc_idx, "xc50"]), max(scmetrics_data3[infc_idx, "xc50"]))
+  expect_identical(min(scmetrics_data2[infc_idx, "xc50"]) / 5, min(scmetrics_data3[infc_idx, "xc50"]))
+  
+  ## data without infinities
+  scmetrics_data4 <- cap_assay_infinities(scaveraged_data, scmetrics_data2, experiment_name = "combination")
+  expect_identical(scmetrics_data2, scmetrics_data4)
+  
+  # test non-default values of other parameters
+  expect_error(cap_assay_infinities(list(a = 2)), "Must be a data.table")
+  expect_error(cap_assay_infinities(saveraged_data, list(a = 2)),
+               "Must be a data.table")
+  expect_error(
+    cap_assay_infinities(saveraged_data, smetrics_data, experiment_name = "test"),
+    "Must be element of set "
+  )
+  expect_error(
+    cap_assay_infinities(
+      saveraged_data,
+      smetrics_data,
+      experiment_name = "single-agent",
+      col = 2
+    ) ,
+    "Must be of type 'string'"
+  )
+  expect_error(
+    cap_assay_infinities(
+      saveraged_data,
+      smetrics_data,
+      experiment_name = "single-agent",
+      col = "no_col"
+    ),
+    "Must be element of set"
+  )
+  expect_error(
+    cap_assay_infinities(
+      saveraged_data,
+      smetrics_data,
+      experiment_name = "single-agent",
+      capping_fold = "x"
+    ),
+    "Must be of type 'number'"
+  )
 })
