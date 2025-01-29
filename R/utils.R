@@ -901,7 +901,7 @@ cap_assay_infinities <- function(conc_assay_dt,
   group_cols <- if (experiment_name == get_supported_experiments("sa")) {
     as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
   } else if (experiment_name == get_supported_experiments("combo")) {
-    as.character(get_env_identifiers(c("drug", "drug2", "cellline"), simplify = FALSE))
+    as.character(gDRutils::get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
   } else {
     sprintf("unsupported experiment:'%s'", experiment_name)
   }
