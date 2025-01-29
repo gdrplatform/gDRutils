@@ -235,16 +235,16 @@ test_that("average_biological_replicates_dt works as expected", {
   tdata$fit_type <- letters[1:8]
   
   av1b <- average_biological_replicates_dt(tdata, var = "source_id")
-  av1f <- gDRutils::flatten(
+  av1f <- flatten(
     av1b,
     groups = c("normalization_type", "fit_source"),
-    wide_cols = gDRutils::get_header("response_metrics")
+    wide_cols = get_header("response_metrics")
   )
   
-  av2f <- gDRutils::flatten(
+  av2f <- flatten(
     tdata,
     groups = c("normalization_type", "fit_source"),
-    wide_cols = gDRutils::get_header("response_metrics")
+    wide_cols = get_header("response_metrics")
   )
   av2b <- average_biological_replicates_dt(av2f, var = "source_id")
   expect_true(all.equal(av1f, av2b))
@@ -597,7 +597,7 @@ test_that("remove_drug_batch", {
   # (Gnumber followed by the ",") -remove
   expect_equal(remove_drug_batch("G00018838, Cisplatin"), "G00018838")
   
-  # suffix added by gDRutils::set_unique_drug_names_dt function (prevent duplication) - nothing changes
+  # suffix added by set_unique_drug_names_dt function (prevent duplication) - nothing changes
   expect_equal(remove_drug_batch("G00060245_(G00060245.1-8)"),
                "G00060245_(G00060245.1-8)")
  
@@ -645,13 +645,13 @@ test_that("cap_assay_infinities", {
   expect_identical(min(smetrics_data2[inf_idx, "xc50"]) / 5, min(smetrics_data3[inf_idx, "xc50"]))
   
   ## data without infinities
-  smetrics_data4 <- gDRutils::cap_assay_infinities(saveraged_data, smetrics_data2, experiment_name = "single-agent")
+  smetrics_data4 <- cap_assay_infinities(saveraged_data, smetrics_data2, experiment_name = "single-agent")
   expect_identical(smetrics_data2, smetrics_data4)
   
   ## non-default column to be changed
   smetrics_data5 <- smetrics_data
   smetrics_data5$custom_col <- smetrics_data5$xc50
-  smetrics_data6 <- gDRutils::cap_assay_infinities(saveraged_data,
+  smetrics_data6 <- cap_assay_infinities(saveraged_data,
                                                  smetrics_data5,
                                                  experiment_name = "single-agent",
                                                  col = "custom_col")
@@ -662,8 +662,8 @@ test_that("cap_assay_infinities", {
   cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
   scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
   scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
-  scmetrics_data2 <- gDRutils::cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
-  scmetrics_data3 <- gDRutils::cap_assay_infinities(
+  scmetrics_data2 <- cap_assay_infinities(scaveraged_data, scmetrics_data, experiment_name = "combination")
+  scmetrics_data3 <- cap_assay_infinities(
     scaveraged_data,
     scmetrics_data,
     experiment_name = "combination",
@@ -681,7 +681,7 @@ test_that("cap_assay_infinities", {
   expect_identical(min(scmetrics_data2[infc_idx, "xc50"]) / 5, min(scmetrics_data3[infc_idx, "xc50"]))
   
   ## data without infinities
-  scmetrics_data4 <- gDRutils::cap_assay_infinities(scaveraged_data, scmetrics_data2, experiment_name = "combination")
+  scmetrics_data4 <- cap_assay_infinities(scaveraged_data, scmetrics_data2, experiment_name = "combination")
   expect_identical(scmetrics_data2, scmetrics_data4)
   
   # test non-default values of other parameters
