@@ -710,12 +710,12 @@ get_additional_variables <- function(dt_list,
   if (prettified) {
     headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
     pidfs <- get_prettified_identifiers()
-    idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
+    idf2keep <- pidfs[c("drug3", "concentration3", "duration", "replicate")]
     idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
   } else {
     headers <- unlist(get_header())
     pidfs <- get_env_identifiers()
-    idf2keep <- pidfs[c("drug3", "concentration3", "duration")]
+    idf2keep <- pidfs[c("drug3", "concentration3", "duration", "replicate")]
     idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
   }
   
