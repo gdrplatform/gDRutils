@@ -710,15 +710,15 @@ get_additional_variables <- function(dt_list,
   if (prettified) {
     headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
     pidfs <- get_prettified_identifiers()
-    idf2keep <- pidfs[c("drug3", "concentration3", "duration", "replicate")]
-    idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
   } else {
     headers <- unlist(get_header())
     pidfs <- get_env_identifiers()
-    idf2keep <- pidfs[c("drug3", "concentration3", "duration", "replicate")]
-    idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
   }
-  
+  idf2keep <- pidfs[get_settings_from_json(
+    "additional_variables_idfs_to_keep",
+    system.file(package = "gDRutils", "settings.json")
+  )]
+  idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
 
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
     setdiff(sub(" \\(.*\\)$", "", names(x)), idfs)
