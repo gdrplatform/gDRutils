@@ -1,3 +1,6 @@
+## gDRutils 1.5.8 - 2025-01-30
+* keep 'replicate' column as additional perturbation in get_additional_variables
+
 ## gDRutils 1.5.7 - 2025-01-24
 * add `cap_assay_infinities`
 
