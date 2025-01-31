@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,8 @@
 <span>  <span class="va">assay_name</span>,</span>
 <span>  include_metadata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  retain_nested_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  wide_structure <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  wide_structure <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  unify_metadata <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -90,6 +91,11 @@ If <code>TRUE</code>, the resulting column in the data.table will be named as <c
 <dt>wide_structure</dt>
 <dd><p>Boolean indicating whether or not to transform data.table into wide format.
 <code>wide_structure = TRUE</code> requires <code>retain_nested_rownames = TRUE</code>.</p></dd>
+
+
+<dt>unify_metadata</dt>
+<dd><p>Boolean indicating whether to unify DrugName and CellLineName in cases where DrugNames
+and CellLineNames are shared by more than one Gnumber and/or clid within the experiment.</p></dd>
 
 </dl></div>
     <div class="section level2">
