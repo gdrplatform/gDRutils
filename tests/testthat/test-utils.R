@@ -459,8 +459,8 @@ test_that("get_additional_variables works as expected", {
   add_var4_unique <- get_additional_variables(rdata4, unique = TRUE, prettified = TRUE)
   
   expect_equal(add_var1, "Ligand")
-  expect_equal(add_var2_nonunique)
-  expect_equal(add_var2_unique, c("Ligand"))
+  expect_equal(add_var2_nonunique, "Replicate")
+  expect_equal(add_var2_unique, c("Ligand", "Replicate"))
   expect_equal(add_var3, NULL)
   expect_equal(add_var4_nonunique, "Concentration_2")
   expect_equal(add_var4_unique, c("Concentration_2", "Ligand"))

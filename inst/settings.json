@@ -35,6 +35,7 @@
     "additional_variables_idfs_to_keep": [
         "drug3", 
         "concentration3", 
-        "duration"
+        "duration", 
+        "replicate"
     ]
 }
