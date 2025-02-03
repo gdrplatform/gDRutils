@@ -31,5 +31,11 @@
         "duration",
         "data_source",
         "normalization_type"
+    ],
+    "additional_variables_idfs_to_keep": [
+        "drug3", 
+        "concentration3", 
+        "duration", 
+        "replicate"
     ]
 }
