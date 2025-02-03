@@ -1,5 +1,8 @@
-## gDRutils 1.5.8 - 2025-01-30
+## gDRutils 1.5.9 - 2025-02-03
 * keep 'replicate' column as additional perturbation in get_additional_variables
+
+## gDRutils 1.5.8 - 2025-01-30
+* add support for unifying metadata in `convert_se_assay_to_dt` function
 
 ## gDRutils 1.5.7 - 2025-01-24
 * add `cap_assay_infinities`
