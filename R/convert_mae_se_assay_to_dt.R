@@ -73,7 +73,7 @@ convert_se_assay_to_dt <- function(se,
     if (conc %in% names(dt)) {
       dt <- dt[!is.na(get(conc))]
     }
-    if (masked %in% names(dt)) {
+    if (masked_tag %in% names(dt)) {
       dt <- dt[get(masked_tag) == FALSE]
     }
   }
