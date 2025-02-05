@@ -46,6 +46,25 @@ test_that("convert_se_assay_to_dt works as expected", {
   merged <- base::merge(df, S4Vectors::DataFrame(dt[, c("rnames", "cnames", "values")]))
   expect_equal(merged$r, merged$rnames)
   expect_equal(merged$c, merged$cnames)
+  
+  # Properly drops masked values.
+  df$normalization_type <- "value"
+  df[1, "normalization_type"] <- NA
+  norm <- BumpyMatrix::splitAsBumpyMatrix(df, row = df$r, column = df$c)
+  se <- SummarizedExperiment::SummarizedExperiment(assays = list(norm = norm),
+                                                   rowData = S4Vectors::DataFrame(rnames),
+                                                   colData = S4Vectors::DataFrame(cnames))
+  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = FALSE)
+  expect_equal(NROW(dt), 199)
+  
+  df$Concentration <- runif(NROW(df))
+  df[2:3, "Concentration"] <- NA
+  norm <- BumpyMatrix::splitAsBumpyMatrix(df, row = df$r, column = df$c)
+  se <- SummarizedExperiment::SummarizedExperiment(assays = list(norm = norm),
+                                                   rowData = S4Vectors::DataFrame(rnames),
+                                                   colData = S4Vectors::DataFrame(cnames))
+  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = FALSE)
+  expect_equal(NROW(dt), 197)
 })
 
 

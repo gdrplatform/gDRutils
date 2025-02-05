@@ -10,7 +10,8 @@ convert_mae_assay_to_dt(
   experiment_name = NULL,
   include_metadata = TRUE,
   retain_nested_rownames = FALSE,
-  wide_structure = FALSE
+  wide_structure = FALSE,
+  drop_masked = TRUE
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ If \code{TRUE}, the resulting column in the data.table will be named as \code{"<
 \item{wide_structure}{Boolean indicating whether or not to transform data.table into wide format.
 \code{wide_structure = TRUE} requires \code{retain_nested_rownames = TRUE} however that will be validated
 in \code{convert_se_assay_to_dt} function}
+
+\item{drop_masked}{Boolean indicating whether to drop masked values; TRUE by default.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.

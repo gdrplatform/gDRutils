@@ -26,6 +26,7 @@ if (getRversion() >= "2.15.1") {
       ".N",
       "maxlog10Concentration",
       "MaxEffectiveness",
+      "normalization_type",
       "RV AOC within set range",
       "GR AOC within set range",
       "project_id",

@@ -10,7 +10,8 @@ convert_se_assay_to_dt(
   include_metadata = TRUE,
   retain_nested_rownames = FALSE,
   wide_structure = FALSE,
-  unify_metadata = FALSE
+  unify_metadata = FALSE,
+  drop_masked = TRUE
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ If \code{TRUE}, the resulting column in the data.table will be named as \code{"<
 
 \item{unify_metadata}{Boolean indicating whether to unify DrugName and CellLineName in cases where DrugNames
 and CellLineNames are shared by more than one Gnumber and/or clid within the experiment.}
+
+\item{drop_masked}{Boolean indicating whether to drop masked values; TRUE by default.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.

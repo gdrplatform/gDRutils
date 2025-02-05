@@ -1,3 +1,6 @@
+## gDRutils 1.5.10 - 2025-02-05
+* add support for dropping masked values in the assay data
+
 ## gDRutils 1.5.9 - 2025-02-03
 * keep 'replicate' column as additional perturbation in get_additional_variables
 
