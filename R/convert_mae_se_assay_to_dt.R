@@ -20,6 +20,7 @@
 #' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE`.
 #' @param unify_metadata Boolean indicating whether to unify DrugName and CellLineName in cases where DrugNames
 #' and CellLineNames are shared by more than one Gnumber and/or clid within the experiment.
+#' @param drop_masked Boolean indicating whether to drop masked values; TRUE by default.
 #' @keywords convert
 #'
 #' @return data.table representation of the data in \code{assay_name}.
@@ -36,7 +37,8 @@ convert_se_assay_to_dt <- function(se,
                                    include_metadata = TRUE,
                                    retain_nested_rownames = FALSE,
                                    wide_structure = FALSE,
-                                   unify_metadata = FALSE) {
+                                   unify_metadata = FALSE,
+                                   drop_masked = TRUE) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
@@ -61,6 +63,19 @@ convert_se_assay_to_dt <- function(se,
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
   if (nrow(dt) == 0L) {
     return(dt)
+  }
+  if (drop_masked) {
+    conc <- get_env_identifiers("concentration")
+    masked_tag <- get_env_identifiers("masked_tag")
+    if ("normalization_type" %in% names(dt)) {
+      dt <- dt[!is.na(normalization_type)]
+    }
+    if (conc %in% names(dt)) {
+      dt <- dt[!is.na(get(conc))]
+    }
+    if (masked %in% names(dt)) {
+      dt <- dt[get(masked_tag) == FALSE]
+    }
   }
   if (include_metadata) {
     dt <- .extract_and_merge_metadata(se, data.table::copy(dt))
@@ -186,6 +201,7 @@ convert_se_assay_to_dt <- function(se,
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
 #' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated 
 #' in `convert_se_assay_to_dt` function
+#' @param drop_masked Boolean indicating whether to drop masked values; TRUE by default.
 #' @keywords convert
 #'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
@@ -204,7 +220,8 @@ convert_mae_assay_to_dt <- function(mae,
                                     experiment_name = NULL,
                                     include_metadata = TRUE,
                                     retain_nested_rownames = FALSE,
-                                    wide_structure = FALSE) {
+                                    wide_structure = FALSE,
+                                    drop_masked = TRUE) {
   
   # Assertions.
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -226,7 +243,8 @@ convert_mae_assay_to_dt <- function(mae,
                            assay_name = assay_name,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames,
-                           wide_structure = wide_structure)
+                           wide_structure = wide_structure,
+                           drop_masked = drop_masked)
   })
   if (all(vapply(dtList, is.null, logical(1)))) {
     warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
