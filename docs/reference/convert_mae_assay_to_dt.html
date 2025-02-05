@@ -12,7 +12,7 @@ to a long data.table."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,8 @@ to a long data.table.</p>
 <span>  experiment_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  include_metadata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  retain_nested_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  wide_structure <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  wide_structure <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  drop_masked <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,6 +102,10 @@ If <code>TRUE</code>, the resulting column in the data.table will be named as <c
 <dd><p>Boolean indicating whether or not to transform data.table into wide format.
 <code>wide_structure = TRUE</code> requires <code>retain_nested_rownames = TRUE</code> however that will be validated
 in <code>convert_se_assay_to_dt</code> function</p></dd>
+
+
+<dt>drop_masked</dt>
+<dd><p>Boolean indicating whether to drop masked values; TRUE by default.</p></dd>
 
 </dl></div>
     <div class="section level2">
