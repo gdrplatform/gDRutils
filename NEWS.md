@@ -1,31 +1,31 @@
-## gDRutils 1.5.10 - 2025-02-05
+## gDRutils 1.4.10 - 2025-02-05
 * add support for dropping masked values in the assay data
 
-## gDRutils 1.5.9 - 2025-02-03
+## gDRutils 1.4.9 - 2025-02-03
 * keep 'replicate' column as additional perturbation in get_additional_variables
 
-## gDRutils 1.5.8 - 2025-01-30
+## gDRutils 1.4.8 - 2025-01-30
 * add support for unifying metadata in `convert_se_assay_to_dt` function
 
-## gDRutils 1.5.7 - 2025-01-24
+## gDRutils 1.4.7 - 2025-01-24
 * add `cap_assay_infinities`
 
-## gDRutils 1.5.6 - 2025-01-13
+## gDRutils 1.4.6 - 2025-01-13
 * refactor `remove_drug_batch`
 
-## gDRutils 1.5.5 - 2024-12-10
+## gDRutils 1.4.5 - 2024-12-10
 * make split_SE_components working correctly for sa assay data, modified with `avearge_biological_duplicates`
 
-## gDRutils 1.5.4 - 2024-12-09
+## gDRutils 1.4.4 - 2024-12-09
 * minor improvement in the logic of `average_biological_replicates` (new blacklisted column)
 
-## gDRutils 1.5.3 - 2024-12-02
+## gDRutils 1.4.3 - 2024-12-02
 * refactor `set_unique_*` functions
 
-## gDRutils 1.5.2 - 2024-11-05
+## gDRutils 1.4.2 - 2024-11-05
 * add `get_env_var` helper
 
-## gDRutils 1.5.1 - 2024-11-05
+## gDRutils 1.4.1 - 2024-11-05
 * synchronize Bioconductor and GitHub versioning
 
 ## gDRutils 1.3.17 - 2024-10-24
