@@ -9,7 +9,7 @@ cap_assay_infinities(
   assay_dt,
   experiment_name,
   col = "xc50",
-  capping_fold = 1
+  capping_fold = 5
 )
 }
 \arguments{
