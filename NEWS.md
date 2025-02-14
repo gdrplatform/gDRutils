@@ -1,4 +1,4 @@
-## gDRutils 1.5.10 - 2025-02-05
+## gDRutils 1.5.10 - 2025-02-14
 * update default value of `capping_fold` param in `cap_assay_infinities`
 
 ## gDRutils 1.5.10 - 2025-02-05
