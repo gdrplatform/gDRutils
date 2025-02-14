@@ -1,4 +1,7 @@
 ## gDRutils 1.5.10 - 2025-02-05
+* update default value of `capping_fold` param in `cap_assay_infinities`
+
+## gDRutils 1.5.10 - 2025-02-05
 * add support for dropping masked values in the assay data
 
 ## gDRutils 1.5.9 - 2025-02-03
