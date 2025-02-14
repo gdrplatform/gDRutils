@@ -876,7 +876,7 @@ cap_assay_infinities <- function(conc_assay_dt,
                                  assay_dt,
                                  experiment_name,
                                  col = "xc50",
-                                 capping_fold = 1) {
+                                 capping_fold = 5) {
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_data_table(assay_dt)
   checkmate::assert_string(experiment_name)
