@@ -458,7 +458,7 @@ average_biological_replicates_dt <- function(
     add_sd = FALSE) {
   
   checkmate::assert_data_table(dt)
-  checkmate::assert_string(var)
+  checkmate::assert_character(var)
   checkmate::assert_flag(prettified)
   checkmate::assert_character(geometric_average_fields)
   checkmate::assert_character(fit_type_average_fields)
@@ -477,6 +477,8 @@ average_biological_replicates_dt <- function(
   }
   
   average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var, iso_cols))
+  # don't  average across _sd$ fields (to avoid adding unexpected columns, i.e. x_sd_sd_sd_sd)
+  average_fields <- grep("_sd$", average_fields, invert = TRUE, value = TRUE)
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
   fit_type_average_fields <- intersect(fit_type_average_fields, names(dt))
   blacklisted_fields <- intersect(blacklisted_fields, names(dt))

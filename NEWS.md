@@ -1,3 +1,6 @@
+## gDRutils 1.5.12 - 2025-02-21
+* refactor average_across_biological_replipcates
+
 ## gDRutils 1.5.11 - 2025-02-14
 * update default value of `capping_fold` param in `cap_assay_infinities`
 
