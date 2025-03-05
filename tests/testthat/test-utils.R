@@ -251,6 +251,23 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_true(nrow(av1f) == 1)
   av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
   expect_true(nrow(av1i) == 8)
+ 
+  # two additional variables for averaging
+  ligand_data <- get_synthetic_data("finalMAE_wLigand")
+  lmetrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
+  lmetrics_data$source_id <- "ds_small_ligand"
+  
+  sdata <- get_synthetic_data("finalMAE_small")
+  smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
+  smetrics_data$source_id <- "ds_small"
+  
+  lsmetrics_data <- data.table::rbindlist(list(lmetrics_data, smetrics_data), fill = TRUE)
+  avg_vars <- get_additional_variables(lsmetrics_data)
+  lsmetrics_avg <- average_biological_replicates_dt(lsmetrics_data, var = avg_vars, add_sd = TRUE)
+  
+  expect_identical(NROW(smetrics_data), NROW(lsmetrics_avg))
+  expect_true(all(avg_vars %in% colnames(lsmetrics_data)))
+  expect_true(all(!avg_vars %in% colnames(lsmetrics_avg)))
   
 })
 
