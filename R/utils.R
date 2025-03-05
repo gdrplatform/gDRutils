@@ -458,7 +458,7 @@ average_biological_replicates_dt <- function(
     add_sd = FALSE) {
   
   checkmate::assert_data_table(dt)
-  checkmate::assert_character(var)
+  checkmate::assert_character(var, null.ok = FALSE, any.missing = FALSE)
   checkmate::assert_flag(prettified)
   checkmate::assert_character(geometric_average_fields)
   checkmate::assert_character(fit_type_average_fields)
