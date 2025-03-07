@@ -914,7 +914,7 @@ cap_assay_infinities <- function(conc_assay_dt,
       mt[, -c("min", "max")]
       
     } else if (experiment_name == get_supported_experiments("combo")) {
-      # caluclate min and max conc for each combination
+      # caluclate min and max conc & conc_2 for each combination
       min_max_conc <- 
         conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
                       by = group_cols]
@@ -922,6 +922,10 @@ cap_assay_infinities <- function(conc_assay_dt,
         conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
                       by = group_cols]
       min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
+      
+      mt <- merge(assay_dt, min_max_conc, by = group_cols)
+      data.table::setkey(mt, NULL)
+      mt[, -c("min_conc", "max_conc", "min_conc_2", "max_conc_2")]
     }
   } else {
     assay_dt
