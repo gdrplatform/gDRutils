@@ -895,25 +895,24 @@ cap_assay_infinities <- function(conc_assay_dt,
   
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
-  
-  group_cols <- if (experiment_name == get_supported_experiments("sa")) {
-    as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
-  } else if (experiment_name == get_supported_experiments("combo")) {
-    as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
-  }
-  
+
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) {
     if (experiment_name == get_supported_experiments("sa")) {
+      group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
+      
       # calculate min and max conc for each combination
       min_max_conc <- conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
       
       mt <- merge(assay_dt, min_max_conc, by = group_cols)
-      mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / capping_fold
-      mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * capping_fold
+      mt[get(col) == -Inf, col] <- mt[get(col) == -Inf, "min"] / capping_fold
+      mt[get(col) == Inf, col] <- mt[get(col) == Inf, "max"] * capping_fold
       data.table::setkey(mt, NULL)
       mt[, -c("min", "max")]
       
     } else if (experiment_name == get_supported_experiments("combo")) {
+      group_cols <- 
+        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+      
       # caluclate min and max conc & conc_2 for each combination
       min_max_conc <- 
         conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
@@ -924,6 +923,19 @@ cap_assay_infinities <- function(conc_assay_dt,
       min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
       
       mt <- merge(assay_dt, min_max_conc, by = group_cols)
+      # col_fittings
+      mt[get(col) == -Inf & source == "col_fittings", col] <- 
+        mt[get(col) == -Inf & source == "col_fittings", "min_conc"] / capping_fold
+      mt[get(col) == Inf & source == "col_fittings", col] <- 
+        mt[get(col) == Inf & source == "col_fittings", "max_conc"] * capping_fold
+      # row_fittings
+      mt[get(col) == -Inf & source == "row_fittings", col] <- 
+        mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
+      mt[get(col) == Inf & source == "row_fittings", col] <-
+        mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
+      # codilution_fittings
+      # WIP
+      
       data.table::setkey(mt, NULL)
       mt[, -c("min_conc", "max_conc", "min_conc_2", "max_conc_2")]
     }
