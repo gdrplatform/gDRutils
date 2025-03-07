@@ -871,7 +871,7 @@ remove_drug_batch <- function(drug_vec,
 #'                                               scmetrics_data,
 #'                                               experiment_name = "combination")
 #'
-#' @return data.table without capped -Inf / Inf values
+#' @return data.table without -Inf / Inf values
 #' @keywords package_utils
 #' @export
 cap_assay_infinities <- function(conc_assay_dt,
@@ -884,7 +884,7 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_string(experiment_name)
   checkmate::assert_choice(experiment_name, get_supported_experiments())
   checkmate::assert_string(col)
-  checkmate::assert_choice(col, colnames(assay_dt))
+  checkmate::assert_numeric(assay_dt[[col]])
   checkmate::assert_number(capping_fold, lower = 1)
   
   if (!experiment_name %in% c(get_supported_experiments("sa"),
@@ -896,16 +896,18 @@ cap_assay_infinities <- function(conc_assay_dt,
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
 
-  out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) {
+  out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
       group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
       
       # calculate min and max conc for each combination
-      min_max_conc <- conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
+      min_max_conc <- 
+        conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
       
       mt <- merge(assay_dt, min_max_conc, by = group_cols)
       mt[get(col) == -Inf, col] <- mt[get(col) == -Inf, "min"] / capping_fold
       mt[get(col) == Inf, col] <- mt[get(col) == Inf, "max"] * capping_fold
+      
       data.table::setkey(mt, NULL)
       mt[, -c("min", "max")]
       
