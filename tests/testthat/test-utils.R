@@ -731,7 +731,12 @@ test_that("cap_assay_infinities", {
                                     smetrics_data,
                                     experiment_name = get_supported_experiments("sa"),
                                     col = "no_col"),
-               "Must be element of set")
+               "Must be of type 'numeric', not 'NULL'")
+  expect_error(cap_assay_infinities(saveraged_data,
+                                    smetrics_data,
+                                    experiment_name = get_supported_experiments("sa"),
+                                    col = "fit_type"),
+               "Must be of type 'numeric', not 'character'")
   expect_error(cap_assay_infinities(saveraged_data,
                                     smetrics_data,
                                     experiment_name = get_supported_experiments("sa"),
