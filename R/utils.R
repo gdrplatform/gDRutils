@@ -4,7 +4,7 @@
   dropped <- setdiff(keys, cols)
   if (length(dropped) != 0L) {
     warning(sprintf("ignoring input keys: '%s' which are not present in data.table",
-      paste0(dropped, collapse = ", ")))
+                    paste0(dropped, collapse = ", ")))
   }
   intersect(keys, cols)
 }
@@ -18,12 +18,12 @@ assert_equal_input_len <- function(outlier, ...) {
   if (!h) {
     stop("unequal length objects provided as input")
   }
-
+  
   contains_length_one <- length(first) == 1L || length(outlier) == 1L
   if (length(first) != length(outlier) && !contains_length_one) {
     stop("unequal lengths detected, either the fit parameters must be length one, or the tested value")
   }
-
+  
   invisible(NULL)
 }
 
@@ -78,7 +78,7 @@ assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
     checkmate::test_choice(y, choices, ...)
   }, FUN.VALUE = logical(1))
-
+  
   if (!all(out)) {
     msg <-
       sprintf(
@@ -122,7 +122,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     } else {
       data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
     }
-
+    
   } else {
     out
   }
@@ -194,7 +194,7 @@ apply_bumpy_function <- function(se,
   checkmate::assert_string(req_assay_name)
   checkmate::assert_string(out_assay_name)
   validate_se_assay_name(se, req_assay_name)
-
+  
   asy <- SummarizedExperiment::assay(se, req_assay_name)
   checkmate::assert_class(asy, "BumpyDataFrameMatrix")
   df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
@@ -217,12 +217,12 @@ apply_bumpy_function <- function(se,
       stop("only data.table objects supported as return values from FUN for now")
     }
   }, parallelize = parallelize)
-
+  
   out <- S4Vectors::DataFrame(do.call(rbind, out))
-
+  
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
-    row = out$row,
-    col = out$column)
+                                               row = out$row,
+                                               col = out$column)
   SummarizedExperiment::assays(se)[[out_assay_name]] <- out_assay
   se
 }
@@ -245,7 +245,7 @@ apply_bumpy_function <- function(se,
 #' @export
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   all(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
@@ -266,7 +266,7 @@ is_mae_empty <- function(mae) {
 #' @export
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   any(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
@@ -288,14 +288,14 @@ is_any_exp_empty <- function(mae) {
 #' @export
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
-
+  
   names <- SummarizedExperiment::assayNames(exp)
   dt <- `if`(
     is.null(names),
     data.table::data.table(),
     convert_se_assay_to_dt(exp, names[[1]])
   )
-
+  
   any(
     nrow(SummarizedExperiment::assay(exp)) == 0,
     nrow(dt) == 0
@@ -319,7 +319,7 @@ is_exp_empty <- function(exp) {
 #' @export
 get_non_empty_assays <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   ne_info <- MAEpply(mae, is_exp_empty) == FALSE
   names(ne_info[ne_info == TRUE])
 }
@@ -341,7 +341,7 @@ get_non_empty_assays <- function(mae) {
 #' @export
 mcolData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
 }
 
@@ -361,7 +361,7 @@ mcolData <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }
 
@@ -721,7 +721,7 @@ get_additional_variables <- function(dt_list,
     system.file(package = "gDRutils", "settings.json")
   )]
   idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
-
+  
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
     setdiff(sub(" \\(.*\\)$", "", names(x)), idfs)
   })))
@@ -887,35 +887,42 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_choice(col, colnames(assay_dt))
   checkmate::assert_number(capping_fold, lower = 1)
   
-  conc_col <- if (experiment_name == get_supported_experiments("sa")) {
-    get_env_identifiers("concentration")
-  } else if (experiment_name == get_supported_experiments("combo")) {
-    # TODO: improve logic for determining concentration column in combination data (GDR-2856)
-    get_env_identifiers("concentration")
-  } else {
+  if (!experiment_name %in% c(get_supported_experiments("sa"),
+                              get_supported_experiments("combo"))) {
+    # this function does not support "co-dilution" yet
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
   
-    
-  # remove records for 0 concentrations
-  conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
+  conc <- get_env_identifiers("concentration")
+  conc_2 <- get_env_identifiers("concentration2")
   
   group_cols <- if (experiment_name == get_supported_experiments("sa")) {
     as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
   } else if (experiment_name == get_supported_experiments("combo")) {
-    as.character(gDRutils::get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
-  } else {
-    sprintf("unsupported experiment:'%s'", experiment_name)
+    as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
   }
   
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) {
-    min_max_conc <- conc_assay_dt[, .(min = min(get(conc_col)), max = max(get(conc_col))), by = group_cols]
-    mt <- merge(assay_dt, min_max_conc, by = group_cols)
-    mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / capping_fold
-    mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * capping_fold
-    data.table::setkey(mt, NULL)
-    mt[, -c("min", "max")]
-    
+    if (experiment_name == get_supported_experiments("sa")) {
+      # calculate min and max conc for each combination
+      min_max_conc <- conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
+      
+      mt <- merge(assay_dt, min_max_conc, by = group_cols)
+      mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / capping_fold
+      mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * capping_fold
+      data.table::setkey(mt, NULL)
+      mt[, -c("min", "max")]
+      
+    } else if (experiment_name == get_supported_experiments("combo")) {
+      # caluclate min and max conc for each combination
+      min_max_conc <- 
+        conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
+                      by = group_cols]
+      min_max_conc_2 <- 
+        conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
+                      by = group_cols]
+      min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
+    }
   } else {
     assay_dt
   }
