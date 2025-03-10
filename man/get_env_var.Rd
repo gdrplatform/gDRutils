@@ -7,7 +7,7 @@
 get_env_var(x, ...)
 }
 \arguments{
-\item{x}{string with the name of the environemntal variable}
+\item{x}{string with the name of the environmental variable}
 
 \item{...}{additional params for Sys.getenev}
 }
