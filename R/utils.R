@@ -896,6 +896,8 @@ cap_assay_infinities <- function(conc_assay_dt,
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
   
+  min_conc <- max_conc <- min_conc_2 <- max_conc_2 <- min_val_conc_cd <- min_conc_cd <- min_conc_cd <- NULL
+  
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
       group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
@@ -926,12 +928,16 @@ cap_assay_infinities <- function(conc_assay_dt,
       
       mt <- merge(assay_dt, min_max_conc, by = group_cols)
       # col_fittings
-      mt[, (col) := data.table::fifelse(get(col) == -Inf & source == "col_fittings", min_conc / capping_fold, get(col))]
-      mt[, (col) := data.table::fifelse(get(col) == Inf & source == "col_fittings", max_conc * capping_fold, get(col))]
-      
+      mt[get(col) == -Inf & source == "col_fittings", col] <- 
+        mt[get(col) == -Inf & source == "col_fittings", "min_conc"] / capping_fold
+      mt[get(col) == Inf & source == "col_fittings", col] <- 
+        mt[get(col) == Inf & source == "col_fittings", "max_conc"] * capping_fold
+    
       # row_fittings
-      mt[, (col) := data.table::fifelse(get(col) == -Inf & source == "row_fittings", min_conc_2 / capping_fold, get(col))]
-      mt[, (col) := data.table::fifelse(get(col) == Inf & source == "row_fittings", max_conc_2 * capping_fold, get(col))]
+      mt[get(col) == -Inf & source == "row_fittings", col] <- 
+        mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
+      mt[get(col) == Inf & source == "row_fittings", col] <- 
+        mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
 
       ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
       data.table::setkey(mt, NULL)
@@ -940,14 +946,16 @@ cap_assay_infinities <- function(conc_assay_dt,
       # codilution_fittings
       if (any(assay_dt$source == "codilution_fittings")) {
         # calculate min and max conc for each codilution
-        min_max_conc_cd <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
+        min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
         
-        mt <- merge(mt, min_max_conc_cd, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
+        mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
         # codilution_fittings
-        mt[, (col) := data.table::fifelse(get(col) == -Inf & source == "codilution_fittings", min_val_conc_cd / capping_fold, get(col))]
-        mt[, (col) := data.table::fifelse(get(col) == Inf & source == "codilution_fittings", max_val_conc_cd * capping_fold, get(col))]
+        mt[get(col) == -Inf & source == "codilution_fittings", col] <- 
+          mt[get(col) == -Inf & source == "codilution_fittings", "min_conc_cd"] / capping_fold
+        mt[get(col) == Inf & source == "codilution_fittings", col] <- 
+          mt[get(col) == Inf & source == "codilution_fittings", "max_conc_cd"] * capping_fold
  
-        ls_clean <- intersect(c("min_val_conc_cd", "max_val_conc_cd"), names(mt))
+        ls_clean <- intersect(c("min_conc_cd", "max_conc_cd"), names(mt))
         data.table::setkey(mt, NULL)
         mt <- mt[, -ls_clean, with = FALSE]
       }
@@ -995,8 +1003,8 @@ cap_assay_infinities <- function(conc_assay_dt,
   conc_dict[["ratio"]] <- round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
   conc_dict[["summed_conc"]] <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
   
-  conc_dict <- conc_dict[, .(min_val_conc_cd = min(summed_conc), 
-                             max_val_conc_cd = max(summed_conc),
+  conc_dict <- conc_dict[, .(min_conc_cd = min(summed_conc), 
+                             max_conc_cd = max(summed_conc),
                              N_conc = .N),
                          by = c(group_cols_cd, "ratio")]
   conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
