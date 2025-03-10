@@ -771,7 +771,7 @@ calc_sd <- function(x) {
 #' for which the backslash  is automatically added in some contexts
 #' and R could not get the original value for these env vars.
 #' 
-#' @param x string with the name of the environemntal variable
+#' @param x string with the name of the environmental variable
 #' @param ... additional params for Sys.getenev
 #' @keywords package_utils
 #' 
@@ -895,7 +895,7 @@ cap_assay_infinities <- function(conc_assay_dt,
   
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
-
+  
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
       group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
@@ -915,7 +915,7 @@ cap_assay_infinities <- function(conc_assay_dt,
       group_cols <- 
         as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
       
-      # caluclate min and max conc & conc_2 for each combination
+      # calculate min and max conc & conc_2 for each combination
       min_max_conc <- 
         conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
                       by = group_cols]
@@ -935,15 +935,72 @@ cap_assay_infinities <- function(conc_assay_dt,
         mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
       mt[get(col) == Inf & source == "row_fittings", col] <-
         mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
-      # codilution_fittings
-      # WIP
       
+      ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
       data.table::setkey(mt, NULL)
-      mt[, -c("min_conc", "max_conc", "min_conc_2", "max_conc_2")]
+      mt <- mt[, -ls_clean, with = FALSE]
+      
+      # codilution_fittings
+      if (any(assay_dt$source == "codilution_fittings")) {
+        # calculate min and max conc for each codilution
+        min_max_conc_cd <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
+        
+        mt <- merge(mt, min_max_conc_cd, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
+        # codilution_fittings
+        mt[get(col) == -Inf & source == "codilution_fittings", col] <- 
+          mt[get(col) == -Inf & source == "codilution_fittings", "min_val_conc_cd"] / capping_fold
+        mt[get(col) == Inf & source == "codilution_fittings", col] <- 
+          mt[get(col) == Inf & source == "codilution_fittings", "max_val_conc_cd"] * capping_fold
+        
+        ls_clean <- intersect(c("min_val_conc_cd", "max_val_conc_cd"), names(mt))
+        data.table::setkey(mt, NULL)
+        mt <- mt[, -ls_clean, with = FALSE]
+      }
+      mt
     }
   } else {
     assay_dt
   }
   out_dt
   
+}
+
+#' Prepare dict with min and max concentration for codilution
+#'
+#' @param conc_assay_dt assay data in data.table format with Concentration data
+#' @param group_cols charvec with grouping column names
+#' 
+#' @return \code{data.table} with max and min concentration for codilution
+#' 
+#' @keywords internal
+.prep_cd_conc_cap_dict <- function(conc_assay_dt, group_cols) {
+  
+  checkmate::assert_data_table(conc_assay_dt)
+  checkmate::assert_character(group_cols)
+  checkmate::assert_subset(group_cols, choices = names(conc_assay_dt))
+  
+  conc <- get_env_identifiers("concentration")
+  conc_2 <- get_env_identifiers("concentration2")
+  
+  group_cols_cd <- c(group_cols, "normalization_type")
+  
+  conc_map <- gDRcore::map_conc_to_standardized_conc(conc_assay_dt[[conc]], 
+                                                     conc_assay_dt[[conc_2]])
+  
+  conc_dict <- unique(conc_assay_dt[, c(group_cols_cd, conc, conc_2), with = FALSE])
+  # filter out all single-agents.
+  conc_dict <- conc_dict[!(conc_dict[[conc]] == 0 | conc_dict[[conc_2]] == 0)]
+  # add standardized concentration
+  conc_dict <- merge(conc_dict, conc_map, by.x = conc, by.y = "concs")
+  conc_dict <- merge(conc_dict, conc_map, by.x = conc_2, by.y = "concs", suffixes = c("", "_2"))
+  conc_dict$ratio <- 
+    gDRutils::round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
+  conc_dict$summed_conc <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
+  conc_dict <- conc_dict[, .(min_val_conc_cd = min(summed_conc), 
+                             max_val_conc_cd = max(summed_conc),
+                             N_conc = .N),
+                         by = c(group_cols_cd, "ratio")]
+  conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
+  
+  return(conc_dict)
 }
