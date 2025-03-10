@@ -743,3 +743,21 @@ test_that("cap_assay_infinities", {
                                     capping_fold = "x"),
                "Must be of type 'number'")
 })
+
+test_that("map_conc_to_standardized_conc works as expected", {
+  ratio <- 0.5
+  conc1 <- c(0, 10 ^ (seq(-3, 1, ratio)))
+  
+  shorter_range <- conc1[-1]
+  noise <- runif(length(shorter_range), 1e-12, 1e-11)
+  conc2 <- shorter_range + noise
+  
+  obs <- map_conc_to_standardized_conc(conc1, conc2)
+  expect_true(methods::is(obs, "data.table"))
+})
+
+test_that(".standardize_conc works as expected", {
+  concs <- 10 ^ (seq(-1, 1, 0.9))
+  obs <- .standardize_conc(concs)
+  expect_equal(obs, c(0.1, 0.794, 6.31))
+})
