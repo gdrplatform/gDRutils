@@ -1119,7 +1119,7 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
     log10(first_removed / last_removed), 
     log10(first_two_removed / last_two_removed)
   )
-  rounded_dil_ratios <- gDRutils::round_concentration(dil_ratios, 2)
+  rounded_dil_ratios <- round_concentration(dil_ratios, 2)
   
   # Get most frequent dilution ratio.
   highest_freq_ratio <- names(
