@@ -926,16 +926,13 @@ cap_assay_infinities <- function(conc_assay_dt,
       
       mt <- merge(assay_dt, min_max_conc, by = group_cols)
       # col_fittings
-      mt[get(col) == -Inf & source == "col_fittings", col] <- 
-        mt[get(col) == -Inf & source == "col_fittings", "min_conc"] / capping_fold
-      mt[get(col) == Inf & source == "col_fittings", col] <- 
-        mt[get(col) == Inf & source == "col_fittings", "max_conc"] * capping_fold
-      # row_fittings
-      mt[get(col) == -Inf & source == "row_fittings", col] <- 
-        mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
-      mt[get(col) == Inf & source == "row_fittings", col] <-
-        mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
+      mt[, (col) := data.table::fifelse(get(col) == -Inf & source == "col_fittings", min_conc / capping_fold, get(col))]
+      mt[, (col) := data.table::fifelse(get(col) == Inf & source == "col_fittings", max_conc * capping_fold, get(col))]
       
+      # row_fittings
+      mt[, (col) := data.table::fifelse(get(col) == -Inf & source == "row_fittings", min_conc_2 / capping_fold, get(col))]
+      mt[, (col) := data.table::fifelse(get(col) == Inf & source == "row_fittings", max_conc_2 * capping_fold, get(col))]
+
       ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
       data.table::setkey(mt, NULL)
       mt <- mt[, -ls_clean, with = FALSE]
@@ -947,11 +944,9 @@ cap_assay_infinities <- function(conc_assay_dt,
         
         mt <- merge(mt, min_max_conc_cd, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
         # codilution_fittings
-        mt[get(col) == -Inf & source == "codilution_fittings", col] <- 
-          mt[get(col) == -Inf & source == "codilution_fittings", "min_val_conc_cd"] / capping_fold
-        mt[get(col) == Inf & source == "codilution_fittings", col] <- 
-          mt[get(col) == Inf & source == "codilution_fittings", "max_val_conc_cd"] * capping_fold
-        
+        mt[, (col) := data.table::fifelse(get(col) == -Inf & source == "codilution_fittings", min_val_conc_cd / capping_fold, get(col))]
+        mt[, (col) := data.table::fifelse(get(col) == Inf & source == "codilution_fittings", max_val_conc_cd * capping_fold, get(col))]
+ 
         ls_clean <- intersect(c("min_val_conc_cd", "max_val_conc_cd"), names(mt))
         data.table::setkey(mt, NULL)
         mt <- mt[, -ls_clean, with = FALSE]
@@ -996,8 +991,10 @@ cap_assay_infinities <- function(conc_assay_dt,
   # add standardized concentration
   conc_dict <- merge(conc_dict, conc_map, by.x = conc, by.y = "concs")
   conc_dict <- merge(conc_dict, conc_map, by.x = conc_2, by.y = "concs", suffixes = c("", "_2"))
+  
   conc_dict[["ratio"]] <- round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
   conc_dict[["summed_conc"]] <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
+  
   conc_dict <- conc_dict[, .(min_val_conc_cd = min(summed_conc), 
                              max_val_conc_cd = max(summed_conc),
                              N_conc = .N),
