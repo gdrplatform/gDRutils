@@ -251,7 +251,7 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_true(nrow(av1f) == 1)
   av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
   expect_true(nrow(av1i) == 8)
- 
+  
   # two additional variables for averaging
   ligand_data <- get_synthetic_data("finalMAE_wLigand")
   lmetrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
@@ -637,14 +637,15 @@ test_that("remove_drug_batch", {
 
 test_that("cap_assay_infinities", {
   # single-agent data - data expected tests
-  sdata <- get_synthetic_data("finalMAE_small")
+  sdata <- get_synthetic_data("finalMAE_medium")
   smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], 
                                           "Metrics")
-  ## add some Infs/-Infs
-  smetrics_data$xc50[1:3] <- -Inf
-  smetrics_data$xc50[100:103] <- Inf
+
   saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], 
                                            "Averaged")
+  ## add some Infs/-Infs
+  smetrics_data$xc50[1:30] <- -Inf
+  smetrics_data$xc50[100:103] <- Inf
   smetrics_data2 <- cap_assay_infinities(saveraged_data, 
                                          smetrics_data, 
                                          experiment_name = get_supported_experiments("sa")) # default
@@ -659,9 +660,15 @@ test_that("cap_assay_infinities", {
   # no Inf/-Inf after running the function
   inf_idx2 <- which(is.infinite(smetrics_data2$xc50))
   expect_true(NROW(inf_idx2) == 0)
+  inf_idx3 <- which(is.infinite(smetrics_data3$xc50))
+  expect_true(NROW(inf_idx2) == 0)
   ##  Inf values
-  expect_identical(max(smetrics_data2[inf_idx, "xc50"]), 5 * max(smetrics_data3[inf_idx, "xc50"]))
-  expect_identical(min(smetrics_data2[inf_idx, "xc50"]), min(smetrics_data3[inf_idx, "xc50"]) / 5)
+  inf_idx_lower <- which(smetrics_data[order(x_mean)]$xc50 == -Inf)
+  inf_idx_upper <- which(smetrics_data[order(x_mean)]$xc50 == Inf)
+  expect_identical(unique(smetrics_data3[order(x_mean)][inf_idx_lower, ]$xc50 / 
+                     smetrics_data2[order(x_mean)][inf_idx_lower, ]$xc50), 5)
+  expect_identical(unique(smetrics_data2[order(x_mean)][inf_idx_upper, ]$xc50 / 
+                            smetrics_data3[order(x_mean)][inf_idx_upper, ]$xc50), 5)
   
   ## data without infinities
   smetrics_data4 <- cap_assay_infinities(saveraged_data, 
@@ -680,7 +687,7 @@ test_that("cap_assay_infinities", {
   expect_true(any(smetrics_data6$xc50 != smetrics_data2$xc50))
   
   # combination data - data expected tests
-  cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+  cdata <- get_synthetic_data("finalMAE_combo_matrix")
   scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], 
                                             "Averaged")
   scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], 
@@ -692,17 +699,25 @@ test_that("cap_assay_infinities", {
                                           scmetrics_data,
                                           experiment_name = get_supported_experiments("combo"),
                                           capping_fold = 1)
-  # WIP ---> # nolint start
-  # ## data with inf/-inf values
-  # infc_idx <- which(is.infinite(scmetrics_data$xc50))
-  # expect_true(NROW(infc_idx) > 0)
-  # ## no Inf/-Inf after running the function
-  # infc_idx2 <- which(is.infinite(scmetrics_data2$xc50))
-  # expect_true(NROW(infc_idx2) == 0)
-  # ##  Inf values
-  # expect_identical(max(scmetrics_data2[infc_idx, "xc50"]), 5 * max(scmetrics_data3[infc_idx, "xc50"]))
-  # expect_identical(min(scmetrics_data2[infc_idx, "xc50"]), min(scmetrics_data3[infc_idx, "xc50"]) / 5)
-  # <--- WIP # nolint end
+  ## data with inf/-inf values
+  inf_idx <- which(is.infinite(scmetrics_data$xc50))
+  expect_true(NROW(inf_idx) > 0)
+  ## no Inf/-Inf after running the function
+  inf_idx2 <- which(is.infinite(scmetrics_data2$xc50))
+  expect_true(NROW(inf_idx2) == 0)
+  inf_idx3 <- which(is.infinite(scmetrics_data3$xc50))
+  expect_true(NROW(inf_idx3) == 0)
+  ##  Inf values
+  inf_idx_lower <- which(scmetrics_data[order(x_mean)]$xc50 == -Inf)
+  inf_idx_upper <- which(scmetrics_data[order(x_mean)]$xc50 == Inf)
+  expect_equal(unique(
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+  expect_equal(unique(
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+  
+  # WIP codilution_fittings
   
   ## data without infinities
   scmetrics_data4 <- cap_assay_infinities(scaveraged_data, 
