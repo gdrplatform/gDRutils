@@ -761,3 +761,10 @@ test_that(".standardize_conc works as expected", {
   obs <- .standardize_conc(concs)
   expect_equal(obs, c(0.1, 0.794, 6.31))
 })
+
+test_that(".calculate_dilution_ratio works as expected", {
+  ratio <- 0.5
+  concs <- 10 ^ (seq(-3, 1, ratio))
+  obs <- .calculate_dilution_ratio(concs)
+  expect_equal(obs, ratio)
+})
