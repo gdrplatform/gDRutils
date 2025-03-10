@@ -4,7 +4,11 @@
 \alias{.prep_cd_conc_cap_dict}
 \title{Prepare dict with min and max concentration for codilution}
 \usage{
-.prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
+.prep_cd_conc_cap_dict(
+  conc_assay_dt,
+  group_cols = as.character(get_env_identifiers(c("drug_name", "drug_name2",
+    "cellline_name"), simplify = FALSE))
+)
 }
 \arguments{
 \item{conc_assay_dt}{assay data in data.table format with Concentration data}
