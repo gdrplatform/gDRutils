@@ -640,7 +640,7 @@ test_that("cap_assay_infinities", {
   sdata <- get_synthetic_data("finalMAE_medium")
   smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], 
                                           "Metrics")
-
+  
   saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], 
                                            "Averaged")
   ## add some Infs/-Infs
@@ -666,7 +666,7 @@ test_that("cap_assay_infinities", {
   inf_idx_lower <- which(smetrics_data[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(smetrics_data[order(x_mean)]$xc50 == Inf)
   expect_identical(unique(smetrics_data3[order(x_mean)][inf_idx_lower, ]$xc50 / 
-                     smetrics_data2[order(x_mean)][inf_idx_lower, ]$xc50), 5)
+                            smetrics_data2[order(x_mean)][inf_idx_lower, ]$xc50), 5)
   expect_identical(unique(smetrics_data2[order(x_mean)][inf_idx_upper, ]$xc50 / 
                             smetrics_data3[order(x_mean)][inf_idx_upper, ]$xc50), 5)
   
@@ -718,6 +718,12 @@ test_that("cap_assay_infinities", {
       scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
   
   # WIP codilution_fittings
+  expect_equal(unique(
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50), 5)
+  expect_equal(unique(
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50), 5)
   
   ## data without infinities
   scmetrics_data4 <- cap_assay_infinities(scaveraged_data, 
