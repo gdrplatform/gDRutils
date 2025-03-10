@@ -973,7 +973,10 @@ cap_assay_infinities <- function(conc_assay_dt,
 #' @return \code{data.table} with max and min concentration for codilution
 #' 
 #' @keywords internal
-.prep_cd_conc_cap_dict <- function(conc_assay_dt, group_cols) {
+.prep_cd_conc_cap_dict <- function(
+    conc_assay_dt,
+    group_cols = as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+) {
   
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_character(group_cols)
@@ -984,8 +987,8 @@ cap_assay_infinities <- function(conc_assay_dt,
   
   group_cols_cd <- c(group_cols, "normalization_type")
   
-  conc_map <- gDRcore::map_conc_to_standardized_conc(conc_assay_dt[[conc]], 
-                                                     conc_assay_dt[[conc_2]])
+  conc_map <- map_conc_to_standardized_conc(conc_assay_dt[[conc]], 
+                                            conc_assay_dt[[conc_2]])
   
   conc_dict <- unique(conc_assay_dt[, c(group_cols_cd, conc, conc_2), with = FALSE])
   # filter out all single-agents.
@@ -993,9 +996,8 @@ cap_assay_infinities <- function(conc_assay_dt,
   # add standardized concentration
   conc_dict <- merge(conc_dict, conc_map, by.x = conc, by.y = "concs")
   conc_dict <- merge(conc_dict, conc_map, by.x = conc_2, by.y = "concs", suffixes = c("", "_2"))
-  conc_dict$ratio <- 
-    gDRutils::round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
-  conc_dict$summed_conc <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
+  conc_dict[["ratio"]] <- round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
+  conc_dict[["summed_conc"]] <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
   conc_dict <- conc_dict[, .(min_val_conc_cd = min(summed_conc), 
                              max_val_conc_cd = max(summed_conc),
                              N_conc = .N),
@@ -1003,4 +1005,98 @@ cap_assay_infinities <- function(conc_assay_dt,
   conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
   
   return(conc_dict)
+}
+
+#' Create a mapping of concentrations to standardized concentrations.
+#'
+#' @param conc1 numeric vector of the concentrations for drug 1.
+#' @param conc2 numeric vector of the concentrations for drug 2.
+#'
+#' @examples
+#' 
+#' ratio <- 0.5
+#' conc1 <- c(0, 10 ^ (seq(-3, 1, ratio)))
+#' 
+#' shorter_range <- conc1[-1]
+#' noise <- runif(length(shorter_range), 1e-12, 1e-11)
+#' conc2 <- shorter_range + noise
+#' 
+#' map_conc_to_standardized_conc(conc1, conc2)
+#'
+#' @return data.table of 2 columns named \code{"concs"} and \code{"rconcs"}
+#' containing the original concentrations and their closest matched 
+#' standardized concentrations respectively. and their new standardized 
+#' concentrations.
+#'
+#' @details The concentrations are standardized in that they will contain 
+#' regularly spaced dilutions and close values will be rounded.
+#' @keywords utils
+#' @export
+map_conc_to_standardized_conc <- function(conc1, conc2) {
+  # Remove single-agent.
+  
+  conc_1 <- setdiff(conc1, 0)
+  conc_2 <- setdiff(conc2, 0)
+  
+  conc_1 <- sort(unique(conc_1))
+  rconc1 <- .standardize_conc(conc_1)
+  
+  conc_2 <- sort(unique(conc_2))
+  rconc2 <- .standardize_conc(conc_2)
+  
+  rconc <- c(0, unique(c(rconc1, rconc2)))
+  .find_closest_match <- function(x) {
+    rconc[abs(rconc - x) == min(abs(rconc - x))]
+  }
+  concs <- unique(c(conc1, conc2))
+  mapped_rconcs <- vapply(concs, .find_closest_match, numeric(1))
+  map <- unique(data.table::data.table(concs = concs, rconcs = mapped_rconcs))
+  
+  tol <- 1
+  
+  # Check if standardized values are within 5% of the original values
+  round_diff <- which(abs(map$concs - map$rconcs) / map$concs > 0.05)
+  
+  map$rconcs[round_diff] <- map$concs[round_diff]
+  mismatched <- which(
+    round_concentration(map$conc, tol) != round_concentration(map$rconc, tol)
+  )
+  for (i in mismatched) {
+    warning(sprintf("mapping original concentration '%s' to '%s'",
+                    map[i, "concs"], map[i, "rconcs"]))
+  }
+  map
+}
+
+
+#' Standardize concentration values.
+#'
+#' Standardize concentration values.
+#'
+#' @param conc numeric vector of the concentrations
+#'
+#' @examples
+#' concs <- 10 ^ (seq(-1, 1, 0.9))
+#' .standardize_conc(concs)
+#'
+#' @return vector of standardized concentrations
+#' @details If no \code{conc} are passed, \code{NULL} is returned.
+#'
+#' @keywords utils
+#' @export
+.standardize_conc <- function(conc) {
+  rconc <- if (S4Vectors::isEmpty(conc)) {
+    NULL
+  } else if (length(unique(round_concentration(conc, 3))) > 4) {
+    # 4 is determined by the fewest number of concentrations required to be 
+    # considered a "matrix".
+    log10_step <- .calculate_dilution_ratio(conc)
+    num_steps <- round((log10(max(conc)) - log10(min(conc)) / log10_step), 0)
+    seqs <- log10(max(conc)) - (log10_step * c(0:num_steps))
+    sort(round_concentration(10 ^ seqs, 3))
+  } else {
+    # Few enough concentrations, don't need to calculate a series.
+    round_concentration(conc, 3)
+  }
+  rconc
 }
