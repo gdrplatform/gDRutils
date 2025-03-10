@@ -1071,8 +1071,6 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 
 #' Standardize concentration values.
 #'
-#' Standardize concentration values.
-#'
 #' @param conc numeric vector of the concentrations
 #'
 #' @examples
@@ -1099,4 +1097,33 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
     round_concentration(conc, 3)
   }
   rconc
+}
+
+#' Calculate a dilution ratio.
+#'
+#' Calculation a dilution ratio from a vector of concentrations.
+#'
+#' @param concs numeric vector of concentrations.
+#'
+#' @return numeric value of the dilution ratio for a given set of 
+#' concentrations.
+#' @keywords internal
+#' @noRd
+.calculate_dilution_ratio <- function(concs) {
+  first_removed <- concs[-1]
+  first_two_removed <- first_removed[-1]
+  last_removed <- concs[-length(concs)]
+  last_two_removed <- last_removed[-length(last_removed)]
+  
+  dil_ratios <- c(
+    log10(first_removed / last_removed), 
+    log10(first_two_removed / last_two_removed)
+  )
+  rounded_dil_ratios <- gDRutils::round_concentration(dil_ratios, 2)
+  
+  # Get most frequent dilution ratio.
+  highest_freq_ratio <- names(
+    sort(table(rounded_dil_ratios), decreasing = TRUE)
+  )[[1]]
+  as.numeric(highest_freq_ratio)
 }
