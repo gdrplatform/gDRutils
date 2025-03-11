@@ -916,34 +916,36 @@ cap_assay_infinities <- function(conc_assay_dt,
     } else if (experiment_name == get_supported_experiments("combo")) {
       group_cols <- 
         as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
-      
-      # calculate min and max conc & conc_2 for each combination
-      min_max_conc <- 
-        conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
-                      by = group_cols]
-      min_max_conc_2 <- 
-        conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
-                      by = group_cols]
-      min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
-      
-      mt <- merge(assay_dt, min_max_conc, by = group_cols)
-      # col_fittings
-      mt[get(col) == -Inf & source == "col_fittings", col] <- 
-        mt[get(col) == -Inf & source == "col_fittings", "min_conc"] / capping_fold
-      mt[get(col) == Inf & source == "col_fittings", col] <- 
-        mt[get(col) == Inf & source == "col_fittings", "max_conc"] * capping_fold
-    
-      # row_fittings
-      mt[get(col) == -Inf & source == "row_fittings", col] <- 
-        mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
-      mt[get(col) == Inf & source == "row_fittings", col] <- 
-        mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
+      mt <- data.table::copy(assay_dt)
+ 
+      if (any(assay_dt$source %in% c("col_fittings", "row_fittings"))) {
+        # calculate min and max conc & conc_2 for each combination
+        min_max_conc <- 
+          conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
+                        by = group_cols]
+        min_max_conc_2 <- 
+          conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
+                        by = group_cols]
+        min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
+        
+        mt <- merge(mt, min_max_conc, by = group_cols)
+        # col_fittings
+        mt[get(col) == -Inf & source == "col_fittings", col] <- 
+          mt[get(col) == -Inf & source == "col_fittings", "min_conc"] / capping_fold
+        mt[get(col) == Inf & source == "col_fittings", col] <- 
+          mt[get(col) == Inf & source == "col_fittings", "max_conc"] * capping_fold
+        
+        # row_fittings
+        mt[get(col) == -Inf & source == "row_fittings", col] <- 
+          mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
+        mt[get(col) == Inf & source == "row_fittings", col] <- 
+          mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
+        
+        ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
+        data.table::setkey(mt, NULL)
+        mt <- mt[, -ls_clean, with = FALSE]
+      }
 
-      ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
-      data.table::setkey(mt, NULL)
-      mt <- mt[, -ls_clean, with = FALSE]
-      
-      # codilution_fittings
       if (any(assay_dt$source %in% c("codilution_fittings"))) {
         # calculate min and max conc for each codilution
         min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
@@ -954,7 +956,7 @@ cap_assay_infinities <- function(conc_assay_dt,
           mt[get(col) == -Inf & source == "codilution_fittings", "min_conc_cd"] / capping_fold
         mt[get(col) == Inf & source == "codilution_fittings", col] <- 
           mt[get(col) == Inf & source == "codilution_fittings", "max_conc_cd"] * capping_fold
- 
+        
         ls_clean <- intersect(c("min_conc_cd", "max_conc_cd"), names(mt))
         data.table::setkey(mt, NULL)
         mt <- mt[, -ls_clean, with = FALSE]
