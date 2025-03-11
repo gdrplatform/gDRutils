@@ -598,7 +598,7 @@ test_that("calc_sd works as expected", {
   expect_true(is.na(calc_sd(c(NA, NA, NA))))
 })
 
-test_that("remove_drug_batch", {
+test_that("remove_drug_batch works as expected", {
   # no suffix - nothing changes
   expect_equal(remove_drug_batch("G00060245"), "G00060245")
   # expected suffix - remove
@@ -635,7 +635,7 @@ test_that("remove_drug_batch", {
   
 })
 
-test_that("cap_assay_infinities", {
+test_that("cap_assay_infinities works as expected", {
   # single-agent data - data expected tests
   sdata <- get_synthetic_data("finalMAE_medium")
   smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], 
@@ -662,6 +662,9 @@ test_that("cap_assay_infinities", {
   expect_true(NROW(inf_idx2) == 0)
   inf_idx3 <- which(is.infinite(smetrics_data3$xc50))
   expect_true(NROW(inf_idx2) == 0)
+  # dim
+  expect_equal(dim(smetrics_data), dim(smetrics_data2))
+  expect_equal(dim(smetrics_data), dim(smetrics_data3))
   ##  Inf values
   inf_idx_lower <- which(smetrics_data[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(smetrics_data[order(x_mean)]$xc50 == Inf)
@@ -707,17 +710,19 @@ test_that("cap_assay_infinities", {
   expect_true(NROW(inf_idx2) == 0)
   inf_idx3 <- which(is.infinite(scmetrics_data3$xc50))
   expect_true(NROW(inf_idx3) == 0)
+  # dim
+  expect_equal(dim(scmetrics_data), dim(scmetrics_data2))
+  expect_equal(dim(scmetrics_data), dim(scmetrics_data3))
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data[order(x_mean)]$xc50 == Inf)
+
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
   expect_equal(unique(
     scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
-  
-  # WIP codilution_fittings
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50 /
       scmetrics_data2[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50), 5)
@@ -730,6 +735,98 @@ test_that("cap_assay_infinities", {
                                           scmetrics_data2, 
                                           experiment_name = get_supported_experiments("combo"))
   expect_identical(scmetrics_data2, scmetrics_data4)
+  
+  ## lack of source - codilution_fittings
+  scmetrics_data_lack_1 <- data.table::copy(scmetrics_data)[source != "codilution_fittings"]
+  
+  scmetrics_data2 <- cap_assay_infinities(scaveraged_data, 
+                                          scmetrics_data_lack_1, 
+                                          experiment_name = get_supported_experiments("combo"))
+  scmetrics_data3 <- cap_assay_infinities(scaveraged_data,
+                                          scmetrics_data_lack_1,
+                                          experiment_name = get_supported_experiments("combo"),
+                                          capping_fold = 1)
+  ## data with inf/-inf values
+  inf_idx <- which(is.infinite(scmetrics_data_lack_1$xc50))
+  expect_true(NROW(inf_idx) > 0)
+  ## no Inf/-Inf after running the function
+  inf_idx2 <- which(is.infinite(scmetrics_data2$xc50))
+  expect_true(NROW(inf_idx2) == 0)
+  inf_idx3 <- which(is.infinite(scmetrics_data3$xc50))
+  expect_true(NROW(inf_idx3) == 0)
+  # dim
+  expect_equal(dim(scmetrics_data_lack_1), dim(scmetrics_data2))
+  expect_equal(dim(scmetrics_data_lack_1), dim(scmetrics_data3))
+  ##  Inf values
+  inf_idx_lower <- which(scmetrics_data_lack_1[order(x_mean)]$xc50 == -Inf)
+  inf_idx_upper <- which(scmetrics_data_lack_1[order(x_mean)]$xc50 == Inf)
+
+  expect_equal(unique(
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+  expect_equal(unique(
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+
+  ## lack of source - col_fittings
+  scmetrics_data_lack_2 <- data.table::copy(scmetrics_data)[source != "col_fittings"]
+  
+  scmetrics_data2 <- cap_assay_infinities(scaveraged_data, 
+                                          scmetrics_data_lack_2, 
+                                          experiment_name = get_supported_experiments("combo"))
+  scmetrics_data3 <- cap_assay_infinities(scaveraged_data,
+                                          scmetrics_data_lack_2,
+                                          experiment_name = get_supported_experiments("combo"),
+                                          capping_fold = 1)
+  ## data with inf/-inf values
+  inf_idx <- which(is.infinite(scmetrics_data_lack_2$xc50))
+  expect_true(NROW(inf_idx) > 0)
+  ## no Inf/-Inf after running the function
+  inf_idx2 <- which(is.infinite(scmetrics_data2$xc50))
+  expect_true(NROW(inf_idx2) == 0)
+  inf_idx3 <- which(is.infinite(scmetrics_data3$xc50))
+  expect_true(NROW(inf_idx3) == 0)
+  # dim
+  expect_equal(dim(scmetrics_data_lack_2), dim(scmetrics_data2))
+  expect_equal(dim(scmetrics_data_lack_2), dim(scmetrics_data3))
+  ##  Inf values
+  inf_idx_lower <- which(scmetrics_data_lack_2[order(x_mean)]$xc50 == -Inf)
+  inf_idx_upper <- which(scmetrics_data_lack_2[order(x_mean)]$xc50 == Inf)
+
+  expect_equal(unique(
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+  expect_equal(unique(
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+  expect_equal(unique(
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50), 5)
+  expect_equal(unique(
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50), 5)
+  
+  ## NA in source 
+  scmetrics_data_NA <- data.table::copy(scmetrics_data)[, source := NA]
+  
+  scmetrics_data2 <- cap_assay_infinities(scaveraged_data, 
+                                          scmetrics_data_NA, 
+                                          experiment_name = get_supported_experiments("combo"))
+  ## data with inf/-inf values
+  inf_idx <- which(is.infinite(scmetrics_data_NA$xc50))
+  expect_true(NROW(inf_idx) > 0)
+  ## no Inf/-Inf after running the function
+  inf_idx2 <- which(is.infinite(scmetrics_data2$xc50))
+  expect_true(NROW(inf_idx2) == NROW(inf_idx))
+  # dim
+  expect_equal(dim(scmetrics_data_NA), dim(scmetrics_data2))
+  ##  Inf values
+  inf_idx_lower <- which(scmetrics_data_NA[order(x_mean)]$xc50 == -Inf)
+  inf_idx_upper <- which(scmetrics_data_NA[order(x_mean)]$xc50 == Inf)
+
+  expect_equal(scmetrics_data_NA[inf_idx_lower, ]$xc50, scmetrics_data2[inf_idx_lower, ]$xc50)
+  expect_equal(scmetrics_data_NA[inf_idx_upper, ]$xc50, scmetrics_data2[inf_idx_upper, ]$xc50)
+  
   
   # test non-default values of other parameters
   expect_error(cap_assay_infinities(list(a = 2)), "Must be a data.table")
