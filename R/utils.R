@@ -944,7 +944,7 @@ cap_assay_infinities <- function(conc_assay_dt,
       mt <- mt[, -ls_clean, with = FALSE]
       
       # codilution_fittings
-      if (any(assay_dt$source == "codilution_fittings")) {
+      if (any(assay_dt$source %in% c("codilution_fittings"))) {
         # calculate min and max conc for each codilution
         min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
         
