@@ -1011,7 +1011,7 @@ cap_assay_infinities <- function(conc_assay_dt,
                          by = c(group_cols_cd, "ratio")]
   conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
   
-  return(conc_dict)
+  conc_dict
 }
 
 #' Create a mapping of concentrations to standardized concentrations.
@@ -1053,7 +1053,7 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
   
   rconc <- c(0, unique(c(rconc1, rconc2)))
   .find_closest_match <- function(x) {
-    rconc[abs(rconc - x) == min(abs(rconc - x))]
+    rconc[which.min(abs(rconc - x))]
   }
   concs <- unique(c(conc1, conc2))
   mapped_rconcs <- vapply(concs, .find_closest_match, numeric(1))
@@ -1117,6 +1117,9 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 #' @keywords internal
 #' @noRd
 .calculate_dilution_ratio <- function(concs) {
+  checkmate::assert_numeric(concs, min.len = 2)
+  concs <- unique(sort(concs))
+  
   first_removed <- concs[-1]
   first_two_removed <- first_removed[-1]
   last_removed <- concs[-length(concs)]

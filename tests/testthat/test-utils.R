@@ -716,7 +716,7 @@ test_that("cap_assay_infinities works as expected", {
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data[order(x_mean)]$xc50 == Inf)
-
+  
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
@@ -760,14 +760,14 @@ test_that("cap_assay_infinities works as expected", {
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data_lack_1[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data_lack_1[order(x_mean)]$xc50 == Inf)
-
+  
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
   expect_equal(unique(
     scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
-
+  
   ## lack of source - col_fittings
   scmetrics_data_lack_2 <- data.table::copy(scmetrics_data)[source != "col_fittings"]
   
@@ -792,7 +792,7 @@ test_that("cap_assay_infinities works as expected", {
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data_lack_2[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data_lack_2[order(x_mean)]$xc50 == Inf)
-
+  
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
@@ -823,7 +823,7 @@ test_that("cap_assay_infinities works as expected", {
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data_NA[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data_NA[order(x_mean)]$xc50 == Inf)
-
+  
   expect_equal(scmetrics_data_NA[inf_idx_lower, ]$xc50, scmetrics_data2[inf_idx_lower, ]$xc50)
   expect_equal(scmetrics_data_NA[inf_idx_upper, ]$xc50, scmetrics_data2[inf_idx_upper, ]$xc50)
   
@@ -885,4 +885,17 @@ test_that(".calculate_dilution_ratio works as expected", {
   concs <- 10 ^ (seq(-3, 1, ratio))
   obs <- .calculate_dilution_ratio(concs)
   expect_equal(obs, ratio)
+  
+  obs <- .calculate_dilution_ratio(concs[1:2])
+  expect_equal(obs, ratio)
+  
+  ratio_2 <- 0.3
+  concs_2 <-  10 ^ (seq(-3, 1, ratio_2))
+  obs <- .calculate_dilution_ratio(c(concs, concs_2))
+  expect_equal(obs, c(ratio, ratio_2)[which.max(c(NROW(concs), NROW(concs_2)))])
+  
+  expect_error(.calculate_dilution_ratio(concs[1]),
+               "Assertion on 'concs' failed: Must have length >= 2")
+  expect_error(.calculate_dilution_ratio(letters[1:5]),
+               "Assertion on 'concs' failed: Must be of type 'numeric'")
 })
