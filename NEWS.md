@@ -1,6 +1,6 @@
 ## gDRutils 1.5.13 - 2025-03-07
 * add support for combination experiment in `cap_assay_infinities`
-* move `map_conc_to_standardized_conc` form gDRcore package
+* move `map_conc_to_standardized_conc` from gDRcore package
 
 ## gDRutils 1.5.12 - 2025-02-21
 * refactor `average_biological_replicates`
