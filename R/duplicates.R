@@ -51,7 +51,7 @@ get_assay_req_uniq_cols <- function(dt) {
   col_names_up <- as.character(get_env_identifiers(col_ids, simplify = FALSE))
   
   # add additional variables
-  ## there are column that shouuld not be considered additional variables 
+  ## there are columns that should not be considered additional variables 
   skip_col_ids <- get_settings_from_json(
     "assay_dt_skip_uniq_col_ids",
     system.file(package = "gDRutils", "settings.json")
