@@ -45,11 +45,28 @@ get_assay_req_uniq_cols <- function(dt) {
     "assay_dt_req_uniq_col_ids",
     system.file(package = "gDRutils", "settings.json")
   )
-  
+ 
   # check with both pretiffied and unprettified version of ids
   col_names_p <- unlist(get_prettified_identifiers(col_ids, simplify = FALSE))
   col_names_up <- as.character(get_env_identifiers(col_ids, simplify = FALSE))
-  col_names <- unique(c(col_names_p, col_names_up))
+  
+  # add additional variables
+  ## there are column that shouuld not be considered additional variables 
+  skip_col_ids <- get_settings_from_json(
+    "assay_dt_skip_uniq_col_ids",
+    system.file(package = "gDRutils", "settings.json")
+  )
+  skip_col_ids <- intersect(colnames(dt), skip_col_ids)
+  if (NROW(skip_col_ids)) {
+    sdt <- dt[, -skip_col_ids, with = FALSE]
+    add_v_p <- gDRutils::get_additional_variables(sdt)
+    add_v_up <- gDRutils::get_additional_variables(sdt, prettified = FALSE)
+  } else {
+    add_v_p <- gDRutils::get_additional_variables(dt)
+    add_v_up <- gDRutils::get_additional_variables(dt, prettified = FALSE)
+  }
+  
+  col_names <- unique(c(col_names_p, col_names_up, add_v_p, add_v_up))
   
   intersect(col_names, names(dt))
 }
