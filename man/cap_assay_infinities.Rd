@@ -25,7 +25,7 @@ cap_assay_infinities(
 final formulas are min / capping_fold and max * capping_fold}
 }
 \value{
-data.table without capped -Inf / Inf values
+data.table without -Inf / Inf values
 }
 \description{
 Cap infinity values (Inf, -Inf) in the assay data
