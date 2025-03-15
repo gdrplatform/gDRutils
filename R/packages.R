@@ -26,6 +26,7 @@ if (getRversion() >= "2.15.1") {
       ".N",
       "maxlog10Concentration",
       "MaxEffectiveness",
+      "N_conc",
       "normalization_type",
       "RV AOC within set range",
       "GR AOC within set range",
@@ -36,7 +37,8 @@ if (getRversion() >= "2.15.1") {
       "type",
       "name",
       "count",
-      "fit_source"
+      "fit_source",
+      "summed_conc"
     ),
     utils::packageName())
 }

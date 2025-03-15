@@ -4,7 +4,7 @@
   dropped <- setdiff(keys, cols)
   if (length(dropped) != 0L) {
     warning(sprintf("ignoring input keys: '%s' which are not present in data.table",
-      paste0(dropped, collapse = ", ")))
+                    paste0(dropped, collapse = ", ")))
   }
   intersect(keys, cols)
 }
@@ -18,12 +18,12 @@ assert_equal_input_len <- function(outlier, ...) {
   if (!h) {
     stop("unequal length objects provided as input")
   }
-
+  
   contains_length_one <- length(first) == 1L || length(outlier) == 1L
   if (length(first) != length(outlier) && !contains_length_one) {
     stop("unequal lengths detected, either the fit parameters must be length one, or the tested value")
   }
-
+  
   invisible(NULL)
 }
 
@@ -78,7 +78,7 @@ assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
     checkmate::test_choice(y, choices, ...)
   }, FUN.VALUE = logical(1))
-
+  
   if (!all(out)) {
     msg <-
       sprintf(
@@ -122,7 +122,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     } else {
       data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
     }
-
+    
   } else {
     out
   }
@@ -194,7 +194,7 @@ apply_bumpy_function <- function(se,
   checkmate::assert_string(req_assay_name)
   checkmate::assert_string(out_assay_name)
   validate_se_assay_name(se, req_assay_name)
-
+  
   asy <- SummarizedExperiment::assay(se, req_assay_name)
   checkmate::assert_class(asy, "BumpyDataFrameMatrix")
   df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
@@ -217,12 +217,12 @@ apply_bumpy_function <- function(se,
       stop("only data.table objects supported as return values from FUN for now")
     }
   }, parallelize = parallelize)
-
+  
   out <- S4Vectors::DataFrame(do.call(rbind, out))
-
+  
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
-    row = out$row,
-    col = out$column)
+                                               row = out$row,
+                                               col = out$column)
   SummarizedExperiment::assays(se)[[out_assay_name]] <- out_assay
   se
 }
@@ -245,7 +245,7 @@ apply_bumpy_function <- function(se,
 #' @export
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   all(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
@@ -266,7 +266,7 @@ is_mae_empty <- function(mae) {
 #' @export
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   any(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
@@ -288,14 +288,14 @@ is_any_exp_empty <- function(mae) {
 #' @export
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
-
+  
   names <- SummarizedExperiment::assayNames(exp)
   dt <- `if`(
     is.null(names),
     data.table::data.table(),
     convert_se_assay_to_dt(exp, names[[1]])
   )
-
+  
   any(
     nrow(SummarizedExperiment::assay(exp)) == 0,
     nrow(dt) == 0
@@ -319,7 +319,7 @@ is_exp_empty <- function(exp) {
 #' @export
 get_non_empty_assays <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   ne_info <- MAEpply(mae, is_exp_empty) == FALSE
   names(ne_info[ne_info == TRUE])
 }
@@ -341,7 +341,7 @@ get_non_empty_assays <- function(mae) {
 #' @export
 mcolData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
 }
 
@@ -361,7 +361,7 @@ mcolData <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-
+  
   MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }
 
@@ -721,7 +721,7 @@ get_additional_variables <- function(dt_list,
     system.file(package = "gDRutils", "settings.json")
   )]
   idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
-
+  
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
     setdiff(sub(" \\(.*\\)$", "", names(x)), idfs)
   })))
@@ -771,7 +771,7 @@ calc_sd <- function(x) {
 #' for which the backslash  is automatically added in some contexts
 #' and R could not get the original value for these env vars.
 #' 
-#' @param x string with the name of the environemntal variable
+#' @param x string with the name of the environmental variable
 #' @param ... additional params for Sys.getenev
 #' @keywords package_utils
 #' 
@@ -871,7 +871,7 @@ remove_drug_batch <- function(drug_vec,
 #'                                               scmetrics_data,
 #'                                               experiment_name = "combination")
 #'
-#' @return data.table without capped -Inf / Inf values
+#' @return data.table without -Inf / Inf values
 #' @keywords package_utils
 #' @export
 cap_assay_infinities <- function(conc_assay_dt,
@@ -884,41 +884,256 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_string(experiment_name)
   checkmate::assert_choice(experiment_name, get_supported_experiments())
   checkmate::assert_string(col)
-  checkmate::assert_choice(col, colnames(assay_dt))
+  checkmate::assert_numeric(assay_dt[[col]])
   checkmate::assert_number(capping_fold, lower = 1)
   
-  conc_col <- if (experiment_name == get_supported_experiments("sa")) {
-    get_env_identifiers("concentration")
-  } else if (experiment_name == get_supported_experiments("combo")) {
-    # TODO: improve logic for determining concentration column in combination data (GDR-2856)
-    get_env_identifiers("concentration")
-  } else {
+  if (!experiment_name %in% c(get_supported_experiments("sa"),
+                              get_supported_experiments("combo"))) {
+    # this function does not support "co-dilution" yet
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
   
-    
-  # remove records for 0 concentrations
-  conc_assay_dt <- conc_assay_dt[conc_assay_dt[[conc_col]] != 0, ]
+  conc <- get_env_identifiers("concentration")
+  conc_2 <- get_env_identifiers("concentration2")
   
-  group_cols <- if (experiment_name == get_supported_experiments("sa")) {
-    as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
-  } else if (experiment_name == get_supported_experiments("combo")) {
-    as.character(gDRutils::get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
-  } else {
-    sprintf("unsupported experiment:'%s'", experiment_name)
-  }
+  min_conc <- max_conc <- min_conc_2 <- max_conc_2 <- min_val_conc_cd <- min_conc_cd <- min_conc_cd <- NULL
   
-  out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) {
-    min_max_conc <- conc_assay_dt[, .(min = min(get(conc_col)), max = max(get(conc_col))), by = group_cols]
-    mt <- merge(assay_dt, min_max_conc, by = group_cols)
-    mt[mt[[col]] == -Inf, col] <- mt[mt[[col]] == -Inf, "min"] / capping_fold
-    mt[mt[[col]] == Inf, col] <- mt[mt[[col]] == Inf, "max"] * capping_fold
-    data.table::setkey(mt, NULL)
-    mt[, -c("min", "max")]
-    
+  out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
+    if (experiment_name == get_supported_experiments("sa")) {
+      group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
+      
+      # calculate min and max conc for each combination
+      min_max_conc <- 
+        conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
+      
+      mt <- merge(assay_dt, min_max_conc, by = group_cols)
+      mt[get(col) == -Inf, col] <- mt[get(col) == -Inf, "min"] / capping_fold
+      mt[get(col) == Inf, col] <- mt[get(col) == Inf, "max"] * capping_fold
+      
+      data.table::setkey(mt, NULL)
+      mt[, -c("min", "max")]
+      
+    } else if (experiment_name == get_supported_experiments("combo")) {
+      group_cols <- 
+        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+      mt <- data.table::copy(assay_dt)
+ 
+      if (any(assay_dt$source %in% c("col_fittings", "row_fittings"))) {
+        # calculate min and max conc & conc_2 for each combination
+        min_max_conc <- 
+          conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
+                        by = group_cols]
+        min_max_conc_2 <- 
+          conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
+                        by = group_cols]
+        min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
+        
+        mt <- merge(mt, min_max_conc, by = group_cols)
+        # col_fittings
+        mt[get(col) == -Inf & source == "col_fittings", col] <- 
+          mt[get(col) == -Inf & source == "col_fittings", "min_conc"] / capping_fold
+        mt[get(col) == Inf & source == "col_fittings", col] <- 
+          mt[get(col) == Inf & source == "col_fittings", "max_conc"] * capping_fold
+        
+        # row_fittings
+        mt[get(col) == -Inf & source == "row_fittings", col] <- 
+          mt[get(col) == -Inf & source == "row_fittings", "min_conc_2"] / capping_fold
+        mt[get(col) == Inf & source == "row_fittings", col] <- 
+          mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
+        
+        ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
+        data.table::setkey(mt, NULL)
+        mt <- mt[, -ls_clean, with = FALSE]
+      }
+
+      if (any(assay_dt$source %in% c("codilution_fittings"))) {
+        # calculate min and max conc for each codilution
+        min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
+        
+        mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
+        # codilution_fittings
+        mt[get(col) == -Inf & source == "codilution_fittings", col] <- 
+          mt[get(col) == -Inf & source == "codilution_fittings", "min_conc_cd"] / capping_fold
+        mt[get(col) == Inf & source == "codilution_fittings", col] <- 
+          mt[get(col) == Inf & source == "codilution_fittings", "max_conc_cd"] * capping_fold
+        
+        ls_clean <- intersect(c("min_conc_cd", "max_conc_cd"), names(mt))
+        data.table::setkey(mt, NULL)
+        mt <- mt[, -ls_clean, with = FALSE]
+      }
+      mt
+    }
   } else {
     assay_dt
   }
   out_dt
   
+}
+
+#' Prepare dict with min and max concentration for codilution
+#'
+#' @param conc_assay_dt assay data in data.table format with Concentration data
+#' @param group_cols charvec with grouping column names
+#' 
+#' @return \code{data.table} with max and min concentration for codilution
+#' 
+#' @keywords internal
+.prep_cd_conc_cap_dict <- function(
+    conc_assay_dt,
+    group_cols = as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+) {
+  
+  checkmate::assert_data_table(conc_assay_dt)
+  checkmate::assert_character(group_cols)
+  checkmate::assert_subset(group_cols, choices = names(conc_assay_dt))
+  
+  conc <- get_env_identifiers("concentration")
+  conc_2 <- get_env_identifiers("concentration2")
+  
+  group_cols_cd <- c(group_cols, "normalization_type")
+  
+  conc_map <- map_conc_to_standardized_conc(conc_assay_dt[[conc]], 
+                                            conc_assay_dt[[conc_2]])
+  
+  conc_dict <- unique(conc_assay_dt[, c(group_cols_cd, conc, conc_2), with = FALSE])
+  # filter out all single-agents.
+  conc_dict <- conc_dict[!(conc_dict[[conc]] == 0 | conc_dict[[conc_2]] == 0)]
+  # add standardized concentration
+  conc_dict <- merge(conc_dict, conc_map, by.x = conc, by.y = "concs")
+  conc_dict <- merge(conc_dict, conc_map, by.x = conc_2, by.y = "concs", suffixes = c("", "_2"))
+  
+  conc_dict[["ratio"]] <- round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
+  conc_dict[["summed_conc"]] <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
+  
+  conc_dict <- conc_dict[, .(min_conc_cd = min(summed_conc), 
+                             max_conc_cd = max(summed_conc),
+                             N_conc = .N),
+                         by = c(group_cols_cd, "ratio")]
+  conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
+  
+  conc_dict
+}
+
+#' Create a mapping of concentrations to standardized concentrations.
+#'
+#' @param conc1 numeric vector of the concentrations for drug 1.
+#' @param conc2 numeric vector of the concentrations for drug 2.
+#'
+#' @examples
+#' 
+#' ratio <- 0.5
+#' conc1 <- c(0, 10 ^ (seq(-3, 1, ratio)))
+#' 
+#' shorter_range <- conc1[-1]
+#' noise <- runif(length(shorter_range), 1e-12, 1e-11)
+#' conc2 <- shorter_range + noise
+#' 
+#' map_conc_to_standardized_conc(conc1, conc2)
+#'
+#' @return data.table of 2 columns named \code{"concs"} and \code{"rconcs"}
+#' containing the original concentrations and their closest matched 
+#' standardized concentrations respectively. and their new standardized 
+#' concentrations.
+#'
+#' @details The concentrations are standardized in that they will contain 
+#' regularly spaced dilutions and close values will be rounded.
+#' @keywords utils
+#' @export
+map_conc_to_standardized_conc <- function(conc1, conc2) {
+  # Remove single-agent.
+  
+  conc_1 <- setdiff(conc1, 0)
+  conc_2 <- setdiff(conc2, 0)
+  
+  conc_1 <- sort(unique(conc_1))
+  rconc1 <- .standardize_conc(conc_1)
+  
+  conc_2 <- sort(unique(conc_2))
+  rconc2 <- .standardize_conc(conc_2)
+  
+  rconc <- c(0, unique(c(rconc1, rconc2)))
+  .find_closest_match <- function(x) {
+    rconc[which.min(abs(rconc - x))]
+  }
+  concs <- unique(c(conc1, conc2))
+  mapped_rconcs <- vapply(concs, .find_closest_match, numeric(1))
+  map <- unique(data.table::data.table(concs = concs, rconcs = mapped_rconcs))
+  
+  tol <- 1
+  
+  # Check if standardized values are within 5% of the original values
+  round_diff <- which(abs(map$concs - map$rconcs) / map$concs > 0.05)
+  
+  map$rconcs[round_diff] <- map$concs[round_diff]
+  mismatched <- which(
+    round_concentration(map$conc, tol) != round_concentration(map$rconc, tol)
+  )
+  for (i in mismatched) {
+    warning(sprintf("mapping original concentration '%s' to '%s'",
+                    map[i, "concs"], map[i, "rconcs"]))
+  }
+  map
+}
+
+
+#' Standardize concentration values.
+#'
+#' @param conc numeric vector of the concentrations
+#'
+#' @examples
+#' concs <- 10 ^ (seq(-1, 1, 0.9))
+#' .standardize_conc(concs)
+#'
+#' @return vector of standardized concentrations
+#' @details If no \code{conc} are passed, \code{NULL} is returned.
+#'
+#' @keywords utils
+#' @export
+.standardize_conc <- function(conc) {
+  rconc <- if (S4Vectors::isEmpty(conc)) {
+    NULL
+  } else if (length(unique(round_concentration(conc, 3))) > 4) {
+    # 4 is determined by the fewest number of concentrations required to be 
+    # considered a "matrix".
+    log10_step <- .calculate_dilution_ratio(conc)
+    num_steps <- round((log10(max(conc)) - log10(min(conc)) / log10_step), 0)
+    seqs <- log10(max(conc)) - (log10_step * c(0:num_steps))
+    sort(round_concentration(10 ^ seqs, 3))
+  } else {
+    # Few enough concentrations, don't need to calculate a series.
+    round_concentration(conc, 3)
+  }
+  rconc
+}
+
+#' Calculate a dilution ratio.
+#'
+#' Calculation a dilution ratio from a vector of concentrations.
+#'
+#' @param concs numeric vector of concentrations.
+#'
+#' @return numeric value of the dilution ratio for a given set of 
+#' concentrations.
+#' @keywords internal
+#' @noRd
+.calculate_dilution_ratio <- function(concs) {
+  checkmate::assert_numeric(concs, min.len = 2)
+  concs <- unique(sort(concs))
+  
+  first_removed <- concs[-1]
+  first_two_removed <- first_removed[-1]
+  last_removed <- concs[-length(concs)]
+  last_two_removed <- last_removed[-length(last_removed)]
+  
+  dil_ratios <- c(
+    log10(first_removed / last_removed), 
+    log10(first_two_removed / last_two_removed)
+  )
+  rounded_dil_ratios <- round_concentration(dil_ratios, 2)
+  
+  # Get most frequent dilution ratio.
+  highest_freq_ratio <- names(
+    sort(table(rounded_dil_ratios), decreasing = TRUE)
+  )[[1]]
+  as.numeric(highest_freq_ratio)
 }
