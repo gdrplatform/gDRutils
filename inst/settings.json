@@ -32,6 +32,14 @@
         "data_source",
         "normalization_type"
     ],
+    "assay_dt_skip_uniq_col_ids": [
+        "rowid",
+        "name",
+        "version",
+        "dsid",
+        "dataset",
+        "experimentalist"
+    ],
     "additional_variables_idfs_to_keep": [
         "drug3", 
         "concentration3", 
