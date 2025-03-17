@@ -899,3 +899,35 @@ test_that(".calculate_dilution_ratio works as expected", {
   expect_error(.calculate_dilution_ratio(letters[1:5]),
                "Assertion on 'concs' failed: Must be of type 'numeric'")
 })
+
+
+test_that("split_big_table_for_xlsx works as expected", {
+  
+  # split_big_table_for_xlsx
+  dt_list <- list(
+    DT_row = data.table::data.table(
+      column_1 = 1:1000500, 
+      column_2 = 1:1000500
+    ),
+    DT_ok = data.table::data.table(
+      column_1 = 1:4, 
+      column_2 = 1:4,
+      column_3 = 1:4,
+      column_4 = 1:4
+    ),
+    DT_col = data.table::data.table(
+      matrix(1:33000, ncol = 16500)
+    )
+  )
+  
+  out <- split_big_table_for_xlsx(dt_list)
+  expect_equal(length(out), length(dt_list) + 2)
+  expect_true("DT_ok" %in% names(out))
+  expect_false(all(c("DT_row", "DT_col") %in% names(out)))
+  
+  dt_list_2 <- list(DT = dt_list$DT_ok)
+  expect_error(split_big_table_for_xlsx(dt_list_2, max_row = 2, max_col = 2))
+  out_2 <- split_big_table_for_xlsx(dt_list_2, max_row = 2, max_col = NULL)
+  out_2 <- split_big_table_for_xlsx(out_2, max_row = NULL, max_col = 2)
+  expect_equal(length(out_2), 4)
+})
