@@ -1137,3 +1137,68 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
   )[[1]]
   as.numeric(highest_freq_ratio)
 }
+
+
+#' Split big table
+#' 
+#' Helper function for saving big tables in an Excel file. Excel has a 
+#' sheet size limit, if the table is too large it will not be possible to save 
+#' such a file. This function allows you to split the table into smaller parts 
+#' so that saving can be possible
+#' 
+#' @param dt_list list of data.tables. Each data.table will be checked and 
+#'   split if meet the criteria
+#' @param max_row integer defining the maximum number of rows in one sheet, the 
+#'   rows will be divided into portions of this size. Default value, 1 000 000, 
+#'   is based on excel limit - 1 048 576 with extra safety margin
+#' @param max_col integer defining the maximum number of columns in one sheet, 
+#'   the columns will be divided into portions of this size. Default value, 
+#'   16 000, is based on excel limit - 16 384 with extra safety margin 
+#' 
+#' @keywords internal
+#' 
+#' @return list of data.tables 
+#' 
+#' @export
+#' 
+split_big_table_for_xlsx <- function(dt_list,
+                                     max_row = 1000000,
+                                     max_col = 16000) {
+  
+  checkmate::assert_list(dt_list)
+  checkmate::assert_data_table(dt_list[[1]])
+  checkmate::assert_number(max_row, null.ok = TRUE)
+  checkmate::assert_number(max_col, null.ok = TRUE)
+  
+  to_big_data_list <- lapply(
+    dt_list,
+    FUN = function(x) {
+      c(shiny::isTruthy(NROW(x) > max_row), shiny::isTruthy(NCOL(x) > max_col))
+    }
+  )
+  
+  out_list <- list()
+  if (any(unlist(to_big_data_list))) {
+    for (i in seq_along(to_big_data_list)) {
+      if (to_big_data_list[[i]][1] && to_big_data_list[[i]][2]) {
+        stop("the array is too large in both dimensions, run the functions one dimension at a time")
+      } else if (to_big_data_list[[i]][1]) {
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][1:max_row])
+        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][(max_row + 1):NROW(dt_list[[i]]), ])
+        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
+      } else if (to_big_data_list[[i]][2]) {
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][, 1:max_col])
+        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][, (max_col + 1):NCOL(dt_list[[i]])])
+        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
+      } else {
+        out_list[length(out_list) + 1] <- list(dt_list[[i]])
+        names(out_list)[length(out_list)] <- names(to_big_data_list[i])
+      }
+    }
+  } else {
+    out_list <- dt_list
+  }
+  out_list
+}
