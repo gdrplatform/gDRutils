@@ -24,8 +24,11 @@
         "log2_CI": "log2_CI"
     },
     "assay_dt_req_uniq_col_ids": [
+        "drug",
+        "drug2",
         "drug_name",
         "drug_name2",
+        "cellline",
         "cellline_name",
         "concentration2",
         "duration",
@@ -36,7 +39,6 @@
         "rowid",
         "name",
         "version",
-        "dsid",
         "dataset",
         "experimentalist"
     ],
