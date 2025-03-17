@@ -1173,7 +1173,7 @@ split_big_table_for_xlsx <- function(dt_list,
   to_big_data_list <- lapply(
     dt_list,
     FUN = function(x) {
-      c(shiny::isTruthy(NROW(x) > max_row), shiny::isTruthy(NCOL(x) > max_col))
+      c(isTRUE(NROW(x) > max_row), isTRUE(NCOL(x) > max_col))
     }
   )
   
