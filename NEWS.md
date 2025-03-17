@@ -1,3 +1,6 @@
+## gDRutils 1.5.14 - 2025-03-17
+* move `split_big_table_for_xlsx` from gDRsearch2 package
+
 ## gDRutils 1.5.13 - 2025-03-07
 * add support for combination experiment in `cap_assay_infinities`
 * move `map_conc_to_standardized_conc` from gDRcore package
