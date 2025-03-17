@@ -1,3 +1,6 @@
+## gDRutils 1.5.14 - 2025-03-12
+* improve logic in `get_assay_req_uniq_cols`
+
 ## gDRutils 1.5.13 - 2025-03-07
 * add support for combination experiment in `cap_assay_infinities`
 * move `map_conc_to_standardized_conc` from gDRcore package
