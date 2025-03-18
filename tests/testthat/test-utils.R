@@ -906,17 +906,17 @@ test_that("split_big_table_for_xlsx works as expected", {
   # split_big_table_for_xlsx
   dt_list <- list(
     DT_row = data.table::data.table(
-      column_1 = 1:1000500, 
-      column_2 = 1:1000500
+      column_1 = seq_len(1000500), 
+      column_2 = seq_len(1000500)
     ),
     DT_ok = data.table::data.table(
-      column_1 = 1:4, 
-      column_2 = 1:4,
-      column_3 = 1:4,
-      column_4 = 1:4
+      column_1 = seq_len(4), 
+      column_2 = seq_len(4),
+      column_3 = seq_len(4),
+      column_4 = seq_len(4)
     ),
     DT_col = data.table::data.table(
-      matrix(1:33000, ncol = 16500)
+      matrix(seq_len(33000), ncol = 16500)
     )
   )
   
