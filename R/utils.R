@@ -1037,7 +1037,7 @@ cap_assay_infinities <- function(conc_assay_dt,
 #'
 #' @details The concentrations are standardized in that they will contain 
 #' regularly spaced dilutions and close values will be rounded.
-#' @keywords utils
+#' @keywords package_utils
 #' @export
 map_conc_to_standardized_conc <- function(conc1, conc2) {
   # Remove single-agent.
@@ -1087,7 +1087,7 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 #' @return vector of standardized concentrations
 #' @details If no \code{conc} are passed, \code{NULL} is returned.
 #'
-#' @keywords utils
+#' @keywords package_utils
 #' @export
 .standardize_conc <- function(conc) {
   rconc <- if (S4Vectors::isEmpty(conc)) {
@@ -1155,7 +1155,7 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 #'   the columns will be divided into portions of this size. Default value, 
 #'   16 000, is based on excel limit - 16 384 with extra safety margin 
 #' 
-#' @keywords internal
+#' @keywords package_utils
 #' 
 #' @return list of data.tables 
 #' 

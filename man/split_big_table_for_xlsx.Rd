@@ -27,4 +27,4 @@ sheet size limit, if the table is too large it will not be possible to save
 such a file. This function allows you to split the table into smaller parts
 so that saving can be possible
 }
-\keyword{internal}
+\keyword{package_utils}
