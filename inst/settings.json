@@ -24,13 +24,23 @@
         "log2_CI": "log2_CI"
     },
     "assay_dt_req_uniq_col_ids": [
+        "drug",
+        "drug2",
         "drug_name",
         "drug_name2",
+        "cellline",
         "cellline_name",
         "concentration2",
         "duration",
         "data_source",
         "normalization_type"
+    ],
+    "assay_dt_skip_uniq_col_ids": [
+        "rowid",
+        "name",
+        "version",
+        "dataset",
+        "experimentalist"
     ],
     "additional_variables_idfs_to_keep": [
         "drug3", 
