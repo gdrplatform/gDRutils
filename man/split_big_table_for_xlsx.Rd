@@ -27,4 +27,9 @@ sheet size limit, if the table is too large it will not be possible to save
 such a file. This function allows you to split the table into smaller parts
 so that saving can be possible
 }
+\examples{
+too_large_dt <- list(data.table::data.table(matrix(seq_len(300)), nrow = 10))
+split_big_table_for_xlsx(too_large_dt, max_row = 250)
+
+}
 \keyword{package_utils}

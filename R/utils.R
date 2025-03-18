@@ -1155,6 +1155,10 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 #'   the columns will be divided into portions of this size. Default value, 
 #'   16 000, is based on excel limit - 16 384 with extra safety margin 
 #' 
+#' @examples
+#' too_large_dt <- list(data.table::data.table(matrix(seq_len(300)), nrow = 10))
+#' split_big_table_for_xlsx(too_large_dt, max_row = 250)
+#' 
 #' @keywords package_utils
 #' 
 #' @return list of data.tables 
