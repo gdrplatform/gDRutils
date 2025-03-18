@@ -440,7 +440,7 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
 #' @param add_sd Flag indicating whether to add standard deviation and count columns.
 #' 
 #' @examples
-#' dt <- data.table::data.table(a = c(1:10, 1),
+#' dt <- data.table::data.table(a = c(seq_len(10), 1),
 #' b = c(rep("drugA", 10), rep("drugB", 1)))
 #' average_biological_replicates_dt(dt, var = "a")
 #' 
@@ -1183,12 +1183,12 @@ split_big_table_for_xlsx <- function(dt_list,
       if (to_big_data_list[[i]][1] && to_big_data_list[[i]][2]) {
         stop("the array is too large in both dimensions, run the functions one dimension at a time")
       } else if (to_big_data_list[[i]][1]) {
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][1:max_row])
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][seq_len(max_row)])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
         out_list[length(out_list) + 1] <- list(dt_list[[i]][(max_row + 1):NROW(dt_list[[i]]), ])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
       } else if (to_big_data_list[[i]][2]) {
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][, 1:max_col])
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][, seq_len(max_col)])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
         out_list[length(out_list) + 1] <- list(dt_list[[i]][, (max_col + 1):NCOL(dt_list[[i]])])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
