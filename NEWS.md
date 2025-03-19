@@ -1,3 +1,6 @@
+## gDRutils 1.5.16 - 2025-03-19
+* add `get_gDR_session_info` function
+
 ## gDRutils 1.5.15 - 2025-03-18
 * move `split_big_table_for_xlsx` from gDRsearch2 package
 
