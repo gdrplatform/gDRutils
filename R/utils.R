@@ -1220,7 +1220,7 @@ split_big_table_for_xlsx <- function(dt_list,
 #' 
 get_gDR_session_info <- function(pattern = "^gDR") {
   checkmate::assert_string(pattern)
-  pkg_list <- data.table::data.table(installed.packages(), stringsAsFactors = FALSE)
+  pkg_list <- data.table::data.table(utils::installed.packages(), stringsAsFactors = FALSE)
   gDR_packages <- pkg_list[grepl(pattern, pkg_list$Package), ]
   # there might be multiple entries for the same package and version 
   # if multiple entreies are defined in .libPath

@@ -36,7 +36,8 @@ Imports:
     S4Vectors,
     stats,
     stringr,
-    SummarizedExperiment
+    SummarizedExperiment,
+    utils
 Suggests:
     BiocManager,
     BiocStyle,
