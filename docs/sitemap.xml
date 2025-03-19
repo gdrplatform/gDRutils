@@ -100,7 +100,13 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_norm_specific_metrics.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-prep_cd_conc_cap_dict.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-set_invalid_fit_params.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-standardize_conc.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/extend_normalization_type_name.html</loc>
@@ -250,6 +256,9 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/loop.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/map_conc_to_standardized_conc.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/mcolData.html</loc>
   </url>
   <url>
@@ -326,6 +335,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/split_SE_components.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/split_big_table_for_xlsx.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/standardize_mae.html</loc>
