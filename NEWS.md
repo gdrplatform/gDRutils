@@ -1,3 +1,6 @@
+## gDRutils 1.5.15 - 2025-03-18
+* move `split_big_table_for_xlsx` from gDRsearch2 package
+
 ## gDRutils 1.5.14 - 2025-03-12
 * improve logic in `get_assay_req_uniq_cols`
 
