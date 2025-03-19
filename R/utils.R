@@ -1206,3 +1206,28 @@ split_big_table_for_xlsx <- function(dt_list,
   }
   out_list
 }
+
+#' get gDR package and their version installed in the environment
+#' 
+#' @param pattern string with the pattern to grep R packages from the list of installed packages
+#' 
+#' @examples 
+#' get_gDR_session_info()
+#' 
+#' @keywords package_utils
+#' @return data.table with gDR packages and their versions
+#' @export
+#' 
+get_gDR_session_info <- function(pattern = "^gDR") {
+  checkmate::assert_string(pattern)
+  pkg_list <- data.table::data.table(utils::installed.packages(), stringsAsFactors = FALSE)
+  gDR_packages <- pkg_list[grepl(pattern, pkg_list$Package), ]
+  # there might be multiple entries for the same package and version 
+  # if multiple entreies are defined in .libPath
+  data.table::setorder(gDR_packages, "Package", -"Version")
+  # there might be multiple entries for the same package with different version 
+  # if multiple entreies are defined in .libPath
+  out_dt <- unique(gDR_packages[, c("Package", "Version")])
+  out_dt <- out_dt[!duplicated(out_dt$Package), ]
+  out_dt
+}
