@@ -950,7 +950,7 @@ test_that("get_gDR_session_info works as expected", {
     Version = c("0.2", "0.99")
   )
   
-  mockery::stub(where = get_gDR_session_info, what = "installed.packages", how = ip)
+  mockery::stub(where = get_gDR_session_info, what = "utils::installed.packages", how = ip)
   expect_equal(get_gDR_session_info(), exp_dt)
   
 })
