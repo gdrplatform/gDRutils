@@ -937,6 +937,8 @@ test_that("get_gDR_session_info works as expected", {
   exp_dt <- data.table::data.table(Package = character(0), Version = character(0))
   expect_equal(get_gDR_session_info(pattern = "xyzxyz"), exp_dt)
   
+  checkmate::expect_data_table(get_gDR_session_info())
+  
   ip <- matrix(c(
     rep("gDRdummyPackage", 2),
     rep("gDRdummyPackage2", 2),
