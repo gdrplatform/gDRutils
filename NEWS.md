@@ -1,3 +1,6 @@
+## gDRutils 1.5.17 - 2025-03-24
+* add result entries in headers_list for combination data
+
 ## gDRutils 1.5.16 - 2025-03-19
 * add `get_gDR_session_info` function
 
