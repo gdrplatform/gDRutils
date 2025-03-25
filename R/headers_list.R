@@ -71,7 +71,8 @@ HEADERS_LIST[["excess_results"]] <- c(names(get_combo_excess_field_names()),
   
   
   HEADERS_LIST[["scores"]] <- names(get_combo_score_field_names())
-  HEADERS_LIST[["scores_results"]] <- c(names(get_combo_score_field_names()),paste0(names(get_combo_score_field_names()), "_sd"))
+HEADERS_LIST[["scores_results"]] <- c(names(get_combo_score_field_names()),
+                                      paste0(names(get_combo_score_field_names()), "_sd"))
   
   HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
                                       HEADERS_LIST[["iso_position"]],
