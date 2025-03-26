@@ -268,6 +268,70 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_identical(NROW(smetrics_data), NROW(lsmetrics_avg))
   expect_true(all(avg_vars %in% colnames(lsmetrics_data)))
   expect_true(all(!avg_vars %in% colnames(lsmetrics_avg)))
+ 
+  # averaging combination data - single variable
+  cml_data <- get_synthetic_data("finalMAE_combo_matrix")[[1]]
+  cms_data <- get_synthetic_data("finalMAE_combo_matrix_small")[[1]]
+  
+  ## scores
+  cml_scores_data <- convert_se_assay_to_dt(cml_data, "scores")
+  cml_scores_data$source_id <- "cm"
+  cms_scores_data <- convert_se_assay_to_dt(cms_data, "scores")
+  cms_scores_data$source_id <- "cms"
+  ls_scores_data <- data.table::rbindlist(list(cml_scores_data, cms_scores_data), fill = TRUE)
+  avg_vars <- get_additional_variables(ls_scores_data)
+  
+  ### single additional var
+  expect_identical(avg_vars, "source_id")
+  ### no _sd cols
+  expect_false(NROW(grep("_sd$", colnames(ls_scores_data))) > 0)
+  
+  ls_scores_avg <- average_biological_replicates_dt(ls_scores_data, var = avg_vars, add_sd = TRUE)
+  avg_vars <- get_additional_variables(ls_scores_avg)
+  ### no additional vars
+  expect_identical(avg_vars, NULL)
+  ### _sd cols are present
+  expect_true(NROW(grep("_sd$", colnames(ls_scores_avg))) > 0)
+  
+  ## excess
+  cml_excess_data <- convert_se_assay_to_dt(cml_data, "excess")
+  cml_excess_data$source_id <- "cm"
+  cms_excess_data <- convert_se_assay_to_dt(cms_data, "excess")
+  cms_excess_data$source_id <- "cms"
+  ls_excess_data <- data.table::rbindlist(list(cml_excess_data, cms_excess_data), fill = TRUE)
+  avg_vars <- get_additional_variables(ls_excess_data)
+  
+  ### single additional var
+  expect_identical(avg_vars, "source_id")
+  ### no _sd cols
+  expect_false(NROW(grep("_sd$", colnames(ls_excess_data))) > 0)
+  
+  ls_excess_avg <- average_biological_replicates_dt(ls_excess_data, var = avg_vars, add_sd = TRUE)
+  avg_vars <- get_additional_variables(ls_excess_avg)
+  ### no additional vars
+  expect_identical(avg_vars, NULL)
+  ### _sd cols are present
+  expect_true(NROW(grep("_sd$", colnames(ls_excess_avg))) > 0)
+  
+  ## iso
+  cml_iso_data <- convert_se_assay_to_dt(cml_data, "isobolograms")
+  cml_iso_data$source_id <- "cm"
+  cms_iso_data <- convert_se_assay_to_dt(cms_data, "isobolograms")
+  cms_iso_data$source_id <- "cms"
+  ls_iso_data <- data.table::rbindlist(list(cml_iso_data, cms_iso_data), fill = TRUE)
+  avg_vars <- get_additional_variables(ls_iso_data)
+  
+  ### single additional var
+  expect_identical(avg_vars, "source_id")
+  ### no _sd cols
+  expect_false(NROW(grep("_sd$", colnames(ls_iso_data))) > 0)
+  
+  ls_iso_avg <- average_biological_replicates_dt(ls_iso_data, var = avg_vars, add_sd = TRUE)
+  avg_vars <- get_additional_variables(ls_iso_avg)
+  ### no additional vars
+  expect_identical(avg_vars, NULL)
+  ### _sd cols are present
+  expect_true(NROW(grep("_sd$", colnames(ls_iso_avg))) > 0)
   
 })
 
