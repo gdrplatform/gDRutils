@@ -1187,12 +1187,13 @@ split_big_table_for_xlsx <- function(dt_list,
       if (to_big_data_list[[i]][1] && to_big_data_list[[i]][2]) {
         stop("the array is too large in both dimensions, run the functions one dimension at a time")
       } else if (to_big_data_list[[i]][1]) {
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][seq_len(max_row)])
+        # using seq_len here causes the output format to change, e.g. from data.table to integer
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][1:max_row])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
         out_list[length(out_list) + 1] <- list(dt_list[[i]][(max_row + 1):NROW(dt_list[[i]]), ])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
       } else if (to_big_data_list[[i]][2]) {
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][, seq_len(max_col)])
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][, 1:max_col])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
         out_list[length(out_list) + 1] <- list(dt_list[[i]][, (max_col + 1):NCOL(dt_list[[i]])])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
