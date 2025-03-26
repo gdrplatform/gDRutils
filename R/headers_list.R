@@ -66,17 +66,20 @@
                                       "pos_y_ref")
   
   HEADERS_LIST[["excess"]] <- names(get_combo_excess_field_names())
-  HEADERS_LIST[["excess_results"]] <- c(names(get_combo_excess_field_names()),paste0(names(get_combo_excess_field_names()), "_sd"))
+HEADERS_LIST[["excess_results"]] <- c(names(get_combo_excess_field_names()),
+                                      paste0(names(get_combo_excess_field_names()), "_sd"))
   
   
   HEADERS_LIST[["scores"]] <- names(get_combo_score_field_names())
-  HEADERS_LIST[["scores_results"]] <- c(names(get_combo_score_field_names()),paste0(names(get_combo_score_field_names()), "_sd"))
+HEADERS_LIST[["scores_results"]] <- c(names(get_combo_score_field_names()),
+                                      paste0(names(get_combo_score_field_names()), "_sd"))
   
   HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
                                       HEADERS_LIST[["iso_position"]],
                                       "log2_CI",
                                       "log10_ratio_conc")
-  HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]], paste0(HEADERS_LIST[["isobolograms"]], "_sd"))
+HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]], 
+                                            paste0(HEADERS_LIST[["isobolograms"]], "_sd"))
   
   HEADERS_LIST[["fit_source"]] <- "fit_source"
   
