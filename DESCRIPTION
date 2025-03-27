@@ -47,6 +47,7 @@ Suggests:
     IRanges,
     knitr,
     lintr,
+    mockery,
     purrr,
     qs,
     rcmdcheck,
