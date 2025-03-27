@@ -1188,7 +1188,7 @@ split_big_table_for_xlsx <- function(dt_list,
         stop("the array is too large in both dimensions, run the functions one dimension at a time")
       } else if (to_big_data_list[[i]][1]) {
         # using seq_len here causes the output format to change, e.g. from data.table to integer
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][1:max_row])
+        out_list[length(out_list) + 1] <- list(dt_list[[i]][c(seq_len(max_row)), ])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
         out_list[length(out_list) + 1] <- list(dt_list[[i]][(max_row + 1):NROW(dt_list[[i]]), ])
         names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
