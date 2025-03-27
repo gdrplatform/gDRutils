@@ -18,7 +18,7 @@
 #'
 get_settings_from_json <-
   function(s = NULL,
-           json_path = system.file(package = "gDRutils", "cache.json")) {
+           json_path = system.file(package = "gDRutils", "settings.json")) {
     
     checkmate::assert_character(s, null.ok = TRUE)
     checkmate::assert_file_exists(json_path)

@@ -25,6 +25,8 @@ test_that("get_settings_from_json works as expected", {
   
   s2 <- get_settings_from_json(s = "DICT", json_path = json_path)
   expect_identical(s$DICT, s2)
+  
+  expect_no_error(get_settings_from_json())
 })
 
 

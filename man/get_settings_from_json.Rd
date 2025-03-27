@@ -8,7 +8,7 @@ to avoid hardcoding}
 \usage{
 get_settings_from_json(
   s = NULL,
-  json_path = system.file(package = "gDRutils", "cache.json")
+  json_path = system.file(package = "gDRutils", "settings.json")
 )
 }
 \arguments{
