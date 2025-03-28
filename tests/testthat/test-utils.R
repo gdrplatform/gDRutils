@@ -988,6 +988,7 @@ test_that("split_big_table_for_xlsx works as expected", {
   expect_equal(length(out), length(dt_list) + 2)
   expect_true("DT_ok" %in% names(out))
   expect_false(all(c("DT_row", "DT_col") %in% names(out)))
+  expect_true(all(unlist(lapply(out, function(x) inherits(x, "data.table")))))
   
   dt_list_2 <- list(DT = dt_list$DT_ok)
   expect_error(split_big_table_for_xlsx(dt_list_2, max_row = 2, max_col = 2))
