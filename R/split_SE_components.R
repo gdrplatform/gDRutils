@@ -60,7 +60,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
                    get_header("averaged_results"),
     get_header("metrics_results"), get_env_identifiers("concentration", simplify = TRUE),
     identifiers_md$well_position, identifiers_md$template, nested_keys,
-    get_header("scores"), get_header("excess"), get_header("isobolograms")))
+    get_header("scores_results"), get_header("excess_results"), get_header("isobolograms_results")))
   data_cols <- data_fields[data_fields %in% all_cols]
   md_cols <- setdiff(all_cols, data_cols) 
   md <- unique(df_[, md_cols]) 
