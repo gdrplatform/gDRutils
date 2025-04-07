@@ -32,7 +32,6 @@ Imports:
     jsonlite,
     jsonvalidate,
     methods,    
-    mockery,
     MultiAssayExperiment,
     S4Vectors,
     stats,
