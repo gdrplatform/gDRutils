@@ -1221,14 +1221,32 @@ split_big_table_for_xlsx <- function(dt_list,
 #' 
 get_gDR_session_info <- function(pattern = "^gDR") {
   checkmate::assert_string(pattern)
-  pkg_list <- data.table::data.table(utils::installed.packages(), stringsAsFactors = FALSE)
-  gDR_packages <- pkg_list[grepl(pattern, pkg_list$Package), ]
-  # there might be multiple entries for the same package and version 
-  # if multiple entreies are defined in .libPath
-  data.table::setorder(gDR_packages, "Package", -"Version")
-  # there might be multiple entries for the same package with different version 
-  # if multiple entreies are defined in .libPath
-  out_dt <- unique(gDR_packages[, c("Package", "Version")])
-  out_dt <- out_dt[!duplicated(out_dt$Package), ]
-  out_dt
+  all_packages <- utils::installed.packages()
+  matched_packages <- all_packages[grepl(pattern, all_packages[, "Package"]), ]
+  
+  pkg_data <- data.table::data.table(
+    Package = matched_packages[, "Package"],
+    Version = matched_packages[, "Version"],
+    LibPath = matched_packages[, "LibPath"]
+  )
+  
+  if (NROW(pkg_data) == 0) {
+    return(data.table::data.table(Package = character(0), Version = character(0)))
+  }
+  
+  pkg_data[, UsedVersion := Version[order(match(LibPath, .libPaths()))[1]], by = Package]
+  pkg_data[, MaxVersion := max(Version), by = Package]
+  
+  outdated_pkgs <- pkg_data[LibPath != .Library & UsedVersion < MaxVersion, .(Package, UsedVersion, MaxVersion)]
+  
+  if (NROW(outdated_pkgs) > 0) {
+    warning_msg <- paste("The following packages have a user version older than the system version:",
+                         paste(outdated_pkgs$Package, 
+                               "Used Version:", outdated_pkgs$UsedVersion, 
+                               "Highest Version:", outdated_pkgs$MaxVersion, 
+                               sep = " ", collapse = "\n"), sep = "\n")
+    warning(warning_msg)
+  }
+  
+  unique(pkg_data[, .(Package, Version = UsedVersion)])
 }
