@@ -1234,7 +1234,7 @@ get_gDR_session_info <- function(pattern = "^gDR") {
     return(data.table::data.table(Package = character(0), Version = character(0)))
   }
   
-  pkg_data[, UsedVersion := Version[order(match(LibPath, .libPaths()))[1]], by = Package]
+  pkg_data[, UsedVersion := Version[order(match(LibPath, .libPaths()))[1]], by = Package] # nolint
   pkg_data[, MaxVersion := max(Version), by = Package]
   
   outdated_pkgs <- pkg_data[LibPath != .Library & UsedVersion < MaxVersion, .(Package, UsedVersion, MaxVersion)]
