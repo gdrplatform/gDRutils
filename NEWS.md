@@ -1,5 +1,5 @@
 ## gDRutils 1.5.18 - 2025-04-08
-* refactor `get_gDR_session_info` to display used packages
+* refactor `get_gDR_session_info` to display used packages 
 
 ## gDRutils 1.5.17 - 2025-03-26
 * fix default parameter in `get_settings_from_json`
