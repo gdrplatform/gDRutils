@@ -1,3 +1,6 @@
+## gDRutils 1.7.1 - 2025-04-16
+* synchronize Bioconductor and GitHub versioning
+
 ## gDRutils 1.5.17 - 2025-03-26
 * fix default parameter in `get_settings_from_json`
 
