@@ -934,7 +934,8 @@ test_that("split_big_table_for_xlsx works as expected", {
 })
 
 test_that("get_gDR_session_info behaves correctly under various conditions", {
-  exp_dt_empty <- data.table(Package = character(0), Version = character(0))
+  exp_dt_empty <- data.table::data.table(Package = character(0),
+                                         Version = character(0))
   expect_equal(get_gDR_session_info(pattern = "xyzxyz"), exp_dt_empty)
   
   checkmate::expect_data_table(get_gDR_session_info())
@@ -947,7 +948,7 @@ test_that("get_gDR_session_info behaves correctly under various conditions", {
   ), nrow = 4, byrow = TRUE)
   colnames(ip_correct_versions) <- c("Package", "Version", "LibPath")
   
-  exp_dt_correct_versions <- data.table(
+  exp_dt_correct_versions <- data.table::data.table(
     Package = c("gDRdummyPackage", "gDRdummyPackage2"),
     Version = c("0.1", "0.99")
   )
