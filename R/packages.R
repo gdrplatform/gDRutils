@@ -38,7 +38,12 @@ if (getRversion() >= "2.15.1") {
       "name",
       "count",
       "fit_source",
-      "summed_conc"
+      "summed_conc",
+      "LibPath",
+      "MaxVersion",
+      "Package",
+      "UsedVersion",
+      "Version"
     ),
     utils::packageName())
 }

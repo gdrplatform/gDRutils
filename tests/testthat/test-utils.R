@@ -933,25 +933,29 @@ test_that("split_big_table_for_xlsx works as expected", {
   expect_equal(length(out_2), 4)
 })
 
-test_that("get_gDR_session_info works as expected", {
-
-  exp_dt <- data.table::data.table(Package = character(0), Version = character(0))
-  expect_equal(get_gDR_session_info(pattern = "xyzxyz"), exp_dt)
+test_that("get_gDR_session_info behaves correctly under various conditions", {
+  exp_dt_empty <- data.table::data.table(Package = character(0),
+                                         Version = character(0))
+  expect_equal(get_gDR_session_info(pattern = "xyzxyz"), exp_dt_empty)
   
   checkmate::expect_data_table(get_gDR_session_info())
   
-  ip <- matrix(c(
-    rep("gDRdummyPackage", 2),
-    rep("gDRdummyPackage2", 2),
-    c("0.1", "0.2", "0.99", "0.99")
-  ), nrow = 4)
-  colnames(ip) <- c("Package", "Version")
-  exp_dt <- data.table::data.table(
+  ip_correct_versions <- matrix(c(
+    "gDRdummyPackage", "0.1", .Library,
+    "gDRdummyPackage", "0.2", .Library,
+    "gDRdummyPackage2", "0.99", .Library,
+    "gDRdummyPackage2", "0.99", .Library
+  ), nrow = 4, byrow = TRUE)
+  colnames(ip_correct_versions) <- c("Package", "Version", "LibPath")
+  
+  exp_dt_correct_versions <- data.table::data.table(
     Package = c("gDRdummyPackage", "gDRdummyPackage2"),
-    Version = c("0.2", "0.99")
+    Version = c("0.1", "0.99")
   )
   
-  mockery::stub(where = get_gDR_session_info, what = "utils::installed.packages", how = ip)
-  expect_equal(get_gDR_session_info(), exp_dt)
+  mockery::stub(where = get_gDR_session_info,
+                what = "utils::installed.packages",
+                how = ip_correct_versions)
   
+  expect_equal(get_gDR_session_info(), exp_dt_correct_versions)
 })
