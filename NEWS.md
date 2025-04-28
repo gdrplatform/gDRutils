@@ -1,5 +1,11 @@
-## gDRutils 1.5.18 - 2025-03-26
+## gDRutils 1.7.3 - 2025-04-28
 * add result entries in headers_list for combination data
+
+## gDRutils 1.7.2 - 2025-04-17
+* refactor `get_gDR_session_info` to display used packages 
+
+## gDRutils 1.7.1 - 2025-04-16
+* synchronize Bioconductor and GitHub versioning
 
 ## gDRutils 1.5.17 - 2025-03-26
 * fix default parameter in `get_settings_from_json`
