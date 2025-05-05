@@ -1,4 +1,5 @@
 
+
 #' df_to_bm_assay
 #'
 #' Convert data.table with dose-response data into a BumpyMatrix assay.
@@ -11,7 +12,7 @@
 #' @param discard_keys a vector of keys that should be discarded
 #' @keywords convert
 #'
-#' @examples 
+#' @examples
 #' df_to_bm_assay(data.table::data.table(Gnumber = 2, clid = "A"))
 #'
 #' @return BumpyMatrix object
@@ -23,29 +24,37 @@ df_to_bm_assay <-
     stopifnot(any(inherits(data, "data.table"), checkmate::test_character(data)))
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     
-    data <- methods::as(data, "DataFrame")
     allMetadata <- split_SE_components(data, nested_keys = discard_keys)
     
-    seColData <- allMetadata$condition_md
-    seColData$col_id <- seq_along(rownames(seColData))
+    seColData <- data.table::as.data.table(allMetadata$condition_md)
+    seRowData <- data.table::as.data.table(allMetadata$treatment_md)
+    
+    # Create row_id and col_id directly in data.table for speed
+    seColData[, col_id := .I]
+    seRowData[, row_id := .I]
+    
     cl_entries <- setdiff(colnames(seColData), c("col_id", "name_"))
-    seRowData <- allMetadata$treatment_md
-    seRowData$row_id <- seq_along(rownames(seRowData))
     cond_entries <- setdiff(colnames(seRowData), c("row_id", "name_"))
     
-    complete <- S4Vectors::DataFrame(
-      expand.grid(col_id = seColData$col_id, row_id = seRowData$row_id, stringsAsFactors = FALSE)
-    )
-    complete$factor_id <- seq_len(nrow(complete))
-    completeMerged <- merge(merge(complete, seColData, by = "col_id"), seRowData, by = "row_id")
+    # Use data.table's cross-join for speed
+    complete <- data.table::CJ(col_id = seColData$col_id, row_id = seRowData$row_id)
+    complete[, factor_id := .I]
     
-    data_assigned <- merge(data, completeMerged, by = c(cond_entries, cl_entries))
-    data_assigned <- data_assigned[order(data_assigned$factor_id), ]
-    bm <- BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, drop = FALSE], 
+    # Use data.table merge for speed
+    completeMerged <- merge(complete, seColData, by = "col_id", all.x = TRUE)
+    completeMerged <- merge(completeMerged, seRowData, by = "row_id", all.x = TRUE)
+    
+    # Merge with original data using data.table merge
+    data_assigned <- merge(data, completeMerged, by = c(cond_entries, cl_entries), all.x = TRUE)
+    
+    # Order by factor_id using data.table's setorder
+    data.table::setorder(data_assigned, factor_id)
+    
+    bm <- BumpyMatrix::splitAsBumpyMatrix(data_assigned[, allMetadata$data_fields, with = FALSE],
                                           row = data_assigned$row_id,
                                           column = data_assigned$col_id)
     
-    # Check if the orderd of rows/cols are correct
+    # Check if the order of rows/cols are correct
     stopifnot(!is.unsorted(as.numeric(rownames(bm))))
     stopifnot(!is.unsorted(as.numeric(colnames(bm))))
     

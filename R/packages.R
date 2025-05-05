@@ -9,6 +9,10 @@ if (getRversion() >= "2.15.1") {
   utils::globalVariables(
     c(
       ".",
+      ".I",
+      "col_id",
+      "factor_id",
+      "row_id",
       "GR50",
       "IC50",
       "GR Inf",
@@ -47,3 +51,4 @@ if (getRversion() >= "2.15.1") {
     ),
     utils::packageName())
 }
+

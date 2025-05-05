@@ -1,3 +1,6 @@
+## gDRutils 1.7.3 - 2025-04-28
+* add result entries in headers_list for combination data
+
 ## gDRutils 1.7.2 - 2025-04-17
 * refactor `get_gDR_session_info` to display used packages 
 
