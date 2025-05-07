@@ -1011,7 +1011,7 @@ cap_assay_infinities <- function(conc_assay_dt,
                          by = c(group_cols_cd, "ratio")]
   conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
   
-  conc_dict
+  (conc_dict)
 }
 
 #' Create a mapping of concentrations to standardized concentrations.
