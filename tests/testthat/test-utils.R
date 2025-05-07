@@ -754,7 +754,7 @@ test_that("cap_assay_infinities works as expected", {
   expect_true(any(smetrics_data6$xc50 != smetrics_data2$xc50))
   
   # combination data - data expected tests
-  cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+  cdata <- get_synthetic_data("finalMAE_combo_matrix")
   scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], 
                                             "Averaged")
   scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], 
@@ -921,9 +921,11 @@ test_that("cap_assay_infinities works as expected", {
     ),
     tab_avg)
   
-  tab_met_capped <- cap_assay_infinities(tab_avg, 
-                                         tab_met, 
-                                         experiment_name = get_supported_experiments("combo"))
+  expect_warning({
+    tab_met_capped <- cap_assay_infinities(tab_avg, 
+                                           tab_met, 
+                                           experiment_name = get_supported_experiments("combo"))
+  })
   expect_equal(NROW(tab_met_capped), NROW(tab_met))
   
   # test non-default values of other parameters
