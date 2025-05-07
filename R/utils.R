@@ -950,7 +950,7 @@ cap_assay_infinities <- function(conc_assay_dt,
         # calculate min and max conc for each codilution
         min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
         
-        mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
+        mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all.x = TRUE)
         # codilution_fittings
         mt[get(col) == -Inf & source == "codilution_fittings", col] <- 
           mt[get(col) == -Inf & source == "codilution_fittings", "min_conc_cd"] / capping_fold

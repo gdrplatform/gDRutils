@@ -1,3 +1,6 @@
+## gDRutils 1.7.4 - 2025-05-07
+* update `cap_assay_infinities`
+
 ## gDRutils 1.7.3 - 2025-04-28
 * add result entries in headers_list for combination data
 
