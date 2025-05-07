@@ -892,7 +892,7 @@ test_that("cap_assay_infinities works as expected", {
   expect_equal(scmetrics_data_NA[inf_idx_upper, ]$xc50, scmetrics_data2[inf_idx_upper, ]$xc50)
   
   ## list with combined standardized conc and conc2 are longer than in source data
-  tab_met <- data.table::data.table(
+  cmetrics_d <- data.table::data.table(
     DrugName = rep("drug_001", 14),
     DrugName_2 = rep("drug_021", 14),
     CellLineName = rep("celllinename_AZ", 14),
@@ -901,32 +901,32 @@ test_that("cap_assay_infinities works as expected", {
     normalization_type = rep(c("RV", "GR"), 7),
     ratio = rep(c(0.006, 0.050, 0.200, 0.500, 2.000, 10.000, 40.000), each = 2)
   )
-  tab_met$xc50[c(1, 5, 8, 12)] <- Inf
+  cmetrics_d$xc50[c(1, 5, 8, 12)] <- Inf
   
   ls_conc <- c(0.000000000, 0.001524158, 0.004572471, 0.013717406, 0.041152289, 
                0.123456795, 0.370370169, 1.111112414, 3.333335288, 10.000000000)
-  ls_conc_2 <- c(0.000000000, 0.000762079, 0.002286236, 0.006858719,# 0.020576144,
+  ls_conc_2 <- c(0.000000000, 0.000762079, 0.002286236, 0.006858719, # 0.020576144,
                  0.061728397, 0.185185083, 0.555556202, 1.666667628, 4.999999950)
   ls_norm <- c("RV", "GR")
-  tab_avg <- expand.grid(Concentration = ls_conc, 
-                         Concentration_2 = ls_conc_2, 
-                         normalization_type = ls_norm,
-                         stringsAsFactors = FALSE)
-  tab_avg <- cbind(
+  caveraged_d <- expand.grid(Concentration = ls_conc, 
+                             Concentration_2 = ls_conc_2, 
+                             normalization_type = ls_norm,
+                             stringsAsFactors = FALSE)
+  caveraged_d <- cbind(
     data.table::data.table(
-      DrugName = rep("drug_001", NROW(tab_avg)),
-      DrugName_2 = rep("drug_021", NROW(tab_avg)),
-      CellLineName = rep("celllinename_AZ", NROW(tab_avg)),
-      x = withr::with_seed(42, rnorm(n = NROW(tab_avg), mean = 0.11, sd = 0.13))
+      DrugName = rep("drug_001", NROW(caveraged_d)),
+      DrugName_2 = rep("drug_021", NROW(caveraged_d)),
+      CellLineName = rep("celllinename_AZ", NROW(caveraged_d)),
+      x = withr::with_seed(42, rnorm(n = NROW(caveraged_d), mean = 0.11, sd = 0.13))
     ),
-    tab_avg)
+    caveraged_d)
   
   expect_warning({
-    tab_met_capped <- cap_assay_infinities(tab_avg, 
-                                           tab_met, 
-                                           experiment_name = get_supported_experiments("combo"))
+    cmetrics_d_capped <- cap_assay_infinities(caveraged_d, 
+                                              cmetrics_d, 
+                                              experiment_name = get_supported_experiments("combo"))
   })
-  expect_equal(NROW(tab_met_capped), NROW(tab_met))
+  expect_equal(NROW(cmetrics_d_capped), NROW(cmetrics_d))
   
   # test non-default values of other parameters
   expect_error(cap_assay_infinities(list(a = 2)), "Must be a data.table")
