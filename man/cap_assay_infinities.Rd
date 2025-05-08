@@ -9,7 +9,8 @@ cap_assay_infinities(
   assay_dt,
   experiment_name,
   col = "xc50",
-  capping_fold = 5
+  capping_fold = 5,
+  additional_group_cols = NULL
 )
 }
 \arguments{
@@ -23,6 +24,13 @@ cap_assay_infinities(
 
 \item{capping_fold}{number for min and max concentration values
 final formulas are min / capping_fold and max * capping_fold}
+
+\item{additional_group_cols}{character vector of column names used to identify unique observations
+\itemize{
+\item for single-agent experiment additional to the combination of \code{DrugName} and \code{CellLineName}
+\item for combination experiment additional to the combination of \code{DrugName}, \code{DrugName_2}
+and \code{CellLineName}
+}}
 }
 \value{
 data.table without -Inf / Inf values
