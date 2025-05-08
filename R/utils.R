@@ -917,6 +917,7 @@ cap_assay_infinities <- function(conc_assay_dt,
       group_cols <- 
         as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
       mt <- data.table::copy(assay_dt)
+      orig_col_order <- colnames(mt)
  
       if (any(assay_dt$source %in% c("col_fittings", "row_fittings"))) {
         # calculate min and max conc & conc_2 for each combination
@@ -961,11 +962,12 @@ cap_assay_infinities <- function(conc_assay_dt,
         data.table::setkey(mt, NULL)
         mt <- mt[, -ls_clean, with = FALSE]
       }
-      mt
+      mt[, orig_col_order, with = FALSE]
     }
   } else {
     assay_dt
   }
+  stopifnot(identical(dim(assay_dt), dim(out_dt)))
   out_dt
   
 }
