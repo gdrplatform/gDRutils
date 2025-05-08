@@ -736,12 +736,15 @@ test_that("cap_assay_infinities works as expected", {
                             smetrics_data2[order(x_mean)][inf_idx_lower, ]$xc50), 5)
   expect_identical(unique(smetrics_data2[order(x_mean)][inf_idx_upper, ]$xc50 / 
                             smetrics_data3[order(x_mean)][inf_idx_upper, ]$xc50), 5)
+  expect_true(all(names(smetrics_data2) == names(smetrics_data)))
+  expect_true(all(names(smetrics_data3) == names(smetrics_data)))
   
   ## data without infinities
   smetrics_data4 <- cap_assay_infinities(saveraged_data, 
                                          smetrics_data2, 
                                          experiment_name = get_supported_experiments("sa"))
   expect_identical(smetrics_data2, smetrics_data4)
+  expect_true(all(names(smetrics_data4) == names(smetrics_data)))
   
   ## non-default column to be changed
   smetrics_data5 <- smetrics_data
@@ -752,6 +755,7 @@ test_that("cap_assay_infinities works as expected", {
                                          col = "custom_col")
   expect_identical(smetrics_data2$xc50, smetrics_data6$custom_col)
   expect_true(any(smetrics_data6$xc50 != smetrics_data2$xc50))
+  expect_true(all(names(smetrics_data6) == names(smetrics_data5)))
   
   # combination data - data expected tests
   cdata <- get_synthetic_data("finalMAE_combo_matrix")
@@ -780,6 +784,9 @@ test_that("cap_assay_infinities works as expected", {
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data[order(x_mean)]$xc50 == Inf)
+  
+  expect_true(all(names(scmetrics_data2) == names(scmetrics_data)))
+  expect_true(all(names(scmetrics_data3) == names(scmetrics_data)))
   
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
@@ -825,6 +832,9 @@ test_that("cap_assay_infinities works as expected", {
   inf_idx_lower <- which(scmetrics_data_lack_1[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data_lack_1[order(x_mean)]$xc50 == Inf)
   
+  expect_true(all(names(scmetrics_data2) == names(scmetrics_data_lack_1)))
+  expect_true(all(names(scmetrics_data3) == names(scmetrics_data_lack_1)))
+  
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
       scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
@@ -856,6 +866,9 @@ test_that("cap_assay_infinities works as expected", {
   ##  Inf values
   inf_idx_lower <- which(scmetrics_data_lack_2[order(x_mean)]$xc50 == -Inf)
   inf_idx_upper <- which(scmetrics_data_lack_2[order(x_mean)]$xc50 == Inf)
+  
+  expect_true(all(names(scmetrics_data2) == names(scmetrics_data_lack_2)))
+  expect_true(all(names(scmetrics_data3) == names(scmetrics_data_lack_2)))
   
   expect_equal(unique(
     scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
@@ -890,6 +903,8 @@ test_that("cap_assay_infinities works as expected", {
   
   expect_equal(scmetrics_data_NA[inf_idx_lower, ]$xc50, scmetrics_data2[inf_idx_lower, ]$xc50)
   expect_equal(scmetrics_data_NA[inf_idx_upper, ]$xc50, scmetrics_data2[inf_idx_upper, ]$xc50)
+  
+  expect_true(all(names(scmetrics_data2) == names(scmetrics_data_NA)))
   
   ## list with combined standardized conc and conc2 are longer than in source data
   cmetrics_d <- data.table::data.table(
@@ -927,6 +942,8 @@ test_that("cap_assay_infinities works as expected", {
                                               experiment_name = get_supported_experiments("combo"))
   })
   expect_equal(NROW(cmetrics_d_capped), NROW(cmetrics_d))
+  
+  expect_true(all(names(cmetrics_d_capped) == names(cmetrics_d)))
   
   # test non-default values of other parameters
   expect_error(cap_assay_infinities(list(a = 2)), "Must be a data.table")
