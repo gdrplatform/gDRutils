@@ -853,6 +853,11 @@ remove_drug_batch <- function(drug_vec,
 #' @param col string with column name to be capped in assay_dt ("xc50" by default)
 #' @param capping_fold number for min and max concentration values
 #'                     final formulas are min / capping_fold and max * capping_fold
+#' @param additional_group_cols character vector of column names used to identify unique observations 
+#'  - for single-agent experiment additional to the combination of \code{DrugName} and \code{CellLineName}
+#'  - for combination experiment additional to the combination of \code{DrugName}, \code{DrugName_2} 
+#'    and \code{CellLineName}
+#'            
 #'        
 #' @examples
 #' # single-agent data
@@ -878,7 +883,8 @@ cap_assay_infinities <- function(conc_assay_dt,
                                  assay_dt,
                                  experiment_name,
                                  col = "xc50",
-                                 capping_fold = 5) {
+                                 capping_fold = 5,
+                                 additional_group_cols = NULL) {
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_data_table(assay_dt)
   checkmate::assert_string(experiment_name)
@@ -886,6 +892,11 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_string(col)
   checkmate::assert_numeric(assay_dt[[col]])
   checkmate::assert_number(capping_fold, lower = 1)
+  checkmate::assert_character(additional_group_cols, any.missing = FALSE, null.ok = TRUE)
+  if (!is.null(additional_group_cols)) {
+    checkmate::assert_subset(additional_group_cols, choices = names(conc_assay_dt))
+    checkmate::assert_subset(additional_group_cols, choices = names(assay_dt))
+  }
   
   if (!experiment_name %in% c(get_supported_experiments("sa"),
                               get_supported_experiments("combo"))) {
@@ -900,7 +911,9 @@ cap_assay_infinities <- function(conc_assay_dt,
   
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
-      group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
+      group_cols <- c(
+        as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE)),
+        additional_group_cols)
       mt <- data.table::copy(assay_dt)
       orig_col_order <- colnames(mt)
       
@@ -917,8 +930,9 @@ cap_assay_infinities <- function(conc_assay_dt,
       mt[, orig_col_order, with = FALSE]
       
     } else if (experiment_name == get_supported_experiments("combo")) {
-      group_cols <- 
-        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+      group_cols <- c(
+        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE)),
+        additional_group_cols)
       mt <- data.table::copy(assay_dt)
       orig_col_order <- colnames(mt)
  
