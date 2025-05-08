@@ -853,6 +853,11 @@ remove_drug_batch <- function(drug_vec,
 #' @param col string with column name to be capped in assay_dt ("xc50" by default)
 #' @param capping_fold number for min and max concentration values
 #'                     final formulas are min / capping_fold and max * capping_fold
+#' @param additional_group_cols character vector of column names used to identify unique observations 
+#'  - for single-agent experiment additional to the combination of \code{DrugName} and \code{CellLineName}
+#'  - for combination experiment additional to the combination of \code{DrugName}, \code{DrugName_2} 
+#'    and \code{CellLineName}
+#'            
 #'        
 #' @examples
 #' # single-agent data
@@ -878,7 +883,8 @@ cap_assay_infinities <- function(conc_assay_dt,
                                  assay_dt,
                                  experiment_name,
                                  col = "xc50",
-                                 capping_fold = 5) {
+                                 capping_fold = 5,
+                                 additional_group_cols = NULL) {
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_data_table(assay_dt)
   checkmate::assert_string(experiment_name)
@@ -886,6 +892,11 @@ cap_assay_infinities <- function(conc_assay_dt,
   checkmate::assert_string(col)
   checkmate::assert_numeric(assay_dt[[col]])
   checkmate::assert_number(capping_fold, lower = 1)
+  checkmate::assert_character(additional_group_cols, any.missing = FALSE, null.ok = TRUE)
+  if (!is.null(additional_group_cols)) {
+    checkmate::assert_subset(additional_group_cols, choices = names(conc_assay_dt))
+    checkmate::assert_subset(additional_group_cols, choices = names(assay_dt))
+  }
   
   if (!experiment_name %in% c(get_supported_experiments("sa"),
                               get_supported_experiments("combo"))) {
@@ -900,23 +911,30 @@ cap_assay_infinities <- function(conc_assay_dt,
   
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
-      group_cols <- as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE))
+      group_cols <- c(
+        as.character(get_env_identifiers(c("drug_name", "cellline_name"), simplify = FALSE)),
+        additional_group_cols)
+      mt <- data.table::copy(assay_dt)
+      orig_col_order <- colnames(mt)
       
       # calculate min and max conc for each combination
       min_max_conc <- 
         conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
       
-      mt <- merge(assay_dt, min_max_conc, by = group_cols)
+      mt <- merge(mt, min_max_conc, by = group_cols)
       mt[get(col) == -Inf, col] <- mt[get(col) == -Inf, "min"] / capping_fold
       mt[get(col) == Inf, col] <- mt[get(col) == Inf, "max"] * capping_fold
       
+      # return result with orgin column
       data.table::setkey(mt, NULL)
-      mt[, -c("min", "max")]
+      mt[, orig_col_order, with = FALSE]
       
     } else if (experiment_name == get_supported_experiments("combo")) {
-      group_cols <- 
-        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
+      group_cols <- c(
+        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE)),
+        additional_group_cols)
       mt <- data.table::copy(assay_dt)
+      orig_col_order <- colnames(mt)
  
       if (any(assay_dt$source %in% c("col_fittings", "row_fittings"))) {
         # calculate min and max conc & conc_2 for each combination
@@ -941,25 +959,25 @@ cap_assay_infinities <- function(conc_assay_dt,
         mt[get(col) == Inf & source == "row_fittings", col] <- 
           mt[get(col) == Inf & source == "row_fittings", "max_conc_2"] * capping_fold
         
-        ls_clean <- intersect(c("min_conc", "max_conc", "min_conc_2", "max_conc_2"), names(mt))
+        # return result with orgin column
         data.table::setkey(mt, NULL)
-        mt <- mt[, -ls_clean, with = FALSE]
+        mt <- mt[, orig_col_order, with = FALSE]
       }
 
       if (any(assay_dt$source %in% c("codilution_fittings"))) {
         # calculate min and max conc for each codilution
         min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
         
-        mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all = TRUE)
+        mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all.x = TRUE)
         # codilution_fittings
         mt[get(col) == -Inf & source == "codilution_fittings", col] <- 
           mt[get(col) == -Inf & source == "codilution_fittings", "min_conc_cd"] / capping_fold
         mt[get(col) == Inf & source == "codilution_fittings", col] <- 
           mt[get(col) == Inf & source == "codilution_fittings", "max_conc_cd"] * capping_fold
         
-        ls_clean <- intersect(c("min_conc_cd", "max_conc_cd"), names(mt))
+        # return result with orgin column
         data.table::setkey(mt, NULL)
-        mt <- mt[, -ls_clean, with = FALSE]
+        mt <- mt[, orig_col_order, with = FALSE]
       }
       mt
     }
@@ -1011,7 +1029,7 @@ cap_assay_infinities <- function(conc_assay_dt,
                          by = c(group_cols_cd, "ratio")]
   conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
   
-  conc_dict
+  (conc_dict)
 }
 
 #' Create a mapping of concentrations to standardized concentrations.
