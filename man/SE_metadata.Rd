@@ -22,7 +22,7 @@ set_SE_processing_metadata(se, value)
 
 set_SE_keys(se, value)
 
-set_SE_experiment_metadata(se, value)
+set_SE_experiment_metadata(se, value, append = TRUE)
 
 set_SE_experiment_raw_data(se, value)
 
@@ -44,6 +44,8 @@ set_SE_identifiers(se, value)
 \item{se}{a \linkS4class{SummarizedExperiment} object for which to add fit parameter metadata.}
 
 \item{value}{named list of metadata for fit parameters.}
+
+\item{append}{Boolean indicating whether to append the new metadata value to the existing entry.}
 
 \item{key_type}{string of a specific key type (i.e. 'nested_keys', etc.).}
 
