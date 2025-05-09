@@ -7,6 +7,18 @@ test_that("get_SE_experiment_metadata and set_SE_experiment_metadata work as exp
   se <- set_SE_experiment_metadata(se, exp_md)
   oexp_md <- get_SE_experiment_metadata(se)
   expect_equal(oexp_md, exp_md)
+  
+  append_md_iga <- list("Iga" = "Swiatek")
+  se <- set_SE_experiment_metadata(se, append_md_iga, append = TRUE)
+  oexp_md <- get_SE_experiment_metadata(se)
+  expected_md_append <- list("Super" = "Star", "Serena" = "Williams", "Iga" = "Swiatek")
+  expect_equal(oexp_md, expected_md_append)
+  
+  overwrite_md_iga <- list("Iga" = "Swiatek")
+  se <- set_SE_experiment_metadata(se, overwrite_md_iga, append = FALSE)
+  oexp_md <- get_SE_experiment_metadata(se)
+  expected_md_overwrite <- list("Iga" = "Swiatek")
+  expect_equal(oexp_md, expected_md_overwrite)
 })
 
 
