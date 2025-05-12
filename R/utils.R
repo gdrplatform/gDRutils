@@ -944,7 +944,9 @@ cap_assay_infinities <- function(conc_assay_dt,
         min_max_conc_2 <- 
           conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
                         by = group_cols]
-        min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols)
+
+        # all = TRUE to avoid skipping values with min_con == 2 and/or min_con_2 == 0
+        min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols, all = TRUE)
         
         mt <- merge(mt, min_max_conc, by = group_cols)
         # col_fittings
@@ -984,6 +986,7 @@ cap_assay_infinities <- function(conc_assay_dt,
   } else {
     assay_dt
   }
+  stopifnot(identical(dim(assay_dt), dim(out_dt)))
   out_dt
   
 }
