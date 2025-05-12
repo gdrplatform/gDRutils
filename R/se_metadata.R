@@ -236,6 +236,10 @@ set_SE_identifiers <- function(se, value) {
 .set_SE_metadata <- function(se, name, value, append = FALSE) {
   current_metadata <- .get_SE_metadata(se, name)
   
+  if (S4Vectors::isEmpty(current_metadata)) {
+    current_metadata <- NULL
+  }
+  
   if (!is.null(current_metadata)) {
     if (append) {
       S4Vectors::metadata(se)[[name]] <- c(current_metadata, value)
