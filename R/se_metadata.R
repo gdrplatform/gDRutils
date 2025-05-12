@@ -236,7 +236,7 @@ set_SE_identifiers <- function(se, value) {
 .set_SE_metadata <- function(se, name, value, append = FALSE) {
   current_metadata <- .get_SE_metadata(se, name)
   
-  if (S4Vectors::isEmpty(current_metadata)) {
+  if (is.null(k) || S4Vectors::isEmpty(current_metadata)) {
     current_metadata <- NULL
   }
   
