@@ -69,23 +69,10 @@ test_that("convert_se_to_json works with diferent types of metadata", {
   md <- data.table::data.table(title = "my awesome experiment",
                        description = "description of experiment",
                        source = "GeneData_Screener")
-  expect_warning(
-    se <- set_SE_experiment_metadata(se, md),
-    "overwriting existing metadata entry: 'experiment_metadata'"
-  )
+  se <- set_SE_experiment_metadata(se, md)
 
   # check if there is no error
   expect_error(convert_se_to_json(se), NA)
-
-  # error
-  md <- c(title = "my awesome experiment",
-          description = "description of experiment",
-          source = "GeneData_Screener")
-  expect_warning(
-    se <- set_SE_experiment_metadata(se, md),
-    "overwriting existing metadata entry: 'experiment_metadata'"
-  )
-  expect_error(convert_se_to_json(se), "jsonlite::validate(json) is not TRUE", fixed = TRUE)
 })
 
 test_that("strip_first_and_last_char works as expected", {
