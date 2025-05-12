@@ -1,3 +1,6 @@
+## gDRutils 1.7.5 - 2025-05-12
+* improve logic in `cap_assay_infinities`
+
 ## gDRutils 1.7.4 - 2025-05-07
 * update `cap_assay_infinities`
 * add additional grouping columns in `cap_assay_infinities`
