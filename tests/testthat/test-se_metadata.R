@@ -15,7 +15,9 @@ test_that("get_SE_experiment_metadata and set_SE_experiment_metadata work as exp
   expect_equal(oexp_md, expected_md_append)
   
   overwrite_md_iga <- list("Iga" = "Swiatek")
-  se <- set_SE_experiment_metadata(se, overwrite_md_iga, append = FALSE)
+  expect_warning(se <- set_SE_experiment_metadata(se,
+                                                  overwrite_md_iga,
+                                                  append = FALSE))
   oexp_md <- get_SE_experiment_metadata(se)
   expected_md_overwrite <- list("Iga" = "Swiatek")
   expect_equal(oexp_md, expected_md_overwrite)
