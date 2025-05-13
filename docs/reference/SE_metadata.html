@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
 <span></span>
 <span><span class="fu">set_SE_keys</span><span class="op">(</span><span class="va">se</span>, <span class="va">value</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">set_SE_experiment_metadata</span><span class="op">(</span><span class="va">se</span>, <span class="va">value</span><span class="op">)</span></span>
+<span><span class="fu">set_SE_experiment_metadata</span><span class="op">(</span><span class="va">se</span>, <span class="va">value</span>, append <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">set_SE_experiment_raw_data</span><span class="op">(</span><span class="va">se</span>, <span class="va">value</span><span class="op">)</span></span>
 <span></span>
@@ -87,6 +87,10 @@
 
 <dt>value</dt>
 <dd><p>named list of metadata for fit parameters.</p></dd>
+
+
+<dt>append</dt>
+<dd><p>Boolean indicating whether to append the new metadata value to the existing entry.</p></dd>
 
 
 <dt>key_type</dt>
