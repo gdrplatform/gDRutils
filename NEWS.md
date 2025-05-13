@@ -1,5 +1,8 @@
-## gDRutils 1.7.5 - 2025-05-09
+## gDRutils 1.7.6 - 2025-05-13
 * add `append` arg to `.set_SE_metadata`
+
+## gDRutils 1.7.5 - 2025-05-12
+* improve logic in `cap_assay_infinities`
 
 ## gDRutils 1.7.4 - 2025-05-07
 * update `cap_assay_infinities`
