@@ -7,6 +7,7 @@
 #' @param key_type string of a specific key type (i.e. 'nested_keys', etc.).
 #' @param id_type string of a specific id type (i.e. 'duration', 'cellline_name', etc.).
 #' @param simplify Boolean indicating whether output should be simplified.
+#' @param append Boolean indicating whether to append the new metadata value to the existing entry. 
 #'
 #' @details
 #' For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines
@@ -55,8 +56,8 @@ set_SE_keys <- function(se, value) {
 #' @rdname SE_metadata
 #' @export
 #'
-set_SE_experiment_metadata <- function(se, value) {
-  .set_SE_metadata(se, name = "experiment_metadata", value)
+set_SE_experiment_metadata <- function(se, value, append = TRUE) {
+  .set_SE_metadata(se, name = "experiment_metadata", value, append = append)
 }
 
 #' @keywords SE_operators
@@ -232,10 +233,23 @@ set_SE_identifiers <- function(se, value) {
 
 #' The primary purpose of this function is to allow other functions to create exposed setter functions.
 #' @noRd
-.set_SE_metadata <- function(se, name, value) {
-  if (!is.null(.get_SE_metadata(se, name))) {
-    warning(sprintf("overwriting existing metadata entry: '%s'", name))
+.set_SE_metadata <- function(se, name, value, append = FALSE) {
+  current_metadata <- .get_SE_metadata(se, name)
+  
+  if (is.null(current_metadata) || S4Vectors::isEmpty(current_metadata)) {
+    current_metadata <- NULL
   }
-  S4Vectors::metadata(se)[[name]] <- value
+  
+  if (!is.null(current_metadata)) {
+    if (append) {
+      S4Vectors::metadata(se)[[name]] <- c(current_metadata, value)
+    } else {
+      warning(sprintf("overwriting existing metadata entry: '%s'", name))
+      S4Vectors::metadata(se)[[name]] <- value
+    }
+  } else {
+    S4Vectors::metadata(se)[[name]] <- value
+  }
+  
   se
 }
