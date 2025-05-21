@@ -90,7 +90,7 @@ test_that("merge_MAE works as expected", {
   checkmate::expect_class(mergedMAE$result, "MultiAssayExperiment")
   validate_MAE(mergedMAE$result)
   expect_identical(
-    SummarizedExperiment::assayNames(experiments(listMAE[[1]])[[1]]),
-    SummarizedExperiment::assayNames(experiments(mergedMAE$result)[[1]])
+    SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(listMAE[[1]])[[1]]),
+    SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(mergedMAE$result)[[1]])
   )
 })
