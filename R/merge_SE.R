@@ -1,3 +1,47 @@
+#' Merge multiple MultiAssayExperiment objects
+#'
+#' @param MAElist Named list of MultiAssayExperiment objects.
+#' @param additional_col_name String with the name of the column that will be
+#' added to assay data for the distinction of possible duplicated metrics
+#' that can arise from multiple projects.
+#' @param discard_keys Character vector of strings that will be discarded
+#' during creating BumpyMatrix object.
+#' @keywords SE_operators
+#'
+#' @examples
+#' mae1 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
+#' mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
+#' merge_MAE(list(mae1 = mae1, mae2 = mae2))
+#'
+#' @return Merged MultiAssayExperiment object.
+#' @export
+merge_MAE <- function(MAElist,
+                      additional_col_name = "data_source",
+                      discard_keys = c("normalization_type",
+                                       "fit_source",
+                                       "record_id",
+                                       "isDay0",
+                                       "swap_sa",
+                                       "control_type",
+                                       "iso_level",
+                                       "conc_1",
+                                       "conc_2")) {
+  
+  checkmate::assert_list(MAElist, types = "MultiAssayExperiment")
+  
+  experiments <- unique(unlist(lapply(MAElist, names)))
+  
+  merged_SE_assays <- lapply(experiments, function(x) {
+    merge_SE(lapply(MAElist, function(y) y[[x]]))
+  })
+  names(merged_SE_assays) <- experiments
+  
+  MultiAssayExperiment::MultiAssayExperiment(
+    experiments = MultiAssayExperiment::ExperimentList(merged_SE_assays),
+    metadata = Reduce(c, lapply(MAElist, S4Vectors::metadata))
+  )
+}
+
 #' Merge multiple Summarized Experiments
 #'
 #' @param SElist named list of Summarized Experiments
@@ -20,8 +64,12 @@ merge_SE <- function(SElist,
                      discard_keys = c("normalization_type",
                                       "fit_source",
                                       "record_id",
+                                      "isDay0",
                                       "swap_sa",
-                                      "control_type")) {
+                                      "control_type",
+                                      "iso_level",
+                                      "conc_1",
+                                      "conc_2")) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
@@ -53,7 +101,8 @@ merge_SE <- function(SElist,
                     intersect(names(merged_assays$Averaged$DT),
                               c(additional_col_name, discard_keys)), NULL)
   }
-  data <- split_SE_components(merged_assays$Averaged$DT, nested_keys = additional_col_name)
+  data <- split_SE_components(merged_assays$Averaged$DT,
+                              nested_keys = intersect(additional_col_name, names(merged_assays$Averaged$DT)))
   data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
   identifiers <- NULL
