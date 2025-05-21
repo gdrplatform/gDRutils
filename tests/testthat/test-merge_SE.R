@@ -1,5 +1,6 @@
 listMAE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
                              "final", full.names = TRUE)[1:2], qs::qread)
+names(listMAE) <- c("MAE1", "MAE2")
 listSE <- lapply(listMAE, function(x) x[[2]])
 names(listSE) <- c("combo1", "combo2")
 
@@ -82,4 +83,14 @@ test_that("merge_SE works with data with additional perturbations", {
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   validate_SE(mergedSE$result)
   expect_equal(dim(mergedSE$result), c(10, 5))
+})
+
+test_that("merge_MAE works as expected", {
+  mergedMAE <- purrr::quietly(merge_MAE)(listMAE)
+  checkmate::expect_class(mergedMAE$result, "MultiAssayExperiment")
+  validate_MAE(mergedMAE$result)
+  expect_identical(
+    SummarizedExperiment::assayNames(experiments(listMAE[[1]])[[1]]),
+    SummarizedExperiment::assayNames(experiments(mergedMAE$result)[[1]])
+  )
 })
