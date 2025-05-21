@@ -1,3 +1,7 @@
+## gDRutils 1.7.7 - 2025-05-21
+* add support for combo data in `merge_SE`
+* add `merge_MAE` fun
+
 ## gDRutils 1.7.6 - 2025-05-13
 * add `append` arg to `.set_SE_metadata`
 
