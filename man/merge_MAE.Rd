@@ -33,4 +33,4 @@ mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
 merge_MAE(list(mae1 = mae1, mae2 = mae2))
 
 }
-\keyword{MAE_operators}
+\keyword{SE_operators}
