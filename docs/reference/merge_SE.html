@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,8 +57,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">merge_SE</span><span class="op">(</span></span>
 <span>  <span class="va">SElist</span>,</span>
 <span>  additional_col_name <span class="op">=</span> <span class="st">"data_source"</span>,</span>
-<span>  discard_keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normalization_type"</span>, <span class="st">"fit_source"</span>, <span class="st">"record_id"</span>, <span class="st">"swap_sa"</span>,</span>
-<span>    <span class="st">"control_type"</span><span class="op">)</span></span>
+<span>  discard_keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normalization_type"</span>, <span class="st">"fit_source"</span>, <span class="st">"record_id"</span>, <span class="st">"isDay0"</span>, <span class="st">"swap_sa"</span>,</span>
+<span>    <span class="st">"control_type"</span>, <span class="st">"iso_level"</span>, <span class="st">"conc_1"</span>, <span class="st">"conc_2"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -90,7 +90,6 @@ during creating BumpyMatrix object</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">se1</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_synthetic_data.html">get_synthetic_data</a></span><span class="op">(</span><span class="st">"finalMAE_small"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">merge_SE</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>se1 <span class="op">=</span> <span class="va">se1</span>, se2 <span class="op">=</span> <span class="va">se1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>ignoring input keys: 'data_source' which are not present in data.table</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: SummarizedExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 10 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> metadata(5): experiment_metadata Keys fit_parameters .internal</span>
