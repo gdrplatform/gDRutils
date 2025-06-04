@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.7.7
-Date: 2025-05-21
+Version: 1.7.9
+Date: 2025-06-04
 Authors@R: c(person("Bartosz", "Czech", role=c("aut"),
                    comment = c(ORCID = "0000-0002-9908-3007")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com",
@@ -55,6 +55,7 @@ Suggests:
     scales,
     testthat,
     tools,
+    withr,
     yaml
 URL: https://github.com/gdrplatform/gDRutils, https://gdrplatform.github.io/gDRutils/
 BugReports: https://github.com/gdrplatform/gDRutils/issues
