@@ -1,4 +1,4 @@
-## gDRutils 1.7.9 - 2025-06-04
+## gDRutils 1.7.9 - 2025-06-04 
 * update dependencies
 
 ## gDRutils 1.7.8 - 2025-05-26
