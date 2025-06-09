@@ -158,7 +158,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
 #'
 #' # Batch processing
-#' loop(1:1000, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
+#' loop(1:10, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
 #'
 #' @keywords package_utils
 #' @export
@@ -193,6 +193,7 @@ loop <- function(x,
     
     # total number of iterations
     total_iterations <- length(x)
+    batch_size <- min(batch_size, total_iterations)
     
     # determine batch indices starting from batch_size, e.g., 100, 200, 300, ...
     indices <- seq(batch_size, total_iterations, by = batch_size)
