@@ -170,7 +170,7 @@ loop <- function(x,
                  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
                  ...) {
   
-  # assertions to check input validity using checkmate
+  # assertions to check input val,idity using checkmate
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
@@ -178,14 +178,25 @@ loop <- function(x,
   checkmate::assert_string(temp_dir)
   checkmate::assert_count(batch_size, positive = TRUE)
   
+  # use sys.call() to attempt to determine parent function name
+  parent_call <- sys.call(-1)
+  parent_name <- if (!is.null(parent_call)) {
+    deparse(parent_call[[1]])
+    } else {
+      "unknown_parent_fun"
+    }
+  
   if (use_batch) {
     # ensure the directory exists
     if (!dir.exists(temp_dir)) {
       dir.create(temp_dir, recursive = TRUE)
     }
     
-    # extract the function name for use in filenames
+    # determine function name or use parent name if anonymous
     fun_name <- deparse(substitute(FUN))
+    if (any(grepl("function", fun_name))) {
+      fun_name <- parent_name
+    }
     
     # generate a unique identifier based on the input data and user ID
     user_id <- Sys.info()["user"]
