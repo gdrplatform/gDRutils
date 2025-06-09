@@ -171,7 +171,7 @@ loop <- function(x,
                  ...) {
   
   # assertions to check input validity using checkmate
-  checkmate::assert_atomic(x)
+  checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
   checkmate::assert_flag(use_batch)
@@ -277,7 +277,7 @@ loop <- function(x,
 #' @export
 process_batch <- function(batch, start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...) {
   # assertions to check input validity using checkmate
-  checkmate::assert_atomic(batch)
+  checkmate::assert_vector(batch, null.ok = FALSE)
   checkmate::assert_count(start_index, positive = TRUE)
   checkmate::assert_string(fun_name)
   checkmate::assert_string(unique_id)
@@ -291,7 +291,7 @@ process_batch <- function(batch, start_index, fun_name, unique_id, total_iterati
   }
   file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
   qs::qsave(results, file_path)
-  gc() # clear memory after saving the batch
+  invisible(gc()) # clear memory after saving the batch
 }
 
 #' Apply a function to every element of a bumpy matrix.
