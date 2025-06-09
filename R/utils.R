@@ -128,31 +128,170 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
-#' Lapply or bplapply.
+#' Conditional Lapply or Bplapply with Optional Batch Processing.
 #'
-#' @param x Vector (atomic or list) or an ‘expression’ object.
+#' @param x Vector (atomic or list) or an expression object.
 #' Other objects (including classed objects) will be coerced by
-#' ‘base::as.list’.
-#' @param FUN A user-defined function.
+#' base::as.list.
+#' @param FUN A user-defined function to apply to each element of `x`.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
 #' Defaults to \code{TRUE}.
-#' @param ... optional argument passed to
-#' \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
+#' @param use_batch Logical indicating whether to use batch processing to save intermediate results.
+#' Defaults to \code{FALSE}.
+#' @param temp_dir Character string specifying the directory where batch results are saved.
+#' Defaults to \code{tempdir()}.
+#' @param batch_size Integer specifying the number of elements to process in each batch during batch mode.
+#' Defaults to \code{100}.
+#' @param ... Optional arguments passed to \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
 #' else to \link[base]{lapply}.
 #'
 #' @return List containing output of \code{FUN} applied to every element in \code{x}.
-#' 
-#' @examples 
-#' loop(list(c(1,2), c(2,3)), sum, parallelize = FALSE)
-#' 
+#' When batch processing is enabled, results are saved incrementally and merged at the end of processing.
+#'
+#' @details The function operates in two modes:
+#' 1. Regular mode: Directly applies \code{FUN} to the elements using \code{lapply} or \code{bplapply}.
+#' 2. Batch mode: Saves results in batches to disk, allowing computation to resume from the last saved step.
+#' Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
+#'
+#' @examples
+#' # Regular processing
+#' loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
+#'
+#' # Batch processing
+#' loop(1:1000, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
+#'
 #' @keywords package_utils
 #' @export
-loop <- function(x, FUN, parallelize = TRUE, ...) {
-  if (parallelize) {
-    BiocParallel::bplapply(x, FUN, ...)
+loop <- function(x,
+                 FUN,
+                 parallelize = TRUE,
+                 use_batch = as.logical(Sys.getenv("GDR_USE_BATCH", "FALSE")),
+                 temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
+                 batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
+                 ...) {
+  
+  # assertions to check input validity using checkmate
+  checkmate::assert_atomic(x)
+  checkmate::assert_function(FUN)
+  checkmate::assert_flag(parallelize)
+  checkmate::assert_flag(use_batch)
+  checkmate::assert_string(temp_dir)
+  checkmate::assert_count(batch_size, positive = TRUE)
+  
+  if (use_batch) {
+    # ensure the directory exists
+    if (!dir.exists(temp_dir)) {
+      dir.create(temp_dir, recursive = TRUE)
+    }
+    
+    # extract the function name for use in filenames
+    fun_name <- deparse(substitute(FUN))
+    
+    # generate a unique identifier based on the input data and user ID
+    user_id <- Sys.info()["user"]
+    unique_id <- paste0(digest::digest(x, algo = "sha256"), "_", user_id)
+    
+    # total number of iterations
+    total_iterations <- length(x)
+    
+    # determine batch indices starting from batch_size, e.g., 100, 200, 300, ...
+    indices <- seq(batch_size, total_iterations, by = batch_size)
+    
+    # find the last completed batch index using vapply
+    completed_batches <- vapply(indices, function(start_index) {
+      file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+      file.exists(file_path)
+    }, logical(1))
+    
+    # start processing from the next incomplete batch
+    start_index <- indices[!completed_batches][1]
+    if (is.na(start_index)) {
+      message("All batches are already completed.")
+      start_index <- indices[length(indices)] + batch_size  # set to go beyond the last index to prevent further processing
+    }
+    
+    # process and save results in batches
+    if (parallelize) {
+      BiocParallel::bplapply(indices[indices >= start_index], function(start_index) {
+        end_index <- min(start_index, total_iterations)
+        process_batch(x[(start_index - batch_size + 1):end_index], start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+      })
+    } else {
+      lapply(indices[indices >= start_index], function(start_index) {
+        end_index <- min(start_index, total_iterations)
+        process_batch(x[(start_index - batch_size + 1):end_index], start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+      })
+    }
+    
+    # load and merge all saved batches at the end of processing
+    final_results <- list()
+    for (start_index in indices) {
+      file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+      if (file.exists(file_path)) {
+        batch_results <- qs::qread(file_path)
+        final_results <- c(final_results, batch_results)
+      }
+    }
+    
+    # remove intermediate files after successful completion
+    for (start_index in indices) {
+      file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+      if (file.exists(file_path)) {
+        file.remove(file_path)
+      }
+    }
+    
+    # return the final merged results
+    return(final_results)
   } else {
-    lapply(x, FUN, ...)
+    # perform regular processing without batch saving
+    if (parallelize) {
+      return(BiocParallel::bplapply(x, FUN, ...))
+    } else {
+      return(lapply(x, FUN, ...))
+    }
   }
+}
+
+#' Process and Save a Batch of Results.
+#'
+#' @param batch A subset of the vector or list `x` to be processed.
+#' @param start_index Integer indicating the starting index of the batch in the original vector `x`.
+#' @param fun_name Character string representing the name of the function `FUN` for use in file naming.
+#' @param unique_id Unique identifier for the current task and user to ensure file uniqueness.
+#' @param total_iterations Integer indicating the total number of iterations in the original vector `x`.
+#' @param temp_dir Character string specifying the directory where batch results are saved.
+#' @param FUN A user-defined function to apply to each element of the batch.
+#' @param ... Optional arguments passed to `FUN`.
+#'
+#' @return This function does not return a value. It saves the processed batch results to disk as a `.qs` file.
+#'
+#' @details The function applies `FUN` to each element in `batch`, saves the results to a file named
+#' according to the format `<fun_name>_<unique_id>_<start_index>_of_<total_iterations>_batch.qs`, and clears
+#' memory using `gc()` after saving.
+#'
+#' @examples
+#' process_batch(list(1, 2, 3), 100, "my_function", "unique_task_id_user", 1000, tempdir(), function(x) x^2)
+#'
+#' @keywords package_utils
+#' @export
+process_batch <- function(batch, start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...) {
+  # assertions to check input validity using checkmate
+  checkmate::assert_atomic(batch)
+  checkmate::assert_count(start_index, positive = TRUE)
+  checkmate::assert_string(fun_name)
+  checkmate::assert_string(unique_id)
+  checkmate::assert_count(total_iterations, positive = TRUE)
+  checkmate::assert_string(temp_dir)
+  checkmate::assert_function(FUN)
+  
+  results <- vector("list", length(batch))
+  for (i in seq_along(batch)) {
+    results[[i]] <- FUN(batch[[i]], ...)
+  }
+  file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+  qs::qsave(results, file_path)
+  gc() # clear memory after saving the batch
 }
 
 #' Apply a function to every element of a bumpy matrix.
