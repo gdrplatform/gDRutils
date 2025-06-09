@@ -1,3 +1,6 @@
+## gDRutils 1.7.10 - 2025-06-09
+* update `loop` to support batch approach
+
 ## gDRutils 1.7.9 - 2025-06-04
 * update dependencies
 
