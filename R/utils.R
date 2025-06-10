@@ -170,7 +170,7 @@ loop <- function(x,
                  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
                  ...) {
   
-  # assertions to check input val,idity using checkmate
+  # assertions to check input validity using checkmate
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
@@ -178,51 +178,42 @@ loop <- function(x,
   checkmate::assert_string(temp_dir)
   checkmate::assert_count(batch_size, positive = TRUE)
   
-  # use sys.call() to attempt to determine parent function name
   parent_call <- sys.call(-1)
   parent_name <- if (!is.null(parent_call)) {
     deparse(parent_call[[1]])
-    } else {
-      "unknown_parent_fun"
-    }
+  } else {
+    "unknown_parent_fun"
+  }
   
   if (use_batch) {
-    # ensure the directory exists
     if (!dir.exists(temp_dir)) {
       dir.create(temp_dir, recursive = TRUE)
     }
     
-    # determine function name or use parent name if anonymous
     fun_name <- deparse(substitute(FUN))
     if (any(grepl("function", fun_name))) {
       fun_name <- parent_name
     }
     
-    # generate a unique identifier based on the input data and user ID
     user_id <- Sys.info()["user"]
     unique_id <- paste0(digest::digest(x, algo = "sha256"), "_", user_id)
     
-    # total number of iterations
     total_iterations <- length(x)
     batch_size <- min(batch_size, total_iterations)
     
-    # determine batch indices starting from batch_size, e.g., 100, 200, 300, ...
     indices <- seq(batch_size, total_iterations, by = batch_size)
     
-    # find the last completed batch index using vapply
     completed_batches <- vapply(indices, function(start_index) {
       file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
       file.exists(file_path)
     }, logical(1))
     
-    # start processing from the next incomplete batch
     start_index <- indices[!completed_batches][1]
     if (is.na(start_index)) {
       message("All batches are already completed.")
-      start_index <- indices[length(indices)] + batch_size  # set to go beyond the last index to prevent further processing
+      start_index <- indices[length(indices)] + batch_size
     }
     
-    # process and save results in batches
     if (parallelize) {
       BiocParallel::bplapply(indices[indices >= start_index], function(start_index) {
         end_index <- min(start_index, total_iterations)
@@ -235,7 +226,6 @@ loop <- function(x,
       })
     }
     
-    # load and merge all saved batches at the end of processing
     final_results <- list()
     for (start_index in indices) {
       file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
@@ -245,7 +235,6 @@ loop <- function(x,
       }
     }
     
-    # remove intermediate files after successful completion
     for (start_index in indices) {
       file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
       if (file.exists(file_path)) {
@@ -253,10 +242,8 @@ loop <- function(x,
       }
     }
     
-    # return the final merged results
     return(final_results)
   } else {
-    # perform regular processing without batch saving
     if (parallelize) {
       return(BiocParallel::bplapply(x, FUN, ...))
     } else {
@@ -297,7 +284,7 @@ process_batch <- function(batch, start_index, fun_name, unique_id, total_iterati
   checkmate::assert_string(temp_dir)
   checkmate::assert_function(FUN)
   
-  results <- vector("list", length(batch))
+  results <- setNames(vector("list", length(batch)), names(batch))
   for (i in seq_along(batch)) {
     results[[i]] <- FUN(batch[[i]], ...)
   }
