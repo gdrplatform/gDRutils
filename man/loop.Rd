@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{loop}
 \alias{loop}
-\title{Conditional Lapply or Bplapply with Optional Batch Processing.}
+\title{Conditional lapply or bplapply with optional batch processing.}
 \usage{
 loop(
   x,
@@ -41,7 +41,7 @@ List containing output of \code{FUN} applied to every element in \code{x}.
 When batch processing is enabled, results are saved incrementally and merged at the end of processing.
 }
 \description{
-Conditional Lapply or Bplapply with Optional Batch Processing.
+Conditional lapply or bplapply with optional batch processing.
 }
 \details{
 The function operates in two modes:
@@ -56,7 +56,7 @@ Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
 loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
 
 # Batch processing
-loop(1:1000, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
+loop(1:10, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
 
 }
 \keyword{package_utils}

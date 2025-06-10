@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{process_batch}
 \alias{process_batch}
-\title{Process and Save a Batch of Results.}
+\title{Process and save a batch of results.}
 \usage{
 process_batch(
   batch,
@@ -36,7 +36,7 @@ process_batch(
 This function does not return a value. It saves the processed batch results to disk as a \code{.qs} file.
 }
 \description{
-Process and Save a Batch of Results.
+Process and save a batch of results.
 }
 \details{
 The function applies \code{FUN} to each element in \code{batch}, saves the results to a file named

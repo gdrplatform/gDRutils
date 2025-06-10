@@ -128,7 +128,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
-#' Conditional Lapply or Bplapply with Optional Batch Processing.
+#' Conditional lapply or bplapply with optional batch processing.
 #'
 #' @param x Vector (atomic or list) or an expression object.
 #' Other objects (including classed objects) will be coerced by
@@ -170,7 +170,6 @@ loop <- function(x,
                  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
                  ...) {
   
-  # assertions to check input validity using checkmate
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
@@ -252,7 +251,7 @@ loop <- function(x,
   }
 }
 
-#' Process and Save a Batch of Results.
+#' Process and save a batch of results.
 #'
 #' @param batch A subset of the vector or list `x` to be processed.
 #' @param start_index Integer indicating the starting index of the batch in the original vector `x`.
@@ -275,7 +274,6 @@ loop <- function(x,
 #' @keywords package_utils
 #' @export
 process_batch <- function(batch, start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...) {
-  # assertions to check input validity using checkmate
   checkmate::assert_vector(batch, null.ok = FALSE)
   checkmate::assert_count(start_index, positive = TRUE)
   checkmate::assert_string(fun_name)
