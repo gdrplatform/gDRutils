@@ -273,7 +273,13 @@ loop <- function(x,
 #'
 #' @keywords package_utils
 #' @export
-process_batch <- function(batch, start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...) {
+process_batch <- function(batch, 
+                          start_index, 
+                          fun_name, 
+                          unique_id, 
+                          total_iterations, 
+                          temp_dir, 
+                          FUN, ...) {
   checkmate::assert_vector(batch, null.ok = FALSE)
   checkmate::assert_count(start_index, positive = TRUE)
   checkmate::assert_string(fun_name)
