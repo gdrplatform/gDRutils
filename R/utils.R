@@ -256,7 +256,7 @@ loop <- function(x,
 #' @param batch A subset of the vector or list `x` to be processed.
 #' @param start_index Integer indicating the starting index of the batch in the original vector `x`.
 #' @param fun_name Character string representing the name of the function `FUN` for use in file naming.
-#' @param unique_id Unique identifier for the current task and user to ensure file uniqueness.
+#' @param unique_id String with unique identifier for the current task and user to ensure file uniqueness.
 #' @param total_iterations Integer indicating the total number of iterations in the original vector `x`.
 #' @param temp_dir Character string specifying the directory where batch results are saved.
 #' @param FUN A user-defined function to apply to each element of the batch.
