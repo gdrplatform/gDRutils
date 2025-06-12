@@ -203,7 +203,11 @@ loop <- function(x,
     indices <- seq(batch_size, total_iterations, by = batch_size)
     
     completed_batches <- vapply(indices, function(start_index) {
-      file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+      file_path <- file.path(temp_dir,
+                             paste0(fun_name, "_",
+                                    unique_id, "_",
+                                    start_index, "_of_",
+                                    total_iterations, "_batch.qs"))
       file.exists(file_path)
     }, logical(1))
     
@@ -216,18 +220,24 @@ loop <- function(x,
     if (parallelize) {
       BiocParallel::bplapply(indices[indices >= start_index], function(start_index) {
         end_index <- min(start_index, total_iterations)
-        process_batch(x[(start_index - batch_size + 1):end_index], start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+        process_batch(x[(start_index - batch_size + 1):end_index],
+                      start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
       })
     } else {
       lapply(indices[indices >= start_index], function(start_index) {
         end_index <- min(start_index, total_iterations)
-        process_batch(x[(start_index - batch_size + 1):end_index], start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+        process_batch(x[(start_index - batch_size + 1):end_index],
+                      start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
       })
     }
     
     final_results <- list()
     for (start_index in indices) {
-      file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+      file_path <- file.path(temp_dir,
+                             paste0(fun_name, "_",
+                                    unique_id, "_",
+                                    start_index, "_of_",
+                                    total_iterations, "_batch.qs"))
       if (file.exists(file_path)) {
         batch_results <- qs::qread(file_path)
         final_results <- c(final_results, batch_results)
@@ -235,7 +245,11 @@ loop <- function(x,
     }
     
     for (start_index in indices) {
-      file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+      file_path <- file.path(temp_dir,
+                             paste0(fun_name, "_",
+                                    unique_id, "_",
+                                    start_index, "_of_",
+                                    total_iterations, "_batch.qs"))
       if (file.exists(file_path)) {
         file.remove(file_path)
       }
@@ -292,7 +306,11 @@ process_batch <- function(batch,
   for (i in seq_along(batch)) {
     results[[i]] <- FUN(batch[[i]], ...)
   }
-  file_path <- file.path(temp_dir, paste0(fun_name, "_", unique_id, "_", start_index, "_of_", total_iterations, "_batch.qs"))
+  file_path <- file.path(temp_dir,
+                         paste0(fun_name, "_",
+                                unique_id, "_",
+                                start_index, "_of_",
+                                total_iterations, "_batch.qs"))
   qs::qsave(results, file_path)
   invisible(gc()) # clear memory after saving the batch
 }
