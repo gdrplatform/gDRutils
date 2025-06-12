@@ -288,7 +288,7 @@ process_batch <- function(batch,
   checkmate::assert_string(temp_dir)
   checkmate::assert_function(FUN)
   
-  results <- setNames(vector("list", length(batch)), names(batch))
+  results <- stats::setNames(vector("list", length(batch)), names(batch))
   for (i in seq_along(batch)) {
     results[[i]] <- FUN(batch[[i]], ...)
   }

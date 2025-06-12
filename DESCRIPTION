@@ -28,6 +28,7 @@ Imports:
     BumpyMatrix,
     checkmate,
     data.table,
+    digest,
     drc,
     jsonlite,
     jsonvalidate,
@@ -37,6 +38,7 @@ Imports:
     stats,
     stringr,
     SummarizedExperiment,
+    qs,
     utils
 Suggests:
     BiocManager,
@@ -49,7 +51,6 @@ Suggests:
     lintr,
     mockery,
     purrr,
-    qs,
     rcmdcheck,
     rmarkdown,
     scales,

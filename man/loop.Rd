@@ -17,7 +17,7 @@ loop(
 \arguments{
 \item{x}{Vector (atomic or list) or an expression object.
 Other objects (including classed objects) will be coerced by
-base::as.list.}
+\link[base]{as.list}}
 
 \item{FUN}{A user-defined function to apply to each element of \code{x}.}
 

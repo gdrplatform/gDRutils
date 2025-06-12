@@ -22,7 +22,7 @@ process_batch(
 
 \item{fun_name}{Character string representing the name of the function \code{FUN} for use in file naming.}
 
-\item{unique_id}{Unique identifier for the current task and user to ensure file uniqueness.}
+\item{unique_id}{String with unique identifier for the current task and user to ensure file uniqueness.}
 
 \item{total_iterations}{Integer indicating the total number of iterations in the original vector \code{x}.}
 
