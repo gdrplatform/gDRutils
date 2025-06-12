@@ -132,7 +132,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #'
 #' @param x Vector (atomic or list) or an expression object.
 #' Other objects (including classed objects) will be coerced by
-#' base::as.list.
+#' \link[base]{as.list}
 #' @param FUN A user-defined function to apply to each element of `x`.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
 #' Defaults to \code{TRUE}.
