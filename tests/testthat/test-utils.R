@@ -147,11 +147,61 @@ test_that("apply_bumpy_function works as expected", {
 })
 
 test_that("loop works as expected", {
+  # test regular processing mode
   n <- 10
   listRunif <- lapply(seq_len(n), runif)
-  sumOfList <- loop(listRunif, sum)
-  expect_true(is(sumOfList, "list"))
+  sumOfList <- loop(listRunif, sum, parallelize = FALSE, use_batch = FALSE)
+  expect_true(is.list(sumOfList))
   expect_length(unlist(sumOfList), n)
+  
+  # test parallel processing mode
+  sumOfListParallel <- loop(listRunif, sum, parallelize = TRUE, use_batch = FALSE)
+  expect_true(is.list(sumOfListParallel))
+  expect_length(unlist(sumOfListParallel), n)
+  
+  # test batch processing mode
+  n_batch <- 200
+  listRunifBatch <- lapply(seq_len(n_batch), runif)
+  sumOfListBatch <- loop(listRunifBatch, sum, parallelize = FALSE, use_batch = TRUE, batch_size = 50)
+  expect_true(is.list(sumOfListBatch))
+  expect_length(unlist(sumOfListBatch), n_batch)
+  
+  # test handling of empty input
+  sumOfEmptyList <- loop(list(), sum, parallelize = FALSE, use_batch = FALSE)
+  expect_true(is.list(sumOfEmptyList))
+  expect_length(sumOfEmptyList, 0)
+  
+  # test preservation of names in batch mode
+  namedListRunif <- setNames(lapply(seq_len(n_batch), runif), paste0("element_", seq_len(n_batch)))
+  sumOfNamedListBatch <- loop(namedListRunif, sum, parallelize = FALSE, use_batch = TRUE, batch_size = 20)
+  expect_true(is.list(sumOfNamedListBatch))
+  expect_length(unlist(sumOfNamedListBatch), n_batch)
+  expect_equal(names(sumOfNamedListBatch), names(namedListRunif))
+})
+
+test_that("process_batch works as expected", {
+  temp_dir <- tempdir()
+  
+  n <- 50
+  namedBatch <- setNames(lapply(seq_len(n), runif), paste0("element_", seq_len(n)))
+  process_batch(namedBatch, start_index = 1, fun_name = "test_fun", unique_id = "test_id", 
+                total_iterations = n, temp_dir = temp_dir, FUN = sum)
+  
+  file_path <- file.path(temp_dir, "test_fun_test_id_1_of_50_batch.qs")
+  expect_true(file.exists(file_path))
+  
+  saved_results <- qs::qread(file_path)
+  expect_true(is.list(saved_results))
+  expect_length(saved_results, n)
+  expect_equal(names(saved_results), names(namedBatch))
+  
+  expect_true(file.remove(file_path))
+  
+  process_batch(list(), start_index = 1, fun_name = "test_fun", unique_id = "test_id", 
+                total_iterations = 1, temp_dir = temp_dir, FUN = sum)
+  
+  empty_file_path <- file.path(temp_dir, "test_fun_test_id_1_of_0_batch.qs")
+  expect_false(file.exists(empty_file_path))
 })
 
 test_that("get_synthetic_data works as expected", {

@@ -2,32 +2,61 @@
 % Please edit documentation in R/utils.R
 \name{loop}
 \alias{loop}
-\title{Lapply or bplapply.}
+\title{Conditional lapply or bplapply with optional batch processing.}
 \usage{
-loop(x, FUN, parallelize = TRUE, ...)
+loop(
+  x,
+  FUN,
+  parallelize = TRUE,
+  use_batch = as.logical(Sys.getenv("GDR_USE_BATCH", "FALSE")),
+  temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
+  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
+  ...
+)
 }
 \arguments{
-\item{x}{Vector (atomic or list) or an ‘expression’ object.
+\item{x}{Vector (atomic or list) or an expression object.
 Other objects (including classed objects) will be coerced by
-‘base::as.list’.}
+\link[base]{as.list}}
 
-\item{FUN}{A user-defined function.}
+\item{FUN}{A user-defined function to apply to each element of \code{x}.}
 
 \item{parallelize}{Logical indicating whether or not to parallelize the computation.
 Defaults to \code{TRUE}.}
 
-\item{...}{optional argument passed to
-\link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
+\item{use_batch}{Logical indicating whether to use batch processing to save intermediate results.
+Defaults to \code{FALSE}.}
+
+\item{temp_dir}{Character string specifying the directory where batch results are saved.
+Defaults to \code{tempdir()}.}
+
+\item{batch_size}{Integer specifying the number of elements to process in each batch during batch mode.
+Defaults to \code{100}.}
+
+\item{...}{Optional arguments passed to \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
 else to \link[base]{lapply}.}
 }
 \value{
 List containing output of \code{FUN} applied to every element in \code{x}.
+When batch processing is enabled, results are saved incrementally and merged at the end of processing.
 }
 \description{
-Lapply or bplapply.
+Conditional lapply or bplapply with optional batch processing.
+}
+\details{
+The function operates in two modes:
+\enumerate{
+\item Regular mode: Directly applies \code{FUN} to the elements using \code{lapply} or \code{bplapply}.
+\item Batch mode: Saves results in batches to disk, allowing computation to resume from the last saved step.
+Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
+}
 }
 \examples{
-loop(list(c(1,2), c(2,3)), sum, parallelize = FALSE)
+# Regular processing
+loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
+
+# Batch processing
+loop(1:10, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
 
 }
 \keyword{package_utils}

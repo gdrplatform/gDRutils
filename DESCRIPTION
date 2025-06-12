@@ -1,8 +1,8 @@
 Package: gDRutils
 Type: Package
 Title: A package with helper functions for processing drug response data
-Version: 1.7.9
-Date: 2025-06-04
+Version: 1.7.10
+Date: 2025-06-09
 Authors@R: c(person("Bartosz", "Czech", role=c("aut"),
                    comment = c(ORCID = "0000-0002-9908-3007")),
              person("Arkadiusz", "Gladki", role=c("cre", "aut"), email="gladki.arkadiusz@gmail.com",
@@ -28,6 +28,7 @@ Imports:
     BumpyMatrix,
     checkmate,
     data.table,
+    digest,
     drc,
     jsonlite,
     jsonvalidate,
@@ -37,6 +38,7 @@ Imports:
     stats,
     stringr,
     SummarizedExperiment,
+    qs,
     utils
 Suggests:
     BiocManager,
@@ -49,7 +51,6 @@ Suggests:
     lintr,
     mockery,
     purrr,
-    qs,
     rcmdcheck,
     rmarkdown,
     scales,
