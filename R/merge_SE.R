@@ -31,8 +31,15 @@ merge_MAE <- function(MAElist,
   
   experiments <- unique(unlist(lapply(MAElist, names)))
   
-  merged_SE_assays <- lapply(experiments, function(x) {
-    merge_SE(lapply(MAElist, function(y) y[[x]]))
+  merged_SE_assays <- lapply(experiments, function(exp_name) {
+    exp_list <- lapply(MAElist, function(mae) {
+      if (exp_name %in% names(mae)) {
+        mae[[exp_name]]
+      } else {
+        NULL
+      }
+    })
+    merge_SE(exp_list)
   })
   names(merged_SE_assays) <- experiments
   
