@@ -39,6 +39,7 @@ merge_MAE <- function(MAElist,
         NULL
       }
     })
+    exp_list <- exp_list[!vapply(exp_list, is.null, FUN.VALUE = logical(1))]
     merge_SE(exp_list)
   })
   names(merged_SE_assays) <- experiments
