@@ -93,4 +93,14 @@ test_that("merge_MAE works as expected", {
     SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(listMAE[[1]])[[1]]),
     SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(mergedMAE$result)[[1]])
   )
+  
+  listMAE_mixed <- listMAE
+  MultiAssayExperiment::experiments(listMAE_mixed[[1]]) <- MultiAssayExperiment::experiments(listMAE_mixed[[1]])[2]
+  mergedMAE2 <- purrr::quietly(merge_MAE)(listMAE_mixed)
+  checkmate::expect_class(mergedMAE2$result, "MultiAssayExperiment")
+  validate_MAE(mergedMAE2$result)
+  expect_identical(
+    SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(listMAE_mixed[[1]])[[1]]),
+    SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(mergedMAE2$result)[[1]])
+  )
 })
