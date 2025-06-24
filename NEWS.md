@@ -1,3 +1,6 @@
+## gDRutils 1.7.11 - 2025-06-24
+* add support in `merge_MAE` for merging mixed experiments
+
 ## gDRutils 1.7.10 - 2025-06-09
 * update `loop` to support batch approach
 
