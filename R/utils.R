@@ -636,13 +636,32 @@ average_biological_replicates_dt <- function(
     id_cols <- prettify_flat_metrics(get_header("id"))
   }
   
-  average_fields <- setdiff(names(Filter(is.numeric, data)), c(unlist(pidfs), var, iso_cols))
+  max_fields <- c("maxlog10Concentration", "N_conc")
+  regex_max_fields <- paste0(c(max_fields, prettify_flat_metrics(max_fields, human_readable = TRUE)),
+                             collapse = "|")
+  max_fields <- grep(regex_max_fields, names(data), value = TRUE)
+  
+
+  p_val_col <- "p_value"
+  regex_p_val_col <- paste0(c(p_val_col, prettify_flat_metrics(p_val_col, human_readable = TRUE)),
+                             collapse = "|")
+  p_val_col <- grep(regex_p_val_col, names(data), value = TRUE)
+  
+  r2_col <- "r2"
+  regex_r2_col <- paste0(c(r2_col, prettify_flat_metrics(r2_col, human_readable = TRUE)),
+                            collapse = "|")
+  r2_col <- grep(regex_r2_col, names(data), value = TRUE)
+  
+  average_fields <- setdiff(names(Filter(is.numeric, data)),
+                            c(unlist(pidfs), var, iso_cols, drop_cols, max_fields, p_val))
   # don't  average across _sd$ fields (to avoid adding unexpected columns, i.e. x_sd_sd_sd_sd)
   average_fields <- grep("_sd$", average_fields, invert = TRUE, value = TRUE)
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
-  fit_type_average_fields <- intersect(fit_type_average_fields, names(dt))
   blacklisted_fields <- intersect(blacklisted_fields, names(dt))
-  group_by <- setdiff(names(data), c(average_fields, var, id_cols, fit_type_average_fields, blacklisted_fields))
+  group_by <- setdiff(names(data), c(average_fields, var, id_cols, blacklisted_fields, max_fields, p_val_col))
+  
+  
+  replicate_iden_vars <- intersect(c(group_by, var), names(data))
   
   if (add_sd) {
     # Calculate standard deviation for both average_fields and geometric_average_fields
@@ -658,16 +677,32 @@ average_biological_replicates_dt <- function(
     data <- data[, count := .N, by = group_by]
   }
   
-  data <- data[, (var) := NULL][, 
-                                (average_fields) := lapply(.SD, mean, na.rm = TRUE), 
-                                .SDcols = average_fields, 
-                                by = group_by][,
-                                               (geometric_average_fields) := lapply(.SD, FUN = function(x) {
-                                                 geometric_mean(x, fixed = fixed)
-                                               }), 
-                                               .SDcols = geometric_average_fields, 
-                                               by = group_by]
+  # 1. Remove the specified variable column
+  data[, (var) := NULL]
   
+  # 2. For max_fields - take the maximum value
+  data[, (max_fields) := lapply(.SD, max, na.rm = TRUE),
+       .SDcols = max_fields, by = group_by]
+  
+  # 3. For p_val_col - average using Fisher's method
+  data[, (p_val_col) := lapply(.SD, average_pvalues),
+       .SDcols = p_val_col, by = group_by]
+  
+  # 4. For standard numeric fields - use arithmetic mean
+  data[, (average_fields) := lapply(.SD, mean, na.rm = TRUE),
+       .SDcols = average_fields, by = group_by]
+  
+  # 5. For specified fields - use geometric mean
+  data[, (geometric_average_fields) := lapply(.SD, FUN = function(x) {
+    geometric_mean(x, fixed = fixed)
+  }),
+  .SDcols = geometric_average_fields, by = group_by]
+  
+  # 6. Choose better model 
+  data <- data.table::rbindlist(lapply(r2_col, function(col) {
+    data[data[, .I[which.max(get(col))], by = setdiff(group_by, fit_type_average_fields)]$V]
+  }), use.names = TRUE, fill = TRUE)
+
   unique(data, by = group_by)
 }
 
@@ -1430,4 +1465,37 @@ get_gDR_session_info <- function(pattern = "^gDR") {
   }
   
   unique(pkg_data[, .(Package, Version = UsedVersion)])
+}
+
+#' Average p-values using Fisher's method
+#' Combines a vector of p-values into a single representative p-value. 
+#' It implements Fisher's method, where the test statistic is calculated as 
+#' \deqn{X_{2k}^2 = -2 \sum_{i=1}^{k} \ln(p_i)}. 
+#' This statistic follows a chi-squared distribution with 2k degrees of freedom (where k is the number
+#' of p-values), from which the combined p-value is derived.
+#'
+#' @param p_values A numeric vector of p-values. Values are expected to be between 0 and 1.
+#'   The function assumes at least one non-NA value is provided.
+#'
+#' @return A single, combined p-value as a numeric value.
+#' @keywords internal
+average_pvalues <- function(p_values) {
+  checkmate::assert_numeric(p_values, lower = 0, upper = 1, min.len = 1)
+  
+  p_values <- stats::na.omit(p_values)
+  k <- length(p_values)
+  
+  if (k == 0) {
+    return(NA)
+  }
+  
+  if (k == 1) {
+    return(p_values)
+  }
+  
+  # Fisher's method formula: chi-squared statistic
+  chi_sq_stat <- -2 * sum(log(p_values))
+  
+  # Combined p-value from the chi-squared distribution with 2k degrees of freedom
+  stats::pchisq(chi_sq_stat, df = 2 * k, lower.tail = FALSE)
 }

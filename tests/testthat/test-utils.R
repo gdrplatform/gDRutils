@@ -270,8 +270,8 @@ test_that("average_biological_replicates_dt works as expected", {
                                                         prettified = TRUE,
                                                         add_sd = TRUE)
   
-  expect_equal(dim(avg_metrics_data2), c(40, 44))
-  expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 15)
+  expect_equal(dim(avg_metrics_data2), c(40, 42))
+  expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 13)
   expect_true("count" %in% names(avg_metrics_data2))
   
   # protection against regression
@@ -382,6 +382,7 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_identical(avg_vars, NULL)
   ### _sd cols are present
   expect_true(NROW(grep("_sd$", colnames(ls_iso_avg))) > 0)
+  
   
 })
 
