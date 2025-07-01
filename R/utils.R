@@ -699,9 +699,11 @@ average_biological_replicates_dt <- function(
   .SDcols = geometric_average_fields, by = group_by]
   
   # 6. Choose better model 
-  data <- data.table::rbindlist(lapply(r2_col, function(col) {
-    data[data[, .I[which.max(get(col))], by = setdiff(group_by, fit_type_average_fields)]$V]
-  }), use.names = TRUE, fill = TRUE)
+  if (NROW(r2_col)) {
+    data <- data.table::rbindlist(lapply(r2_col, function(col) {
+      data[data[, .I[which.max(get(col))], by = setdiff(group_by, fit_type_average_fields)]$V1]
+    }), use.names = TRUE, fill = TRUE)
+  }
 
   unique(data, by = group_by)
 }
