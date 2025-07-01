@@ -1,3 +1,6 @@
+## gDRutils 1.7.12 - 2025-07-01
+* refactor `average_biological_replicates_dt` to properly average data
+
 ## gDRutils 1.7.11 - 2025-06-24
 * add support in `merge_MAE` for merging mixed experiments
 
