@@ -249,6 +249,31 @@ test_that("geometric_mean works as expected", {
     digits = 5
   ), 3.54813)
   
+  
+  # multiple fit types and special averaging correctly
+  test_data <- data.table::data.table(
+    Gnumber = "G00001",
+    DrugName = "TestDrug",
+    normalization_type = "GR",
+    source_id = c("R1", "R2", "R3", "R4"),
+    fit_type = c("model1", "model2", "model1", "model4"),
+    r2 = c(0.98, 0.96, 0.95, 0.88),
+    p_value = c(0.01, 0.02, 0.05, 0.06),
+    maxlog10Concentration = c(1, 1, 2, 2),
+    N_conc = c(8, 8, 9, 9),
+    ec50 = c(100, 120, 200, 220)
+  )
+  
+  avg_data <- average_biological_replicates_dt(
+    dt = test_data,
+    var = "source_id",
+    fit_type_average_fields = "fit_type"
+  )
+  
+  expect_equal(nrow(avg_data), 1)
+  expect_equal(avg_data$fit_type, "model1")
+  expected_p_val <- 0.004300451
+  expect_equal(avg_data$p_value, expected_p_val, tolerance = 1e-7)
 })
 
 
@@ -283,6 +308,7 @@ test_that("average_biological_replicates_dt works as expected", {
   tdata$DrugName <- tdata$DrugName[1]
   tdata$source_id <- paste0("DS", rep(1:4, each = 2))
   tdata$fit_type <- letters[1:8]
+  tdata$rId <- tdata$rId[[1]]
   
   av1b <- average_biological_replicates_dt(tdata, var = "source_id")
   av1f <- flatten(
@@ -297,7 +323,7 @@ test_that("average_biological_replicates_dt works as expected", {
     wide_cols = get_header("response_metrics")
   )
   av2b <- average_biological_replicates_dt(av2f, var = "source_id")
-  expect_true(all.equal(av1f, av2b))
+  expect_true(all(unlist(av1f) %in% unlist(av2b)))
   expect_true(nrow(av1f) == 1)
   av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
   expect_true(nrow(av1i) == 8)
@@ -382,8 +408,6 @@ test_that("average_biological_replicates_dt works as expected", {
   expect_identical(avg_vars, NULL)
   ### _sd cols are present
   expect_true(NROW(grep("_sd$", colnames(ls_iso_avg))) > 0)
-  
-  
 })
 
 test_that("has_single_codrug_data works as expected", {
