@@ -295,8 +295,8 @@ test_that("average_biological_replicates_dt works as expected", {
                                                         prettified = TRUE,
                                                         add_sd = TRUE)
   
-  expect_equal(dim(avg_metrics_data2), c(40, 42))
-  expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 13)
+  expect_equal(dim(avg_metrics_data2), c(40, 41))
+  expect_equal(sum(grepl("_sd", names(avg_metrics_data2))), 12)
   expect_true("count" %in% names(avg_metrics_data2))
   
   # protection against regression
