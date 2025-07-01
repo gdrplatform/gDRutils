@@ -653,7 +653,7 @@ average_biological_replicates_dt <- function(
   r2_col <- grep(regex_r2_col, names(data), value = TRUE)
   
   average_fields <- setdiff(names(Filter(is.numeric, data)),
-                            c(unlist(pidfs), var, iso_cols, max_fields, p_val))
+                            c(unlist(pidfs), var, iso_cols, max_fields, p_val_col))
   # don't  average across _sd$ fields (to avoid adding unexpected columns, i.e. x_sd_sd_sd_sd)
   average_fields <- grep("_sd$", average_fields, invert = TRUE, value = TRUE)
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
