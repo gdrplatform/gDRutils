@@ -1,3 +1,6 @@
+## gDRutils 1.7.13 - 2025-07-14
+* add "maxlog10Concentration" and "N_conc" to headers list
+
 ## gDRutils 1.7.12 - 2025-07-01
 * refactor `average_biological_replicates_dt` to properly average data
 
