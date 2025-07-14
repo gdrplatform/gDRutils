@@ -148,7 +148,7 @@ HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
     "p_value",
     "rss",
     "maxlog10Concentration",
-    "N_conc,"
+    "N_conc",
     "x_sd_avg",
     "fit_type",
     "x_mean_sd",
