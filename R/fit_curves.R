@@ -487,7 +487,7 @@ logistic_metrics <- function(c, x_metrics) {
 #' @keywords fit_curves
 #' @export
 .setup_metric_output <- function() {
-  resp_metric_all_cols <- c(get_header("response_metrics"), "maxlog10Concentration", "N_conc")
+  resp_metric_all_cols <- get_header("response_metrics")
   # remove cols ending with "_sd"
   # they are not present in the primary assays 
   # but only with the assays followed by averaging of biological replicates
