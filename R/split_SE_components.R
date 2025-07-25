@@ -116,9 +116,12 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   trt_cols <- drug_cols
   cell_cols <- unique(c(cell_cols, cl_entries))
   if (combine_on == 1L) {
-    trt_cols <- c(trt_cols, remaining_cols)
+    # sort remaing cols to assure that rId across the assays will be the same
+    # example "Gnumber_bn" "Media" "fix5.aza"  
+    trt_cols <- c(trt_cols, sort(remaining_cols))
   } else if (combine_on == 2L) {
-    cell_cols <- c(cell_cols, remaining_cols)
+    # sort remaing cols to assure that cId across the assays will be the same
+    cell_cols <- c(cell_cols, sort(remaining_cols))
   } else {
     stop(sprintf("combine_on input: '%s' of class: '%s' is not supported",
                  combine_on, class(combine_on)))

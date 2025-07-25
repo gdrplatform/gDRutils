@@ -1,3 +1,6 @@
+## gDRutils 1.7.14 - 2025-07-25
+* improve logic in `split_SE_components`
+
 ## gDRutils 1.7.13 - 2025-07-14
 * add "maxlog10Concentration" and "N_conc" to headers list
 
