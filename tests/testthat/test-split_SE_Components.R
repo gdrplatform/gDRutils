@@ -76,8 +76,11 @@ test_that("split_SE_components sorts non-default columns", {
   test_df3$`a-fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df3), replace = TRUE)
   test_df3$`b-fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df3), replace = TRUE)
   md <- split_SE_components(test_df3)
-  expect_true("fix5-aza" %in% names(md$treatment_md))
   expect_identical(grep("fix5-aza", names(md$treatment_md), value = TRUE),
+                   c("a-fix5-aza", "b-fix5-aza", "fix5-aza"))
+  
+  md2 <- split_SE_components(test_df3, combine_on = 2)
+  expect_identical(grep("fix5-aza", names(md2$condition_md), value = TRUE),
                    c("a-fix5-aza", "b-fix5-aza", "fix5-aza"))
 })
 
