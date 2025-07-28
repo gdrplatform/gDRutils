@@ -255,7 +255,7 @@ test_that("geometric_mean works as expected", {
     Gnumber = "G00001",
     DrugName = "TestDrug",
     normalization_type = "GR",
-    source_id = c("R1", "R2", "R3", "R4"),
+    dilution_drug = c("R1", "R2", "R3", "R4"),
     fit_type = c("model1", "model2", "model1", "model4"),
     r2 = c(0.98, 0.96, 0.95, 0.88),
     p_value = c(0.01, 0.02, 0.05, 0.06),
@@ -266,7 +266,7 @@ test_that("geometric_mean works as expected", {
   
   avg_data <- average_biological_replicates_dt(
     dt = test_data,
-    var = "source_id",
+    var = "dilution_drug",
     fit_type_average_fields = "fit_type"
   )
   
@@ -306,36 +306,36 @@ test_that("average_biological_replicates_dt works as expected", {
   tdata <- smetrics_data[1:8, ]
   tdata$Gnumber <- tdata$Gnumber[1]
   tdata$DrugName <- tdata$DrugName[1]
-  tdata$source_id <- paste0("DS", rep(1:4, each = 2))
+  tdata$dilution_drug <- paste0("DS", rep(1:4, each = 2))
   tdata$fit_type <- letters[1:8]
   tdata$rId <- tdata$rId[[1]]
   
-  av1b <- average_biological_replicates_dt(tdata, var = "source_id")
+  av1b <- average_biological_replicates_dt(tdata, var = "dilution_drug")
   av1f <- flatten(
     av1b,
-    groups = c("normalization_type", "fit_source"),
+    groups = c("normalization_type", "fit_dilution_drug"),
     wide_cols = get_header("response_metrics")
   )
   
   av2f <- flatten(
     tdata,
-    groups = c("normalization_type", "fit_source"),
+    groups = c("normalization_type", "fit_dilution_drug"),
     wide_cols = get_header("response_metrics")
   )
-  av2b <- average_biological_replicates_dt(av2f, var = "source_id")
+  av2b <- average_biological_replicates_dt(av2f, var = "dilution_drug")
   expect_true(all(unlist(av1f) %in% unlist(av2b)))
   expect_true(nrow(av1f) == 1)
-  av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
+  av1i <- average_biological_replicates_dt(tdata, var = "dilution_drug", fit_type_average_fields = "bad_value")
   expect_true(nrow(av1i) == 8)
   
   # two additional variables for averaging
   ligand_data <- get_synthetic_data("finalMAE_wLigand")
   lmetrics_data <- convert_se_assay_to_dt(ligand_data[[1]], "Metrics")
-  lmetrics_data$source_id <- "ds_small_ligand"
+  lmetrics_data$dilution_drug <- "ds_small_ligand"
   
   sdata <- get_synthetic_data("finalMAE_small")
   smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
-  smetrics_data$source_id <- "ds_small"
+  smetrics_data$dilution_drug <- "ds_small"
   
   lsmetrics_data <- data.table::rbindlist(list(lmetrics_data, smetrics_data), fill = TRUE)
   avg_vars <- get_additional_variables(lsmetrics_data)
@@ -351,14 +351,14 @@ test_that("average_biological_replicates_dt works as expected", {
   
   ## scores
   cml_scores_data <- convert_se_assay_to_dt(cml_data, "scores")
-  cml_scores_data$source_id <- "cm"
+  cml_scores_data$dilution_drug <- "cm"
   cms_scores_data <- convert_se_assay_to_dt(cms_data, "scores")
-  cms_scores_data$source_id <- "cms"
+  cms_scores_data$dilution_drug <- "cms"
   ls_scores_data <- data.table::rbindlist(list(cml_scores_data, cms_scores_data), fill = TRUE)
   avg_vars <- get_additional_variables(ls_scores_data)
   
   ### single additional var
-  expect_identical(avg_vars, "source_id")
+  expect_identical(avg_vars, "dilution_drug")
   ### no _sd cols
   expect_false(NROW(grep("_sd$", colnames(ls_scores_data))) > 0)
   
@@ -371,14 +371,14 @@ test_that("average_biological_replicates_dt works as expected", {
   
   ## excess
   cml_excess_data <- convert_se_assay_to_dt(cml_data, "excess")
-  cml_excess_data$source_id <- "cm"
+  cml_excess_data$dilution_drug <- "cm"
   cms_excess_data <- convert_se_assay_to_dt(cms_data, "excess")
-  cms_excess_data$source_id <- "cms"
+  cms_excess_data$dilution_drug <- "cms"
   ls_excess_data <- data.table::rbindlist(list(cml_excess_data, cms_excess_data), fill = TRUE)
   avg_vars <- get_additional_variables(ls_excess_data)
   
   ### single additional var
-  expect_identical(avg_vars, "source_id")
+  expect_identical(avg_vars, "dilution_drug")
   ### no _sd cols
   expect_false(NROW(grep("_sd$", colnames(ls_excess_data))) > 0)
   
@@ -391,14 +391,14 @@ test_that("average_biological_replicates_dt works as expected", {
   
   ## iso
   cml_iso_data <- convert_se_assay_to_dt(cml_data, "isobolograms")
-  cml_iso_data$source_id <- "cm"
+  cml_iso_data$dilution_drug <- "cm"
   cms_iso_data <- convert_se_assay_to_dt(cms_data, "isobolograms")
-  cms_iso_data$source_id <- "cms"
+  cms_iso_data$dilution_drug <- "cms"
   ls_iso_data <- data.table::rbindlist(list(cml_iso_data, cms_iso_data), fill = TRUE)
   avg_vars <- get_additional_variables(ls_iso_data)
   
   ### single additional var
-  expect_identical(avg_vars, "source_id")
+  expect_identical(avg_vars, "dilution_drug")
   ### no _sd cols
   expect_false(NROW(grep("_sd$", colnames(ls_iso_data))) > 0)
   
@@ -864,17 +864,17 @@ test_that("cap_assay_infinities works as expected", {
   expect_true(all(names(scmetrics_data3) == names(scmetrics_data)))
   
   expect_equal(unique(
-    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
-      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
-      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50 /
-      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50), 5)
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][dilution_drug == "codilution", ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][dilution_drug == "codilution", ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50 /
-      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50), 5)
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][dilution_drug == "codilution", ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][dilution_drug == "codilution", ]$xc50), 5)
   
   ## data without infinities
   scmetrics_data4 <- cap_assay_infinities(scaveraged_data, 
@@ -882,8 +882,8 @@ test_that("cap_assay_infinities works as expected", {
                                           experiment_name = get_supported_experiments("combo"))
   expect_identical(scmetrics_data2, scmetrics_data4)
   
-  ## lack of source - codilution_fittings
-  scmetrics_data_lack_1 <- data.table::copy(scmetrics_data)[source != "codilution_fittings"]
+  ## lack of dilution_drug - codilution
+  scmetrics_data_lack_1 <- data.table::copy(scmetrics_data)[dilution_drug != "codilution"]
   
   scmetrics_data2 <- cap_assay_infinities(scaveraged_data, 
                                           scmetrics_data_lack_1, 
@@ -911,14 +911,14 @@ test_that("cap_assay_infinities works as expected", {
   expect_true(all(names(scmetrics_data3) == names(scmetrics_data_lack_1)))
   
   expect_equal(unique(
-    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
-      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
-      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50), 5)
   
-  ## lack of source - col_fittings
-  scmetrics_data_lack_2 <- data.table::copy(scmetrics_data)[source != "col_fittings"]
+  ## lack of dilution_drug - drug_1
+  scmetrics_data_lack_2 <- data.table::copy(scmetrics_data)[dilution_drug != "drug_1"]
   
   scmetrics_data2 <- cap_assay_infinities(scaveraged_data, 
                                           scmetrics_data_lack_2, 
@@ -946,20 +946,20 @@ test_that("cap_assay_infinities works as expected", {
   expect_true(all(names(scmetrics_data3) == names(scmetrics_data_lack_2)))
   
   expect_equal(unique(
-    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
-      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50 /
-      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source %in% c("col_fittings", "row_fittings"), ]$xc50), 5)
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][dilution_drug %in% c("drug_1", "drug_2"), ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data3[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50 /
-      scmetrics_data2[order(x_mean)][inf_idx_lower, ][source == "codilution_fittings", ]$xc50), 5)
+    scmetrics_data3[order(x_mean)][inf_idx_lower, ][dilution_drug == "codilution", ]$xc50 /
+      scmetrics_data2[order(x_mean)][inf_idx_lower, ][dilution_drug == "codilution", ]$xc50), 5)
   expect_equal(unique(
-    scmetrics_data2[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50 /
-      scmetrics_data3[order(x_mean)][inf_idx_upper, ][source == "codilution_fittings", ]$xc50), 5)
+    scmetrics_data2[order(x_mean)][inf_idx_upper, ][dilution_drug == "codilution", ]$xc50 /
+      scmetrics_data3[order(x_mean)][inf_idx_upper, ][dilution_drug == "codilution", ]$xc50), 5)
   
-  ## NA in source 
-  scmetrics_data_NA <- data.table::copy(scmetrics_data)[, source := NA]
+  ## NA in dilution_drug 
+  scmetrics_data_NA <- data.table::copy(scmetrics_data)[, dilution_drug := NA]
   
   scmetrics_data2 <- cap_assay_infinities(scaveraged_data, 
                                           scmetrics_data_NA, 
@@ -981,13 +981,13 @@ test_that("cap_assay_infinities works as expected", {
   
   expect_true(all(names(scmetrics_data2) == names(scmetrics_data_NA)))
   
-  ## list with combined standardized conc and conc2 are longer than in source data
+  ## list with combined standardized conc and conc2 are longer than in dilution_drug data
   cmetrics_d <- data.table::data.table(
     DrugName = rep("drug_001", 14),
     DrugName_2 = rep("drug_021", 14),
     CellLineName = rep("celllinename_AZ", 14),
     xc50 = withr::with_seed(42, rnorm(n = 14, mean = 0.11, sd = 0.13)),
-    source = rep("codilution_fittings", 14),
+    dilution_drug = rep("codilution", 14),
     normalization_type = rep(c("RV", "GR"), 7),
     ratio = rep(c(0.006, 0.050, 0.200, 0.500, 2.000, 10.000, 40.000), each = 2)
   )
