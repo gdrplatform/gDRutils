@@ -70,4 +70,15 @@ test_that("split_SE_components works with colnames with -", {
   expect_true("fix5-aza" %in% names(md$treatment_md))
 })
 
+test_that("split_SE_components sorts non-default columns", {
+  test_df3 <- data.table::copy(test_df)
+  test_df3$`fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df3), replace = TRUE)
+  test_df3$`a-fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df3), replace = TRUE)
+  test_df3$`b-fix5-aza` <- sample(c(0.5, 0), size = nrow(test_df3), replace = TRUE)
+  md <- split_SE_components(test_df3)
+  expect_true("fix5-aza" %in% names(md$treatment_md))
+  expect_identical(grep("fix5-aza", names(md$treatment_md), value = TRUE),
+                   c("a-fix5-aza", "b-fix5-aza", "fix5-aza"))
+})
+
 
