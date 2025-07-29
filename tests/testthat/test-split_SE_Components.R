@@ -82,6 +82,14 @@ test_that("split_SE_components sorts non-default columns", {
   md2 <- split_SE_components(test_df3, combine_on = 2)
   expect_identical(grep("fix5-aza", names(md2$condition_md), value = TRUE),
                    c("a-fix5-aza", "b-fix5-aza", "fix5-aza"))
+
+  # ensure identical rownames of DFrames
+  # in case of two data.tables with assay data with different order of non-default columns
+  test_df4 <- data.table::copy(test_df3)
+  data.table::setcolorder(test_df4, c("b-fix5-aza", "a-fix5-aza", "fix5-aza"))
+  md3 <- split_SE_components(test_df4)
+  expect_identical(sort(rownames(md$treatment_md)), sort(rownames(md3$treatment_md)))
 })
+
 
 
