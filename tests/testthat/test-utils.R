@@ -313,13 +313,13 @@ test_that("average_biological_replicates_dt works as expected", {
   av1b <- average_biological_replicates_dt(tdata, var = "dilution_drug")
   av1f <- flatten(
     av1b,
-    groups = c("normalization_type", "fit_dilution_drug"),
+    groups = c("normalization_type", "fit_source"),
     wide_cols = get_header("response_metrics")
   )
   
   av2f <- flatten(
     tdata,
-    groups = c("normalization_type", "fit_dilution_drug"),
+    groups = c("normalization_type", "fit_source"),
     wide_cols = get_header("response_metrics")
   )
   av2b <- average_biological_replicates_dt(av2f, var = "dilution_drug")
