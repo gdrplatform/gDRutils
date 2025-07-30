@@ -1,3 +1,6 @@
+## gDRutils 1.7.15 - 2025-07-30
+* fix `convert_se_assay_to_dt` to display appropriate columns
+
 ## gDRutils 1.7.14 - 2025-07-28
 * replace `row/col_fittings` in source for matrix Metrics assay
 
