@@ -263,7 +263,7 @@ convert_mae_assay_to_dt <- function(mae,
 #' Convert a SummarizedExperiment assay to a long data.table and conduct some post processing steps
 #'
 #' Convert an assay within a SummarizedExperiment object to a long data.table. Then
-#' condcut some post processing steps.
+#' conduct some post processing steps.
 #'
 #' Current strategy is per-assay specific.
 #' 1. combo assays: conversion to data.table only (with `wide_structure` = FALSE)
@@ -273,18 +273,19 @@ convert_mae_assay_to_dt <- function(mae,
 #'     * fix for 'EC50' and 'Metrics_rownames'
 #'     * flatten
 #'     * prettifying and dropping excess variables
-#'   - Metrics (same as Metrics_raw + capVals)
+#'   - Metrics (same as Metrics_raw + cap_values if `cap_values = TRUE`)
 #' 3. 'Normalization' and 'Averaged' assay:
 #'   - conversion to data.table (with `wide_structure` = TRUE)
 #'   - prettifying and dropping excess variables
 #'
 #' @details NOTE: to extract information about 'Control' data, simply call the
 #' function with the name of the assay holding data on controls.
-#' To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
+#' To extract the reference data in the same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
 #'
 #' @param se A SummarizedExperiment object holding raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within the \code{se}.
-#' @param output_table String of type name of the output data.table
+#' @param output_table String of type name of the output data.table.
+#' @param cap_values Logical indicating whether to apply capping (via `capVals`) for "Metrics" output. Default is FALSE.
 #' @return data.table representation of the data in \code{assay_name} with added information from \code{colData}.
 #'
 #' @examples
@@ -294,13 +295,15 @@ convert_mae_assay_to_dt <- function(mae,
 #' convert_se_assay_to_custom_dt(se, "Metrics", output_table = "Metrics_raw")
 #' convert_se_assay_to_custom_dt(se, "Metrics", output_table = "Metrics_initial")
 #' convert_se_assay_to_custom_dt(se, "Averaged")
+#' convert_se_assay_to_custom_dt(se, "Metrics", cap_values = TRUE)
 #'
 #' @seealso convert_se_assay_to_dt
 #' @keywords convert
 #' @export
 convert_se_assay_to_custom_dt <- function(se,
                                           assay_name,
-                                          output_table = NULL) {
+                                          output_table = NULL,
+                                          cap_values = FALSE) {
   
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
@@ -309,6 +312,8 @@ convert_se_assay_to_custom_dt <- function(se,
   checkmate::assert_choice(output_table,
                            c(get_assay_names(), "Metrics_initial", "Metrics_raw"),
                            null.ok = TRUE)
+  checkmate::assert_flag(cap_values)
+  
   if (is.null(output_table)) {
     output_table <- assay_name
   }
@@ -342,7 +347,6 @@ convert_se_assay_to_custom_dt <- function(se,
   }
   
   if (output_table %in% c("Metrics_raw", "Metrics", "Normalized", "Averaged")) {
-    
     # TODO GDR-2513 # nolint start
     # pidfs <- get_SE_identifiers(se)
     # udrugs <- unique(as.character(dt[[pidfs[["drug_name"]]]]))
@@ -353,14 +357,15 @@ convert_se_assay_to_custom_dt <- function(se,
     #   dt[vars] <- NULL
     # }
     # nolint end
-    futile.logger::flog.trace("Main App: \t renaming", name = "trace.logger")
-    #add identifiers specific for given SE
+    
+    # add identifiers specific for given SE
     colnames(dt) <- prettify_flat_metrics(colnames(dt), human_readable = TRUE)
   }
   
-  if (output_table == "Metrics") {
+  if (output_table == "Metrics" && cap_values) {
     dt <- capVals(dt)
   }
+  
   dt
 }
 
