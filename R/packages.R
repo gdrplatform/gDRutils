@@ -47,7 +47,8 @@ if (getRversion() >= "2.15.1") {
       "MaxVersion",
       "Package",
       "UsedVersion",
-      "Version"
+      "Version",
+      "dilution_drug"
     ),
     utils::packageName())
 }

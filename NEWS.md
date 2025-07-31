@@ -1,3 +1,6 @@
+## gDRutils 1.7.14 - 2025-07-28
+* replace `row/col_fittings` in source for matrix Metrics assay
+
 ## gDRutils 1.7.13 - 2025-07-14
 * add "maxlog10Concentration" and "N_conc" to headers list
 

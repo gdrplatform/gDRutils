@@ -28,7 +28,7 @@
     "cotrt_value_sd",
     "ratio",
     "ratio_sd",
-    "source",
+    "dilution_drug",
     "count",
     HEADERS_LIST[["response_metrics"]],
     as.character(HEADERS_LIST[["metrics_names"]])
