@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.14</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,19 +100,19 @@ during creating BumpyMatrix object</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">merge_assay</span><span class="op">(</span><span class="va">listSE</span>, <span class="st">"Normalized"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $DT</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       data_source Concentration Concentration_2 masked normalization_type     x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt;         &lt;num&gt;           &lt;num&gt; &lt;lgcl&gt;             &lt;fctr&gt; &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:      combo1   0.001000000             0.0  FALSE                 RV 0.957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:      combo1   0.001000000             0.2  FALSE                 RV 0.957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:      combo1   0.001000000             1.0  FALSE                 RV 0.957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:      combo1   0.003162278             0.0  FALSE                 RV 0.712</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:      combo1   0.003162278             0.2  FALSE                 RV 0.712</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2804:          sa   1.000000000              NA  FALSE                 GR 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2805:          sa   1.000000000              NA  FALSE                 GR 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2806:          sa   1.000000000              NA  FALSE                 GR 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2807:          sa   1.000000000              NA  FALSE                 GR 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2808:          sa   1.000000000              NA  FALSE                 GR 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       data_source Concentration Concentration_2 normalization_type     x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt;         &lt;num&gt;           &lt;num&gt;             &lt;fctr&gt; &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:      combo1   0.001000000             0.0                 RV 0.957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:      combo1   0.001000000             0.2                 RV 0.957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:      combo1   0.001000000             1.0                 RV 0.957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:      combo1   0.003162278             0.0                 RV 0.712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:      combo1   0.003162278             0.2                 RV 0.712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2804:          sa   1.000000000              NA                 GR 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2805:          sa   1.000000000              NA                 GR 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2806:          sa   1.000000000              NA                 GR 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2807:          sa   1.000000000              NA                 GR 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2808:          sa   1.000000000              NA                 GR 1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Gnumber DrugName drug_moa Gnumber_2 DrugName_2 drug_moa_2 Duration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;   &lt;char&gt;   &lt;char&gt;    &lt;char&gt;     &lt;char&gt;     &lt;char&gt;    &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:  G00002 drug_002    moa_A    G00026   drug_026      moa_E       72</span>
@@ -145,20 +145,20 @@ during creating BumpyMatrix object</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rownames: 1 2 ... 12 13 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colnames: 1 2 3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> preview [1,1]:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   DataFrame with 54 rows and 5 columns</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          masked         x Concentration data_source normalization_type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;logical&gt; &lt;numeric&gt;     &lt;numeric&gt; &lt;character&gt;           &lt;factor&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1       FALSE    0.9570    0.00100000      combo1                 RV</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2       FALSE    0.7120    0.00316228      combo1                 RV</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3       FALSE    0.4119    0.01000000      combo1                 RV</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4       FALSE    0.3501    0.03162278      combo1                 RV</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5       FALSE    0.3317    0.10000000      combo1                 RV</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ...       ...       ...           ...         ...                ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   50      FALSE    0.3427      0.100000      combo1                 GR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   51      FALSE    0.2086      0.316228      combo1                 GR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   52      FALSE    0.1019      1.000000      combo1                 GR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   53      FALSE    0.0908      3.162278      combo1                 GR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   54      FALSE    0.0902     10.000000      combo1                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   DataFrame with 54 rows and 4 columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               x Concentration data_source normalization_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;numeric&gt;     &lt;numeric&gt; &lt;character&gt;           &lt;factor&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1      0.9570    0.00100000      combo1                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2      0.7120    0.00316228      combo1                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3      0.4119    0.01000000      combo1                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4      0.3501    0.03162278      combo1                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5      0.3317    0.10000000      combo1                 RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ...       ...           ...         ...                ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   50     0.3427      0.100000      combo1                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   51     0.2086      0.316228      combo1                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   52     0.1019      1.000000      combo1                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   53     0.0908      3.162278      combo1                 GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   54     0.0902     10.000000      combo1                 GR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
