@@ -4,21 +4,28 @@
 \alias{convert_se_assay_to_custom_dt}
 \title{Convert a SummarizedExperiment assay to a long data.table and conduct some post processing steps}
 \usage{
-convert_se_assay_to_custom_dt(se, assay_name, output_table = NULL)
+convert_se_assay_to_custom_dt(
+  se,
+  assay_name,
+  output_table = NULL,
+  cap_values = FALSE
+)
 }
 \arguments{
 \item{se}{A SummarizedExperiment object holding raw and/or processed dose-response data in its assays.}
 
 \item{assay_name}{String of name of the assay to transform within the \code{se}.}
 
-\item{output_table}{String of type name of the output data.table}
+\item{output_table}{String of type name of the output data.table.}
+
+\item{cap_values}{Logical indicating whether to apply capping (via \code{capVals}) for "Metrics" output. Default is FALSE.}
 }
 \value{
 data.table representation of the data in \code{assay_name} with added information from \code{colData}.
 }
 \description{
 Convert an assay within a SummarizedExperiment object to a long data.table. Then
-condcut some post processing steps.
+conduct some post processing steps.
 }
 \details{
 Current strategy is per-assay specific.
@@ -34,7 +41,7 @@ Current strategy is per-assay specific.
 \item flatten
 \item prettifying and dropping excess variables
 }
-\item Metrics (same as Metrics_raw + capVals)
+\item Metrics (same as Metrics_raw + cap_values if \code{cap_values = TRUE})
 }
 \enumerate{
 \item 'Normalization' and 'Averaged' assay:
@@ -46,7 +53,7 @@ Current strategy is per-assay specific.
 
 NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
-To extract the reference data in to same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
+To extract the reference data in the same format as 'Averaged' use \code{convert_se_ref_assay_to_dt}.
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small")
@@ -55,6 +62,7 @@ convert_se_assay_to_custom_dt(se, "Metrics")
 convert_se_assay_to_custom_dt(se, "Metrics", output_table = "Metrics_raw")
 convert_se_assay_to_custom_dt(se, "Metrics", output_table = "Metrics_initial")
 convert_se_assay_to_custom_dt(se, "Averaged")
+convert_se_assay_to_custom_dt(se, "Metrics", cap_values = TRUE)
 
 }
 \seealso{
