@@ -1,5 +1,8 @@
-## gDRutils 1.7.14 - 2025-07-25
+## gDRutils 1.7.15 - 2025-08-01
 * improve logic in `split_SE_components`
+
+## gDRutils 1.7.14 - 2025-07-28
+* replace `row/col_fittings` in source for matrix Metrics assay
 
 ## gDRutils 1.7.13 - 2025-07-14
 * add "maxlog10Concentration" and "N_conc" to headers list
