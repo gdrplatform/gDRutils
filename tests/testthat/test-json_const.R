@@ -31,7 +31,7 @@ test_that("get_settings_from_json works as expected", {
 
 
 
-test_that("get_isobologram_columns works fine", {
+test_that("get_isobologram_columns as expected", {
   expect_equal(
     get_isobologram_columns(),
     c("Iso_Level", "Pos_x", "Pos_x_Ref", "Pos_y", "Pos_y_Ref", "Log10_Ratio_Conc", "Log2_CI"))

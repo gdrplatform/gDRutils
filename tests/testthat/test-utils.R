@@ -574,7 +574,7 @@ test_that("remove_codrug_data works as expected", {
   )
 })
 
-test_that("is_combo_data works fine", {
+test_that("is_combo_data as expected", {
   rdata <- data.table::data.table(Gnumber = seq_len(10),
                                   Concentration = runif(10), Ligand = c(rep(0.5, 5), rep(0, 5)))
   se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata)
@@ -635,7 +635,7 @@ test_that("get_additional_variables works as expected", {
 })
 
 
-test_that("convert_se_assay_to_custom_dt works fine", {
+test_that("convert_se_assay_to_custom_dt as expected", {
   json_path <- system.file(package = "gDRutils", "test_settings_2.json")
   s <- get_settings_from_json(json_path = json_path)
   
