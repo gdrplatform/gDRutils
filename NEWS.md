@@ -1,6 +1,9 @@
-## gDRutils 1.7.15 - 2025-07-30
+## gDRutils 1.7.16 - 2025-08-05
 * fix `convert_se_assay_to_dt` to display appropriate columns
 * add flag for capping values in `convert_se_assay_to_custom_dt`
+
+## gDRutils 1.7.15 - 2025-08-01
+* improve logic in `split_SE_components`
 
 ## gDRutils 1.7.14 - 2025-07-28
 * replace `row/col_fittings` in source for matrix Metrics assay
