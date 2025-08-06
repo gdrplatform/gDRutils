@@ -94,10 +94,10 @@ convert_se_assay_to_dt <- function(se,
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
       x[length(x)] <- extend_normalization_type_name(x[length(x)])
       if (grepl("^x$|x_+", x[1])) {
-      paste(x[-1], collapse = "_")
-      } else {
-        paste(x, collapse = "_")
-      }
+        paste(x[-1], collapse = "_")
+        } else {
+          paste(x, collapse = "_")
+        }
     }))
     dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols)
     dt$id <- NULL 
