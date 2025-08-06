@@ -225,47 +225,67 @@ test_that("convert_mae_assay_to_dt works as expected", {
 })
 
 
-test_that("convert_se_assay_to_custom_dt works fine", {
+test_that("convert_se_assay_to_custom_dt works as expected", {
   json_path <- system.file(package = "gDRutils", "test_settings_2.json")
   s <- get_settings_from_json(json_path = json_path)
   
   se <- get_synthetic_data("finalMAE_small")[[1]]
+  
   dt1 <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
   checkmate::expect_data_table(dt1, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt1)))
+  
   dt2 <-
     convert_se_assay_to_custom_dt(se, assay_name = "Metrics", output_table = "Metrics_raw")
   checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt2)))
+  
   dt3 <-
     convert_se_assay_to_custom_dt(se, assay_name = "Metrics", output_table = "Metrics_initial")
   checkmate::expect_data_table(dt3, min.rows = 2, min.cols = 2)
   expect_false(identical(dt2, dt3))
-  checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
-  expect_true(all(c("x_mean", "x_AOC", "x_AOC_range", "xc50", "x_max", "ec50", 
+  expect_true(all(c("x_mean", "x_AOC", "x_AOC_range", "xc50", "x_max", "ec50",  
                     "x_inf", "x_0", "h", "r2", "x_sd_avg", "fit_type") %in% names(dt3)))
+  
   dt4 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged")
-  checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
+  checkmate::expect_data_table(dt4, min.rows = 2, min.cols = 2)
   expect_true(
     all(c("GR value", "Relative Viability", "Std GR value", "Std Relative Viability") %in% names(dt4)))
-  dt5 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Metrics")
+  
+  dt5 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Averaged")
   expect_true(identical(dt4, dt5))
   
   se2 <- get_synthetic_data("finalMAE_combo_matrix")[[1]]
   dt6 <- convert_se_assay_to_custom_dt(se2, assay_name = "Metrics")
   checkmate::expect_data_table(dt6, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt6)))
+  
   dt7 <-
     convert_se_assay_to_custom_dt(se2, assay_name = get_combo_assay_names()[1])
   checkmate::expect_data_table(dt7, min.rows = 2, min.cols = 2)
   expect_true(all(names(get_combo_excess_field_names()) %in% names(dt7)))
   
   expect_error(convert_se_assay_to_custom_dt(as.list(se), assay_name = "Metrics"))
-  expect_error(convert_se_assay_to_custom_dt(as.list(se), output_table = "Averaged"))
-  expect_error(
-    convert_se_assay_to_custom_dt(as.list(se), assay_name = "Averaged", output_table = "Metrics_raw"))
+  expect_error(convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Metrics_raw"))
   expect_error(convert_se_assay_to_custom_dt(se, "xxx"))
   expect_error(convert_se_assay_to_custom_dt(se, "Metrics", "xxx"))
+  
+  dt_metrics_uncapped <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics", cap_values = FALSE)
+  dt_metrics_capped <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics", cap_values = TRUE)
+  
+  checkmate::expect_data_table(dt_metrics_capped)
+  expect_false(identical(dt_metrics_uncapped, dt_metrics_capped))
+  
+  manually_capped_dt <- capVals(dt_metrics_uncapped)
+  expect_identical(dt_metrics_capped, manually_capped_dt)
+  
+  dt_metrics_default <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
+  expect_identical(dt_metrics_default, dt_metrics_uncapped)
+  
+  dt_averaged_no_cap <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", cap_values = FALSE)
+  dt_averaged_cap_ignored <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", cap_values = TRUE)
+  
+  expect_identical(dt_averaged_no_cap, dt_averaged_cap_ignored)
 })
 
 
