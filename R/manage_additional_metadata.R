@@ -169,9 +169,11 @@ modifyData.default <- function(x, option, keep, ...) {
   checkmate::assert_string(keep, null.ok = TRUE)
   pidfs <- get_prettified_identifiers(simplify = TRUE)
   additional_var_names <- class(x)[[1]]
-  additional_var <- ifelse(additional_var_names %in% names(pidfs),
-                           pidfs[[additional_var_names]],
-                           additional_var_names)
+  additional_var <- if (additional_var_names %in% names(pidfs)) {
+    pidfs[[additional_var_names]]
+  } else {
+    additional_var_names
+  }  
   cell_name <- pidfs[["cellline_name"]]
   drug_name <- pidfs[["drug_name"]]
   
