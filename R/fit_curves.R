@@ -238,7 +238,13 @@ logisticFit <-
     out$N_conc <- length(unique(concs))
     out$x_sd_avg <- mean(std_norm_values, na.rm = TRUE)
     # Cap norm_values at (x_0 + cap) so as not to throw off the fit.
-    norm_values <- pmin(norm_values, (if (is.na(x_0)) 1 else x_0) + cap)
+    limit <- if (is.na(x_0)) {
+      1 + cap
+    } else {
+      x_0 + cap
+    }
+    
+    norm_values <- pmin(norm_values, limit)
     df_ <- data.table::data.table(concs = concs, norm_values = norm_values)
     if (has_dups(df_$concs)) {
       warning("duplicates were found, averaging values")
@@ -693,7 +699,11 @@ cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
   checkmate::assert_number(min_conc, na.ok = TRUE)
   
   upper_cap <- max_conc * capping_fold
-  lower_cap <- if (!is.na(min_conc)) min_conc / capping_fold else max_conc / (capping_fold * 1e5)
+  lower_cap <- if (!is.na(min_conc)) {
+    min_conc / capping_fold
+  } else {
+    max_conc / (capping_fold * 1e5)
+  }
   if (xc50 > upper_cap) {
     xc50 <- Inf
   } else if (xc50 < lower_cap) {
