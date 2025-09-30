@@ -421,14 +421,12 @@ test_that("predict_smooth_from_combo works as expected", {
   )
   expect_equal(snapped_pred, expected_val, tolerance = 1e-4)
   
-  # --- Test 2: Error handling for invalid inputs ---
   bad_metrics <- metrics[, -c("ec50")]
   expect_error(
     predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = bad_metrics),
     "Names must include the elements"
   )
   
-  # --- Test 3: Handling of missing models ---
   metrics_missing_row <- metrics[!(dilution_drug == "drug_2" & cotrt_value == 1)]
   expected_val_missing <- mean(c(c1, c3))
   missing_model_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics_missing_row)

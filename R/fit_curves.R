@@ -593,7 +593,7 @@ logistic_metrics <- function(c, x_metrics) {
   if (length(available_concs) == 0 || is.na(user_conc)) {
     return(NA_real_)
   }
-  # Find the index of the concentration that is closest on a log scale.
+  # find the index of the concentration that is closest on a log scale.
   closest_idx <- which.min(abs(log10(available_concs) - log10(user_conc)))
   available_concs[closest_idx]
 }
