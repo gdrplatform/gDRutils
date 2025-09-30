@@ -394,3 +394,43 @@ test_that("predict_efficacy_from_conc works as expected", {
   
   expect_equal(out, res)
 })
+
+
+test_that("predict_smooth_from_combo works as expected", {
+  metrics <- data.table::data.table(
+    dilution_drug = c("drug_1", "drug_1", "drug_2", "drug_2", "codilution"),
+    cotrt_value = c(0, 10, 0, 1, NA),
+    ratio = c(NA, NA, NA, NA, 10),
+    ec50 = c(1, 1.5, 5, 6, 10),
+    h = c(2, 2, 2, 2, 2),
+    x_inf = c(0.1, 0.2, 0.1, 0.3, 0.15),
+    x_0 = c(1, 1, 1, 1, 1)
+  )
+  
+  on_grid_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics)
+  
+  c1 <- 0.2 + (1 - 0.2) / (1 + (1 / 1.5)^2) 
+  c2 <- 0.3 + (1 - 0.3) / (1 + (10 / 6)^2) 
+  c3 <- 0.15 + (1 - 0.15) / (1 + (11 / 10)^2)
+  expected_val <- mean(c(c1, c2, c3))
+  expect_equal(on_grid_pred, expected_val, tolerance = 1e-4)
+  
+  expect_message(
+    snapped_pred <- predict_smooth_from_combo(conc_1 = 1.1, conc_2 = 9.8, metrics_merged = metrics),
+    "Using models for nearest concentrations"
+  )
+  expect_equal(snapped_pred, expected_val, tolerance = 1e-4)
+  
+  # --- Test 2: Error handling for invalid inputs ---
+  bad_metrics <- metrics[, -c("ec50")]
+  expect_error(
+    predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = bad_metrics),
+    "Names must include the elements"
+  )
+  
+  # --- Test 3: Handling of missing models ---
+  metrics_missing_row <- metrics[!(dilution_drug == "drug_2" & cotrt_value == 1)]
+  expected_val_missing <- mean(c(c1, c3))
+  missing_model_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics_missing_row)
+  expect_equal(missing_model_pred, expected_val_missing, tolerance = 1e-1)
+})
