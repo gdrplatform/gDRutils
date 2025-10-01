@@ -36,4 +36,4 @@ metrics <- data.table::data.table(
 predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = metrics)
 
 }
-\keyword{combo_prediction}
+\keyword{fit_curves}

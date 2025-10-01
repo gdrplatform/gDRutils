@@ -455,7 +455,7 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #' )
 #' predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = metrics)
 #'
-#' @keywords combo_prediction
+#' @keywords fit_curves
 #' @export
 #'
 predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
