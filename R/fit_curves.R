@@ -82,7 +82,7 @@ fit_curves <- function(df_,
                                   pcutoff, cap, n_point_cutoff)
   
   is_unique_normalization_type_and_fit_source <- 
-    NROWunique(df_metrics[, c("normalization_type", "fit_source")])) == NROWdf_metrics)
+    NROW(unique(df_metrics[, c("normalization_type", "fit_source")])) == NROW(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
     stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
   }
@@ -472,7 +472,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
   
 
   col_params <- metrics_merged[dilution_drug == "drug_1" & cotrt_value == snapped_conc_2, ]
-  col_value <- if (NROWcol_params) == 1) {
+  col_value <- if (NROW(col_params) == 1) {
     predict_efficacy_from_conc(snapped_conc_1,
                                col_params$x_inf,
                                col_params$x_0,
@@ -483,7 +483,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
     }
   
   row_params <- metrics_merged[dilution_drug == "drug_2" & cotrt_value == snapped_conc_1, ]
-  row_value <- if (NROWrow_params) == 1) {
+  row_value <- if (NROW(row_params) == 1) {
     predict_efficacy_from_conc(snapped_conc_2,
                                row_params$x_inf,
                                row_params$x_0,
@@ -497,7 +497,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
   if (!is.na(snapped_conc_1) && snapped_conc_1 != 0) {
     ratio <- snapped_conc_2 / snapped_conc_1
     codil_params <- metrics_merged[dilution_drug == "codilution" & round(ratio, 2) == round(ratio, 2), ]
-    codil_value <- if (NROWcodil_params) == 1) {
+    codil_value <- if (NROW(codil_params) == 1) {
       predict_efficacy_from_conc(snapped_conc_1 + snapped_conc_2,
                                  codil_params$x_inf,
                                  codil_params$x_0,
