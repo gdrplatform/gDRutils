@@ -432,3 +432,34 @@ test_that("predict_smooth_from_combo works as expected", {
   missing_model_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics_missing_row)
   expect_equal(missing_model_pred, expected_val_missing, tolerance = 1e-1)
 })
+
+
+test_that(".snap_conc_to_model works as expected", {
+  available <- c(0.1, 0.3, 1, 3, 10)
+  
+  # Snaps to the closest value on a log scale.
+  expect_equal(.snap_conc_to_model(user_conc = 1.1, available_concs = available), 1)
+  expect_equal(.snap_conc_to_model(user_conc = 0.2, available_concs = available), 0.3)
+  expect_equal(.snap_conc_to_model(user_conc = 0.1, available_concs = available), 0.1)
+  
+  # Snaps to min/max when outside the range.
+  expect_equal(.snap_conc_to_model(user_conc = 0.01, available_concs = available), 0.1)
+  expect_equal(.snap_conc_to_model(user_conc = 100, available_concs = available), 10)
+  
+  # Handles empty input.
+  expect_true(is.na(.snap_conc_to_model(user_conc = 1, available_concs = numeric(0))))
+  
+  # --- Test error handling (assertions) ---
+  expect_error(
+    .snap_conc_to_model(user_conc = c(1, 2), available_concs = available),
+    "Assertion on 'user_conc' failed: Must have length 1."
+  )
+  expect_error(
+    .snap_conc_to_model(user_conc = "a", available_concs = available),
+    "Assertion on 'user_conc' failed: Must be of type 'number'"
+  )
+  expect_error(
+    .snap_conc_to_model(user_conc = 1, available_concs = c("a", "b")),
+    "Assertion on 'available_concs' failed: Must be of type 'numeric'"
+  )
+})
