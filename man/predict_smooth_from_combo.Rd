@@ -26,7 +26,7 @@ their predictions. This is the combination equivalent of
 \examples{
 mae <- gDRutils::get_synthetic_data("combo_matrix")
 se <- mae[[gDRutils::get_supported_experiments("combo")]]
-dt_metrics <- gDRutils::convert_se_assay_to_dt(se[1, 1], "Metrics")
+dt_metrics <- gDRutils::convert_se_assay_to_dt(se[1, 1], "Metrics")[normalization_type == "RV"]
 predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = metrics)
 
 }
