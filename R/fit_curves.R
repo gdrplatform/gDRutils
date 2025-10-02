@@ -444,15 +444,9 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #' @return A single numeric value for the predicted 'smooth' response.
 #' 
 #' @examples
-#' metrics <- data.table::data.table(
-#'  dilution_drug = c("drug_1", "drug_1", "drug_2", "drug_2"),
-#'  cotrt_value = c(0, 10, 0, 1),
-#'  ratio = c(NA, NA, NA, NA),
-#'  ec50 = c(1, 1.5, 5, 6),
-#'  h = c(2, 2, 2, 2),
-#'  x_inf = c(0.1, 0.2, 0.1, 0.3),
-#'  x_0 = c(1, 1, 1, 1)
-#' )
+#' mae <- gDRutils::get_synthetic_data("combo_matrix")
+#' se <- mae[[gDRutils::get_supported_experiments("combo")]]
+#' dt_metrics <- gDRutils::convert_se_assay_to_dt(se[1, 1], "Metrics")
 #' predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = metrics)
 #'
 #' @keywords fit_curves
