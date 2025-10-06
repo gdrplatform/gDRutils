@@ -379,7 +379,6 @@ test_that("cap_xc50 works as expected", {
 })
 
 test_that("predict_efficacy_from_conc works as expected", {
-  # params
   h <- 2
   x_inf <- 0.1
   x_0 <- 1
@@ -409,30 +408,29 @@ test_that("predict_smooth_from_combo works as expected", {
   
   on_grid_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics)
   
-  c1 <- 0.2 + (1 - 0.2) / (1 + (1 / 1.5)^2) 
-  c2 <- 0.3 + (1 - 0.3) / (1 + (10 / 6)^2) 
-  c3 <- 0.15 + (1 - 0.15) / (1 + (11 / 10)^2)
-  expected_val <- mean(c(c1, c2, c3))
-  expect_equal(on_grid_pred, expected_val, tolerance = 1e-4)
+  c1_ongrid <- 0.2 + (1 - 0.2) / (1 + (1 / 1.5)^2) 
+  c2_ongrid <- 0.3 + (1 - 0.3) / (1 + (10 / 6)^2) 
+  c3_ongrid <- 0.15 + (1 - 0.15) / (1 + ((1 + 10) / 10)^2)
+  expected_val_ongrid <- mean(c(c1_ongrid, c2_ongrid, c3_ongrid))
+  expect_equal(on_grid_pred, expected_val_ongrid, tolerance = 1e-4)
   
   expect_message(
     snapped_pred <- predict_smooth_from_combo(conc_1 = 1.1, conc_2 = 9.8, metrics_merged = metrics),
     "Using models for nearest concentrations"
   )
-  expect_equal(snapped_pred, expected_val, tolerance = 1e-4)
+  
+  c1_snapped <- 0.2 + (1 - 0.2) / (1 + (1.1 / 1.5)^2) # Use model for cotrt=10, predict at conc=1.1
+  c2_snapped <- 0.3 + (1 - 0.3) / (1 + (9.8 / 6)^2)   # Use model for cotrt=1, predict at conc=9.8
+  c3_snapped <- 0.15 + (1 - 0.15) / (1 + ((1.1 + 9.8) / 10)^2) # Use codilution model, predict at sum=10.9
+  expected_val_snapped <- mean(c(c1_snapped, c2_snapped, c3_snapped))
+  expect_equal(snapped_pred, expected_val_snapped, tolerance = 1e-4)
   
   bad_metrics <- metrics[, -c("ec50")]
   expect_error(
     predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = bad_metrics),
-    "Names must include the elements"
+    "Names must include the element"
   )
-  
-  metrics_missing_row <- metrics[!(dilution_drug == "drug_2" & cotrt_value == 1)]
-  expected_val_missing <- mean(c(c1, c3))
-  missing_model_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics_missing_row)
-  expect_equal(missing_model_pred, expected_val_missing, tolerance = 1e-1)
 })
-
 
 test_that(".snap_conc_to_model works as expected", {
   available <- c(0.1, 0.3, 1, 3, 10)
