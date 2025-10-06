@@ -473,7 +473,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
 
   col_params <- metrics_merged[dilution_drug == "drug_1" & cotrt_value == snapped_conc_2, ]
   col_value <- if (NROW(col_params) == 1) {
-    predict_efficacy_from_conc(snapped_conc_1,
+    predict_efficacy_from_conc(conc_1,
                                col_params$x_inf,
                                col_params$x_0,
                                col_params$ec50,
@@ -484,7 +484,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
   
   row_params <- metrics_merged[dilution_drug == "drug_2" & cotrt_value == snapped_conc_1, ]
   row_value <- if (NROW(row_params) == 1) {
-    predict_efficacy_from_conc(snapped_conc_2,
+    predict_efficacy_from_conc(conc_2,
                                row_params$x_inf,
                                row_params$x_0,
                                row_params$ec50,
@@ -498,7 +498,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
     ratio <- snapped_conc_2 / snapped_conc_1
     codil_params <- metrics_merged[dilution_drug == "codilution" & round(ratio, 2) == round(ratio, 2), ]
     codil_value <- if (NROW(codil_params) == 1) {
-      predict_efficacy_from_conc(snapped_conc_1 + snapped_conc_2,
+      predict_efficacy_from_conc(conc_1 + conc_2,
                                  codil_params$x_inf,
                                  codil_params$x_0,
                                  codil_params$ec50,
