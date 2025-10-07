@@ -447,7 +447,7 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #' mae <- gDRutils::get_synthetic_data("combo_matrix")
 #' se <- mae[[gDRutils::get_supported_experiments("combo")]]
 #' dt_metrics <- gDRutils::convert_se_assay_to_dt(se[1, 1], "Metrics")[normalization_type == "RV"]
-#' predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = metrics)
+#' predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = dt_metrics)
 #'
 #' @keywords fit_curves
 #' @export

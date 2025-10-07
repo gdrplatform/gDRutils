@@ -379,6 +379,7 @@ test_that("cap_xc50 works as expected", {
 })
 
 test_that("predict_efficacy_from_conc works as expected", {
+  # params
   h <- 2
   x_inf <- 0.1
   x_0 <- 1
@@ -447,7 +448,6 @@ test_that(".snap_conc_to_model works as expected", {
   # Handles empty input.
   expect_true(is.na(.snap_conc_to_model(user_conc = 1, available_concs = numeric(0))))
   
-  # --- Test error handling (assertions) ---
   expect_error(
     .snap_conc_to_model(user_conc = c(1, 2), available_concs = available),
     "Assertion on 'user_conc' failed: Must have length 1."
