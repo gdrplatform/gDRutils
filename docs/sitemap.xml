@@ -109,6 +109,9 @@
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-set_invalid_fit_params.html</loc>
   </url>
   <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-snap_conc_to_model.html</loc>
+  </url>
+  <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/dot-standardize_conc.html</loc>
   </url>
   <url>
@@ -290,6 +293,9 @@
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/predict_efficacy_from_conc.html</loc>
+  </url>
+  <url>
+    <loc>https://gdrplatform.github.io/gDRstyle/reference/predict_smooth_from_combo.html</loc>
   </url>
   <url>
     <loc>https://gdrplatform.github.io/gDRstyle/reference/prettify_flat_metrics.html</loc>
