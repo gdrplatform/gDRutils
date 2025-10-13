@@ -1,3 +1,6 @@
+## gDRutils 1.7.18 - 2025-09-30
+* add `predict_smooth_from_combo` function
+
 ## gDRutils 1.7.17 - 2025-08-12
 * fix usage of `ifelse`
 

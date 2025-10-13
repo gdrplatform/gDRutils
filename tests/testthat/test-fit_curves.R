@@ -394,3 +394,70 @@ test_that("predict_efficacy_from_conc works as expected", {
   
   expect_equal(out, res)
 })
+
+
+test_that("predict_smooth_from_combo works as expected", {
+  metrics <- data.table::data.table(
+    dilution_drug = c("drug_1", "drug_1", "drug_2", "drug_2", "codilution"),
+    cotrt_value = c(0, 10, 0, 1, NA),
+    ratio = c(NA, NA, NA, NA, 10),
+    ec50 = c(1, 1.5, 5, 6, 10),
+    h = c(2, 2, 2, 2, 2),
+    x_inf = c(0.1, 0.2, 0.1, 0.3, 0.15),
+    x_0 = c(1, 1, 1, 1, 1)
+  )
+  
+  on_grid_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics)
+  
+  c1_ongrid <- 0.2 + (1 - 0.2) / (1 + (1 / 1.5)^2) 
+  c2_ongrid <- 0.3 + (1 - 0.3) / (1 + (10 / 6)^2) 
+  c3_ongrid <- 0.15 + (1 - 0.15) / (1 + ((1 + 10) / 10)^2)
+  expected_val_ongrid <- mean(c(c1_ongrid, c2_ongrid, c3_ongrid))
+  expect_equal(on_grid_pred, expected_val_ongrid, tolerance = 1e-4)
+  
+  expect_message(
+    snapped_pred <- predict_smooth_from_combo(conc_1 = 1.1, conc_2 = 9.8, metrics_merged = metrics),
+    "Using models for nearest concentrations"
+  )
+  
+  c1_snapped <- 0.2 + (1 - 0.2) / (1 + (1.1 / 1.5)^2) # Use model for cotrt=10, predict at conc=1.1
+  c2_snapped <- 0.3 + (1 - 0.3) / (1 + (9.8 / 6)^2)   # Use model for cotrt=1, predict at conc=9.8
+  c3_snapped <- 0.15 + (1 - 0.15) / (1 + ((1.1 + 9.8) / 10)^2) # Use codilution model, predict at sum=10.9
+  expected_val_snapped <- mean(c(c1_snapped, c2_snapped, c3_snapped))
+  expect_equal(snapped_pred, expected_val_snapped, tolerance = 1e-4)
+  
+  bad_metrics <- metrics[, -c("ec50")]
+  expect_error(
+    predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = bad_metrics),
+    "Names must include the element"
+  )
+})
+
+test_that(".snap_conc_to_model works as expected", {
+  available <- c(0.1, 0.3, 1, 3, 10)
+  
+  # Snaps to the closest value on a log scale.
+  expect_equal(.snap_conc_to_model(user_conc = 1.1, available_concs = available), 1)
+  expect_equal(.snap_conc_to_model(user_conc = 0.2, available_concs = available), 0.3)
+  expect_equal(.snap_conc_to_model(user_conc = 0.1, available_concs = available), 0.1)
+  
+  # Snaps to min/max when outside the range.
+  expect_equal(.snap_conc_to_model(user_conc = 0.01, available_concs = available), 0.1)
+  expect_equal(.snap_conc_to_model(user_conc = 100, available_concs = available), 10)
+  
+  # Handles empty input.
+  expect_true(is.na(.snap_conc_to_model(user_conc = 1, available_concs = numeric(0))))
+  
+  expect_error(
+    .snap_conc_to_model(user_conc = c(1, 2), available_concs = available),
+    "Assertion on 'user_conc' failed: Must have length 1."
+  )
+  expect_error(
+    .snap_conc_to_model(user_conc = "a", available_concs = available),
+    "Assertion on 'user_conc' failed: Must be of type 'number'"
+  )
+  expect_error(
+    .snap_conc_to_model(user_conc = 1, available_concs = c("a", "b")),
+    "Assertion on 'available_concs' failed: Must be of type 'numeric'"
+  )
+})

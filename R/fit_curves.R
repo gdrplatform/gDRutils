@@ -82,7 +82,7 @@ fit_curves <- function(df_,
                                   pcutoff, cap, n_point_cutoff)
   
   is_unique_normalization_type_and_fit_source <- 
-    nrow(unique(df_metrics[, c("normalization_type", "fit_source")])) == nrow(df_metrics)
+    NROW(unique(df_metrics[, c("normalization_type", "fit_source")])) == NROW(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
     stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
   }
@@ -429,6 +429,96 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 }
 
 
+#' Predict a smoothed response for a drug combination
+#'
+#' Predicts a 'smooth' value for a single pair of drug concentrations by
+#' snapping to the nearest available models from a metrics table and averaging
+#' their predictions. This is the combination equivalent of
+#' 'predict_efficacy_from_conc'.
+#'
+#' @param conc_1 A single numeric value for the desired concentration of the first drug.
+#' @param conc_2 A single numeric value for the desired concentration of the second drug.
+#' @param metrics_merged A data.table containing all pre-calculated curve fit parameters.
+#'   Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.
+#'
+#' @return A single numeric value for the predicted 'smooth' response.
+#' 
+#' @examples
+#' mae <- gDRutils::get_synthetic_data("combo_matrix")
+#' se <- mae[[gDRutils::get_supported_experiments("combo")]]
+#' dt_metrics <- gDRutils::convert_se_assay_to_dt(se[1, 1], "Metrics")[normalization_type == "RV"]
+#' predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = dt_metrics)
+#'
+#' @keywords fit_curves
+#' @export
+#'
+predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
+  checkmate::assert_number(conc_1, lower = 0)
+  checkmate::assert_number(conc_2, lower = 0)
+  checkmate::assert_data_table(metrics_merged)
+  checkmate::assert_names(
+    colnames(metrics_merged),
+    must.include = c("dilution_drug", "cotrt_value", "ratio", "ec50", "h", "x_inf", "x_0")
+  )
+  
+  available_cotrt_1 <- unique(metrics_merged[dilution_drug == "drug_2"]$cotrt_value)
+  available_cotrt_2 <- unique(metrics_merged[dilution_drug == "drug_1"]$cotrt_value)
+  
+  snapped_conc_1 <- .snap_conc_to_model(conc_1, available_cotrt_1)
+  snapped_conc_2 <- .snap_conc_to_model(conc_2, available_cotrt_2)
+  
+  message(sprintf("Requested: (%.2f, %.2f) ==> Using models for nearest concentrations: (%.2f, %.2f)",
+                  conc_1, conc_2, snapped_conc_1, snapped_conc_2))
+  
+
+  col_params <- metrics_merged[dilution_drug == "drug_1" & cotrt_value == snapped_conc_2, ]
+  col_value <- if (NROW(col_params) == 1) {
+    predict_efficacy_from_conc(conc_1,
+                               col_params$x_inf,
+                               col_params$x_0,
+                               col_params$ec50,
+                               col_params$h)
+    } else {
+      NA
+    }
+  
+  row_params <- metrics_merged[dilution_drug == "drug_2" & cotrt_value == snapped_conc_1, ]
+  row_value <- if (NROW(row_params) == 1) {
+    predict_efficacy_from_conc(conc_2,
+                               row_params$x_inf,
+                               row_params$x_0,
+                               row_params$ec50,
+                               row_params$h)
+    } else {
+      NA
+    }
+  
+  codil_value <- NA
+  if (!is.na(snapped_conc_1) && snapped_conc_1 != 0) {
+    ratio <- snapped_conc_2 / snapped_conc_1
+    codil_params <- metrics_merged[dilution_drug == "codilution" & round(ratio, 2) == round(ratio, 2), ]
+    codil_value <- if (NROW(codil_params) == 1) {
+      predict_efficacy_from_conc(conc_1 + conc_2,
+                                 codil_params$x_inf,
+                                 codil_params$x_0,
+                                 codil_params$ec50,
+                                 codil_params$h)
+      } else {
+        NA
+      }
+  }
+  
+  predicted_values <- c(col_value, row_value, codil_value)
+  final_prediction <- mean(predicted_values, na.rm = TRUE)
+  
+  if (is.nan(final_prediction)) {
+    NA_real_
+  } else {
+    final_prediction
+  }
+}
+
+
 #' Predict a concentration for a given efficacy with fit parameters.
 #'
 #' Predict a concentration for a given efficacy with fit parameters.
@@ -489,6 +579,30 @@ logistic_metrics <- function(c, x_metrics) {
 ##################
 # Helper functions
 ##################
+
+#' Snap a concentration to the nearest available model concentration
+#'
+#' Finds the value in a vector of available concentrations that is closest
+#' (on a log scale) to a user-specified concentration. This is an internal
+#' helper function.
+#'
+#' @param user_conc A single numeric value for the desired concentration.
+#' @param available_concs A numeric vector of concentrations for which a model exists.
+#'
+#' @return A single numeric value from 'available_concs'.
+#' @keywords internal
+#'
+.snap_conc_to_model <- function(user_conc, available_concs) {
+  checkmate::assert_number(user_conc, lower = 0)
+  checkmate::assert_numeric(available_concs)
+  
+  if (length(available_concs) == 0 || is.na(user_conc)) {
+    return(NA_real_)
+  }
+  # find the index of the concentration that is closest on a log scale.
+  closest_idx <- which.min(abs(log10(available_concs) - log10(user_conc)))
+  available_concs[closest_idx]
+}
 
 #' @keywords fit_curves
 #' @export

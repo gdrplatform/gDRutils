@@ -48,7 +48,8 @@ if (getRversion() >= "2.15.1") {
       "Package",
       "UsedVersion",
       "Version",
-      "dilution_drug"
+      "dilution_drug",
+      "cotrt_value"
     ),
     utils::packageName())
 }
