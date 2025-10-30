@@ -1,3 +1,6 @@
+## gDRutils 1.9.1 - 2025-10-30
+* synchronize Bioconductor and GitHub versioning
+
 ## gDRutils 1.7.18 - 2025-09-30
 * add `predict_smooth_from_combo` function
 
