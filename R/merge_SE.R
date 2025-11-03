@@ -197,6 +197,9 @@ merge_assay <- function(SElist,
                                        convert_se_assay_to_dt(SElist[[y]], assay_name)
                                      }),  fill = TRUE, idcol = additional_col_name)
   
+  drug_cols <- unlist(gDRutils::get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE))
+  existing_drug_cols <- intersect(drug_cols, names(DT))
+  DT[, (existing_drug_cols) := lapply(.SD, gDRutils::remove_drug_batch), .SDcols = existing_drug_cols]
   
   DT$rId <- DT$cId <- NULL
   discard_keys <- intersect(names(DT), c(discard_keys, additional_col_name))
