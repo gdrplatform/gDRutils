@@ -11,7 +11,7 @@
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
-#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
+#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
 #' nested within a \code{BumpyMatrix} assay.
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
@@ -21,15 +21,17 @@
 #' @param unify_metadata Boolean indicating whether to unify DrugName and CellLineName in cases where DrugNames
 #' and CellLineNames are shared by more than one Gnumber and/or clid within the experiment.
 #' @param drop_masked Boolean indicating whether to drop masked values; TRUE by default.
+#' @param merge_additional_variables Boolean indicating whether to merge additional variables identified by
+#' \code{get_additional_variables} into the \code{DrugName} column. Defaults to \code{FALSE}.
 #' @keywords convert
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @examples 
+#' @examples 
 #' mae <- get_synthetic_data("finalMAE_small")
 #' se <- mae[[1]]
 #' convert_se_assay_to_dt(se, "Metrics")
-#' 
+#' 
 #' @seealso flatten
 #' @export
 convert_se_assay_to_dt <- function(se,
@@ -38,23 +40,25 @@ convert_se_assay_to_dt <- function(se,
                                    retain_nested_rownames = FALSE,
                                    wide_structure = FALSE,
                                    unify_metadata = FALSE,
-                                   drop_masked = TRUE) {
+                                   drop_masked = TRUE,
+                                   merge_additional_variables = FALSE) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
   checkmate::assert_flag(wide_structure)
   checkmate::assert_flag(unify_metadata)
+  checkmate::assert_flag(merge_additional_variables) # New assertion
   validate_se_assay_name(se, assay_name)
   if (wide_structure) {
-    # wide_structure works only with `normalization_type` column in the assay 
+    # wide_structure works only with `normalization_type` column in the assay 
     # and only for assays class "BumpyMatrix"
     if (!inherits(SummarizedExperiment::assay(se, assay_name), "BumpyDataFrameMatrix")) {
       warning("assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
       wide_structure <- FALSE
     } else if ("normalization_type" %in%
                BumpyMatrix::commonColnames(SummarizedExperiment::assay(se, assay_name))) {
-      retain_nested_rownames <- TRUE 
+      retain_nested_rownames <- TRUE
     } else {
       warning("'normalization_type' not found in assay, wide_structure=TRUE ignored")
       wide_structure <- FALSE
@@ -79,28 +83,36 @@ convert_se_assay_to_dt <- function(se,
   }
   if (include_metadata) {
     dt <- .extract_and_merge_metadata(se, data.table::copy(dt))
+    
+    if (merge_additional_variables) {
+      additional_vars <- get_additional_variables(list(dt)) 
+
+      if (!is.null(additional_vars) && length(additional_vars) > 0) {
+        dt <- update_drug_name(dt, additional_vars)
+      }
+    }
   }
   if (wide_structure) {
     id_col <- paste0(assay_name, "_rownames")
     dt$id <- gsub("_.*", "", dt[[id_col]])
     dt[[id_col]] <- NULL
     normalization_cols <- unique(c(grep("^x$|x_+", names(dt), value = TRUE),
-                            intersect(unlist(get_header()[c("excess", "scores", "response_metrics")]),
-                                      names(dt))))
+                                   intersect(unlist(get_header()[c("excess", "scores", "response_metrics")]),
+                                             names(dt))))
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
-    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
+    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
                                 paste, sep = "_"))
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
       x[length(x)] <- extend_normalization_type_name(x[length(x)])
       if (grepl("^x$|x_+", x[1])) {
         paste(x[-1], collapse = "_")
-        } else {
-          paste(x, collapse = "_")
-        }
+      } else {
+        paste(x, collapse = "_")
+      }
     }))
     dt <- data.table::dcast(dt, dcast_formula, value.var = normalization_cols)
-    dt$id <- NULL 
+    dt$id <- NULL
     if (!all(new_cols %in% names(dt))) {
       new_cols <- gsub("x_", "", new_cols)
     }
@@ -190,7 +202,7 @@ convert_se_assay_to_dt <- function(se,
 #' @details NOTE: to extract information about 'Control' data, simply call the
 #' function with the name of the assay holding data on controls.
 #'
-#' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with 
+#' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with 
 #' raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within an experiment of the \code{mae}.
 #' @param experiment_name String of name of the experiment in \code{mae} whose \code{assay_name} should be converted.
@@ -198,27 +210,29 @@ convert_se_assay_to_dt <- function(se,
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData()}
 #' and \code{colData()} in the returned data.table.
 #' Defaults to \code{TRUE}.
-#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
+#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
 #' nested within a \code{BumpyMatrix} assay.
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
-#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated 
+#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated 
 #' in `convert_se_assay_to_dt` function
 #' @param drop_masked Boolean indicating whether to drop masked values; TRUE by default.
+#' @param merge_additional_variables Boolean indicating whether to merge additional variables identified by
+#' \code{get_additional_variables} into the \code{DrugName} column. Defaults to \code{FALSE}.
 #' @keywords convert
 #'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
-#' 
+#' 
 #' @return data.table representation of the data in \code{assay_name}.
 #'
 #' @seealso flatten convert_se_assay_to_dt
-#' 
-#' @examples 
+#' 
+#' @examples 
 #' mae <- get_synthetic_data("finalMAE_small")
 #' convert_mae_assay_to_dt(mae, "Metrics")
-#' 
+#' 
 #' @export
 convert_mae_assay_to_dt <- function(mae,
                                     assay_name,
@@ -226,7 +240,8 @@ convert_mae_assay_to_dt <- function(mae,
                                     include_metadata = TRUE,
                                     retain_nested_rownames = FALSE,
                                     wide_structure = FALSE,
-                                    drop_masked = TRUE) {
+                                    drop_masked = TRUE,
+                                    merge_additional_variables = FALSE) { # New argument
   
   # Assertions.
   checkmate::assert_class(mae, "MultiAssayExperiment")
@@ -235,6 +250,7 @@ convert_mae_assay_to_dt <- function(mae,
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
   checkmate::assert_flag(wide_structure)
+  checkmate::assert_flag(merge_additional_variables) # New assertion
   
   if (is.null(experiment_name)) {
     experiment_name <- names(mae)
@@ -249,7 +265,8 @@ convert_mae_assay_to_dt <- function(mae,
                            include_metadata = include_metadata,
                            retain_nested_rownames = retain_nested_rownames,
                            wide_structure = wide_structure,
-                           drop_masked = drop_masked)
+                           drop_masked = drop_masked,
+                           merge_additional_variables = merge_additional_variables)
   })
   if (all(vapply(dtList, is.null, logical(1)))) {
     warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
@@ -454,4 +471,64 @@ capVals <- function(x) {
     X[, EC50 := scales::oob_squish_any(EC50, range = c(s$fifty_lower_limit, s$fifty_upper_limit))]
   }
   return(X)
+}
+
+#' Update drug name with additional variables
+#'
+#' Concatenates the values of specified additional variables to the existing
+#' drug identifier columns in a data.table, using the variables defined in
+#' \code{get_env_identifiers}.
+#'
+#' @param dt A data.table containing drug-response information, including drug
+#' identifier columns (e.g., \code{DrugName}, \code{Gnumber}) and the \code{additional_vars}.
+#' @param additional_vars Character vector of column names (variables) to merge
+#' into the drug identifier columns.
+#'
+#' @return A copy of the input data.table \code{dt} with the relevant drug
+#' identifier columns updated to include the additional variable information in the format:
+#' \code{Identifier (variable = value)}.
+#'
+#' @examples
+#' # Assuming get_env_identifiers() returns c("DrugName", "Gnumber") for drug identifiers
+#' dt <- data.table::data.table(
+#'   DrugName = c("DrugA", "DrugA", "DrugB"),
+#'   Gnumber = c("G1", "G1", "G2"),
+#'   Var1 = c(NA, "X", NA),
+#'   Var2 = c(NA, "Y", "Z")
+#' )
+#' additional_vars <- c("Var1", "Var2")
+#' # update_drug_name(dt, additional_vars) # Would update DrugName and Gnumber
+#'
+#' @keywords internal
+#' @export
+update_drug_name <- function(dt, additional_vars) {
+  checkmate::assert_data_table(dt)
+  checkmate::assert_character(additional_vars)
+  
+  dt <- data.table::copy(dt)
+  
+  # Identify the columns to merge the additional info into
+  cols_to_merge <- unlist(get_env_identifiers(c("drug", "drug_name"), simplify = FALSE))
+  
+  for (var in additional_vars) {
+    if (!var %in% names(dt)) {
+      warning(sprintf("Additional variable '%s' not found in data.table. Skipping merge for this variable.", var))
+      next
+    }
+    
+    # Iterate over all drug identifier columns
+    for (col in cols_to_merge) {
+      if (!col %in% names(dt)) {
+        warning(sprintf("Drug identifier column '%s' not found in data.table. Skipping update for this column.", col))
+        next
+      }
+
+      dt[, (col) := ifelse(
+        is.na(dt[[var]]),
+        get(col),
+        paste0(get(col), " (", var, " = ", get(var), ")")
+      )]
+    }
+  }
+  return(dt)
 }
