@@ -337,3 +337,55 @@ test_that("capVals works as expected", {
   expect_error(capVals(as.list(dt1)), "Must be a data.table")
 })
 
+test_that("update_drug_name works as expected", {
+  dt <- data.table::data.table(
+    DrugName = c("D1", "D2", "D3"),
+    Gnumber = c("G1", "G2", "G3"),
+    Var1 = c("X", NA, "Y"),
+    Var2 = c(NA, "Z", "W")
+  )
+  additional_vars <- c("Var1", "Var2")
+  
+  dt_updated <- update_drug_name(dt, additional_vars)
+  
+  expect_equal(dt_updated[1, ]$DrugName, "D1 (Var1 = X)")
+  expect_equal(dt_updated[1, ]$Gnumber, "G1 (Var1 = X)")
+  
+  expect_equal(dt_updated[2, ]$DrugName, "D2 (Var2 = Z)")
+  expect_equal(dt_updated[2, ]$Gnumber, "G2 (Var2 = Z)")
+  
+  expect_equal(dt_updated[3, ]$DrugName, "D3 (Var1 = Y) (Var2 = W)")
+  expect_equal(dt_updated[3, ]$Gnumber, "G3 (Var1 = Y) (Var2 = W)")
+  
+  expect_warning(update_drug_name(dt, c("Var1", "NonExistent")), "Additional variable 'NonExistent'")
+})
+
+test_that("convert_se_assay_to_dt merges additional variables", {
+  m <- 4
+  n <- 1
+  ref_gr_value <- matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(LETTERS[1:m], "c1"))
+  
+  rData_with_extra <- S4Vectors::DataFrame(
+    rId = LETTERS[1:m],
+    Gnumber = LETTERS[1:m], 
+    DrugName = paste0("Drug_", LETTERS[1:m]), 
+    Plate_number = c("B1", NA, "B3", NA)
+  )
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(RefGRvalue = ref_gr_value),
+    rowData = rData_with_extra,
+    colData = S4Vectors::DataFrame(cnames = "c1")
+  )
+  
+  dt_merged <- convert_se_assay_to_dt(
+    se = se, 
+    assay_name = "RefGRvalue", 
+    include_metadata = TRUE, 
+    merge_additional_variables = TRUE
+  )
+  
+  expect_equal(dt_merged[rId == "A"]$DrugName, "Drug_A (Plate_number = B1)")
+  expect_equal(dt_merged[rId == "A"]$Gnumber, "A (Plate_number = B1)")
+  
+  expect_equal(dt_merged[rId == "B"]$DrugName, "Drug_B")
+})

@@ -1,3 +1,6 @@
+## gDRutils 1.9.3 - 2025-11-19
+* `convert_se_assay_to_dt` supports merging additional variables
+
 ## gDRutils 1.9.2 - 2025-11-03
 * update merge_SE function to merge drugs with different batches together
 
