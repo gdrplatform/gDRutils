@@ -48,7 +48,7 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_flag(retain_nested_rownames)
   checkmate::assert_flag(wide_structure)
   checkmate::assert_flag(unify_metadata)
-  checkmate::assert_flag(merge_additional_variables) # New assertion
+  checkmate::assert_flag(merge_additional_variables)
   validate_se_assay_name(se, assay_name)
   if (wide_structure) {
     # wide_structure works only with `normalization_type` column in the assay 
@@ -250,7 +250,7 @@ convert_mae_assay_to_dt <- function(mae,
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
   checkmate::assert_flag(wide_structure)
-  checkmate::assert_flag(merge_additional_variables) # New assertion
+  checkmate::assert_flag(merge_additional_variables)
   
   if (is.null(experiment_name)) {
     experiment_name <- names(mae)
