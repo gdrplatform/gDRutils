@@ -11,7 +11,7 @@
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData(se)}
 #' and \code{colData(se)} in the returned data.table.
 #' Defaults to \code{TRUE}.
-#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
+#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames
 #' nested within a \code{BumpyMatrix} assay.
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
@@ -27,11 +27,11 @@
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
-#' @examples 
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small")
 #' se <- mae[[1]]
 #' convert_se_assay_to_dt(se, "Metrics")
-#' 
+#'
 #' @seealso flatten
 #' @export
 convert_se_assay_to_dt <- function(se,
@@ -51,7 +51,7 @@ convert_se_assay_to_dt <- function(se,
   checkmate::assert_flag(merge_additional_variables)
   validate_se_assay_name(se, assay_name)
   if (wide_structure) {
-    # wide_structure works only with `normalization_type` column in the assay 
+    # wide_structure works only with `normalization_type` column in the assay
     # and only for assays class "BumpyMatrix"
     if (!inherits(SummarizedExperiment::assay(se, assay_name), "BumpyDataFrameMatrix")) {
       warning("assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
@@ -100,7 +100,7 @@ convert_se_assay_to_dt <- function(se,
                                    intersect(unlist(get_header()[c("excess", "scores", "response_metrics")]),
                                              names(dt))))
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
-    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~  normalization_type")
+    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~ normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
                                 paste, sep = "_"))
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
@@ -202,7 +202,7 @@ convert_se_assay_to_dt <- function(se,
 #' @details NOTE: to extract information about 'Control' data, simply call the
 #' function with the name of the assay holding data on controls.
 #'
-#' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with 
+#' @param mae A \linkS4class{MultiAssayExperiment} object holding experiments with
 #' raw and/or processed dose-response data in its assays.
 #' @param assay_name String of name of the assay to transform within an experiment of the \code{mae}.
 #' @param experiment_name String of name of the experiment in \code{mae} whose \code{assay_name} should be converted.
@@ -210,13 +210,13 @@ convert_se_assay_to_dt <- function(se,
 #' @param include_metadata Boolean indicating whether or not to include \code{rowData()}
 #' and \code{colData()} in the returned data.table.
 #' Defaults to \code{TRUE}.
-#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames 
+#' @param retain_nested_rownames Boolean indicating whether or not to retain the rownames
 #' nested within a \code{BumpyMatrix} assay.
 #' Defaults to \code{FALSE}.
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
-#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated 
+#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated
 #' in `convert_se_assay_to_dt` function
 #' @param drop_masked Boolean indicating whether to drop masked values; TRUE by default.
 #' @param merge_additional_variables Boolean indicating whether to merge additional variables identified by
@@ -224,15 +224,15 @@ convert_se_assay_to_dt <- function(se,
 #' @keywords convert
 #'
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
-#' 
+#'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
 #' @seealso flatten convert_se_assay_to_dt
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small")
 #' convert_mae_assay_to_dt(mae, "Metrics")
-#' 
+#'
 #' @export
 convert_mae_assay_to_dt <- function(mae,
                                     assay_name,
