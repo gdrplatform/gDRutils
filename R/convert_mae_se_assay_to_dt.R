@@ -241,7 +241,7 @@ convert_mae_assay_to_dt <- function(mae,
                                     retain_nested_rownames = FALSE,
                                     wide_structure = FALSE,
                                     drop_masked = TRUE,
-                                    merge_additional_variables = FALSE) { # New argument
+                                    merge_additional_variables = FALSE) {
   
   # Assertions.
   checkmate::assert_class(mae, "MultiAssayExperiment")
