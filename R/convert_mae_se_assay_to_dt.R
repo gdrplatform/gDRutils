@@ -507,7 +507,6 @@ update_drug_name <- function(dt, additional_vars) {
   
   dt <- data.table::copy(dt)
   
-  # Identify the columns to merge the additional info into
   cols_to_merge <- unlist(get_env_identifiers(c("drug", "drug_name"), simplify = FALSE))
   
   for (var in additional_vars) {
@@ -516,7 +515,6 @@ update_drug_name <- function(dt, additional_vars) {
       next
     }
     
-    # Iterate over all drug identifier columns
     for (col in cols_to_merge) {
       if (!col %in% names(dt)) {
         warning(sprintf("Drug identifier column '%s' not found in data.table. Skipping update for this column.", col))
