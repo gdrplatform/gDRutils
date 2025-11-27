@@ -1,4 +1,7 @@
 ## gDRutils 1.9.2 - 2025-11-03
+* add support for the `time-course` experiment
+
+## gDRutils 1.9.2 - 2025-11-03
 * update merge_SE function to merge drugs with different batches together
 
 ## gDRutils 1.9.1 - 2025-10-30
