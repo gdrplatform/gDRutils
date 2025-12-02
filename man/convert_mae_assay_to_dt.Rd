@@ -16,7 +16,7 @@ convert_mae_assay_to_dt(
 )
 }
 \arguments{
-\item{mae}{A \linkS4class{MultiAssayExperiment} object holding experiments with 
+\item{mae}{A \linkS4class{MultiAssayExperiment} object holding experiments with
 raw and/or processed dose-response data in its assays.}
 
 \item{assay_name}{String of name of the assay to transform within an experiment of the \code{mae}.}
@@ -28,14 +28,14 @@ Defaults to \code{NULL} to indicate to convert assay in all experiments into one
 and \code{colData()} in the returned data.table.
 Defaults to \code{TRUE}.}
 
-\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames 
+\item{retain_nested_rownames}{Boolean indicating whether or not to retain the rownames
 nested within a \code{BumpyMatrix} assay.
 Defaults to \code{FALSE}.
 If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.}
 
 \item{wide_structure}{Boolean indicating whether or not to transform data.table into wide format.
-\code{wide_structure = TRUE} requires \code{retain_nested_rownames = TRUE} however that will be validated 
+\code{wide_structure = TRUE} requires \code{retain_nested_rownames = TRUE} however that will be validated
 in \code{convert_se_assay_to_dt} function}
 
 \item{drop_masked}{Boolean indicating whether to drop masked values; TRUE by default.}
@@ -55,10 +55,9 @@ NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
 }
 \examples{
- 
 mae <- get_synthetic_data("finalMAE_small")
 convert_mae_assay_to_dt(mae, "Metrics")
- 
+
 }
 \seealso{
 flatten convert_se_assay_to_dt

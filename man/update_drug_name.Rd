@@ -32,7 +32,9 @@ dt <- data.table::data.table(
   Var2 = c(NA, "Y", "Z")
 )
 additional_vars <- c("Var1", "Var2")
-# update_drug_name(dt, additional_vars) # Would update DrugName and Gnumber
+ dt_updated <- update_drug_name(dt, additional_vars)
+# Would update DrugName and Gnumber
+dt_updated
 
 }
 \keyword{internal}
