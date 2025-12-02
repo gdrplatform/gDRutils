@@ -216,8 +216,8 @@ convert_se_assay_to_dt <- function(se,
 #' If the \code{assay_name} is not of the \code{BumpyMatrix} class, this argument's value is ignored.
 #' If \code{TRUE}, the resulting column in the data.table will be named as \code{"<assay_name>_rownames"}.
 #' @param wide_structure Boolean indicating whether or not to transform data.table into wide format.
-#' `wide_structure = TRUE` requires `retain_nested_rownames = TRUE` however that will be validated
-#' in `convert_se_assay_to_dt` function
+#' \code{wide_structure = TRUE} requires \code{retain_nested_rownames = TRUE} however that will be validated
+#' in \code{convert_se_assay_to_dt} function
 #' @param drop_masked Boolean indicating whether to drop masked values; TRUE by default.
 #' @param merge_additional_variables Boolean indicating whether to merge additional variables identified by
 #' \code{get_additional_variables} into the \code{DrugName} column. Defaults to \code{FALSE}.
@@ -497,7 +497,9 @@ capVals <- function(x) {
 #'   Var2 = c(NA, "Y", "Z")
 #' )
 #' additional_vars <- c("Var1", "Var2")
-#' # update_drug_name(dt, additional_vars) # Would update DrugName and Gnumber
+#'  dt_updated <- update_drug_name(dt, additional_vars)
+#' # Would update DrugName and Gnumber
+#' dt_updated
 #'
 #' @keywords internal
 #' @export
