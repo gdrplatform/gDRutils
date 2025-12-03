@@ -1,3 +1,6 @@
+## gDRutils 1.9.4 - 2025-12-02
+* `convert_se_assay_to_dt` supports merging additional variables
+
 ## gDRutils 1.9.3 - 2025-11-27
 * add support for the `time-course` experiment
 
