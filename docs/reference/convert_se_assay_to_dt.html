@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,8 @@
 <span>  retain_nested_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  wide_structure <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  unify_metadata <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  drop_masked <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  drop_masked <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  merge_additional_variables <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,6 +102,11 @@ and CellLineNames are shared by more than one Gnumber and/or clid within the exp
 
 <dt>drop_masked</dt>
 <dd><p>Boolean indicating whether to drop masked values; TRUE by default.</p></dd>
+
+
+<dt>merge_additional_variables</dt>
+<dd><p>Boolean indicating whether to merge additional variables identified by
+<code>get_additional_variables</code> into the <code>DrugName</code> column. Defaults to <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
