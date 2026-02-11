@@ -11,7 +11,8 @@ convert_se_assay_to_dt(
   retain_nested_rownames = FALSE,
   wide_structure = FALSE,
   unify_metadata = FALSE,
-  drop_masked = TRUE
+  drop_masked = TRUE,
+  merge_additional_variables = FALSE
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ If \code{TRUE}, the resulting column in the data.table will be named as \code{"<
 and CellLineNames are shared by more than one Gnumber and/or clid within the experiment.}
 
 \item{drop_masked}{Boolean indicating whether to drop masked values; TRUE by default.}
+
+\item{merge_additional_variables}{Boolean indicating whether to merge additional variables identified by
+\code{get_additional_variables} into the \code{DrugName} column. Defaults to \code{FALSE}.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.

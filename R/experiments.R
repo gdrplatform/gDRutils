@@ -1,10 +1,12 @@
 ## The following are the default values that will be used for handling MAE experiments
 SUPPORTED_EXPERIMENTS <-
-  c(sa = "single-agent", combo = "combination", "cd" = "co-dilution")
+  c(sa = "single-agent", combo = "combination", "cd" = "co-dilution", "time-course" = "time-course")
+
 EXPERIMENT_GROUPS <-
   list(`single-agent` = c(`single-agent` = "single-agent",
                           `co-dilution` = "co-dilution"),
-       combination = "combination")
+       combination = "combination",
+       `time-course` = "time-course")
 
 #' get_supported_experiments
 #'

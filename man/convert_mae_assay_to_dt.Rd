@@ -11,7 +11,8 @@ convert_mae_assay_to_dt(
   include_metadata = TRUE,
   retain_nested_rownames = FALSE,
   wide_structure = FALSE,
-  drop_masked = TRUE
+  drop_masked = TRUE,
+  merge_additional_variables = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,9 @@ If \code{TRUE}, the resulting column in the data.table will be named as \code{"<
 in \code{convert_se_assay_to_dt} function}
 
 \item{drop_masked}{Boolean indicating whether to drop masked values; TRUE by default.}
+
+\item{merge_additional_variables}{Boolean indicating whether to merge additional variables identified by
+\code{get_additional_variables} into the \code{DrugName} column. Defaults to \code{FALSE}.}
 }
 \value{
 data.table representation of the data in \code{assay_name}.
