@@ -12,7 +12,7 @@ remove_drug_batch(
 )
 }
 \arguments{
-\item{drug_vec}{character vector with drug id(s)}
+\item{drug_vec}{atomic vector (e.g., character or integer) with drug id(s)}
 
 \item{drug_p}{string with regex pattern for drug id. Set to Gnumber format by default: "G[0-9]\{8\}".}
 

@@ -1003,7 +1003,7 @@ get_env_var <- function(x, ...) {
 #'  *  too long Gnumber 
 #'     * G123456789.1-12
 #' 
-#' @param drug_vec character vector with drug id(s)
+#' @param drug_vec atomic vector (e.g., character or integer) with drug id(s)
 #' @param drug_p string with regex pattern for drug id. Set to Gnumber format by default: "G\[0-9\]\{8\}".
 #' @param sep_p string with regex pattern for separator. Set to any character except for digit and space
 #' @param batch_p string with regex pattern for batch substring. 
@@ -1031,10 +1031,12 @@ remove_drug_batch <- function(drug_vec,
                               drug_p = "^G[0-9]{8}",
                               sep_p = "[^0-9|^_]",
                               batch_p = ".+") {
-  checkmate::assert_character(drug_vec)
+  checkmate::assert_atomic_vector(drug_vec)
   checkmate::assert_string(drug_p)
   checkmate::assert_string(sep_p)
   checkmate::assert_string(batch_p)
+  
+  drug_vec <- as.character(drug_vec)
   
   p <- paste0("(", drug_p, ")", sep_p, batch_p, "$")
   r <- "\\1"
