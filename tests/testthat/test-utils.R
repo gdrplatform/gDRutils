@@ -764,6 +764,13 @@ test_that("remove_drug_batch works as expected", {
   expect_equal(remove_drug_batch("G00001234.28", batch_p = "[0-9]+"),
                "G00001234")
   
+  # test drug_vec as non-character input  
+  expect_equal(remove_drug_batch(12345L), "12345")
+  expect_equal(remove_drug_batch(9876.54), "9876.54")
+  expect_equal(remove_drug_batch(c("G00060245.1", 112233)), c("G00060245", "112233"))
+  expect_equal(remove_drug_batch(12345.678, drug_p = "[0-9]{5}", sep_p = "\\."), "12345")
+  
+  # error tests
   expect_error(remove_drug_batch(list(drug = "G00000001")), "Assertion on 'drug_vec' failed")
   expect_error(remove_drug_batch("G00000001", drug_p = list(1)),
                "Assertion on 'drug_p' failed")

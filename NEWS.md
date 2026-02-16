@@ -1,3 +1,6 @@
+## gDRutils 1.9.5 - 2026-02-12
+* `remove_drug_batch` supports atomic vectors as input 
+
 ## gDRutils 1.9.4 - 2025-12-02
 * `convert_se_assay_to_dt` supports merging additional variables
 
