@@ -12,7 +12,7 @@ conduct some post processing steps."><!-- mathjax --><script src="https://cdnjs.
     
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -219,6 +219,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: G00010_drug_010_moa_A_72 CL00020_cellline_KB_tissue_z_62  0.199150357</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: G00011_drug_011_moa_B_72 CL00020_cellline_KB_tissue_z_62 -0.114813416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          r Id                            c Id      GR Mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;char&gt;                          &lt;char&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          GR AOC GR AOC within set range        GR50      GR Max       GEC50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;                   &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: 0.52707024              0.60484720 0.008956223  0.33660000 0.004512560</span>
@@ -322,6 +323,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: 0.80084964              0.89159948 0.096729600 -0.78626667 0.146270629</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: 1.11481342              1.30596053 0.016239553 -0.76026667 0.026434030</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          GR AOC GR AOC within set range        GR50      GR Max       GEC50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;                   &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             GR Inf      GR 0      h GR     GR R2   GR p Value       GR Rss</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              &lt;num&gt;     &lt;num&gt;     &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:  0.3651678148 1.0000000 1.9119007 0.9884406 1.660656e-07 0.0045303452</span>
@@ -425,6 +427,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: -0.7443040083 1.0000000 2.2046853 0.9985705 1.104466e-10 0.0081610637</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: -0.7340189608 1.0000000 1.8543083 0.9987249 7.403286e-11 0.0064842414</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             GR Inf      GR 0      h GR     GR R2   GR p Value       GR Rss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              &lt;num&gt;     &lt;num&gt;     &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      GR maxlog10Concentration GR N Conc  GR Sd Avg            Fit Type GR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:                        1         9 0.03203268 DRC3pHillFitModelFixS0</span>
@@ -528,6 +531,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:                        1         9 0.06333498 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:                        1         9 0.07007818 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      GR maxlog10Concentration GR N Conc  GR Sd Avg            Fit Type GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Fit Source Gnumber Drug Name Drug MOA Duration    Clid Cell Line Name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;    &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;         &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:        gDR  G00002  drug_002    moa_A       72 CL00011    cellline_BA</span>
@@ -631,6 +635,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:        gDR  G00010  drug_010    moa_A       72 CL00020    cellline_KB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:        gDR  G00011  drug_011    moa_B       72 CL00020    cellline_KB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Fit Source Gnumber Drug Name Drug MOA Duration    Clid Cell Line Name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;    &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;         &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue Reference Division Time   RV Mean     RV AOC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                   &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: tissue_x                      26 0.4466890 0.55331098</span>
@@ -734,6 +739,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: tissue_z                      62 0.5769999 0.42300010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: tissue_z                      62 0.4117805 0.58821946</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue Reference Division Time   RV Mean     RV AOC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                   &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV AOC within set range        IC50      E Max        EC50      E Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;num&gt;       &lt;num&gt;      &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:              0.62771204 0.007253171 0.32793333 0.003795893 0.34682665</span>
@@ -837,6 +843,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:              0.47231044 0.150209032 0.07513333 0.137152296 0.09235428</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:              0.69005808 0.027440547 0.08603333 0.024485958 0.09662172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV AOC within set range        IC50      E Max        EC50      E Inf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;num&gt;       &lt;num&gt;      &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             E0     h RV     RV R2   RV p Value       RV Rss</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: 1.0000000 1.827031 0.9924695 3.705769e-08 0.0027788222</span>
@@ -940,6 +947,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: 1.0000000 2.245643 0.9988156 5.718652e-11 0.0018424204</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: 1.0000000 1.884916 0.9986615 8.773134e-11 0.0018446214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             E0     h RV     RV R2   RV p Value       RV Rss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV maxlog10Concentration RV N Conc  RV Sd Avg            Fit Type RV</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:                        1         9 0.02424423 DRC3pHillFitModelFixS0</span>
@@ -1043,6 +1051,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:                        1         9 0.03151223 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:                        1         9 0.03335063 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV maxlog10Concentration RV N Conc  RV Sd Avg            Fit Type RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-in"><span><span class="fu">convert_se_assay_to_custom_dt</span><span class="op">(</span><span class="va">se</span>, <span class="st">"Metrics"</span>, output_table <span class="op">=</span> <span class="st">"Metrics_raw"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          r Id                            c Id      GR Mean</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;char&gt;                          &lt;char&gt;        &lt;num&gt;</span>
@@ -1147,6 +1156,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: G00010_drug_010_moa_A_72 CL00020_cellline_KB_tissue_z_62  0.199150357</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: G00011_drug_011_moa_B_72 CL00020_cellline_KB_tissue_z_62 -0.114813416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          r Id                            c Id      GR Mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;char&gt;                          &lt;char&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          GR AOC GR AOC within set range        GR50      GR Max       GEC50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;                   &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: 0.52707024              0.60484720 0.008956223  0.33660000 0.004512560</span>
@@ -1250,6 +1260,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: 0.80084964              0.89159948 0.096729600 -0.78626667 0.146270629</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: 1.11481342              1.30596053 0.016239553 -0.76026667 0.026434030</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          GR AOC GR AOC within set range        GR50      GR Max       GEC50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;                   &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             GR Inf      GR 0      h GR     GR R2   GR p Value       GR Rss</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              &lt;num&gt;     &lt;num&gt;     &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:  0.3651678148 1.0000000 1.9119007 0.9884406 1.660656e-07 0.0045303452</span>
@@ -1353,6 +1364,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: -0.7443040083 1.0000000 2.2046853 0.9985705 1.104466e-10 0.0081610637</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: -0.7340189608 1.0000000 1.8543083 0.9987249 7.403286e-11 0.0064842414</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             GR Inf      GR 0      h GR     GR R2   GR p Value       GR Rss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              &lt;num&gt;     &lt;num&gt;     &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      GR maxlog10Concentration GR N Conc  GR Sd Avg            Fit Type GR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:                        1         9 0.03203268 DRC3pHillFitModelFixS0</span>
@@ -1456,6 +1468,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:                        1         9 0.06333498 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:                        1         9 0.07007818 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      GR maxlog10Concentration GR N Conc  GR Sd Avg            Fit Type GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Fit Source Gnumber Drug Name Drug MOA Duration    Clid Cell Line Name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;    &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;         &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:        gDR  G00002  drug_002    moa_A       72 CL00011    cellline_BA</span>
@@ -1559,6 +1572,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:        gDR  G00010  drug_010    moa_A       72 CL00020    cellline_KB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:        gDR  G00011  drug_011    moa_B       72 CL00020    cellline_KB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Fit Source Gnumber Drug Name Drug MOA Duration    Clid Cell Line Name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;    &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;         &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue Reference Division Time   RV Mean     RV AOC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                   &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: tissue_x                      26 0.4466890 0.55331098</span>
@@ -1662,6 +1676,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: tissue_z                      62 0.5769999 0.42300010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: tissue_z                      62 0.4117805 0.58821946</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue Reference Division Time   RV Mean     RV AOC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                   &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV AOC within set range        IC50      E Max        EC50      E Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;num&gt;       &lt;num&gt;      &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:              0.62771204 0.007253171 0.32793333 0.003795893 0.34682665</span>
@@ -1765,6 +1780,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:              0.47231044 0.150209032 0.07513333 0.137152296 0.09235428</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:              0.69005808 0.027440547 0.08603333 0.024485958 0.09662172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV AOC within set range        IC50      E Max        EC50      E Inf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;num&gt;       &lt;num&gt;      &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             E0     h RV     RV R2   RV p Value       RV Rss</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: 1.0000000 1.827031 0.9924695 3.705769e-08 0.0027788222</span>
@@ -1868,6 +1884,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: 1.0000000 2.245643 0.9988156 5.718652e-11 0.0018424204</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: 1.0000000 1.884916 0.9986615 8.773134e-11 0.0018446214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             E0     h RV     RV R2   RV p Value       RV Rss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV maxlog10Concentration RV N Conc  RV Sd Avg            Fit Type RV</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:                        1         9 0.02424423 DRC3pHillFitModelFixS0</span>
@@ -1971,6 +1988,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:                        1         9 0.03151223 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:                        1         9 0.03335063 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV maxlog10Concentration RV N Conc  RV Sd Avg            Fit Type RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-in"><span><span class="fu">convert_se_assay_to_custom_dt</span><span class="op">(</span><span class="va">se</span>, <span class="st">"Metrics"</span>, output_table <span class="op">=</span> <span class="st">"Metrics_initial"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           rId                             cId     x_mean</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;char&gt;                          &lt;char&gt;      &lt;num&gt;</span>
@@ -2208,6 +2226,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: G00010_drug_010_moa_A_72 CL00020_cellline_KB_tissue_z_62  0.199150357</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: G00011_drug_011_moa_B_72 CL00020_cellline_KB_tissue_z_62 -0.114813416</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          r Id                            c Id      GR Mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;char&gt;                          &lt;char&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          GR AOC GR AOC within set range         GR50      GR Max       GEC50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;                   &lt;num&gt;        &lt;num&gt;       &lt;num&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: 0.52707024              0.60484720  0.008956223  0.33660000 0.004512560</span>
@@ -2311,6 +2330,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: 0.80084964              0.89159948  0.096729600 -0.78626667 0.146270629</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: 1.11481342              1.30596053  0.016239553 -0.76026667 0.026434030</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          GR AOC GR AOC within set range         GR50      GR Max       GEC50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;                   &lt;num&gt;        &lt;num&gt;       &lt;num&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             GR Inf      GR 0      h GR     GR R2   GR p Value       GR Rss</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              &lt;num&gt;     &lt;num&gt;     &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:  0.3651678148 1.0000000 1.9119007 0.9884406 1.660656e-07 0.0045303452</span>
@@ -2414,6 +2434,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: -0.7443040083 1.0000000 2.2046853 0.9985705 1.104466e-10 0.0081610637</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: -0.7340189608 1.0000000 1.8543083 0.9987249 7.403286e-11 0.0064842414</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             GR Inf      GR 0      h GR     GR R2   GR p Value       GR Rss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              &lt;num&gt;     &lt;num&gt;     &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      GR maxlog10Concentration GR N Conc  GR Sd Avg            Fit Type GR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:                        1         9 0.03203268 DRC3pHillFitModelFixS0</span>
@@ -2517,6 +2538,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:                        1         9 0.06333498 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:                        1         9 0.07007818 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      GR maxlog10Concentration GR N Conc  GR Sd Avg            Fit Type GR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Fit Source Gnumber Drug Name Drug MOA Duration    Clid Cell Line Name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;    &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;         &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:        gDR  G00002  drug_002    moa_A       72 CL00011    cellline_BA</span>
@@ -2620,6 +2642,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:        gDR  G00010  drug_010    moa_A       72 CL00020    cellline_KB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:        gDR  G00011  drug_011    moa_B       72 CL00020    cellline_KB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Fit Source Gnumber Drug Name Drug MOA Duration    Clid Cell Line Name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;char&gt;  &lt;char&gt;    &lt;char&gt;   &lt;char&gt;    &lt;num&gt;  &lt;char&gt;         &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue Reference Division Time   RV Mean     RV AOC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                   &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: tissue_x                      26 0.4466890 0.55331098</span>
@@ -2723,6 +2746,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: tissue_z                      62 0.5769999 0.42300010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: tissue_z                      62 0.4117805 0.58821946</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tissue Reference Division Time   RV Mean     RV AOC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;char&gt;                   &lt;num&gt;     &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV AOC within set range         IC50      E Max        EC50      E Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;num&gt;        &lt;num&gt;      &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:              0.62771204  0.007253171 0.32793333 0.003795893 0.34682665</span>
@@ -2826,6 +2850,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:              0.47231044  0.150209032 0.07513333 0.137152296 0.09235428</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:              0.69005808  0.027440547 0.08603333 0.024485958 0.09662172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV AOC within set range         IC50      E Max        EC50      E Inf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        &lt;num&gt;        &lt;num&gt;      &lt;num&gt;       &lt;num&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             E0     h RV     RV R2   RV p Value       RV Rss</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1: 1.0000000 1.827031 0.9924695 3.705769e-08 0.0027788222</span>
@@ -2929,6 +2954,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99: 1.0000000 2.245643 0.9988156 5.718652e-11 0.0018424204</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100: 1.0000000 1.884916 0.9986615 8.773134e-11 0.0018446214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             E0     h RV     RV R2   RV p Value       RV Rss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;num&gt;     &lt;num&gt;        &lt;num&gt;        &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV maxlog10Concentration RV N Conc  RV Sd Avg            Fit Type RV</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:                        1         9 0.02424423 DRC3pHillFitModelFixS0</span>
@@ -3032,6 +3058,7 @@ To extract the reference data in the same format as 'Averaged' use <code>convert
 <span class="r-out co"><span class="r-pr">#&gt;</span>  99:                        1         9 0.03151223 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100:                        1         9 0.03335063 DRC3pHillFitModelFixS0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      RV maxlog10Concentration RV N Conc  RV Sd Avg            Fit Type RV</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;num&gt;     &lt;int&gt;      &lt;num&gt;                 &lt;char&gt;</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
