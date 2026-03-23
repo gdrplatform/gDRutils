@@ -86,6 +86,7 @@ standardize_se <- function(se, use_default = TRUE) {
     })
     assays(se) <- assayList
   }
+  se <- set_SE_identifiers(se, to_idfs)
   se
 }
 
