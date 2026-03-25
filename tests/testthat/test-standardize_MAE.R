@@ -22,7 +22,7 @@ test_that("standardize_se works as expected",  {
   se@metadata$identifiers$concentration2 <- "dose 2"
   rowData(se) <- rename_DFrame(rowData(se), c("Gnumber" = "druuug"))
   assay(se, "RawTreated") <- rename_bumpy(assay(se, "RawTreated"), c("Concentration_2" = "dose 2"))
-  se_standardized <- standardize_se(se)
+  se_standardized <- purrr::quietly(standardize_se)(se)$result
   expect_equal(convert_se_assay_to_dt(se_standardized, "RawTreated"),
                convert_se_assay_to_dt(se_original, "RawTreated"))
 })
@@ -34,7 +34,7 @@ test_that("standardize_se works as expected with default = FALSE",  {
   se@metadata$identifiers$concentration2 <- "dose 2"
   rowData(se) <- rename_DFrame(rowData(se), c("Gnumber" = "druuug"))
   assay(se, "RawTreated") <- rename_bumpy(assay(se, "RawTreated"), c("Concentration_2" = "dose 2"))
-  se_standardized <- standardize_se(standardize_se(se), use_default = FALSE)
+  se_standardized <- standardize_se(se, use_default = FALSE)
   expect_equal(convert_se_assay_to_dt(se_standardized, "RawTreated"),
                convert_se_assay_to_dt(se, "RawTreated"))
 })
