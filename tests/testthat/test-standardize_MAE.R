@@ -49,7 +49,7 @@ test_that("standardize_MAE works as expected",  {
   rowData(mae[[1]]) <- rename_DFrame(rowData(mae[[1]]), c("Gnumber" = "druuug"))
   rowData(mae[[2]]) <- rename_DFrame(rowData(mae[[2]]), c("Gnumber" = "druuug"))
   assay(mae[[1]], "RawTreated") <- rename_bumpy(assay(mae[[1]], "RawTreated"), c("Concentration_2" = "dose 2"))
-  mae_standardized <- standardize_mae(mae)
+  mae_standardized <- purrr::quietly(standardize_mae)(mae)$result
   expect_equal(convert_mae_assay_to_dt(mae_standardized, "RawTreated"),
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })
@@ -63,7 +63,7 @@ test_that("standardize_MAE works with polymapped identifiers",  {
   rowData(mae[[1]]) <- rename_DFrame(rowData(mae[[1]]), c("Gnumber" = "druuug"))
   rowData(mae[[2]]) <- rename_DFrame(rowData(mae[[2]]), c("Gnumber" = "druuug"))
   assay(mae[[1]], "RawTreated") <- rename_bumpy(assay(mae[[1]], "RawTreated"), c("Concentration_2" = "dose 2"))
-  mae_standardized <- standardize_mae(mae)
+  mae_standardized <- purrr::quietly(standardize_mae)(mae)$result
   expect_equal(convert_mae_assay_to_dt(mae_standardized, "RawTreated"),
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })
