@@ -86,7 +86,11 @@ standardize_se <- function(se, use_default = TRUE) {
     })
     assays(se) <- assayList
   }
-  se
+  if (use_default) {
+    set_SE_identifiers(se, to_idfs)
+  } else {
+    se
+  }
 }
 
 #' @keywords internal

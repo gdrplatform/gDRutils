@@ -1,3 +1,6 @@
+## gDRutils 1.9.6 - 2026-03-23
+* `standardize_MAE` standardizes also internal identifiers
+
 ## gDRutils 1.9.5 - 2026-02-12
 * `remove_drug_batch` supports atomic vectors as input 
 
