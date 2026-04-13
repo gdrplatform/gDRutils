@@ -349,8 +349,8 @@ convert_se_assay_to_custom_dt <- function(se,
   }
   
   if (output_table %in% c("Metrics", "Metrics_raw")) {
-    # SE*.qs files contain 'c50' column instead of the 'ec50' in the metrics
-    # this is a temporary fix that should be removed once data (qs files) is reprocessed
+    # SE*.qs2 files contain 'c50' column instead of the 'ec50' in the metrics
+    # this is a temporary fix that should be removed once data (qs2 files) is reprocessed
     data.table::setnames(dt, "c50", "ec50", skip_absent = TRUE)
     
     groups <- c("normalization_type", "fit_source")

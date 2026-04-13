@@ -105,7 +105,7 @@ assert_choices <- function(x, choices, ...) {
 #' @return list or vector depends on unify param
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' MAEpply(mae, SummarizedExperiment::assayNames)
 #' 
 #' @keywords package_utils
@@ -276,10 +276,10 @@ loop <- function(x,
 #' @param FUN A user-defined function to apply to each element of the batch.
 #' @param ... Optional arguments passed to `FUN`.
 #'
-#' @return This function does not return a value. It saves the processed batch results to disk as a `.qs` file.
+#' @return This function does not return a value. It saves the processed batch results to disk as a `.qs2` file.
 #'
 #' @details The function applies `FUN` to each element in `batch`, saves the results to a file named
-#' according to the format `<fun_name>_<unique_id>_<start_index>_of_<total_iterations>_batch.qs`, and clears
+#' according to the format `<fun_name>_<unique_id>_<start_index>_of_<total_iterations>_batch.qs2`, and clears
 #' memory using `gc()` after saving.
 #'
 #' @examples
@@ -329,7 +329,7 @@ process_batch <- function(batch,
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' se <- mae[[1]]
 #' FUN <- function(x) {
 #'   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
@@ -398,7 +398,7 @@ apply_bumpy_function <- function(se,
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' is_mae_empty(mae)
 #' 
 #' @keywords package_utils
@@ -419,7 +419,7 @@ is_mae_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' is_any_exp_empty(mae)
 #' 
 #' @keywords package_utils
@@ -440,7 +440,7 @@ is_any_exp_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' se <- mae[[1]]
 #' is_exp_empty(se)
 #' 
@@ -472,7 +472,7 @@ is_exp_empty <- function(exp) {
 #' @return charvec with non-empty experiments
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' get_non_empty_assays(mae)
 #' 
 #' @keywords package_utils
@@ -492,7 +492,7 @@ get_non_empty_assays <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @examples
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- gDRutils::get_synthetic_data("small")
 #' mcolData(mae)
 #'
 #' @return data.table with all-experiments colData
@@ -515,7 +515,7 @@ mcolData <- function(mae) {
 #' @return data.table with all-experiments rowData
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs") 
+#' mae <- gDRutils::get_synthetic_data("small") 
 #' mrowData(mae)
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
@@ -527,13 +527,13 @@ mrowData <- function(mae) {
 
 #' Get synthetic data from gDRtestData package
 #'
-#' @param qs qs filename
+#' @param qs dataset name or qs2 filename (e.g. \code{"small"} or \code{"finalMAE_small.qs2"})
 #' 
 #' @keywords package_utils
 #' @export
 #' 
 #' @examples
-#' get_synthetic_data("finalMAE_small.qs2")
+#' gDRutils::get_synthetic_data("small")
 #'
 #' @return loaded data
 #' 
