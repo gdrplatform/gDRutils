@@ -13,7 +13,7 @@ listSE3 <- c(listSE[1], listSE2[2])
 
 listSE4 <- c(listSE[1], ligand = qs2::qs_read(
   list.files(system.file(package = "gDRtestData", "testdata"),
-             "Ligand.*\\.qs2$", full.names = TRUE))[[1]])
+             "Ligand.*\\.qs2$", full.names = TRUE)[1])[[1]])
 
 
 test_that("merge_assay works as expected", {
