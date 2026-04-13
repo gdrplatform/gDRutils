@@ -187,10 +187,10 @@ test_that("process_batch works as expected", {
   process_batch(namedBatch, start_index = 1, fun_name = "test_fun", unique_id = "test_id", 
                 total_iterations = n, temp_dir = temp_dir, FUN = sum)
   
-  file_path <- file.path(temp_dir, "test_fun_test_id_1_of_50_batch.qs")
+  file_path <- file.path(temp_dir, "test_fun_test_id_1_of_50_batch.qs2")
   expect_true(file.exists(file_path))
-  
-  saved_results <- qs::qread(file_path)
+
+  saved_results <- qs2::qs_read(file_path)
   expect_true(is.list(saved_results))
   expect_length(saved_results, n)
   expect_equal(names(saved_results), names(namedBatch))
@@ -200,12 +200,12 @@ test_that("process_batch works as expected", {
   process_batch(list(), start_index = 1, fun_name = "test_fun", unique_id = "test_id", 
                 total_iterations = 1, temp_dir = temp_dir, FUN = sum)
   
-  empty_file_path <- file.path(temp_dir, "test_fun_test_id_1_of_0_batch.qs")
+  empty_file_path <- file.path(temp_dir, "test_fun_test_id_1_of_0_batch.qs2")
   expect_false(file.exists(empty_file_path))
 })
 
 test_that("get_synthetic_data works as expected", {
-  expect_is(get_synthetic_data("finalMAE_small.qs"),
+  expect_is(get_synthetic_data("finalMAE_small.qs2"),
             "MultiAssayExperiment")
   expect_is(get_synthetic_data("finalMAE_small"),
             "MultiAssayExperiment")

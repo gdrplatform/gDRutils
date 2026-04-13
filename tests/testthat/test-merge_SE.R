@@ -1,19 +1,19 @@
 listMAE <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                             "final", full.names = TRUE)[1:2], qs::qread)
+                             "final.*\\.qs2$", full.names = TRUE)[1:2], qs2::qs_read)
 names(listMAE) <- c("MAE1", "MAE2")
 listSE <- lapply(listMAE, function(x) x[[2]])
 names(listSE) <- c("combo1", "combo2")
 
 listMAE2 <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                             "final", full.names = TRUE)[1:2], qs::qread)
+                             "final.*\\.qs2$", full.names = TRUE)[1:2], qs2::qs_read)
 listSE2 <- lapply(listMAE, function(x) x[[1]])
 names(listSE2) <- c("combo1", "combo2")
 
 listSE3 <- c(listSE[1], listSE2[2])
 
-listSE4 <- c(listSE[1], ligand = qs::qread(
+listSE4 <- c(listSE[1], ligand = qs2::qs_read(
   list.files(system.file(package = "gDRtestData", "testdata"),
-             "Ligand", full.names = TRUE))[[1]])
+             "Ligand.*\\.qs2$", full.names = TRUE))[[1]])
 
 
 test_that("merge_assay works as expected", {

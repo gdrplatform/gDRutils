@@ -207,7 +207,7 @@ loop <- function(x,
                              paste0(fun_name, "_",
                                     unique_id, "_",
                                     start_index, "_of_",
-                                    total_iterations, "_batch.qs"))
+                                    total_iterations, "_batch.qs2"))
       file.exists(file_path)
     }, logical(1))
     
@@ -237,9 +237,9 @@ loop <- function(x,
                              paste0(fun_name, "_",
                                     unique_id, "_",
                                     start_index, "_of_",
-                                    total_iterations, "_batch.qs"))
+                                    total_iterations, "_batch.qs2"))
       if (file.exists(file_path)) {
-        batch_results <- qs::qread(file_path)
+        batch_results <- qs2::qs_read(file_path)
         final_results <- c(final_results, batch_results)
       }
     }
@@ -249,7 +249,7 @@ loop <- function(x,
                              paste0(fun_name, "_",
                                     unique_id, "_",
                                     start_index, "_of_",
-                                    total_iterations, "_batch.qs"))
+                                    total_iterations, "_batch.qs2"))
       if (file.exists(file_path)) {
         file.remove(file_path)
       }
@@ -310,8 +310,8 @@ process_batch <- function(batch,
                          paste0(fun_name, "_",
                                 unique_id, "_",
                                 start_index, "_of_",
-                                total_iterations, "_batch.qs"))
-  qs::qsave(results, file_path)
+                                total_iterations, "_batch.qs2"))
+  qs2::qs_save(results, file_path)
   invisible(gc()) # clear memory after saving the batch
 }
 
@@ -532,8 +532,8 @@ mrowData <- function(mae) {
 #' @keywords package_utils
 #' @export
 #' 
-#' @examples 
-#' get_synthetic_data("finalMAE_small.qs") 
+#' @examples
+#' get_synthetic_data("finalMAE_small.qs2")
 #'
 #' @return loaded data
 #' 
@@ -542,15 +542,13 @@ get_synthetic_data <- function(qs) {
   if (!grepl("finalMAE", qs)) {
     qs <- paste("finalMAE", qs, sep = "_")
   }
-  # check if extension exist and is supported -`qs`, if not add one or replace
-  if (!grepl(".qs$", qs)) {
-    if (grepl(".RDS$", qs)) {
-      qs <- gsub(".RDS", ".qs", qs)
-    } else {
-      qs <- paste0(qs, ".qs")
-    }
+  # normalize extension to .qs2 (handles .qs, .RDS, or no extension)
+  qs <- sub("\\.qs$", ".qs2", qs)
+  qs <- sub("\\.RDS$", ".qs2", qs)
+  if (!grepl("\\.qs2$", qs)) {
+    qs <- paste0(qs, ".qs2")
   }
-  qs::qread(system.file("testdata", qs, package = "gDRtestData"))
+  qs2::qs_read(system.file("testdata", qs, package = "gDRtestData"))
 }
 
 
