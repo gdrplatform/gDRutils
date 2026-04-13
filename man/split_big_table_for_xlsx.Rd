@@ -4,7 +4,7 @@
 \alias{split_big_table_for_xlsx}
 \title{Split big table}
 \usage{
-split_big_table_for_xlsx(dt_list, max_row = 1000000, max_col = 16000)
+split_big_table_for_xlsx(dt_list, max_row = 1e+06, max_col = 16000)
 }
 \arguments{
 \item{dt_list}{list of data.tables. Each data.table will be checked and

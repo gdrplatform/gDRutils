@@ -33,14 +33,14 @@ process_batch(
 \item{...}{Optional arguments passed to \code{FUN}.}
 }
 \value{
-This function does not return a value. It saves the processed batch results to disk as a \code{.qs} file.
+This function does not return a value. It saves the processed batch results to disk as a \code{.qs2} file.
 }
 \description{
 Process and save a batch of results.
 }
 \details{
 The function applies \code{FUN} to each element in \code{batch}, saves the results to a file named
-according to the format \verb{<fun_name>_<unique_id>_<start_index>_of_<total_iterations>_batch.qs}, and clears
+according to the format \verb{<fun_name>_<unique_id>_<start_index>_of_<total_iterations>_batch.qs2}, and clears
 memory using \code{gc()} after saving.
 }
 \examples{

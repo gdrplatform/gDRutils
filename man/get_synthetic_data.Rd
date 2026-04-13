@@ -7,7 +7,7 @@
 get_synthetic_data(qs)
 }
 \arguments{
-\item{qs}{qs filename}
+\item{qs}{dataset name or qs2 filename (e.g. \code{"small"} or \code{"finalMAE_small.qs2"})}
 }
 \value{
 loaded data
@@ -16,7 +16,7 @@ loaded data
 Get synthetic data from gDRtestData package
 }
 \examples{
-get_synthetic_data("finalMAE_small.qs") 
+gDRutils::get_synthetic_data("small")
 
 }
 \keyword{package_utils}
