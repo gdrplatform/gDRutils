@@ -1,3 +1,6 @@
+## gDRutils 1.9.7 - 2026-04-14
+* add support for metadata in `merge_MAE`
+
 ## gDRutils 1.9.6 - 2026-03-23
 * `standardize_MAE` standardizes also internal identifiers
 
