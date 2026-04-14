@@ -28,9 +28,7 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
   metadata_fields <- identify_unique_se_metadata_fields(listSE)
   mergedMetadata <- merge_metadata(listSE, metadata_fields)
   expect_identical(names(mergedMetadata), metadata_fields)
-  
-  # NEW: experiment_metadata is no longer nested by names(listSE).
-  # It is now synthesized, so we check for standard keys like 'sources'.
+
   if ("experiment_metadata" %in% names(mergedMetadata)) {
     expect_true("sources" %in% names(mergedMetadata$experiment_metadata))
   }
