@@ -8,7 +8,11 @@ merge_MAE(
   MAElist,
   additional_col_name = "data_source",
   discard_keys = c("normalization_type", "fit_source", "record_id", "isDay0", "swap_sa",
-    "control_type", "iso_level", "conc_1", "conc_2")
+    "control_type", "iso_level", "conc_1", "conc_2"),
+  title = NULL,
+  description = NULL,
+  source_name = NULL,
+  source_id = NULL
 )
 }
 \arguments{
@@ -20,6 +24,14 @@ that can arise from multiple projects.}
 
 \item{discard_keys}{Character vector of strings that will be discarded
 during creating BumpyMatrix object.}
+
+\item{title}{String specifying the final DataSetDB title. If NULL, auto-generates.}
+
+\item{description}{String specifying the final DataSetDB description. If NULL, auto-generates.}
+
+\item{source_name}{String specifying the standard DSDB source name. If NULL, auto-detects or uses "merged_analysis".}
+
+\item{source_id}{String specifying the unique DSDB source ID. If NULL, uses "merged_dataset".}
 }
 \value{
 Merged MultiAssayExperiment object.
@@ -30,7 +42,7 @@ Merge multiple MultiAssayExperiment objects
 \examples{
 mae1 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
 mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
-merge_MAE(list(mae1 = mae1, mae2 = mae2))
+merge_MAE(list(mae1 = mae1, mae2 = mae2), title = "Test", description = "Test MAE")
 
 }
 \keyword{SE_operators}

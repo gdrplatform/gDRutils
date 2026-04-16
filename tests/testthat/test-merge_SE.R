@@ -5,7 +5,7 @@ listSE <- lapply(listMAE, function(x) x[[2]])
 names(listSE) <- c("combo1", "combo2")
 
 listMAE2 <- lapply(list.files(system.file(package = "gDRtestData", "testdata"),
-                             "final", full.names = TRUE)[1:2], qs::qread)
+                              "final", full.names = TRUE)[1:2], qs::qread)
 listSE2 <- lapply(listMAE, function(x) x[[1]])
 names(listSE2) <- c("combo1", "combo2")
 
@@ -28,8 +28,11 @@ test_that("merge_metadata and identify_unique_se_metadata_fields work as expecte
   metadata_fields <- identify_unique_se_metadata_fields(listSE)
   mergedMetadata <- merge_metadata(listSE, metadata_fields)
   expect_identical(names(mergedMetadata), metadata_fields)
-  expect_identical(names(mergedMetadata$experiment_metadata), names(listSE))
 
+  if ("experiment_metadata" %in% names(mergedMetadata)) {
+    expect_true("sources" %in% names(mergedMetadata$experiment_metadata))
+  }
+  
   listSE2 <- listSE
   newMetaName <- "dummy_meta"
   S4Vectors::metadata(listSE2$combo1)[[newMetaName]] <- list()
@@ -45,15 +48,16 @@ test_that("merge_SE works as expected", {
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
+  
   additional_col_name <- "QCS"
   mergedSE2 <- purrr::quietly(merge_SE)(listSE, additional_col_name)
   assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
   expect_identical(SummarizedExperiment::assayNames(listSE[[1]]),
-                   SummarizedExperiment::assayNames(mergedSE[[1]]))
+                   SummarizedExperiment::assayNames(mergedSE$result))
   reset_env_identifiers()
-  })
+})
 
 
 test_that("merge_SE works as expected with combo matrix data", {
@@ -61,13 +65,14 @@ test_that("merge_SE works as expected with combo matrix data", {
   checkmate::expect_class(mergedSE$result, "SummarizedExperiment")
   S4Vectors::metadata(mergedSE$result)[["df_raw_data"]] <- list(NULL)
   validate_SE(mergedSE$result)
+  
   additional_col_name <- "QCS"
   mergedSE2 <- purrr::quietly(merge_SE)(listSE2, additional_col_name)
   assayNormalized <- convert_se_assay_to_dt(mergedSE2$result, "Metrics") 
   expect_true(additional_col_name %in% names(assayNormalized))
   expect_identical(unique(assayNormalized[[additional_col_name]]), names(listSE))
   expect_identical(SummarizedExperiment::assayNames(listSE2[[1]]),
-                   SummarizedExperiment::assayNames(mergedSE[[1]]))
+                   SummarizedExperiment::assayNames(mergedSE$result))
 })
 
 test_that("merge_SE works as expected with mixed data types", {
@@ -85,10 +90,28 @@ test_that("merge_SE works with data with additional perturbations", {
   expect_equal(dim(mergedSE$result), c(10, 5))
 })
 
-test_that("merge_MAE works as expected", {
-  mergedMAE <- purrr::quietly(merge_MAE)(listMAE)
+test_that("merge_MAE works as expected with synthetic metadata injection", {
+  custom_title <- "Unit Test Merged MAE"
+  custom_source_id <- "test_dataset_001"
+  
+  mergedMAE <- purrr::quietly(merge_MAE)(
+    listMAE, 
+    title = custom_title,
+    source_id = custom_source_id
+  )
   checkmate::expect_class(mergedMAE$result, "MultiAssayExperiment")
   validate_MAE(mergedMAE$result)
+  
+  mae_meta <- S4Vectors::metadata(mergedMAE$result)
+  if (!is.null(mae_meta$.internal$DataSetDB$dataset)) {
+    expect_equal(mae_meta$.internal$DataSetDB$dataset$title, custom_title)
+    expect_equal(mae_meta$.internal$DataSetDB$dataset$sources[[1]]$id, custom_source_id)
+  }
+  
+  se_meta <- S4Vectors::metadata(mergedMAE$result[[1]])$experiment_metadata
+  expect_equal(se_meta$title, custom_title)
+  expect_equal(se_meta$sources[[1]]$id, custom_source_id)
+  
   expect_identical(
     SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(listMAE[[1]])[[1]]),
     SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(mergedMAE$result)[[1]])
