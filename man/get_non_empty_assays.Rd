@@ -16,7 +16,7 @@ charvec with non-empty experiments
 get non empty assays
 }
 \examples{
-mae <- gDRutils::get_synthetic_data("small")
+mae <- get_synthetic_data("small")
 get_non_empty_assays(mae)
 
 }

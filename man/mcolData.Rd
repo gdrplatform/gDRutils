@@ -16,7 +16,7 @@ data.table with all-experiments colData
 get colData of all experiments
 }
 \examples{
-mae <- gDRutils::get_synthetic_data("small")
+mae <- get_synthetic_data("small")
 mcolData(mae)
 
 }

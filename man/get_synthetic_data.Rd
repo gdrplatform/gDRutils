@@ -16,7 +16,7 @@ loaded data
 Get synthetic data from gDRtestData package
 }
 \examples{
-gDRutils::get_synthetic_data("small")
+get_synthetic_data("small")
 
 }
 \keyword{package_utils}

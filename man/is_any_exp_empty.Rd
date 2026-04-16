@@ -16,7 +16,7 @@ logical
 check if any experiment is empty
 }
 \examples{
-mae <- gDRutils::get_synthetic_data("small")
+mae <- get_synthetic_data("small")
 is_any_exp_empty(mae)
 
 }

@@ -105,7 +105,7 @@ assert_choices <- function(x, choices, ...) {
 #' @return list or vector depends on unify param
 #' 
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' MAEpply(mae, SummarizedExperiment::assayNames)
 #' 
 #' @keywords package_utils
@@ -329,7 +329,7 @@ process_batch <- function(batch,
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' se <- mae[[1]]
 #' FUN <- function(x) {
 #'   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
@@ -398,7 +398,7 @@ apply_bumpy_function <- function(se,
 #' @return logical
 #' 
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' is_mae_empty(mae)
 #' 
 #' @keywords package_utils
@@ -419,7 +419,7 @@ is_mae_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' is_any_exp_empty(mae)
 #' 
 #' @keywords package_utils
@@ -440,7 +440,7 @@ is_any_exp_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' se <- mae[[1]]
 #' is_exp_empty(se)
 #' 
@@ -472,7 +472,7 @@ is_exp_empty <- function(exp) {
 #' @return charvec with non-empty experiments
 #' 
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' get_non_empty_assays(mae)
 #' 
 #' @keywords package_utils
@@ -492,7 +492,7 @@ get_non_empty_assays <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @examples
-#' mae <- gDRutils::get_synthetic_data("small")
+#' mae <- get_synthetic_data("small")
 #' mcolData(mae)
 #'
 #' @return data.table with all-experiments colData
@@ -515,7 +515,7 @@ mcolData <- function(mae) {
 #' @return data.table with all-experiments rowData
 #'
 #' @examples 
-#' mae <- gDRutils::get_synthetic_data("small") 
+#' mae <- get_synthetic_data("small") 
 #' mrowData(mae)
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
@@ -533,7 +533,7 @@ mrowData <- function(mae) {
 #' @export
 #' 
 #' @examples
-#' gDRutils::get_synthetic_data("small")
+#' get_synthetic_data("small")
 #'
 #' @return loaded data
 #' 
