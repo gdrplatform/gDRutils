@@ -16,11 +16,11 @@ logical
 Checks if \code{se} is combo dataset.
 }
 \examples{
-se <- get_synthetic_data("combo_matrix")[[1]]
+se <- get_synthetic_data("finalMAE_combo_matrix.qs2")[[1]]
 is_combo_data(se)
-se <- get_synthetic_data("combo_matrix")[[2]]
+se <- get_synthetic_data("finalMAE_combo_matrix.qs2")[[2]]
 is_combo_data(se)
-se <- get_synthetic_data("small")[[1]]
+se <- get_synthetic_data("finalMAE_small.qs2")[[1]]
 is_combo_data(se)
 
 }

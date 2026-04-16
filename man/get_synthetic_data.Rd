@@ -16,7 +16,7 @@ loaded data
 Get synthetic data from gDRtestData package
 }
 \examples{
-get_synthetic_data("small")
+get_synthetic_data("finalMAE_small.qs2")
 
 }
 \keyword{package_utils}

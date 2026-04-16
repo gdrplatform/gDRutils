@@ -105,7 +105,7 @@ assert_choices <- function(x, choices, ...) {
 #' @return list or vector depends on unify param
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' MAEpply(mae, SummarizedExperiment::assayNames)
 #' 
 #' @keywords package_utils
@@ -329,7 +329,7 @@ process_batch <- function(batch,
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' FUN <- function(x) {
 #'   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
@@ -398,7 +398,7 @@ apply_bumpy_function <- function(se,
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' is_mae_empty(mae)
 #' 
 #' @keywords package_utils
@@ -419,7 +419,7 @@ is_mae_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' is_any_exp_empty(mae)
 #' 
 #' @keywords package_utils
@@ -440,7 +440,7 @@ is_any_exp_empty <- function(mae) {
 #' @return logical
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' is_exp_empty(se)
 #' 
@@ -472,7 +472,7 @@ is_exp_empty <- function(exp) {
 #' @return charvec with non-empty experiments
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' get_non_empty_assays(mae)
 #' 
 #' @keywords package_utils
@@ -492,7 +492,7 @@ get_non_empty_assays <- function(mae) {
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 #' 
 #' @examples
-#' mae <- get_synthetic_data("small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' mcolData(mae)
 #'
 #' @return data.table with all-experiments colData
@@ -515,7 +515,7 @@ mcolData <- function(mae) {
 #' @return data.table with all-experiments rowData
 #'
 #' @examples 
-#' mae <- get_synthetic_data("small") 
+#' mae <- get_synthetic_data("finalMAE_small.qs2") 
 #' mrowData(mae)
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
@@ -533,7 +533,7 @@ mrowData <- function(mae) {
 #' @export
 #' 
 #' @examples
-#' get_synthetic_data("small")
+#' get_synthetic_data("finalMAE_small.qs2")
 #'
 #' @return loaded data
 #' 
@@ -711,11 +711,11 @@ average_biological_replicates_dt <- function(
 #' @param se SummarizedExperiment
 #' 
 #' @examples
-#' se <- get_synthetic_data("combo_matrix")[[1]]
+#' se <- get_synthetic_data("finalMAE_combo_matrix.qs2")[[1]]
 #' is_combo_data(se)
-#' se <- get_synthetic_data("combo_matrix")[[2]]
+#' se <- get_synthetic_data("finalMAE_combo_matrix.qs2")[[2]]
 #' is_combo_data(se)
-#' se <- get_synthetic_data("small")[[1]]
+#' se <- get_synthetic_data("finalMAE_small.qs2")[[1]]
 #' is_combo_data(se)
 #'
 #' @return logical
@@ -1058,7 +1058,7 @@ remove_drug_batch <- function(drug_vec,
 #'        
 #' @examples
 #' # single-agent data
-#' sdata <- get_synthetic_data("finalMAE_small")
+#' sdata <- get_synthetic_data("finalMAE_small.qs2")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Metrics")
 #' saveraged_data <- convert_se_assay_to_dt(sdata[[get_supported_experiments("sa")]], "Averaged")
 #' smetrics_data_capped <- cap_assay_infinities(saveraged_data,
@@ -1066,7 +1066,7 @@ remove_drug_batch <- function(drug_vec,
 #'                                              experiment_name = "single-agent")
 #' 
 #' # combination data
-#' cdata <- get_synthetic_data("finalMAE_combo_matrix_small")
+#' cdata <- get_synthetic_data("finalMAE_combo_matrix_small.qs2")
 #' scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
 #' scmetrics_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Metrics")
 #' scmetrics_data_capped <- cap_assay_infinities(scaveraged_data,

@@ -16,7 +16,7 @@ logical
 check if any experiment is empty
 }
 \examples{
-mae <- get_synthetic_data("small")
+mae <- get_synthetic_data("finalMAE_small.qs2")
 is_any_exp_empty(mae)
 
 }

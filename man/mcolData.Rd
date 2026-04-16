@@ -16,7 +16,7 @@ data.table with all-experiments colData
 get colData of all experiments
 }
 \examples{
-mae <- get_synthetic_data("small")
+mae <- get_synthetic_data("finalMAE_small.qs2")
 mcolData(mae)
 
 }

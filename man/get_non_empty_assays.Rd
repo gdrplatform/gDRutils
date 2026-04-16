@@ -16,7 +16,7 @@ charvec with non-empty experiments
 get non empty assays
 }
 \examples{
-mae <- get_synthetic_data("small")
+mae <- get_synthetic_data("finalMAE_small.qs2")
 get_non_empty_assays(mae)
 
 }
