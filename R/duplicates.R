@@ -31,7 +31,7 @@ has_dt_duplicated_rows <- function(dt, col_names = NULL) {
 #' 
 #' @param dt data.table with assay data
 #' @examples
-#' sdata <- get_synthetic_data("finalMAE_small")
+#' sdata <- get_synthetic_data("finalMAE_small.qs2")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 #' get_assay_req_uniq_cols(smetrics_data)
 #' @return charvec with columns required to have unique data
@@ -80,7 +80,7 @@ get_assay_req_uniq_cols <- function(dt) {
 #' @return logical flag indicating if a dt contains duplicated rows or not
 #' @keywords duplicates
 #' @examples
-#' sdata <- get_synthetic_data("finalMAE_small")
+#' sdata <- get_synthetic_data("finalMAE_small.qs2")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 #' has_assay_dt_duplicated_rows(smetrics_data)
 #' @export
@@ -142,7 +142,7 @@ get_duplicated_rows <- function(x,
 #' @param output string with the output format to be returned
 #' @return integer vector or data.table with duplicated rows
 #' @examples
-#' sdata <- get_synthetic_data("finalMAE_small")
+#' sdata <- get_synthetic_data("finalMAE_small.qs2")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 #' get_assay_dt_duplicated_rows(smetrics_data, output = "data")
 #' get_assay_dt_duplicated_rows(smetrics_data)
@@ -169,7 +169,7 @@ get_assay_dt_duplicated_rows <- function(dt, output = "index") {
 #' @param msg_f function to be used to throw the message
 #' @param preview_max_numb number of rows to preview if duplicates found
 #' @examples
-#' sdata <- get_synthetic_data("finalMAE_small")
+#' sdata <- get_synthetic_data("finalMAE_small.qs2")
 #' smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 #' throw_msg_if_duplicates(smetrics_data, assay_name = "Metrics", msg_f = futile.logger::flog.info)
 #' @return NULL

@@ -38,7 +38,7 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 #' @export
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small") 
+#' mae <- get_synthetic_data("finalMAE_small.qs2") 
 #' se <- mae[[1]]
 #' validate_se_assay_name(se, "RawTreated")
 #'
@@ -71,7 +71,7 @@ validate_se_assay_name <- function(se, name) {
 #' @export
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' validate_SE(se)
 #'
@@ -142,7 +142,7 @@ validate_SE <- function(se,
 #' @export
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small") 
+#' mae <- get_synthetic_data("finalMAE_small.qs2") 
 #' validate_MAE(mae)
 #' 
 #' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>

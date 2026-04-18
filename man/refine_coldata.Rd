@@ -23,7 +23,7 @@ current improvements done on the colData as a standardization step:
 }
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.qs")
+mae <- get_synthetic_data("finalMAE_small.qs2")
 refine_coldata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
 
 }

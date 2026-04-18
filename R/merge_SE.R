@@ -9,8 +9,8 @@
 #' @keywords SE_operators
 #'
 #' @examples
-#' mae1 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
-#' mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
+#' mae1 <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
+#' mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
 #' merge_MAE(list(mae1 = mae1, mae2 = mae2))
 #'
 #' @return Merged MultiAssayExperiment object.
@@ -61,7 +61,7 @@ merge_MAE <- function(MAElist,
 #' @keywords SE_operators
 #'
 #' @examples
-#' se1 <- get_synthetic_data("finalMAE_small")[[1]]
+#' se1 <- get_synthetic_data("finalMAE_small.qs2")[[1]]
 #' merge_SE(list(se1 = se1, se2 = se1))
 #'
 #' @return merged SummarizedExperiment object
@@ -160,7 +160,7 @@ merge_SE <- function(SElist,
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
+#' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
 #' 
 #' listSE <- list(
 #'   combo1 = mae[[1]], 
@@ -216,7 +216,7 @@ merge_assay <- function(SElist,
 #' @return character vector of unique names of metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' SElist <- list(
 #'   se, 
@@ -243,7 +243,7 @@ identify_unique_se_metadata_fields <- function(SElist) {
 #' @return list of merged metadata
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' listSE <- list(
 #'   se, 

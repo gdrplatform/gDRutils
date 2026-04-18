@@ -16,7 +16,7 @@ logical flag indicating if a dt contains duplicated rows or not
 An auxiliary function that checks for duplicates in the assay data
 }
 \examples{
-sdata <- get_synthetic_data("finalMAE_small")
+sdata <- get_synthetic_data("finalMAE_small.qs2")
 smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 has_assay_dt_duplicated_rows(smetrics_data)
 }

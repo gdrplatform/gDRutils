@@ -16,7 +16,7 @@ charvec with columns required to have unique data
 get columns in the assay data required to have unique (non-duplicated) data
 }
 \examples{
-sdata <- get_synthetic_data("finalMAE_small")
+sdata <- get_synthetic_data("finalMAE_small.qs2")
 smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 get_assay_req_uniq_cols(smetrics_data)
 }

@@ -20,7 +20,7 @@ A \code{BumpyMatrix} object aggregated by \code{FUN}.
 Aggregation can only be performed on nested variables.
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small") 
+mae <- get_synthetic_data("finalMAE_small.qs2") 
 se <- mae[[1]]
 assay <- SummarizedExperiment::assay(se)
 aggregate_assay(assay, FUN = mean, by = c("Barcode"))

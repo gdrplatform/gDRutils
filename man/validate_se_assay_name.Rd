@@ -19,7 +19,7 @@ Throws an error if the assay is not valid.
 Check for the presence of an assay in a SummarizedExperiment object.
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small") 
+mae <- get_synthetic_data("finalMAE_small.qs2") 
 se <- mae[[1]]
 validate_se_assay_name(se, "RawTreated")
 
