@@ -8,7 +8,7 @@
 #' @return mae a MultiAssayExperiment with default gDR identifiers
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' S4Vectors::metadata(mae[[1]])$identifiers$drug <- "druug"
 #' standardize_mae(mae)
 #' 
@@ -32,7 +32,7 @@ standardize_mae <- function(mae, use_default = TRUE) {
 #' @return se a SummarizedExperiment with default gDR identifiers
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' S4Vectors::metadata(se)$identifiers$drug <- "druug"
 #' standardize_se(se)
@@ -142,7 +142,7 @@ standardize_se <- function(se, use_default = TRUE) {
 #' @return a renamed DFrame object
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' rename_DFrame(SummarizedExperiment::rowData(mae[[1]]), c("Gnumber" = "Gnumber1"))
 #' 
 #' @export
@@ -165,7 +165,7 @@ rename_DFrame <- function(df, mapping_vector) {
 #' @return a renamed BumpyMatrix object
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' assay <- SummarizedExperiment::assay(se)
 #' rename_bumpy(assay, c("Concentration" = "conc"))
@@ -231,7 +231,7 @@ get_optional_rowdata_fields <- function(se) {
 #' @return refined colData
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' refine_coldata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
 #' 
 #' @export
@@ -263,7 +263,7 @@ refine_coldata <- function(cd, se, default_v = "Undefined") {
 #' @return refined rowData
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' refine_rowdata(SummarizedExperiment::colData(mae[[1]]), mae[[1]])
 #' 
 #' @export

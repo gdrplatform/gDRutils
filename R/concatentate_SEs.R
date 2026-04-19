@@ -33,7 +33,7 @@ has_nested_field <- function(asy, nested_field) {
 #' @details Revert this operation using \code{promote_fields}.
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' se <- promote_fields(se, "ReadoutValue", 2)
 #' demote_fields(se, "ReadoutValue")
@@ -96,7 +96,7 @@ demote_fields <- function(se, fields) {
 #' @seealso demote_fields
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' se <- promote_fields(se, "ReadoutValue", 2)
 #' 
@@ -218,7 +218,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #' @return A \code{BumpyMatrix} object aggregated by \code{FUN}.
 #' 
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_small") 
+#' mae <- get_synthetic_data("finalMAE_small.qs2") 
 #' se <- mae[[1]]
 #' assay <- SummarizedExperiment::assay(se)
 #' aggregate_assay(assay, FUN = mean, by = c("Barcode"))

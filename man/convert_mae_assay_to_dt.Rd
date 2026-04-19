@@ -55,7 +55,7 @@ NOTE: to extract information about 'Control' data, simply call the
 function with the name of the assay holding data on controls.
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small")
+mae <- get_synthetic_data("finalMAE_small.qs2")
 convert_mae_assay_to_dt(mae, "Metrics")
 
 }

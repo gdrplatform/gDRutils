@@ -40,8 +40,8 @@ Merged MultiAssayExperiment object.
 Merge multiple MultiAssayExperiment objects
 }
 \examples{
-mae1 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
-mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
+mae1 <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
+mae2 <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
 merge_MAE(list(mae1 = mae1, mae2 = mae2), title = "Test", description = "Test MAE")
 
 }

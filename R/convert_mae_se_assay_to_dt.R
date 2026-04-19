@@ -28,7 +28,7 @@
 #' @return data.table representation of the data in \code{assay_name}.
 #'
 #' @examples
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' convert_se_assay_to_dt(se, "Metrics")
 #'
@@ -230,7 +230,7 @@ convert_se_assay_to_dt <- function(se,
 #' @seealso flatten convert_se_assay_to_dt
 #'
 #' @examples
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' convert_mae_assay_to_dt(mae, "Metrics")
 #'
 #' @export
@@ -306,7 +306,7 @@ convert_mae_assay_to_dt <- function(mae,
 #' @return data.table representation of the data in \code{assay_name} with added information from \code{colData}.
 #'
 #' @examples
-#' mae <- get_synthetic_data("finalMAE_small")
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' convert_se_assay_to_custom_dt(se, "Metrics")
 #' convert_se_assay_to_custom_dt(se, "Metrics", output_table = "Metrics_raw")
@@ -349,8 +349,8 @@ convert_se_assay_to_custom_dt <- function(se,
   }
   
   if (output_table %in% c("Metrics", "Metrics_raw")) {
-    # SE*.qs files contain 'c50' column instead of the 'ec50' in the metrics
-    # this is a temporary fix that should be removed once data (qs files) is reprocessed
+    # SE*.qs2 files contain 'c50' column instead of the 'ec50' in the metrics
+    # this is a temporary fix that should be removed once data (qs2 files) is reprocessed
     data.table::setnames(dt, "c50", "ec50", skip_absent = TRUE)
     
     groups <- c("normalization_type", "fit_source")

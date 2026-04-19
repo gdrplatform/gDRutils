@@ -16,7 +16,7 @@ data.table with all-experiments rowData
 get rowData of all experiments
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.qs") 
+mae <- get_synthetic_data("finalMAE_small.qs2") 
 mrowData(mae)
 
 }

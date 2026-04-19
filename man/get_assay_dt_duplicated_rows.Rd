@@ -18,7 +18,7 @@ integer vector or data.table with duplicated rows
 Helper function to find duplicated rows in assay data
 }
 \examples{
-sdata <- get_synthetic_data("finalMAE_small")
+sdata <- get_synthetic_data("finalMAE_small.qs2")
 smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 get_assay_dt_duplicated_rows(smetrics_data, output = "data")
 get_assay_dt_duplicated_rows(smetrics_data)

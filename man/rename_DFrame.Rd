@@ -20,7 +20,7 @@ a renamed DFrame object
 Rename DFrame
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_small.qs")
+mae <- get_synthetic_data("finalMAE_small.qs2")
 rename_DFrame(SummarizedExperiment::rowData(mae[[1]]), c("Gnumber" = "Gnumber1"))
 
 }

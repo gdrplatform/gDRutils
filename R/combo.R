@@ -11,7 +11,7 @@
 #' @return list of data.table(s) with combo data
 #'
 #' @examples 
-#' mae <- get_synthetic_data("finalMAE_combo_matrix_small.qs")
+#' mae <- get_synthetic_data("finalMAE_combo_matrix_small.qs2")
 #' convert_combo_data_to_dt(mae[[1]])
 #'
 #' @export

@@ -1,3 +1,7 @@
+## gDRutils 1.9.8 - 2026-04-18
+* migrate from `qs` to `qs2` package (`qs::qread` → `qs2::qs_read`, `qs::qsave` → `qs2::qs_save`)
+* update batch file extension from `.qs` to `.qs2`
+
 ## gDRutils 1.9.7 - 2026-04-14
 * add support for metadata in `merge_MAE`
 

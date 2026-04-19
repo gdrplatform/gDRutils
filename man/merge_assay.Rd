@@ -30,7 +30,7 @@ BumpyMatrix or list with data.table + BumpyMatrix
 Merge assay data
 }
 \examples{
-mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise")
+mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
 
 listSE <- list(
   combo1 = mae[[1]], 
