@@ -223,7 +223,7 @@ convert_se_assay_to_dt <- function(se,
 #' \code{get_additional_variables} into the \code{DrugName} column. Defaults to \code{FALSE}.
 #' @keywords convert
 #'
-#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+#' @author Bartosz Czech <czech.bartosz@@external.gene.com>
 #'
 #' @return data.table representation of the data in \code{assay_name}.
 #'
