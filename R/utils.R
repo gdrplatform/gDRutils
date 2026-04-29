@@ -100,7 +100,7 @@ assert_choices <- function(x, choices, ...) {
 #' @keywords package_utils
 #' @export
 #'
-#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+#' @author Bartosz Czech <czech.bartosz@@external.gene.com>
 #' 
 #' @return list or vector depends on unify param
 #' 
