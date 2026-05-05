@@ -63,6 +63,6 @@ convert_mae_assay_to_dt(mae, "Metrics")
 flatten convert_se_assay_to_dt
 }
 \author{
-Bartosz Czech \href{mailto:bartosz.czech@contractors.roche.com}{bartosz.czech@contractors.roche.com}
+Bartosz Czech \href{mailto:czech.bartosz@external.gene.com}{czech.bartosz@external.gene.com}
 }
 \keyword{convert}

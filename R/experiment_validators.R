@@ -145,7 +145,7 @@ validate_SE <- function(se,
 #' mae <- get_synthetic_data("finalMAE_small.qs2") 
 #' validate_MAE(mae)
 #' 
-#' @author Bartosz Czech <bartosz.czech@@contractors.roche.com>
+#' @author Bartosz Czech <czech.bartosz@@external.gene.com>
 validate_MAE <- function(mae) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(mae, "MultiAssayExperiment")
