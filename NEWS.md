@@ -1,5 +1,8 @@
-## gDRutils 1.9.9 - 2026-04-28
+## gDRutils 1.11.2 - 2026-05-05
 * update author email address
+
+## gDRutils 1.11.1 - 2026-04-29
+* synchronize Bioconductor and GitHub versioning
 
 ## gDRutils 1.9.8 - 2026-04-18
 * migrate from `qs` to `qs2` package (`qs::qread` → `qs2::qs_read`, `qs::qsave` → `qs2::qs_save`)
