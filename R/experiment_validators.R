@@ -102,8 +102,8 @@ validate_SE <- function(se,
                     as.character(which(names(rowdata) == get_env_identifiers("drug")) - 1),
                     "}([^_]+).*")
   #nolint end
-  checkmate::assert_true(nrow(coldata) == nrow(unique(coldata)))
-  checkmate::assert_true(nrow(rowdata) == nrow(unique(rowdata)))
+  checkmate::assert_true(NROW(coldata) == NROW(unique(coldata)))
+  checkmate::assert_true(NROW(rowdata) == NROW(unique(rowdata)))
 
   # Validate non-empty values in rowData and colData
   checkmate::assert_false(any(stats::na.omit(unlist(coldata)) == ""))

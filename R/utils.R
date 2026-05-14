@@ -359,14 +359,14 @@ apply_bumpy_function <- function(se,
   checkmate::assert_class(asy, "BumpyDataFrameMatrix")
   df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
   iterator <- unique(df[, c("column", "row")])
-  out <- loop(seq_len(nrow(iterator)), FUN = function(elem) {
+  out <- loop(seq_len(NROW(iterator)), FUN = function(elem) {
     x <- iterator[elem, ]
     i <- x[["row"]]
     j <- x[["column"]]
     elem_df <- asy[i, j][[1]]
     store <- FUN(elem_df, ...)
     if (is(store, "data.table") || is(store, "DFrame")) {
-      if (nrow(store) != 0L) {
+      if (NROW(store) != 0L) {
         store$row <- i
         store$column <- j
         store
@@ -457,8 +457,8 @@ is_exp_empty <- function(exp) {
   )
   
   any(
-    nrow(SummarizedExperiment::assay(exp)) == 0,
-    nrow(dt) == 0
+    NROW(SummarizedExperiment::assay(exp)) == 0,
+    NROW(dt) == 0
   )
 }
 

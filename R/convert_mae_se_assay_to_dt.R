@@ -65,7 +65,7 @@ convert_se_assay_to_dt <- function(se,
     }
   }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
-  if (nrow(dt) == 0L) {
+  if (NROW(dt) == 0L) {
     return(dt)
   }
   if (drop_masked) {

@@ -71,7 +71,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
 
   singletons <- vapply(remaining_cols,
     function(x) {
-      nrow(unique(md[, x, drop = FALSE])) == 1L
+      NROW(unique(md[, x, drop = FALSE])) == 1L
       },
     logical(1))
   # Get experiment columns.
