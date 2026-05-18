@@ -1,30 +1,30 @@
 #' Get settings from JSON file
 
-#' In most common scenario the settings are stored in JSON file 
+#' In most common scenario the settings are stored in JSON file
 #' to avoid hardcoding
 #'
 #' @param s charvec with setting entry/entries
 #' @param json_path string with the path to the JSON file
 #'
 #' @return value/values for entry/entries from JSON file
-#' 
+#'
 #' @examples
 #' if (!nchar(system.file(package="gDRutils"))) {
 #'    get_settings_from_json()
 #' }
-#' 
+#'
 #' @keywords json_const
 #' @export
 #'
 get_settings_from_json <-
   function(s = NULL,
            json_path = system.file(package = "gDRutils", "settings.json")) {
-    
+
     checkmate::assert_character(s, null.ok = TRUE)
     checkmate::assert_file_exists(json_path)
-    
+
     cache_l <- jsonlite::fromJSON(json_path)
-    
+
     if (!is.null(s)) {
       checkmate::assert_subset(s, names(cache_l))
       cache_l[[s]]
@@ -38,7 +38,7 @@ get_settings_from_json <-
 #'
 #' @param k key
 #' @param prettify change to upper case and add underscore, iso_level --> Iso_Level
-#' 
+#'
 #' @examples
 #' get_isobologram_columns()
 #' get_isobologram_columns("iso_level", prettify = TRUE)
@@ -49,7 +49,7 @@ get_settings_from_json <-
 get_isobologram_columns <- function(k = NULL, prettify = TRUE) {
   checkmate::assert_character(k, null.ok = TRUE)
   checkmate::assert_flag(prettify)
-  
+
   ic <- get_settings_from_json("ISOBOLOGRAM_COLUMNS",
                                system.file(package = "gDRutils", "settings.json"))
   if (!is.null(k)) {
@@ -57,6 +57,6 @@ get_isobologram_columns <- function(k = NULL, prettify = TRUE) {
   } else {
     out <- ic
   }
-  
+
   gsub(" ", "_", prettify_flat_metrics(out, human_readable = prettify))
 }

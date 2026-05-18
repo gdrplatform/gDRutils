@@ -36,16 +36,16 @@ validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 #' Throws an error if the assay is not valid.
 #'
 #' @export
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' validate_se_assay_name(se, "RawTreated")
 #'
 validate_se_assay_name <- function(se, name) {
   if (!name %in% assayNames(se)) {
     stop(sprintf("'%s' is not on of the available assays: '%s'",
-      name, paste0(assayNames(se), collapse = ", ")))
+      name, toString(assayNames(se))))
   }
   invisible(NULL)
 }
@@ -69,8 +69,8 @@ validate_se_assay_name <- function(se, name) {
 #' @return \code{NULL} invisibly if the SummarizedExperiment is valid.
 #' Throws an error if the SummarizedExperiment is not valid.
 #' @export
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' validate_SE(se)
@@ -141,10 +141,10 @@ validate_SE <- function(se,
 #' Throws an error if the MultiAssayExperiment is not valid.
 #' @export
 #'
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' validate_MAE(mae)
-#' 
+#'
 #' @author Bartosz Czech <czech.bartosz@@external.gene.com>
 validate_MAE <- function(mae) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
@@ -161,4 +161,3 @@ validate_MAE <- function(mae) {
   }
   invisible(NULL)
 }
-

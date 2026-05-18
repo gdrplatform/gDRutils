@@ -31,13 +31,13 @@ has_nested_field <- function(asy, nested_field) {
 #'
 #' @seealso promote_fields
 #' @details Revert this operation using \code{promote_fields}.
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' se <- promote_fields(se, "ReadoutValue", 2)
 #' demote_fields(se, "ReadoutValue")
-#' 
+#'
 #' @export
 demote_fields <- function(se, fields) {
   checkmate::assertClass(se, "SummarizedExperiment")
@@ -48,7 +48,7 @@ demote_fields <- function(se, fields) {
 
   if (any(are_nested_fields <- !fields %in% c(rowmd, colmd))) {
     stop(sprintf("field(s) '%s' are already demoted fields, perhapy you intended to call 'promote_fields'?",
-                 paste0(fields[are_nested_fields], collapse = ", ")))
+                 toString(fields[are_nested_fields])))
   }
 
   rowmd <- setdiff(rowmd, fields)
@@ -94,12 +94,12 @@ demote_fields <- function(se, fields) {
 #' @return A \code{SummarizedExperiment} object with new dimensions resulting from promoting given \code{fields}.
 #' @details Revert this operation using \code{demote_fields}.
 #' @seealso demote_fields
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' se <- promote_fields(se, "ReadoutValue", 2)
-#' 
+#'
 #' @export
 promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   checkmate::assertClass(se, "SummarizedExperiment")
@@ -107,13 +107,13 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   if (length(MARGIN) != 1L || !MARGIN %in% c(1, 2)) {
     stop("invalid 'MARGIN' argument, must be either '1' or '2'")
   }
-  rowmd <- colnames(rowData(se)) 
+  rowmd <- colnames(rowData(se))
   colmd <- colnames(colData(se))
   rowmd <- colnames(rowData(se))
   colmd <- colnames(colData(se))
   if (any(rfields <- fields %in% rowmd) || any(cfields <- fields %in% colmd)) {
     stop(sprintf("fields '%s' are already promoted fields",
-                 paste0(fields[rfields || cfields], collapse = ", ")))
+                 toString(fields[rfields || cfields])))
   }
   if (MARGIN == 1) {
     rowmd <- c(rowmd, fields)
@@ -139,7 +139,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   }
   if (length(final_assays) == 0L) {
     stop(sprintf("unable to find nested fields: '%s' in any assays, perhaps you intended to call 'demote_fields'?",
-                 paste0(fields, collapse = ", ")))
+                 toString(fields)))
   }
   .validate_final_assays(final_assays)
   assay_list <- lapply(final_assays, function(x) {
@@ -184,7 +184,7 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
   missing <- setdiff(colnames(df), c(row_fields, column_fields, nested_fields))
   if (length(missing) != 0L) {
     stop(sprintf("found columns in 'df' not specified as row, column, or nested fields",
-                 paste0(missing, collapse = ", ")))
+                 toString(missing)))
   }
   if (any(is_duplicated <- duplicated(c(row_fields, column_fields, nested_fields)))) {
     stop(sprintf("fields: '%s' are duplicated across arguments 'row_fields', 'column_fields', 'nested_fields'",
@@ -216,13 +216,13 @@ promote_fields <- function(se, fields, MARGIN = c(1, 2)) {
 #' @keywords SE_operators
 #'
 #' @return A \code{BumpyMatrix} object aggregated by \code{FUN}.
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' assay <- SummarizedExperiment::assay(se)
 #' aggregate_assay(assay, FUN = mean, by = c("Barcode"))
-#' 
+#'
 #' @export
 aggregate_assay <- function(asy, by, FUN) {
   checkmate::assert_class(asy, "BumpyMatrix")
@@ -238,7 +238,7 @@ aggregate_assay <- function(asy, by, FUN) {
                                         row.field = row.field,
                                         column.field = column.field)
   if (!all(present <- by %in% setdiff(colnames(df), c(row.field, column.field)))) {
-    stop(sprintf("specified 'by' columns: '%s' are not present in 'asy'", paste0(by[!present], collapse = ", ")))
+    stop(sprintf("specified 'by' columns: '%s' are not present in 'asy'", toString(by[!present])))
   }
 
   by <- c(row.field, column.field, by)

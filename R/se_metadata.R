@@ -7,7 +7,7 @@
 #' @param key_type string of a specific key type (i.e. 'nested_keys', etc.).
 #' @param id_type string of a specific id type (i.e. 'duration', 'cellline_name', etc.).
 #' @param simplify Boolean indicating whether output should be simplified.
-#' @param append Boolean indicating whether to append the new metadata value to the existing entry. 
+#' @param append Boolean indicating whether to append the new metadata value to the existing entry.
 #'
 #' @details
 #' For \code{*et_SE_processing_metadata}, get/set metadata for the processing info that defines
@@ -74,12 +74,12 @@ set_SE_experiment_raw_data <- function(se, value) {
 # Getters
 ############
 #' @rdname SE_metadata
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' get_SE_fit_parameters(se)
-#' 
+#'
 #' @keywords SE_operators
 #' @export
 get_SE_fit_parameters <- function(se) {
@@ -88,12 +88,12 @@ get_SE_fit_parameters <- function(se) {
 
 
 #' @rdname SE_metadata
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' meta <- get_SE_processing_metadata(se)
-#' 
+#'
 #' @keywords SE_operators
 #' @export
 get_SE_processing_metadata <- function(se) {
@@ -101,12 +101,12 @@ get_SE_processing_metadata <- function(se) {
 }
 
 #' @rdname SE_metadata
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' get_SE_experiment_raw_data(se)
-#' 
+#'
 #' @keywords SE_operators
 #' @export
 get_SE_experiment_raw_data <- function(se) {
@@ -114,12 +114,12 @@ get_SE_experiment_raw_data <- function(se) {
 }
 
 #' @rdname SE_metadata
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' get_SE_experiment_metadata(se)
-#' 
+#'
 #' @keywords SE_operators
 #' @export
 get_SE_experiment_metadata <- function(se) {
@@ -140,12 +140,12 @@ get_SE_keys <- function(se, key_type = NULL) {
 ##############
 
 #' @rdname SE_metadata
-#' 
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' get_SE_identifiers(se)
-#' 
+#'
 #' @keywords SE_operators
 #' @export
 get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
@@ -163,7 +163,7 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
     SIMPLIFY = FALSE)
     out <- id_vector(id_type)
   }
-  
+
   out
 }
 
@@ -173,16 +173,16 @@ get_SE_identifiers <- function(se, id_type = NULL, simplify = TRUE) {
 #' @param mae MultiAssayExperiment
 #'
 #' @return named list with identifiers for each SE
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' get_MAE_identifiers(mae)
-#' 
+#'
 #' @keywords SE_operators
 #' @export
 get_MAE_identifiers <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   MAEpply(mae, get_SE_identifiers)
 }
 
@@ -223,7 +223,7 @@ set_SE_identifiers <- function(se, value) {
   v <- S4Vectors::metadata(se)[[name]]
   if (!is.null(subname)) {
     if (!subname %in% names(v) && strict) {
-      stop(sprintf("'%s' is not one of valid subname(s): '%s'", subname, paste0(names(v), collapse = ", ")))
+      stop(sprintf("'%s' is not one of valid subname(s): '%s'", subname, toString(names(v))))
     }
     v <- v[[subname]]
   }
@@ -235,11 +235,11 @@ set_SE_identifiers <- function(se, value) {
 #' @noRd
 .set_SE_metadata <- function(se, name, value, append = FALSE) {
   current_metadata <- .get_SE_metadata(se, name)
-  
+
   if (is.null(current_metadata) || S4Vectors::isEmpty(current_metadata)) {
     current_metadata <- NULL
   }
-  
+
   if (!is.null(current_metadata)) {
     if (append) {
       S4Vectors::metadata(se)[[name]] <- c(current_metadata, value)
@@ -250,6 +250,6 @@ set_SE_identifiers <- function(se, value) {
   } else {
     S4Vectors::metadata(se)[[name]] <- value
   }
-  
+
   se
 }

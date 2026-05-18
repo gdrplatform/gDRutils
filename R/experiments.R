@@ -23,9 +23,9 @@ EXPERIMENT_GROUPS <-
 #' @export
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 get_supported_experiments <- function(type = NULL) {
-  
+
   checkmate::assert_choice(type, names(SUPPORTED_EXPERIMENTS), null.ok = TRUE)
-  
+
   if (is.null(type)) {
     as.character(SUPPORTED_EXPERIMENTS)
   } else {
@@ -42,19 +42,19 @@ get_supported_experiments <- function(type = NULL) {
 #'
 #' @return list with experiment groups or string (if type not NULL)
 #'
-#' @examples 
+#' @examples
 #' get_experiment_groups()
-#' 
+#'
 #' @export
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 get_experiment_groups <- function(type = NULL) {
-  
+
   checkmate::assert_choice(type, names(EXPERIMENT_GROUPS), null.ok = TRUE)
-  
+
   if (!is.null(type)) {
     EXPERIMENT_GROUPS[[type]]
   } else {
     EXPERIMENT_GROUPS
   }
-  
+
 }

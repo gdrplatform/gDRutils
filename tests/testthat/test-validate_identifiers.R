@@ -43,7 +43,7 @@ test_that(".check_required_identifiers works as expected", {
   expect_error(.check_required_identifiers(df, req_ids = req_ids, id_map = missing_map_ids),
     regex = sprintf("required identifiers: '%s' missing in 'id_map'", names(ids)[[1]]))
 
-  # Polymapping. 
+  # Polymapping.
   poly_map_ids <- ids
   poly_map_ids[[1]] <- c("Cinderella", "Mulan")
   expect_error(.check_required_identifiers(df, req_ids = req_ids, id_map = poly_map_ids),
@@ -68,7 +68,7 @@ test_that(".check_polymapped_identifiers works as expected", {
 
   # Some polymappings.
   some_poly_map <- id_map
-  some_poly_map[[1]] <- c(some_poly_map[[1]], "extra_item") 
+  some_poly_map[[1]] <- c(some_poly_map[[1]], "extra_item")
   obs <- .check_polymapped_identifiers(df, exp_one_ids, id_map = some_poly_map)
   expect_equal(obs, "more than one mapping for identifier(s): 'duration'\n")
 
@@ -77,7 +77,7 @@ test_that(".check_polymapped_identifiers works as expected", {
   all_poly_map <- lapply(seq_along(all_poly_map), function(x) c(all_poly_map[[x]], "extra_item"))
   names(all_poly_map) <- names(id_map)
   obs <- .check_polymapped_identifiers(df, exp_one_ids, id_map = all_poly_map)
-  exp <- paste0(names(id_map), collapse = ", ")
+  exp <- toString(names(id_map))
   expect_equal(obs, sprintf("more than one mapping for identifier(s): '%s'\n", exp))
 })
 
@@ -99,7 +99,7 @@ test_that(".modify_polymapped_identifiers works as expected", {
 
   # Some polymappings.
   some_poly_map <- id_map
-  some_poly_map[[1]] <- c(some_poly_map[[1]], "extra_item") 
+  some_poly_map[[1]] <- c(some_poly_map[[1]], "extra_item")
   obs <- .modify_polymapped_identifiers(df, exp_one_ids, id_map = some_poly_map)
   expect_equal(obs, id_map)
 

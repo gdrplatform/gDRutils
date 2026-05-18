@@ -36,12 +36,12 @@
 #' The purpose of this statistic is to enable comparison across different experiments with slightly
 #' different concentration ranges.
 #'
-#' @examples 
-#' df_ <- data.table::data.table(Concentration = c(0.001, 0.00316227766016838, 
+#' @examples
+#' df_ <- data.table::data.table(Concentration = c(0.001, 0.00316227766016838,
 #' 0.01, 0.0316227766016838),
 #' x_std = c(0.1, 0.1, 0.1, 0.1), normalization_types = c("RV", "RV", "RV", "RV"),
 #' x = c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482))
-#' 
+#'
 #' fit_curves(df_, "Concentration", normalization_type = "RV")
 #'
 #' @export
@@ -62,49 +62,49 @@ fit_curves <- function(df_,
   stopifnot(any(inherits(df_, "data.table"), inherits(df_, "DFrame")))
   if (any(bad_normalization_type <- ! normalization_type %in% c("GR", "RV"))) {
     stop(sprintf("unknown curve type: '%s'",
-                 paste0(normalization_type[bad_normalization_type], collapse = ", ")))
+                 toString(normalization_type[bad_normalization_type])))
   }
-  
+
   req_fields <- series_identifiers
   opt_fields <- NULL
-  
+
   req_fields <- c(req_fields, "x")
   opt_fields <- "x_std"
-  
+
   if (!all(req_fields %in% colnames(df_))) {
-    stop(sprintf("missing one of the required fields: '%s'", paste(req_fields, collapse = ", ")))
+    stop(sprintf("missing one of the required fields: '%s'", toString(req_fields)))
   }
-  
+
   if (length(setdiff(opt_fields, colnames(df_))) > 0L) {
     df_[, setdiff(opt_fields, colnames(df_))] <- NA
   }
-  df_metrics <- .applyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
+  df_metrics <- .applyLogisticFit(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit,
                                   pcutoff, cap, n_point_cutoff)
-  
-  is_unique_normalization_type_and_fit_source <- 
+
+  is_unique_normalization_type_and_fit_source <-
     NROW(unique(df_metrics[, c("normalization_type", "fit_source")])) == NROW(df_metrics)
   if (!is_unique_normalization_type_and_fit_source) {
-    stop("'normalization_type' and 'fit_source' columns do not create unique combinations") 
+    stop("'normalization_type' and 'fit_source' columns do not create unique combinations")
   }
   rownames(df_metrics) <- paste0(df_metrics$normalization_type, "_", df_metrics$fit_source)
-  
+
   concsNA <- all(is.na(unique(df_[[series_identifiers]])))
   if (concsNA) df_metrics[] <- NA
   df_metrics
 }
 
 #' @keywords internal
-.applyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit, 
+.applyLogisticFit <- function(df_, normalization_type, series_identifiers, e_0, GR_0, range_conc, force_fit,
                               pcutoff, cap, n_point_cutoff) {
-  
+
   df_metrics <- NULL
   concs <- unique(df_[[series_identifiers]])
   med_concs <- stats::median(concs)
   min_concs <- min(concs)
-  
+
   concsNA <- all(is.na(concs))
   if (concsNA) concs[] <- 0
-  
+
   if ("RV" %in% normalization_type) {
     df_metrics <- logisticFit(
       concs,
@@ -121,7 +121,7 @@ fit_curves <- function(df_,
     )
     df_metrics$normalization_type <- "RV"
   }
-  
+
   if ("GR" %in% normalization_type) {
     df_gr <- logisticFit(
       concs,
@@ -139,7 +139,7 @@ fit_curves <- function(df_,
     df_gr$normalization_type <- "GR"
     df_metrics <- data.table::rbindlist(list(df_metrics, df_gr), fill = TRUE)
   }
-  
+
   df_metrics$fit_source <- "gDR"
   df_metrics
 }
@@ -228,11 +228,11 @@ logisticFit <-
     if (length(concs) != length(norm_values)) {
       stop("unequal vector lengths for 'conc' and 'norm_values'")
     }
-    # Check that values have not been logged yet. 
+    # Check that values have not been logged yet.
     if (any(concs < 0)) {
       stop("logisticFit accepts only unlogged concentrations, negative concentrations are detected")
     }
-    
+
     out <- .setup_metric_output()
     out$maxlog10Concentration <- log10(max(concs))
     out$N_conc <- length(unique(concs))
@@ -243,14 +243,14 @@ logisticFit <-
     } else {
       x_0 + cap
     }
-    
+
     norm_values <- pmin(norm_values, limit)
     df_ <- data.table::data.table(concs = concs, norm_values = norm_values)
     if (has_dups(df_$concs)) {
       warning("duplicates were found, averaging values")
       df_ <- average_dups(df_, "concs")
     }
-    
+
     mean_norm_value <- mean(df_$norm_values, na.rm = TRUE)
     out$x_mean <- mean_norm_value
     out$x_AOC <- .calculate_complement(mean_norm_value)
@@ -259,13 +259,13 @@ logisticFit <-
     ## Fit type is determined based on number of free variables available.
     fit_param <- c("h", "x_inf", "x_0", "ec50")
     controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
-    
+
     out <-
       .setLogisticFit(out = out, df_ = df_, n_point_cutoff = n_point_cutoff, fit_param = fit_param,
-                      priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap, 
-                      concs = concs, controls = controls, range_conc = range_conc, pcutoff = pcutoff, 
+                      priors = priors, lower = lower, force_fit = force_fit, x_0 = x_0, cap = cap,
+                      concs = concs, controls = controls, range_conc = range_conc, pcutoff = pcutoff,
                       capping_fold = capping_fold, mean_norm_value = mean_norm_value)
-    
+
     data.table::setDT(out)
     out
   }
@@ -298,7 +298,7 @@ logisticFit <-
     df1 <- nparam - 1 # (N of parameters in the growth curve) - (F-test for the models)
     df2 <- length(stats::na.omit(df_$norm_values)) - nparam + 1
     out$p_value <- f_pval <- .calculate_f_pval(df1, df2, RSS1, RSS2)
-    if (all((!force_fit), 
+    if (all((!force_fit),
            any(all(exists("f_pval"), !is.na(f_pval), f_pval >= pcutoff), is.na(out$ec50)))) {
       stop(fitting_handler(
         "constant_fit",
@@ -347,12 +347,12 @@ logisticFit <-
   if (is.na(x$xc50)) {
     x$xc50 <- .estimate_xc50(x$x_inf)
   } else {
-    # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the 
+    # set the xc50 to Inf if the value is extrapolated beyond to 5-fold above/below the
     # max/min tested concentrations (default)
     x$xc50 <- cap_xc50(
-      x$xc50, 
-      max_conc = 10 ^ x$maxlog10Concentration, 
-      min_conc = min(concs[concs > 0]), 
+      x$xc50,
+      max_conc = 10 ^ x$maxlog10Concentration,
+      min_conc = min(concs[concs > 0]),
       capping_fold = capping_fold
     )
   }
@@ -366,19 +366,19 @@ logisticFit <-
     fit_param <- fit_param[-3]
     priors <- priors[-3]
     lower <- lower[-3]
-    
+
     fct <- drc::LL.3u(upper = x_0, names = fit_param)
     upperl <- c(5, min(x_0 + cap, 1), max(concs) * 10)
-    
+
     x$fit_type <- "DRC3pHillFitModelFixS0"
     x$x_0 <- x_0
   } else {
     fct <- drc::LL.4(names = fit_param)
     upperl <- c(5, 1, 1 + cap, max(concs) * 10)
-    
+
     x$fit_type <- "DRC4pHillFitModel"
   }
-  
+
   drc::drm(
     norm_values ~ concs,
     data = df_,
@@ -410,10 +410,10 @@ logisticFit <-
 #'
 #' @details The inverse of this function is \code{predict_conc_from_efficacy}.
 #' @seealso predict_conc_from_efficacy
-#' 
-#' @examples 
+#'
+#' @examples
 #' predict_efficacy_from_conc(c = 1, x_inf = 0.1, x_0 = 1, ec50 = 0.5, h = 2)
-#' 
+#'
 #' @export
 predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
   checkmate::assert_numeric(c)
@@ -442,7 +442,7 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #'   Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.
 #'
 #' @return A single numeric value for the predicted 'smooth' response.
-#' 
+#'
 #' @examples
 #' mae <- get_synthetic_data("combo_matrix")
 #' se <- mae[[gDRutils::get_supported_experiments("combo")]]
@@ -460,16 +460,16 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
     colnames(metrics_merged),
     must.include = c("dilution_drug", "cotrt_value", "ratio", "ec50", "h", "x_inf", "x_0")
   )
-  
+
   available_cotrt_1 <- unique(metrics_merged[dilution_drug == "drug_2"]$cotrt_value)
   available_cotrt_2 <- unique(metrics_merged[dilution_drug == "drug_1"]$cotrt_value)
-  
+
   snapped_conc_1 <- .snap_conc_to_model(conc_1, available_cotrt_1)
   snapped_conc_2 <- .snap_conc_to_model(conc_2, available_cotrt_2)
-  
+
   message(sprintf("Requested: (%.2f, %.2f) ==> Using models for nearest concentrations: (%.2f, %.2f)",
                   conc_1, conc_2, snapped_conc_1, snapped_conc_2))
-  
+
 
   col_params <- metrics_merged[dilution_drug == "drug_1" & cotrt_value == snapped_conc_2, ]
   col_value <- if (NROW(col_params) == 1) {
@@ -481,7 +481,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
     } else {
       NA
     }
-  
+
   row_params <- metrics_merged[dilution_drug == "drug_2" & cotrt_value == snapped_conc_1, ]
   row_value <- if (NROW(row_params) == 1) {
     predict_efficacy_from_conc(conc_2,
@@ -492,7 +492,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
     } else {
       NA
     }
-  
+
   codil_value <- NA
   if (!is.na(snapped_conc_1) && snapped_conc_1 != 0) {
     ratio <- snapped_conc_2 / snapped_conc_1
@@ -507,10 +507,10 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
         NA
       }
   }
-  
+
   predicted_values <- c(col_value, row_value, codil_value)
   final_prediction <- mean(predicted_values, na.rm = TRUE)
-  
+
   if (is.nan(final_prediction)) {
     NA_real_
   } else {
@@ -524,7 +524,7 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
 #' Predict a concentration for a given efficacy with fit parameters.
 #'
 #' @details The inverse of this function is \code{predict_efficacy_from_conc}.
-#' 
+#'
 #' @param efficacy Numeric vector representing efficacies to predict concentrations for.
 #' @param x_inf Numeric vector representing the asymptotic value of the sigmoidal fit to the dose-response
 #'  data as concentration goes to infinity.
@@ -536,9 +536,9 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
 #'
 #' @return Numeric vector representing predicted concentrations from given efficacies and fit parameters.
 #'
-#' @examples 
+#' @examples
 #' predict_conc_from_efficacy(efficacy = c(1, 1.5), x_inf = 0.1, x_0 = 1, ec50 = 0.5, h = 2)
-#' 
+#'
 #' @seealso predict_efficacy_from_conc .calculate_x50
 #' @export
 predict_conc_from_efficacy <- function(efficacy, x_inf, x_0, ec50, h) {
@@ -595,7 +595,7 @@ logistic_metrics <- function(c, x_metrics) {
 .snap_conc_to_model <- function(user_conc, available_concs) {
   checkmate::assert_number(user_conc, lower = 0)
   checkmate::assert_numeric(available_concs)
-  
+
   if (length(available_concs) == 0 || is.na(user_conc)) {
     return(NA_real_)
   }
@@ -609,10 +609,10 @@ logistic_metrics <- function(c, x_metrics) {
 .setup_metric_output <- function() {
   resp_metric_all_cols <- get_header("response_metrics")
   # remove cols ending with "_sd"
-  # they are not present in the primary assays 
+  # they are not present in the primary assays
   # but only with the assays followed by averaging of biological replicates
   resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
-  
+
   out <- as.list(rep(NA, length(resp_metric_cols)))
   names(out) <- resp_metric_cols
   out
@@ -693,11 +693,11 @@ average_dups <- function(dt, col) {
 #' that can be calculated from the mean.
 #' @keywords fit_curves
 #' @return Modified named list of fit parameters.
-#' 
-#' @examples 
+#'
+#' @examples
 #' na <- list(x_0 = NA)
 #' set_constant_fit_params(na, mean_norm_value = 0.6)
-#' 
+#'
 #' @export
 set_constant_fit_params <- function(out, mean_norm_value) {
   out$fit_type <- "DRCConstantFitResult"
@@ -715,10 +715,10 @@ set_constant_fit_params <- function(out, mean_norm_value) {
 #' @param norm_values Numeric vector used to estimate an \code{xc50} value.
 #' @keywords fit_curves
 #' @return Modified named list of fit parameters.
-#' 
-#' @examples 
+#'
+#' @examples
 #' .set_invalid_fit_params(list(), norm_values = rep(0.3, 6))
-#' 
+#'
 #' @export
 .set_invalid_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCInvalidFitResult"
@@ -783,24 +783,24 @@ set_constant_fit_params <- function(out, mean_norm_value) {
 }
 
 #' Cap XC50 value.
-#' 
+#'
 #' Set IC50/GR50 value to \code{Inf} or \code{-Inf} based on upper and lower limits.
 #'
-#' @details 
+#' @details
 #' Note: \code{xc50} and \code{max_conc} should share the same units.
 #' Ideally, the \code{lower_cap} should be based on the lowest tested concentration.
 #' However, since we don't record that, it is set 5 orders of magnitude below the highest dose.
-#' 
-#' @param xc50 Numeric value of the IC50/GR50 to cap. 
+#'
+#' @param xc50 Numeric value of the IC50/GR50 to cap.
 #' @param max_conc Numeric value of the highest concentration in a dose series used to calculate the \code{xc50}.
-#' @param min_conc Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}. 
+#' @param min_conc Numeric value of the lowest concentration in a dose series used to calculate the \code{xc50}.
 #' If \code{NA} (default), using \code{max_conc/1e5} instead.
 #' @param capping_fold Integer value of the fold number to use for capping. Defaults to \code{5}.
 #' @keywords fit_curves
 #'
 #' @return Capped IC50/GR50 value.
 #'
-#' @examples 
+#' @examples
 #' cap_xc50(xc50 = 1, max_conc = 2)
 #' cap_xc50(xc50 = 2, max_conc = 5, min_conc = 1)
 #' cap_xc50(xc50 = 26, max_conc = 5, capping_fold = 5)
@@ -811,7 +811,7 @@ cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
   checkmate::assert_number(xc50)
   checkmate::assert_number(max_conc)
   checkmate::assert_number(min_conc, na.ok = TRUE)
-  
+
   upper_cap <- max_conc * capping_fold
   lower_cap <- if (!is.na(min_conc)) {
     min_conc / capping_fold
@@ -824,7 +824,7 @@ cap_xc50 <- function(xc50, max_conc, min_conc = NA, capping_fold = 5) {
     xc50 <- -Inf
   }
   xc50
-} 
+}
 
 #################
 # Error handling

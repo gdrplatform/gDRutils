@@ -83,9 +83,9 @@ convert_se_assay_to_dt <- function(se,
   }
   if (include_metadata) {
     dt <- .extract_and_merge_metadata(se, data.table::copy(dt))
-    
+
     if (merge_additional_variables) {
-      additional_vars <- get_additional_variables(list(dt)) 
+      additional_vars <- get_additional_variables(list(dt))
 
       if (!is.null(additional_vars) && length(additional_vars) > 0) {
         dt <- update_drug_name(dt, additional_vars)
@@ -100,7 +100,7 @@ convert_se_assay_to_dt <- function(se,
                                    intersect(unlist(get_header()[c("excess", "scores", "response_metrics")]),
                                              names(dt))))
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
-    dcast_formula <- paste0(paste0(rest_cols, collapse = " + "), " ~ normalization_type")
+    dcast_formula <- paste(paste(rest_cols, collapse = " + "), " ~ normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
                                 paste, sep = "_"))
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
@@ -133,12 +133,12 @@ convert_se_assay_to_dt <- function(se,
 .extract_and_merge_metadata <- function(se, dt) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_data_table(dt)
-  
+
   rData <- data.table::as.data.table(rowData(se))
   rData[, rId := rownames(se)]
   cData <- data.table::as.data.table(colData(se))
   cData[, cId := colnames(se)]
-  
+
   ids <- data.table::CJ(cData$cId, rData$rId)
   data.table::setnames(ids, c("cId", "rId"))
   ids[, names(ids) := lapply(.SD, as.character), .SDcols = names(ids)]
@@ -153,16 +153,16 @@ convert_se_assay_to_dt <- function(se,
 #' @noRd
 #'
 .convert_se_assay_to_dt <- function(se, assay_name, retain_nested_rownames) {
-  
+
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
-  
+
   object <- assays(se)[[assay_name]]
   checkmate::assert_true(inherits(object, "BumpyDataFrameMatrix") || inherits(object, "matrix"))
-  
+
   rowfield <- "rId"
   colfield <- "cId"
-  
+
   if (methods::is(object, "BumpyDataFrameMatrix")) {
     as_df <- BumpyMatrix::unsplitAsDataFrame(object, row.field = rowfield, column.field = colfield)
     # Retain nested rownames.
@@ -172,7 +172,7 @@ convert_se_assay_to_dt <- function(se,
       }
     }
     as_dt <- data.table::as.data.table(as_df)
-    
+
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
     if (is.numeric(first)) {
@@ -242,7 +242,7 @@ convert_mae_assay_to_dt <- function(mae,
                                     wide_structure = FALSE,
                                     drop_masked = TRUE,
                                     merge_additional_variables = FALSE) {
-  
+
   # Assertions.
   checkmate::assert_class(mae, "MultiAssayExperiment")
   checkmate::assert_string(assay_name)
@@ -251,11 +251,11 @@ convert_mae_assay_to_dt <- function(mae,
   checkmate::assert_flag(retain_nested_rownames)
   checkmate::assert_flag(wide_structure)
   checkmate::assert_flag(merge_additional_variables)
-  
+
   if (is.null(experiment_name)) {
     experiment_name <- names(mae)
   }
-  
+
   dtList <- lapply(experiment_name, function(x) {
     if (!assay_name %in% assayNames(mae[[x]])) {
       return()
@@ -271,7 +271,7 @@ convert_mae_assay_to_dt <- function(mae,
   if (all(vapply(dtList, is.null, logical(1)))) {
     warning(sprintf("assay '%s' was not found in any of the following experiments: '%s'",
                     assay_name,
-                    paste(experiment_name, collapse = ", ")))
+                    toString(experiment_name)))
   }
   data.table::rbindlist(dtList, fill = TRUE, use.names = TRUE)
 }
@@ -321,7 +321,7 @@ convert_se_assay_to_custom_dt <- function(se,
                                           assay_name,
                                           output_table = NULL,
                                           cap_values = FALSE) {
-  
+
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_string(output_table, null.ok = TRUE)
@@ -330,29 +330,29 @@ convert_se_assay_to_custom_dt <- function(se,
                            c(get_assay_names(), "Metrics_initial", "Metrics_raw"),
                            null.ok = TRUE)
   checkmate::assert_flag(cap_values)
-  
+
   if (is.null(output_table)) {
     output_table <- assay_name
   }
   if (output_table %in% c("Metrics_initial", "Metrics_raw")) {
     stopifnot(assay_name == "Metrics")
   }
-  
+
   wide_structure <- assay_name %in% c("Normalized", "Averaged")
   dt <- convert_se_assay_to_dt(se,
                                assay_name,
                                include_metadata = TRUE,
                                wide_structure = wide_structure)
-  
+
   if (output_table %in% c(get_combo_assay_names(), "Metrics_initial")) {
     return(dt)
   }
-  
+
   if (output_table %in% c("Metrics", "Metrics_raw")) {
     # SE*.qs2 files contain 'c50' column instead of the 'ec50' in the metrics
     # this is a temporary fix that should be removed once data (qs2 files) is reprocessed
     data.table::setnames(dt, "c50", "ec50", skip_absent = TRUE)
-    
+
     groups <- c("normalization_type", "fit_source")
     if (all(groups %in% names(dt))) {
       dt <- flatten(
@@ -362,7 +362,7 @@ convert_se_assay_to_custom_dt <- function(se,
       )
     }
   }
-  
+
   if (output_table %in% c("Metrics_raw", "Metrics", "Normalized", "Averaged")) {
     # TODO GDR-2513 # nolint start
     # pidfs <- get_SE_identifiers(se)
@@ -374,15 +374,15 @@ convert_se_assay_to_custom_dt <- function(se,
     #   dt[vars] <- NULL
     # }
     # nolint end
-    
+
     # add identifiers specific for given SE
     colnames(dt) <- prettify_flat_metrics(colnames(dt), human_readable = TRUE)
   }
-  
+
   if (output_table == "Metrics" && cap_values) {
     dt <- capVals(dt)
   }
-  
+
   dt
 }
 
@@ -402,13 +402,13 @@ convert_se_assay_to_custom_dt <- function(se,
 #' }
 #'
 #' @param x \code{data.table} containing growth metrics extracted from a \code{SummarizedExperiment}
-#' 
+#'
 #' @examples
 #' dt <- data.table::data.table(
 #'   `E Max` = c(-0.1, 0, 0.5, 1.2),
 #'   `GR Max` = c(-1.1, -1, 0.5, 1.2),
 #'   `RV AOC within set range` = c(-0.2, -0.1, 0, 3),
-#'   `GR AOC within set range` = c(-0.2, -0.1, 0, 3), 
+#'   `GR AOC within set range` = c(-0.2, -0.1, 0, 3),
 #'   `GR50` = c(0, 1e-7, 10, 34),
 #'   `IC50` = c(0, 1e-7, 10, 34),
 #'   `EC50` = c(0, 1e-7, 10, 34),
@@ -417,7 +417,7 @@ convert_se_assay_to_custom_dt <- function(se,
 #' dt
 #' dt1 <- capVals(dt)
 #' dt1
-#' 
+#'
 #' @return A data table with capped values.
 #' @keywords internal
 #'
@@ -425,9 +425,9 @@ convert_se_assay_to_custom_dt <- function(se,
 #'
 #' @export
 capVals <- function(x) {
-  
+
   checkmate::assert_data_table(x)
-  
+
   json_path <- system.file(package = "gDRutils", "settings.json")
   s <- get_settings_from_json("capVals", json_path)
   # fifty_lower_limit numeric value of the lower limit to cap all x50 metrics
@@ -438,10 +438,10 @@ capVals <- function(x) {
   checkmate::assert_number(s$max_upper_limit)
   # range_lower_limit numeric value of the lower limit to cap all xrange metrics
   checkmate::assert_number(s$range_lower_limit)
-  
+
   s_col <- get_settings_from_json("CAP_VALS_COLS", json_path)
   if (!NROW(intersect(s_col, names(x)))) return(x) # no columns to capped
-  
+
   X <- data.table::copy(x)
   if ("E Max" %in% names(X)) {
     X[, `E Max` := scales::oob_squish_any(`E Max`, range = c(0, s$max_upper_limit))]
@@ -506,17 +506,17 @@ capVals <- function(x) {
 update_drug_name <- function(dt, additional_vars) {
   checkmate::assert_data_table(dt)
   checkmate::assert_character(additional_vars)
-  
+
   dt <- data.table::copy(dt)
-  
+
   cols_to_merge <- unlist(get_env_identifiers(c("drug", "drug_name"), simplify = FALSE))
-  
+
   for (var in additional_vars) {
     if (!var %in% names(dt)) {
       warning(sprintf("Additional variable '%s' not found in data.table. Skipping merge for this variable.", var))
       next
     }
-    
+
     for (col in cols_to_merge) {
       if (!col %in% names(dt)) {
         warning(sprintf("Drug identifier column '%s' not found in data.table. Skipping update for this column.", col))

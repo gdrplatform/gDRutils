@@ -1,28 +1,28 @@
 test_that("prettify_flat_metrics works as expected", {
   x <- c("CellLineName", "Tissue",
          "Primary Tissue",
-         "GR_gDR_x_mean", "GR_gDR_xc50", 
-         "RV_GDS_x_mean", 
+         "GR_gDR_x_mean", "GR_gDR_xc50",
+         "RV_GDS_x_mean",
          "Concentration_2", "Gnumber_2", "Drug_3",
          "E_0", "GR_gDR_x_AOC_range"
   )
-  
+
   y <- c("Gnumber", "Gnumber_2", "MyDrug", "MyDrug_2")
-  
+
   obs <- prettify_flat_metrics(x, human_readable = FALSE)
   exp <- c("CellLineName", "Tissue",
            "Primary Tissue",
-           "GR_mean", "GR50", 
-           "GDS_RV_mean", 
+           "GR_mean", "GR50",
+           "GDS_RV_mean",
            "Concentration_2", "Gnumber_2", "Drug_3",
            "E_0", "GR_AOC_range")
   expect_equal(obs, exp)
-  
+
   # Human readable names work.
   obs <- prettify_flat_metrics(x, human_readable = TRUE)
   exp <- c("Cell Line Name", "Tissue",
            "Primary Tissue",
-           "GR Mean", "GR50", 
+           "GR Mean", "GR50",
            "RV Mean (GDS)",
            "Concentration 2", "Gnumber 2", "Drug 3",
            "E0", "GR AOC within set range")
@@ -33,12 +33,12 @@ test_that("prettify_flat_metrics works as expected", {
 })
 
 test_that(".convert_norm_specific_metrics works as expected", {
-  
+
   idfs <- get_env_identifiers(k = NULL, simplify = TRUE)
   norm_type <- c("GR", "RV")
   expect_equal(.convert_norm_specific_metrics(idfs, norm_type), idfs)
   expect_equal(.convert_norm_specific_metrics(idfs, c("AB", "BC")), idfs)
-  
+
   col_name_1 <- c(
     "rId", "cId", "GR_gDR_x_mean", "GR_gDR_x_AOC", "GR_gDR_x_AOC_range", "GR_gDR_xc50",
     "GR_gDR_x_max", "GR_gDR_ec50", "GR_gDR_x_inf", "GR_gDR_x_0", "GR_gDR_h", "GR_gDR_r2",
@@ -60,8 +60,8 @@ test_that(".convert_norm_specific_metrics works as expected", {
     "_gDR_fit_type_RV"
   )
   expect_equal(.convert_norm_specific_metrics(col_name_1, norm_type), col_name_1_exp)
-  
-  
+
+
   col_name_2 <- c(
     "rId", "cId", "Concentration", "Gnumber", "DrugName", "drug_moa",
     "Duration", "clid", "CellLineName", "Tissue", "parental_identifier", "subtype",
@@ -69,7 +69,7 @@ test_that(".convert_norm_specific_metrics works as expected", {
   )
   expect_equal(.convert_norm_specific_metrics(col_name_2, norm_type), col_name_2)
   expect_equal(.convert_norm_specific_metrics(col_name_2, c("AB", "BC")), col_name_2)
-  
+
   col_name_combo_1 <- c(
     "rId", "cId", "Gnumber", "DrugName", "drug_moa", "Gnumber_2",
     "DrugName_2", "drug_moa_2", "Duration", "clid", "CellLineName", "Tissue",
@@ -78,7 +78,7 @@ test_that(".convert_norm_specific_metrics works as expected", {
   )
   expect_equal(.convert_norm_specific_metrics(col_name_combo_1, norm_type), col_name_combo_1)
   expect_equal(.convert_norm_specific_metrics(col_name_combo_1, c("AB", "BC")), col_name_combo_1)
-  
+
   col_name_combo_2 <- c(
     "rId", "cId", "Concentration", "Concentration_2", "Gnumber", "DrugName",
     "drug_moa", "Gnumber_2", "DrugName_2", "drug_moa_2", "Duration", "clid",
@@ -87,7 +87,7 @@ test_that(".convert_norm_specific_metrics works as expected", {
   )
   expect_equal(.convert_norm_specific_metrics(col_name_combo_2, norm_type), col_name_combo_2)
   expect_equal(.convert_norm_specific_metrics(col_name_combo_2, c("AB", "BC")), col_name_combo_2)
-  
+
   col_name_3 <- c(
     "GR_gDR_x_max", "GR_gDR_ec50", "smooth_GR", "bliss_excess_GR",
     "RV_gDR_x_max", "RV_gDR_ec50", "smooth_RV", "bliss_excess_RV"
@@ -97,7 +97,7 @@ test_that(".convert_norm_specific_metrics works as expected", {
     "_gDR_E_max", "_gDR_EC50", "smooth_RV", "bliss_excess_RV"
   )
   expect_equal(.convert_norm_specific_metrics(col_name_3, c("AB", "RV")), col_name_3_exp)
-  
+
 })
 
 test_that(".prettify_metadata_columns works as expected", {
@@ -108,10 +108,9 @@ test_that(".prettify_metadata_columns works as expected", {
   )
   col_name_exp <- c(
     "EC50", "E Inf", "E 0", "h RV",
-    "Reference Division Time", "Relative Viability", "GRvalue", "Std Relative Viability", "Std GRvalue", 
+    "Reference Division Time", "Relative Viability", "GRvalue", "Std Relative Viability", "Std GRvalue",
     "Smooth GR", "HSA Excess GR", "Bliss Excess GR"
   )
   expect_equal(.prettify_metadata_columns(col_name), col_name_exp)
-  
-})
 
+})

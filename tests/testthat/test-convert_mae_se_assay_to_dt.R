@@ -3,50 +3,50 @@ test_that("convert_se_assay_to_dt works as expected", {
   n <- 10
   rnames <- LETTERS[1:m]
   cnames <- letters[1:n]
-  
+
   # Normal matrix.
   ref_gr_value <- matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value),
                                                    rowData = S4Vectors::DataFrame(rnames),
                                                    colData = S4Vectors::DataFrame(cnames))
-  
+
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = FALSE)
   expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 3))
-  
+
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = TRUE)
-  
+
   expect_equal(data.table::setorder(dt, cId)[["RefGRvalue"]], as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
-  
+
   # BumpyDataFrameMatrix.
   df <- S4Vectors::DataFrame(r = rep(rnames, n), c = rep(cnames, m), values = runif(m * n))
-  nested_rnames <- paste0("A", seq(nrow(df)))
+  nested_rnames <- paste0("A", seq_len(NROW(df)))
   rownames(df) <- nested_rnames
-  
+
   norm <- BumpyMatrix::splitAsBumpyMatrix(df, row = df$r, column = df$c)
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(norm = norm),
                                                    rowData = S4Vectors::DataFrame(rnames),
                                                    colData = S4Vectors::DataFrame(cnames))
   dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = FALSE)
   merged <- base::merge(df, S4Vectors::DataFrame(dt[, c("rId", "cId", "values")]))
-  
+
   expect_equal(merged$r, merged$rId)
   expect_equal(merged$c, merged$cId)
-  
-  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", 
+
+  dt <- convert_se_assay_to_dt(se = se, assay_name = "norm",
                                include_metadata = TRUE, retain_nested_rownames = TRUE)
-  
+
   # Properly handles nested rownames.
   expect_equal(sort(dt$norm_rownames), sort(as.character(nested_rnames)))
   expect_true("norm_rownames" %in% colnames(dt))
-  
+
   merged <- base::merge(df, S4Vectors::DataFrame(dt[, c("rnames", "cnames", "values")]))
   expect_equal(merged$r, merged$rnames)
   expect_equal(merged$c, merged$cnames)
-  
+
   # Properly drops masked values.
   df$normalization_type <- "value"
   df[1, "normalization_type"] <- NA
@@ -56,7 +56,7 @@ test_that("convert_se_assay_to_dt works as expected", {
                                                    colData = S4Vectors::DataFrame(cnames))
   dt <- convert_se_assay_to_dt(se = se, assay_name = "norm", include_metadata = FALSE)
   expect_equal(NROW(dt), 199)
-  
+
   df$Concentration <- runif(NROW(df))
   df[2:3, "Concentration"] <- NA
   norm <- BumpyMatrix::splitAsBumpyMatrix(df, row = df$r, column = df$c)
@@ -81,13 +81,13 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(Metrics = mat),
                                                    rowData = S4Vectors::DataFrame(rownames(mat)),
                                                    colData = S4Vectors::DataFrame(colnames(mat)))
-  
+
   obs <- convert_se_assay_to_dt(se, "Metrics")
-  
+
   expect_equal(nrow(obs), m * 2)
   expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs)))
-  
-  # Insert random column. 
+
+  # Insert random column.
   metrics2 <- metrics
   extra_col <- "SERENA_WILLIAMS"
   extra_val <- rep_len(LETTERS, nrow(metrics2))
@@ -96,12 +96,12 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
   se2 <- SummarizedExperiment::SummarizedExperiment(assays = list(Metrics = mat2),
                                                     rowData = S4Vectors::DataFrame(rownames(mat2)),
                                                     colData = S4Vectors::DataFrame(colnames(mat2)))
-  
+
   obs2 <- convert_se_assay_to_dt(se2, "Metrics")
   expect_true(extra_col %in% colnames(obs2))
   expect_equal(metrics2[[extra_col]], extra_val)
   expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs2)))
-  
+
   # unify_metadata works in covert_se_assay_to_dt
   se <- get_synthetic_data("finalMAE_small")[[1]][c(seq_len(3)), 1]
   rowData(se)$DrugName[[2]] <- rowData(se)$DrugName[[1]]
@@ -116,21 +116,21 @@ test_that("convert_mae_assay_to_dt works as expected", {
   n <- 10
   rnames <- LETTERS[1:m]
   cnames <- letters[1:n]
-  
+
   # Normal matrix.
   ref_gr_value <-  matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
   se <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value),
                                                    rowData = S4Vectors::DataFrame(rnames),
                                                    colData = S4Vectors::DataFrame(cnames))
-  
+
   mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list("single-agent" = se))
-  
+
   dt <- convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt)
   expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 3))
-  
-  dt <- suppressWarnings(convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue", 
+
+  dt <- suppressWarnings(convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue",
                                                  include_metadata = FALSE, wide_structure = TRUE))
   checkmate::expect_data_table(dt)
   expect_equal(dt$RefGRvalue, as.vector(ref_gr_value))
@@ -138,59 +138,59 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_warning(convert_mae_assay_to_dt(mae = mae, assay_name = "RefGRvalue",
                                          include_metadata = FALSE, wide_structure = TRUE),
                  "assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
-  
+
   dt <- convert_se_assay_to_dt(se = se, assay_name = "RefGRvalue", include_metadata = TRUE)
   expect_equal(data.table::setorder(dt, cId)[["RefGRvalue"]], as.vector(ref_gr_value))
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
-  
+
   se1 <- SummarizedExperiment::SummarizedExperiment(
     assays = list(RefGRvalue = ref_gr_value[1:10, ]),
     rowData = S4Vectors::DataFrame(rnames)[1:10, , drop = FALSE],
     colData = S4Vectors::DataFrame(cnames))
-  
+
   se2 <- SummarizedExperiment::SummarizedExperiment(
     assays = list(RefGRvalue = ref_gr_value[11:20, ]),
     rowData = S4Vectors::DataFrame(rnames)[11:20, , drop = FALSE],
     colData = S4Vectors::DataFrame(cnames))
-  
+
   maeTwoExperiments <- MultiAssayExperiment::MultiAssayExperiment(
     experiments = list("single-agent" = se1,
                        "combination" = se2))
-  
+
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt1)
   expect_equal(dt1$RefGRvalue, as.vector(ref_gr_value[1:10, , drop = FALSE]))
   expect_equal(dim(dt1), c(m / 2 * n, 3))
-  
+
   dt1 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "single-agent",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
   checkmate::expect_data_table(dt1)
-  expect_equal(sort(data.table::setorder(dt1)[["RefGRvalue"]]), 
+  expect_equal(sort(data.table::setorder(dt1)[["RefGRvalue"]]),
                sort(as.vector(ref_gr_value[1:10, ])))
   expect_equal(dim(dt1), c(m / 2 * n, 5))
   expect_equal(dt1$rnames, as.character(dt1$rId))
   expect_equal(dt1$cnames, as.character(dt1$cId))
-  
-  
+
+
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "combination",
                                  assay_name = "RefGRvalue", include_metadata = FALSE)
   checkmate::expect_data_table(dt2)
   expect_equal(dt2$RefGRvalue, as.vector(ref_gr_value[11:20, , drop = FALSE]))
   expect_equal(dim(dt2), c(m / 2 * n, 3))
-  
+
   dt2 <- convert_mae_assay_to_dt(mae = maeTwoExperiments, experiment_name = "combination",
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
   checkmate::expect_data_table(dt2)
-  expect_equal(sort(data.table::setorder(dt2)[["RefGRvalue"]]), 
+  expect_equal(sort(data.table::setorder(dt2)[["RefGRvalue"]]),
                sort(as.vector(ref_gr_value[11:20, ])))
   expect_equal(dim(dt2), c(m / 2 * n, 5))
   expect_equal(dt2$rnames, as.character(dt2$rId))
   expect_equal(dt2$cnames, as.character(dt2$cId))
-  
-  
+
+
   dt3 <- convert_mae_assay_to_dt(mae = maeTwoExperiments,
                                  assay_name = "RefGRvalue", include_metadata = TRUE)
   checkmate::expect_data_table(dt3)
@@ -198,28 +198,28 @@ test_that("convert_mae_assay_to_dt works as expected", {
   expect_equal(dim(dt), c(m * n, 5))
   expect_equal(dt$rnames, as.character(dt$rId))
   expect_equal(dt$cnames, as.character(dt$cId))
-  
+
   expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments,
                                          assay_name = "Nonexistent"),
                  "assay 'Nonexistent' was not found in any of the following experiments")
-  
-  expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments, assay_name = "RefGRvalue", 
+
+  expect_warning(convert_mae_assay_to_dt(mae = maeTwoExperiments, assay_name = "RefGRvalue",
                                          include_metadata = TRUE, wide_structure = TRUE),
                  "assay is not class `BumpyMatrix`, wide_structure=TRUE ignored")
-  
-  
+
+
   real_mae <- get_synthetic_data("finalMAE_small")
-  
+
   dt_l <- convert_mae_assay_to_dt(mae = real_mae, assay_name = "Averaged", wide_structure = FALSE)
   checkmate::expect_data_table(dt_l)
   col_l <- c("normalization_type", "x", "x_std")
   expect_true(all(col_l %in% colnames(dt_l)))
-  
+
   dt_w <- convert_mae_assay_to_dt(mae = real_mae, assay_name = "Averaged", wide_structure = TRUE)
   checkmate::expect_data_table(dt_w)
   col_w <- c("RelativeViability", "GRvalue", "std_RelativeViability", "std_GRvalue")
   expect_true(all(col_w %in% colnames(dt_w)))
-  
+
   expect_equal(setdiff(colnames(dt_w), col_w), setdiff(colnames(dt_l), col_l))
   expect_equal(max(dt_l[, .N, by = "normalization_type"]$N), NROW(dt_w))
 })
@@ -228,63 +228,63 @@ test_that("convert_mae_assay_to_dt works as expected", {
 test_that("convert_se_assay_to_custom_dt works as expected", {
   json_path <- system.file(package = "gDRutils", "test_settings_2.json")
   s <- get_settings_from_json(json_path = json_path)
-  
+
   se <- get_synthetic_data("finalMAE_small")[[1]]
-  
+
   dt1 <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
   checkmate::expect_data_table(dt1, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt1)))
-  
+
   dt2 <-
     convert_se_assay_to_custom_dt(se, assay_name = "Metrics", output_table = "Metrics_raw")
   checkmate::expect_data_table(dt2, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt2)))
-  
+
   dt3 <-
     convert_se_assay_to_custom_dt(se, assay_name = "Metrics", output_table = "Metrics_initial")
   checkmate::expect_data_table(dt3, min.rows = 2, min.cols = 2)
   expect_false(identical(dt2, dt3))
-  expect_true(all(c("x_mean", "x_AOC", "x_AOC_range", "xc50", "x_max", "ec50",  
+  expect_true(all(c("x_mean", "x_AOC", "x_AOC_range", "xc50", "x_max", "ec50",
                     "x_inf", "x_0", "h", "r2", "x_sd_avg", "fit_type") %in% names(dt3)))
-  
+
   dt4 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged")
   checkmate::expect_data_table(dt4, min.rows = 2, min.cols = 2)
   expect_true(
     all(c("GR value", "Relative Viability", "Std GR value", "Std Relative Viability") %in% names(dt4)))
-  
+
   dt5 <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Averaged")
   expect_true(identical(dt4, dt5))
-  
+
   se2 <- get_synthetic_data("finalMAE_combo_matrix")[[1]]
   dt6 <- convert_se_assay_to_custom_dt(se2, assay_name = "Metrics")
   checkmate::expect_data_table(dt6, min.rows = 2, min.cols = 2)
   expect_true(all(s$METRIC_WISH_LIST %in% names(dt6)))
-  
+
   dt7 <-
     convert_se_assay_to_custom_dt(se2, assay_name = get_combo_assay_names()[1])
   checkmate::expect_data_table(dt7, min.rows = 2, min.cols = 2)
   expect_true(all(names(get_combo_excess_field_names()) %in% names(dt7)))
-  
+
   expect_error(convert_se_assay_to_custom_dt(as.list(se), assay_name = "Metrics"))
   expect_error(convert_se_assay_to_custom_dt(se, assay_name = "Averaged", output_table = "Metrics_raw"))
   expect_error(convert_se_assay_to_custom_dt(se, "xxx"))
   expect_error(convert_se_assay_to_custom_dt(se, "Metrics", "xxx"))
-  
+
   dt_metrics_uncapped <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics", cap_values = FALSE)
   dt_metrics_capped <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics", cap_values = TRUE)
-  
+
   checkmate::expect_data_table(dt_metrics_capped)
   expect_false(identical(dt_metrics_uncapped, dt_metrics_capped))
-  
+
   manually_capped_dt <- capVals(dt_metrics_uncapped)
   expect_identical(dt_metrics_capped, manually_capped_dt)
-  
+
   dt_metrics_default <- convert_se_assay_to_custom_dt(se, assay_name = "Metrics")
   expect_identical(dt_metrics_default, dt_metrics_uncapped)
-  
+
   dt_averaged_no_cap <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", cap_values = FALSE)
   dt_averaged_cap_ignored <- convert_se_assay_to_custom_dt(se, assay_name = "Averaged", cap_values = TRUE)
-  
+
   expect_identical(dt_averaged_no_cap, dt_averaged_cap_ignored)
 })
 
@@ -325,15 +325,15 @@ test_that("capVals works as expected", {
   attr(dt2c, "index") <- NULL
   attr(dt2c_2, "index") <- NULL
   attr(dt3c, "index") <- NULL
-  
+
   expect_false(identical(dt1c, dt1))
   expect_identical(dt2c, dt2)
   expect_identical(dt2c_2, dt2[, 1:4])
   expect_identical(dt3c, dt3)
-  
+
   # values are capped correctly
   expect_equal(dt1c, dt2)
-  
+
   expect_error(capVals(as.list(dt1)), "Must be a data.table")
 })
 
@@ -345,18 +345,18 @@ test_that("update_drug_name works as expected", {
     Var2 = c(NA, "Z", "W")
   )
   additional_vars <- c("Var1", "Var2")
-  
+
   dt_updated <- update_drug_name(dt, additional_vars)
-  
+
   expect_equal(dt_updated[1, ]$DrugName, "D1 (Var1 = X)")
   expect_equal(dt_updated[1, ]$Gnumber, "G1 (Var1 = X)")
-  
+
   expect_equal(dt_updated[2, ]$DrugName, "D2 (Var2 = Z)")
   expect_equal(dt_updated[2, ]$Gnumber, "G2 (Var2 = Z)")
-  
+
   expect_equal(dt_updated[3, ]$DrugName, "D3 (Var1 = Y) (Var2 = W)")
   expect_equal(dt_updated[3, ]$Gnumber, "G3 (Var1 = Y) (Var2 = W)")
-  
+
   expect_warning(update_drug_name(dt, c("Var1", "NonExistent")), "Additional variable 'NonExistent'")
 })
 
@@ -364,11 +364,11 @@ test_that("convert_se_assay_to_dt merges additional variables", {
   m <- 4
   n <- 1
   ref_gr_value <- matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(LETTERS[1:m], "c1"))
-  
+
   rData_with_extra <- S4Vectors::DataFrame(
     rId = LETTERS[1:m],
-    Gnumber = LETTERS[1:m], 
-    DrugName = paste0("Drug_", LETTERS[1:m]), 
+    Gnumber = LETTERS[1:m],
+    DrugName = paste0("Drug_", LETTERS[1:m]),
     Plate_number = c("B1", NA, "B3", NA)
   )
   se <- SummarizedExperiment::SummarizedExperiment(
@@ -376,16 +376,16 @@ test_that("convert_se_assay_to_dt merges additional variables", {
     rowData = rData_with_extra,
     colData = S4Vectors::DataFrame(cnames = "c1")
   )
-  
+
   dt_merged <- convert_se_assay_to_dt(
-    se = se, 
-    assay_name = "RefGRvalue", 
-    include_metadata = TRUE, 
+    se = se,
+    assay_name = "RefGRvalue",
+    include_metadata = TRUE,
     merge_additional_variables = TRUE
   )
-  
+
   expect_equal(dt_merged[rId == "A"]$DrugName, "Drug_A (Plate_number = B1)")
   expect_equal(dt_merged[rId == "A"]$Gnumber, "A (Plate_number = B1)")
-  
+
   expect_equal(dt_merged[rId == "B"]$DrugName, "Drug_B")
 })

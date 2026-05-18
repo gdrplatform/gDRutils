@@ -4,7 +4,7 @@
   dropped <- setdiff(keys, cols)
   if (length(dropped) != 0L) {
     warning(sprintf("ignoring input keys: '%s' which are not present in data.table",
-                    paste0(dropped, collapse = ", ")))
+                    toString(dropped)))
   }
   intersect(keys, cols)
 }
@@ -18,12 +18,12 @@ assert_equal_input_len <- function(outlier, ...) {
   if (!h) {
     stop("unequal length objects provided as input")
   }
-  
+
   contains_length_one <- length(first) == 1L || length(outlier) == 1L
   if (length(first) != length(outlier) && !contains_length_one) {
     stop("unequal lengths detected, either the fit parameters must be length one, or the tested value")
   }
-  
+
   invisible(NULL)
 }
 
@@ -32,10 +32,10 @@ assert_equal_input_len <- function(outlier, ...) {
 #' @param x string with normalization type
 #'
 #' @return shortened string representing the normalization type
-#' 
-#' @examples 
+#'
+#' @examples
 #' shorten_normalization_type_name("GRvalue")
-#' 
+#'
 #' @keywords package_utils
 #' @export
 shorten_normalization_type_name <- function(x) {
@@ -47,12 +47,12 @@ shorten_normalization_type_name <- function(x) {
 #' extend abbreviated normalization type
 #'
 #' @param x string with normalization type
-#' 
+#'
 #' @return string
-#' 
-#' @examples 
+#'
+#' @examples
 #' extend_normalization_type_name("GR")
-#' 
+#'
 #' @keywords package_utils
 #' @export
 extend_normalization_type_name <- function(x) {
@@ -66,19 +66,19 @@ extend_normalization_type_name <- function(x) {
 #' @param x charvec expected subset
 #' @param choices charvec reference set
 #' @param ... Additional arguments to pass to \code{checkmate::test_choice}
-#' 
+#'
 #' @return \code{NULL}
-#' 
-#' @examples 
+#'
+#' @examples
 #' assert_choices("x", c("x","y"))
-#' 
+#'
 #' @keywords package_utils
 #' @export
 assert_choices <- function(x, choices, ...) {
   out <- vapply(x, function(y) {
     checkmate::test_choice(y, choices, ...)
   }, FUN.VALUE = logical(1))
-  
+
   if (!all(out)) {
     msg <-
       sprintf(
@@ -101,13 +101,13 @@ assert_choices <- function(x, choices, ...) {
 #' @export
 #'
 #' @author Bartosz Czech <czech.bartosz@@external.gene.com>
-#' 
+#'
 #' @return list or vector depends on unify param
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' MAEpply(mae, SummarizedExperiment::assayNames)
-#' 
+#'
 #' @keywords package_utils
 #' @export
 MAEpply <- function(mae, FUN, unify = FALSE, ...) {
@@ -122,7 +122,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
     } else {
       data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
     }
-    
+
   } else {
     out
   }
@@ -169,39 +169,39 @@ loop <- function(x,
                  temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
                  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
                  ...) {
-  
+
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
   checkmate::assert_flag(use_batch)
   checkmate::assert_string(temp_dir)
   checkmate::assert_count(batch_size, positive = TRUE)
-  
+
   parent_call <- sys.call(-1)
   parent_name <- if (!is.null(parent_call)) {
     deparse(parent_call[[1]])
   } else {
     "unknown_parent_fun"
   }
-  
+
   if (use_batch) {
     if (!dir.exists(temp_dir)) {
       dir.create(temp_dir, recursive = TRUE)
     }
-    
+
     fun_name <- deparse(substitute(FUN))
     if (any(grepl("function", fun_name))) {
       fun_name <- parent_name
     }
-    
+
     user_id <- Sys.info()["user"]
     unique_id <- paste0(digest::digest(x, algo = "sha256"), "_", user_id)
-    
+
     total_iterations <- length(x)
     batch_size <- min(batch_size, total_iterations)
-    
+
     indices <- seq(batch_size, total_iterations, by = batch_size)
-    
+
     completed_batches <- vapply(indices, function(start_index) {
       file_path <- file.path(temp_dir,
                              paste0(fun_name, "_",
@@ -210,13 +210,13 @@ loop <- function(x,
                                     total_iterations, "_batch.qs2"))
       file.exists(file_path)
     }, logical(1))
-    
+
     start_index <- indices[!completed_batches][1]
     if (is.na(start_index)) {
       message("All batches are already completed.")
       start_index <- indices[length(indices)] + batch_size
     }
-    
+
     if (parallelize) {
       BiocParallel::bplapply(indices[indices >= start_index], function(start_index) {
         end_index <- min(start_index, total_iterations)
@@ -230,7 +230,7 @@ loop <- function(x,
                       start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
       })
     }
-    
+
     final_results <- list()
     for (start_index in indices) {
       file_path <- file.path(temp_dir,
@@ -243,7 +243,7 @@ loop <- function(x,
         final_results <- c(final_results, batch_results)
       }
     }
-    
+
     for (start_index in indices) {
       file_path <- file.path(temp_dir,
                              paste0(fun_name, "_",
@@ -254,7 +254,7 @@ loop <- function(x,
         file.remove(file_path)
       }
     }
-    
+
     return(final_results)
   } else {
     if (parallelize) {
@@ -287,12 +287,12 @@ loop <- function(x,
 #'
 #' @keywords package_utils
 #' @export
-process_batch <- function(batch, 
-                          start_index, 
-                          fun_name, 
-                          unique_id, 
-                          total_iterations, 
-                          temp_dir, 
+process_batch <- function(batch,
+                          start_index,
+                          fun_name,
+                          unique_id,
+                          total_iterations,
+                          temp_dir,
                           FUN, ...) {
   checkmate::assert_vector(batch, null.ok = FALSE)
   checkmate::assert_count(start_index, positive = TRUE)
@@ -301,7 +301,7 @@ process_batch <- function(batch,
   checkmate::assert_count(total_iterations, positive = TRUE)
   checkmate::assert_string(temp_dir)
   checkmate::assert_function(FUN)
-  
+
   results <- stats::setNames(vector("list", length(batch)), names(batch))
   for (i in seq_along(batch)) {
     results[[i]] <- FUN(batch[[i]], ...)
@@ -327,20 +327,20 @@ process_batch <- function(batch,
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
 #' @param ... Additional args to be passed to teh \code{FUN}.
 #' @return The original \code{se} object with a new assay, \code{out_assay_name}.
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' FUN <- function(x) {
 #'   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
-#' } 
+#' }
 #' apply_bumpy_function(
-#'   se, 
-#'   FUN = FUN, 
-#'   req_assay_name = "RawTreated", 
+#'   se,
+#'   FUN = FUN,
+#'   req_assay_name = "RawTreated",
 #'   out_assay_name = "CorrectedReadout"
 #' )
-#' 
+#'
 #' @keywords package_utils
 #' @export
 apply_bumpy_function <- function(se,
@@ -354,7 +354,7 @@ apply_bumpy_function <- function(se,
   checkmate::assert_string(req_assay_name)
   checkmate::assert_string(out_assay_name)
   validate_se_assay_name(se, req_assay_name)
-  
+
   asy <- SummarizedExperiment::assay(se, req_assay_name)
   checkmate::assert_class(asy, "BumpyDataFrameMatrix")
   df <- BumpyMatrix::unsplitAsDataFrame(asy, row.field = "row", column.field = "column")
@@ -377,9 +377,9 @@ apply_bumpy_function <- function(se,
       stop("only data.table objects supported as return values from FUN for now")
     }
   }, parallelize = parallelize)
-  
+
   out <- S4Vectors::DataFrame(do.call(rbind, out))
-  
+
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
                                                row = out$row,
                                                col = out$column)
@@ -392,20 +392,20 @@ apply_bumpy_function <- function(se,
 #'
 #' check if all mae experiments are empty
 #' @param mae MultiAssayExperiment object
-#' 
+#'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
-#' 
+#'
 #' @return logical
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' is_mae_empty(mae)
-#' 
+#'
 #' @keywords package_utils
 #' @export
 is_mae_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   all(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
@@ -413,20 +413,20 @@ is_mae_empty <- function(mae) {
 #'
 #' check if any experiment is empty
 #' @param mae MultiAssayExperiment object
-#' 
+#'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
-#' 
+#'
 #' @return logical
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' is_any_exp_empty(mae)
-#' 
+#'
 #' @keywords package_utils
 #' @export
 is_any_exp_empty <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   any(MAEpply(mae, is_exp_empty, unify = TRUE))
 }
 
@@ -434,28 +434,28 @@ is_any_exp_empty <- function(mae) {
 #'
 #' check if experiment (SE) is empty
 #' @param exp \linkS4class{SummarizedExperiment} object.
-#' 
+#'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
-#' 
+#'
 #' @return logical
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' is_exp_empty(se)
-#' 
+#'
 #' @keywords package_utils
 #' @export
 is_exp_empty <- function(exp) {
   checkmate::assert_class(exp, "SummarizedExperiment")
-  
+
   names <- SummarizedExperiment::assayNames(exp)
   dt <- `if`(
     is.null(names),
     data.table::data.table(),
     convert_se_assay_to_dt(exp, names[[1]])
   )
-  
+
   any(
     NROW(SummarizedExperiment::assay(exp)) == 0,
     NROW(dt) == 0
@@ -466,20 +466,20 @@ is_exp_empty <- function(exp) {
 #'
 #' get non empty assays
 #' @param mae MultiAssayExperiment object
-#' 
+#'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
-#' 
+#'
 #' @return charvec with non-empty experiments
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' get_non_empty_assays(mae)
-#' 
+#'
 #' @keywords package_utils
 #' @export
 get_non_empty_assays <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   ne_info <- MAEpply(mae, is_exp_empty) == FALSE
   names(ne_info[ne_info == TRUE])
 }
@@ -488,9 +488,9 @@ get_non_empty_assays <- function(mae) {
 #'
 #' get colData of all experiments
 #' @param mae MultiAssayExperiment object
-#' 
+#'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
-#' 
+#'
 #' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' mcolData(mae)
@@ -501,7 +501,7 @@ get_non_empty_assays <- function(mae) {
 #' @export
 mcolData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   MAEpply(mae, SummarizedExperiment::colData, unify = TRUE)
 }
 
@@ -514,29 +514,29 @@ mcolData <- function(mae) {
 #'
 #' @return data.table with all-experiments rowData
 #'
-#' @examples 
-#' mae <- get_synthetic_data("finalMAE_small.qs2") 
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' mrowData(mae)
 #'
 #' @author Arkadiusz Gladki <arkadiusz.gladki@@contractors.roche.com>
 mrowData <- function(mae) {
   checkmate::assert_class(mae, "MultiAssayExperiment")
-  
+
   MAEpply(mae, SummarizedExperiment::rowData, unify = TRUE)
 }
 
 #' Get synthetic data from gDRtestData package
 #'
 #' @param qs dataset name or qs2 filename (e.g. \code{"small"} or \code{"finalMAE_small.qs2"})
-#' 
+#'
 #' @keywords package_utils
 #' @export
-#' 
+#'
 #' @examples
 #' get_synthetic_data("finalMAE_small.qs2")
 #'
 #' @return loaded data
-#' 
+#'
 get_synthetic_data <- function(qs) {
   # check if prefix exist, if not add one
   if (!grepl("finalMAE", qs)) {
@@ -553,27 +553,27 @@ get_synthetic_data <- function(qs) {
 
 
 #' Geometric mean
-#' 
+#'
 #' Auxiliary function for calculating geometric mean with possibility to handle -Inf
-#' 
+#'
 #' @param x numeric vector
-#' @param fixed flag should be add fix for -Inf 
+#' @param fixed flag should be add fix for -Inf
 #' @param maxlog10Concentration numeric value needed to calculate minimal value
-#' 
+#'
 #' @return numeric vector
-#' 
-#' @examples 
+#'
+#' @examples
 #' geometric_mean(c(2, 8))
-#' 
+#'
 #' @keywords package_utils
 #' @export
-#' 
+#'
 #' @keywords internal
 geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
   checkmate::assert_numeric(x)
   checkmate::assert_flag(fixed)
   checkmate::assert_numeric(maxlog10Concentration)
-  
+
   if (fixed) {
     x <- pmax(
       10 ^ maxlog10Concentration / 1e6,
@@ -583,25 +583,25 @@ geometric_mean <- function(x, fixed = TRUE, maxlog10Concentration = 1) {
   exp(mean(log(x)))
 }
 
-#' Average biological replicates on the data table side. 
+#' Average biological replicates on the data table side.
 #'
 #' @param dt data.table with Metric data
 #' @param var String representing additional metadata of replicates
 #' @param prettified Flag indicating if the provided identifiers in the dt are prettified
 #' @param fixed Flag indicating whether to add a fix for -Inf in the geometric mean.
-#' @param geometric_average_fields Character vector of column names in \code{dt} 
+#' @param geometric_average_fields Character vector of column names in \code{dt}
 #' to take the geometric average of.
-#' @param fit_type_average_fields Character vector of column names in \code{dt} 
+#' @param fit_type_average_fields Character vector of column names in \code{dt}
 #' that should be treated as a column with fit type data
-#' @param blacklisted_fields Character vector of column names in \code{dt} 
+#' @param blacklisted_fields Character vector of column names in \code{dt}
 #' that should be skipped in averaging
 #' @param add_sd Flag indicating whether to add standard deviation and count columns.
-#' 
+#'
 #' @examples
 #' dt <- data.table::data.table(a = c(seq_len(10), 1),
 #' b = c(rep("drugA", 10), rep("drugB", 1)))
 #' average_biological_replicates_dt(dt, var = "a")
-#' 
+#'
 #' @return data.table without replicates
 #' @keywords package_utils
 #' @export
@@ -614,16 +614,16 @@ average_biological_replicates_dt <- function(
     fit_type_average_fields = get_header("metric_average_fields")$fit_type,
     blacklisted_fields = get_header("metric_average_fields")$blacklisted,
     add_sd = FALSE) {
-  
+
   checkmate::assert_data_table(dt)
   checkmate::assert_character(var, null.ok = FALSE, any.missing = FALSE)
   checkmate::assert_flag(prettified)
   checkmate::assert_character(geometric_average_fields)
   checkmate::assert_character(fit_type_average_fields)
   checkmate::assert_flag(add_sd)
-  
+
   data <- data.table::copy(dt)
-  
+
   if (prettified) {
     pidfs <- get_prettified_identifiers()
     iso_cols <- prettify_flat_metrics(get_header("iso_position"), human_readable = TRUE)
@@ -633,23 +633,23 @@ average_biological_replicates_dt <- function(
     iso_cols <- get_header("iso_position")
     id_cols <- prettify_flat_metrics(get_header("id"))
   }
-  
+
   max_fields <- c("maxlog10Concentration", "N_conc")
   regex_max_fields <- paste0(c(max_fields, prettify_flat_metrics(max_fields, human_readable = TRUE)),
                              collapse = "|")
   max_fields <- grep(regex_max_fields, names(data), value = TRUE)
-  
+
 
   p_val_col <- "p_value"
   regex_p_val_col <- paste0(c(p_val_col, prettify_flat_metrics(p_val_col, human_readable = TRUE)),
                              collapse = "|")
   p_val_col <- grep(regex_p_val_col, names(data), value = TRUE)
-  
+
   r2_col <- "r2"
   regex_r2_col <- paste0(c(r2_col, prettify_flat_metrics(r2_col, human_readable = TRUE)),
                             collapse = "|")
   r2_col <- grep(regex_r2_col, names(data), value = TRUE)
-  
+
   average_fields <- setdiff(names(Filter(is.numeric, data)),
                             c(unlist(pidfs), var, iso_cols, max_fields, p_val_col))
   # don't  average across _sd$ fields (to avoid adding unexpected columns, i.e. x_sd_sd_sd_sd)
@@ -657,46 +657,46 @@ average_biological_replicates_dt <- function(
   geometric_average_fields <- intersect(geometric_average_fields, names(dt))
   blacklisted_fields <- intersect(blacklisted_fields, names(dt))
   group_by <- setdiff(names(data), c(average_fields, var, id_cols, blacklisted_fields, max_fields, p_val_col))
-  
-  
+
+
   replicate_iden_vars <- intersect(c(group_by, var), names(data))
-  
+
   if (add_sd) {
     # Calculate standard deviation for both average_fields and geometric_average_fields
     sd_fields <- paste0(average_fields, "_sd")
     geom_sd_fields <- paste0(geometric_average_fields, "_sd")
-    
+
     data <- data[, (sd_fields) := lapply(.SD, calc_sd),
                  .SDcols = average_fields, by = group_by]
     data <- data[, (geom_sd_fields) := lapply(.SD, calc_sd),
                  .SDcols = geometric_average_fields, by = group_by]
-    
+
     # Calculate count and add as a single column
     data <- data[, count := .N, by = group_by]
   }
-  
+
   # 1. Remove the specified variable column
   data[, (var) := NULL]
-  
+
   # 2. For max_fields - take the maximum value
   data[, (max_fields) := lapply(.SD, max, na.rm = TRUE),
        .SDcols = max_fields, by = group_by]
-  
+
   # 3. For p_val_col - average using Fisher's method
   data[, (p_val_col) := lapply(.SD, average_pvalues),
        .SDcols = p_val_col, by = group_by]
-  
+
   # 4. For standard numeric fields - use arithmetic mean
   data[, (average_fields) := lapply(.SD, mean, na.rm = TRUE),
        .SDcols = average_fields, by = group_by]
-  
+
   # 5. For specified fields - use geometric mean
   data[, (geometric_average_fields) := lapply(.SD, FUN = function(x) {
     geometric_mean(x, fixed = fixed)
   }),
   .SDcols = geometric_average_fields, by = group_by]
-  
-  # 6. Choose better model 
+
+  # 6. Choose better model
   if (NROW(r2_col)) {
     data <- data.table::rbindlist(lapply(r2_col, function(col) {
       data[data[, .I[which.max(get(col))], by = setdiff(group_by, fit_type_average_fields)]$V1]
@@ -709,7 +709,7 @@ average_biological_replicates_dt <- function(
 #' Checks if \code{se} is combo dataset.
 #'
 #' @param se SummarizedExperiment
-#' 
+#'
 #' @examples
 #' se <- get_synthetic_data("finalMAE_combo_matrix.qs2")[[1]]
 #' is_combo_data(se)
@@ -720,11 +720,11 @@ average_biological_replicates_dt <- function(
 #'
 #' @return logical
 #' @keywords combination_data
-#' 
+#'
 #' @export
 is_combo_data <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
-  
+
   all(get_combo_assay_names() %in% SummarizedExperiment::assayNames(se))
 }
 
@@ -733,30 +733,30 @@ is_combo_data <- function(se) {
 #' @param cols character vector with the columns of the input data
 #' @param prettify_identifiers logical flag specifying if identifiers are expected to be prettified
 #' @param codrug_identifiers character vector with identifiers for the codrug columns
-#' 
+#'
 #' @examples
 #' has_single_codrug_data("Drug Name")
 #' has_single_codrug_data(c("Drug Name", "Cell Lines"))
 #' has_single_codrug_data(c("Drug Name 2", "Concentration 2"))
 #' has_single_codrug_data(
 #'   get_prettified_identifiers(
-#'     c("concentration2", "drug_name2"), 
+#'     c("concentration2", "drug_name2"),
 #'     simplify = FALSE
 #'   )
 #' )
 #'
 #' @keywords combination_data
 #' @return logical flag
-#' 
+#'
 #' @export
 has_single_codrug_data <-
   function(cols,
            prettify_identifiers = TRUE,
            codrug_identifiers = c("drug_name2", "concentration2")) {
-    
+
     checkmate::assert_true(all(codrug_identifiers %in% names(get_env_identifiers(simplify = TRUE))))
     checkmate::assert_flag(prettify_identifiers)
-    
+
     codrug_colnames <- if (prettify_identifiers) {
       get_prettified_identifiers(codrug_identifiers, simplify = FALSE)
     } else {
@@ -764,7 +764,7 @@ has_single_codrug_data <-
     }
     checkmate::assert_character(cols, any.missing = FALSE)
     checkmate::assert_character(codrug_colnames, any.missing = FALSE)
-    
+
     all(codrug_colnames %in% cols)
   }
 
@@ -775,7 +775,7 @@ has_single_codrug_data <-
 #' @param prettify_identifiers logical flag specifying if identifiers are expected to be prettified
 #' @param codrug_name_identifier string with the identifiers for the codrug drug_name column
 #' @param codrug_conc_identifier string with the identifiers for the codrug concentration column
-#' 
+#'
 #' @examples
 #' dt <-
 #'   data.table::data.table(
@@ -785,13 +785,13 @@ has_single_codrug_data <-
 #'     "Concentration 2" = 4:6
 #'   )
 #' has_valid_codrug_data(dt)
-#' 
+#'
 #' dt$`Concentration 2` <- NULL
 #' has_valid_codrug_data(dt)
 #'
 #' @keywords combination_data
 #' @return logical flag
-#' 
+#'
 #' @export
 has_valid_codrug_data <-
   function(data,
@@ -803,22 +803,22 @@ has_valid_codrug_data <-
     checkmate::assert_flag(prettify_identifiers)
     checkmate::assert_string(codrug_name_identifier)
     checkmate::assert_string(codrug_conc_identifier)
-    
+
     idfs <- if (prettify_identifiers) {
       get_prettified_identifiers(simplify = TRUE)
     } else {
       get_env_identifiers()
     }
-    
+
     codrug_v <- c(codrug_name_identifier, codrug_conc_identifier)
-    
+
     status <-
       # codrug data not present for drug_name and/or concentration data
       if (!has_single_codrug_data(dcols, prettify_identifiers, codrug_v)) {
         FALSE
       }  else {
         codrug_cols <- as.character(idfs[codrug_v])
-        
+
         # codrug data not valid (for drug names and/or concentration data)
         if (all(data[[codrug_cols[1]]] %in% idfs[["untreated_tag"]]) ||
             all(is.na(data[[codrug_cols[2]]]))) {
@@ -835,9 +835,9 @@ has_valid_codrug_data <-
 #' @param data data.table with input data
 #' @param prettify_identifiers logical flag specifying if identifiers are expected to be prettified
 #' @param codrug_identifiers character vector with identifiers for the codrug columns
-#' 
+#'
 #' @examples
-#' 
+#'
 #' dt <-
 #'   data.table::data.table(
 #'     "Drug Name" = letters[seq_len(3)],
@@ -850,26 +850,26 @@ has_valid_codrug_data <-
 #'
 #' @keywords combination_data
 #' @return data.table without combination columns
-#' 
+#'
 #' @export
 remove_codrug_data <-
   function(data,
            prettify_identifiers = TRUE,
            codrug_identifiers = c("drug_name2", "concentration2")) {
-    
+
     checkmate::assert_true(all(codrug_identifiers %in% names(get_env_identifiers())))
     checkmate::assert_data_table(data)
     checkmate::assert_flag(prettify_identifiers)
-    
+
     codrug_colnames <- if (prettify_identifiers) {
       vapply(codrug_identifiers, function(x) get_prettified_identifiers(x), character(1))
     } else {
       vapply(codrug_identifiers, function(x) get_env_identifiers(x), character(1))
     }
     checkmate::assert_character(codrug_colnames, any.missing = FALSE)
-    
+
     idx <- which(!colnames(data) %in% codrug_colnames)
-    
+
     # support both: data.table and data.frame
     subset(data, select = idx)
   }
@@ -877,33 +877,33 @@ remove_codrug_data <-
 #' Identify and return additional variables in list of dt
 #'
 #' @param dt_list list of data.table or data.table containing additional variables
-#' @param unique logical flag indicating if all variables should be returned 
+#' @param unique logical flag indicating if all variables should be returned
 #' or only those containing more than one unique value
 #' @param prettified Flag indicating if the provided identifiers in the dt are prettified
-#' 
+#'
 #' @examples
 #' dt <- data.table::data.table(
-#'   Gnumber = seq_len(10), 
-#'   Concentration = runif(10), 
+#'   Gnumber = seq_len(10),
+#'   Concentration = runif(10),
 #'   Ligand = c(rep(0.5, 5), rep(0, 5))
 #' )
 #' get_additional_variables(dt)
 #'
 #' @return vector of variable names with additional variables
-#' 
+#'
 #' @keywords combination_data
 #' @export
 get_additional_variables <- function(dt_list,
                                      unique = FALSE,
                                      prettified = FALSE) {
-  
-  
+
+
   if (data.table::is.data.table(dt_list)) {
     dt_list <- list(dt_list)
   }
   checkmate::assert_flag(unique)
   checkmate::assert_flag(prettified)
-  
+
   if (prettified) {
     headers <- prettify_flat_metrics(unlist(get_header()), human_readable = TRUE)
     pidfs <- get_prettified_identifiers()
@@ -916,11 +916,11 @@ get_additional_variables <- function(dt_list,
     system.file(package = "gDRutils", "settings.json")
   )]
   idfs <- setdiff(unique(c(headers, pidfs)), idf2keep)
-  
+
   additional_perturbations <- unique(unlist(lapply(dt_list, function(x) {
     setdiff(sub(" \\(.*\\)$", "", names(x)), idfs)
   })))
-  
+
   if (unique) {
     additional_perturbations
   } else {
@@ -961,19 +961,19 @@ calc_sd <- function(x) {
 
 
 #' safe wrapper of Sys.getenv()
-#' 
-#' So far the helper is needed to handle env vars containing `:` 
+#'
+#' So far the helper is needed to handle env vars containing `:`
 #' for which the backslash  is automatically added in some contexts
 #' and R could not get the original value for these env vars.
-#' 
+#'
 #' @param x string with the name of the environmental variable
 #' @param ... additional params for Sys.getenev
 #' @keywords package_utils
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_env_var("HOME")
 #
-#' @export 
+#' @export
 #' @return sanitized value of the env variable
 get_env_var <- function(x, ...) {
   gsub("\\\\", "", Sys.getenv(x, ...))
@@ -983,7 +983,7 @@ get_env_var <- function(x, ...) {
 #'
 #' Gnumber, i.e. "G12345678" is currently the default format of drug_id. It's also used as a drug name in some cases.
 #'
-#' By default, Gnumber(s) followed by any character (except for underscore and any digit) 
+#' By default, Gnumber(s) followed by any character (except for underscore and any digit)
 #' and any batch substring are cleaned:
 #'  * G00060245.18 => G00060245
 #'  * G00060245.1-8 => G00060245
@@ -998,13 +998,13 @@ get_env_var <- function(x, ...) {
 #' By default, Gnumber(s) followed by the "_" or digit (regardless the batch substring) are not cleaned:
 #'  *  Gnumber with suffix added to prevent duplicated ids
 #'     * G00060245_(G00060245.1-8)
-#'  *  too long Gnumber 
+#'  *  too long Gnumber
 #'     * G123456789.1-12
-#' 
+#'
 #' @param drug_vec atomic vector (e.g., character or integer) with drug id(s)
 #' @param drug_p string with regex pattern for drug id. Set to Gnumber format by default: "G\[0-9\]\{8\}".
 #' @param sep_p string with regex pattern for separator. Set to any character except for digit and space
-#' @param batch_p string with regex pattern for batch substring. 
+#' @param batch_p string with regex pattern for batch substring.
 #'        By default set to any character(s): ".+"
 #'
 #' @examples
@@ -1017,7 +1017,7 @@ get_env_var <- function(x, ...) {
 #' remove_drug_batch("G03256376.1-2;G00376771.1-19;G02557755")
 #' remove_drug_batch("G00060245_(G00060245.1-8)")
 #' remove_drug_batch(c("G00060245.18", "G00060245.1-8", "G00060245.1-1.DMA"))
-#' 
+#'
 #' remove_drug_batch("DRUG_01.123", drug_p = "DRUG_[0-9]+")
 #' remove_drug_batch("G00001234:22-1", sep_p = ":")
 #' remove_drug_batch("G00001234.28", batch_p = "[0-9]+")
@@ -1033,9 +1033,9 @@ remove_drug_batch <- function(drug_vec,
   checkmate::assert_string(drug_p)
   checkmate::assert_string(sep_p)
   checkmate::assert_string(batch_p)
-  
+
   drug_vec <- as.character(drug_vec)
-  
+
   p <- paste0("(", drug_p, ")", sep_p, batch_p, "$")
   r <- "\\1"
   sub(p, r, drug_vec)
@@ -1050,12 +1050,12 @@ remove_drug_batch <- function(drug_vec,
 #' @param col string with column name to be capped in assay_dt ("xc50" by default)
 #' @param capping_fold number for min and max concentration values
 #'                     final formulas are min / capping_fold and max * capping_fold
-#' @param additional_group_cols character vector of column names used to identify unique observations 
+#' @param additional_group_cols character vector of column names used to identify unique observations
 #'  - for single-agent experiment additional to the combination of \code{DrugName} and \code{CellLineName}
-#'  - for combination experiment additional to the combination of \code{DrugName}, \code{DrugName_2} 
+#'  - for combination experiment additional to the combination of \code{DrugName}, \code{DrugName_2}
 #'    and \code{CellLineName}
-#'            
-#'        
+#'
+#'
 #' @examples
 #' # single-agent data
 #' sdata <- get_synthetic_data("finalMAE_small.qs2")
@@ -1064,7 +1064,7 @@ remove_drug_batch <- function(drug_vec,
 #' smetrics_data_capped <- cap_assay_infinities(saveraged_data,
 #'                                              smetrics_data,
 #'                                              experiment_name = "single-agent")
-#' 
+#'
 #' # combination data
 #' cdata <- get_synthetic_data("finalMAE_combo_matrix_small.qs2")
 #' scaveraged_data <- convert_se_assay_to_dt(cdata[[get_supported_experiments("combo")]], "Averaged")
@@ -1094,18 +1094,18 @@ cap_assay_infinities <- function(conc_assay_dt,
     checkmate::assert_subset(additional_group_cols, choices = names(conc_assay_dt))
     checkmate::assert_subset(additional_group_cols, choices = names(assay_dt))
   }
-  
+
   if (!experiment_name %in% c(get_supported_experiments("sa"),
                               get_supported_experiments("combo"))) {
     # this function does not support "co-dilution" yet
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
-  
+
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
-  
+
   min_conc <- max_conc <- min_conc_2 <- max_conc_2 <- min_val_conc_cd <- min_conc_cd <- min_conc_cd <- NULL
-  
+
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
       group_cols <- c(
@@ -1113,51 +1113,51 @@ cap_assay_infinities <- function(conc_assay_dt,
         additional_group_cols)
       mt <- data.table::copy(assay_dt)
       orig_col_order <- colnames(mt)
-      
+
       # calculate min and max conc for each combination
-      min_max_conc <- 
+      min_max_conc <-
         conc_assay_dt[get(conc) > 0, .(min = min(get(conc)), max = max(get(conc))), by = group_cols]
-      
+
       mt <- merge(mt, min_max_conc, by = group_cols)
       mt[get(col) == -Inf, col] <- mt[get(col) == -Inf, "min"] / capping_fold
       mt[get(col) == Inf, col] <- mt[get(col) == Inf, "max"] * capping_fold
-      
+
       # return result with orgin column
       data.table::setkey(mt, NULL)
       mt[, orig_col_order, with = FALSE]
-      
+
     } else if (experiment_name == get_supported_experiments("combo")) {
       group_cols <- c(
         as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE)),
         additional_group_cols)
       mt <- data.table::copy(assay_dt)
       orig_col_order <- colnames(mt)
- 
+
       if (any(assay_dt$dilution_drug %in% c("drug_1", "drug_2"))) {
         # calculate min and max conc & conc_2 for each combination
-        min_max_conc <- 
-          conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))), 
+        min_max_conc <-
+          conc_assay_dt[get(conc) > 0, .(min_conc = min(get(conc)), max_conc = max(get(conc))),
                         by = group_cols]
-        min_max_conc_2 <- 
-          conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))), 
+        min_max_conc_2 <-
+          conc_assay_dt[get(conc_2) > 0, .(min_conc_2 = min(get(conc_2)), max_conc_2 = max(get(conc_2))),
                         by = group_cols]
 
         # all = TRUE to avoid skipping values with min_con == 2 and/or min_con_2 == 0
         min_max_conc <- merge(min_max_conc, min_max_conc_2, by = group_cols, all = TRUE)
-        
+
         mt <- merge(mt, min_max_conc, by = group_cols)
         # drug_1
-        mt[get(col) == -Inf & dilution_drug == "drug_1", col] <- 
+        mt[get(col) == -Inf & dilution_drug == "drug_1", col] <-
           mt[get(col) == -Inf & dilution_drug == "drug_1", "min_conc"] / capping_fold
-        mt[get(col) == Inf & dilution_drug == "drug_1", col] <- 
+        mt[get(col) == Inf & dilution_drug == "drug_1", col] <-
           mt[get(col) == Inf & dilution_drug == "drug_1", "max_conc"] * capping_fold
-        
+
         # drug_2
-        mt[get(col) == -Inf & dilution_drug == "drug_2", col] <- 
+        mt[get(col) == -Inf & dilution_drug == "drug_2", col] <-
           mt[get(col) == -Inf & dilution_drug == "drug_2", "min_conc_2"] / capping_fold
-        mt[get(col) == Inf & dilution_drug == "drug_2", col] <- 
+        mt[get(col) == Inf & dilution_drug == "drug_2", col] <-
           mt[get(col) == Inf & dilution_drug == "drug_2", "max_conc_2"] * capping_fold
-        
+
         # return result with orgin column
         data.table::setkey(mt, NULL)
         mt <- mt[, orig_col_order, with = FALSE]
@@ -1166,14 +1166,14 @@ cap_assay_infinities <- function(conc_assay_dt,
       if (any(assay_dt$dilution_drug %in% c("codilution"))) {
         # calculate min and max conc for each codilution
         min_max_conc <- .prep_cd_conc_cap_dict(conc_assay_dt, group_cols)
-        
+
         mt <- merge(mt, min_max_conc, by = c(group_cols, "normalization_type", "ratio"), all.x = TRUE)
         # codilution
-        mt[get(col) == -Inf & dilution_drug == "codilution", col] <- 
+        mt[get(col) == -Inf & dilution_drug == "codilution", col] <-
           mt[get(col) == -Inf & dilution_drug == "codilution", "min_conc_cd"] / capping_fold
-        mt[get(col) == Inf & dilution_drug == "codilution", col] <- 
+        mt[get(col) == Inf & dilution_drug == "codilution", col] <-
           mt[get(col) == Inf & dilution_drug == "codilution", "max_conc_cd"] * capping_fold
-        
+
         # return result with orgin column
         data.table::setkey(mt, NULL)
         mt <- mt[, orig_col_order, with = FALSE]
@@ -1185,50 +1185,50 @@ cap_assay_infinities <- function(conc_assay_dt,
   }
   stopifnot(identical(dim(assay_dt), dim(out_dt)))
   out_dt
-  
+
 }
 
 #' Prepare dict with min and max concentration for codilution
 #'
 #' @param conc_assay_dt assay data in data.table format with Concentration data
 #' @param group_cols charvec with grouping column names
-#' 
+#'
 #' @return \code{data.table} with max and min concentration for codilution
-#' 
+#'
 #' @keywords internal
 .prep_cd_conc_cap_dict <- function(
     conc_assay_dt,
     group_cols = as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE))
 ) {
-  
+
   checkmate::assert_data_table(conc_assay_dt)
   checkmate::assert_character(group_cols)
   checkmate::assert_subset(group_cols, choices = names(conc_assay_dt))
-  
+
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
-  
+
   group_cols_cd <- c(group_cols, "normalization_type")
-  
-  conc_map <- map_conc_to_standardized_conc(conc_assay_dt[[conc]], 
+
+  conc_map <- map_conc_to_standardized_conc(conc_assay_dt[[conc]],
                                             conc_assay_dt[[conc_2]])
-  
+
   conc_dict <- unique(conc_assay_dt[, c(group_cols_cd, conc, conc_2), with = FALSE])
   # filter out all single-agents.
   conc_dict <- conc_dict[!(conc_dict[[conc]] == 0 | conc_dict[[conc_2]] == 0)]
   # add standardized concentration
   conc_dict <- merge(conc_dict, conc_map, by.x = conc, by.y = "concs")
   conc_dict <- merge(conc_dict, conc_map, by.x = conc_2, by.y = "concs", suffixes = c("", "_2"))
-  
+
   conc_dict[["ratio"]] <- round_concentration(conc_dict[[conc_2]] / conc_dict[[conc]], ndigit = 1)
   conc_dict[["summed_conc"]] <- conc_dict[["rconcs"]] + conc_dict[["rconcs_2"]]
-  
-  conc_dict <- conc_dict[, .(min_conc_cd = min(summed_conc), 
+
+  conc_dict <- conc_dict[, .(min_conc_cd = min(summed_conc),
                              max_conc_cd = max(summed_conc),
                              N_conc = .N),
                          by = c(group_cols_cd, "ratio")]
   conc_dict <- conc_dict[N_conc > 4][, N_conc := NULL] # 4 from assumption in gDRcore:::fit_combo_codilutions
-  
+
   (conc_dict)
 }
 
@@ -1238,37 +1238,37 @@ cap_assay_infinities <- function(conc_assay_dt,
 #' @param conc2 numeric vector of the concentrations for drug 2.
 #'
 #' @examples
-#' 
+#'
 #' ratio <- 0.5
 #' conc1 <- c(0, 10 ^ (seq(-3, 1, ratio)))
-#' 
+#'
 #' shorter_range <- conc1[-1]
 #' noise <- runif(length(shorter_range), 1e-12, 1e-11)
 #' conc2 <- shorter_range + noise
-#' 
+#'
 #' map_conc_to_standardized_conc(conc1, conc2)
 #'
 #' @return data.table of 2 columns named \code{"concs"} and \code{"rconcs"}
-#' containing the original concentrations and their closest matched 
-#' standardized concentrations respectively. and their new standardized 
+#' containing the original concentrations and their closest matched
+#' standardized concentrations respectively. and their new standardized
 #' concentrations.
 #'
-#' @details The concentrations are standardized in that they will contain 
+#' @details The concentrations are standardized in that they will contain
 #' regularly spaced dilutions and close values will be rounded.
 #' @keywords package_utils
 #' @export
 map_conc_to_standardized_conc <- function(conc1, conc2) {
   # Remove single-agent.
-  
+
   conc_1 <- setdiff(conc1, 0)
   conc_2 <- setdiff(conc2, 0)
-  
+
   conc_1 <- sort(unique(conc_1))
   rconc1 <- .standardize_conc(conc_1)
-  
+
   conc_2 <- sort(unique(conc_2))
   rconc2 <- .standardize_conc(conc_2)
-  
+
   rconc <- c(0, unique(c(rconc1, rconc2)))
   .find_closest_match <- function(x) {
     rconc[which.min(abs(rconc - x))]
@@ -1276,12 +1276,12 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
   concs <- unique(c(conc1, conc2))
   mapped_rconcs <- vapply(concs, .find_closest_match, numeric(1))
   map <- unique(data.table::data.table(concs = concs, rconcs = mapped_rconcs))
-  
+
   tol <- 1
-  
+
   # Check if standardized values are within 5% of the original values
   round_diff <- which(abs(map$concs - map$rconcs) / map$concs > 0.05)
-  
+
   map$rconcs[round_diff] <- map$concs[round_diff]
   mismatched <- which(
     round_concentration(map$conc, tol) != round_concentration(map$rconc, tol)
@@ -1311,7 +1311,7 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
   rconc <- if (S4Vectors::isEmpty(conc)) {
     NULL
   } else if (length(unique(round_concentration(conc, 3))) > 4) {
-    # 4 is determined by the fewest number of concentrations required to be 
+    # 4 is determined by the fewest number of concentrations required to be
     # considered a "matrix".
     log10_step <- .calculate_dilution_ratio(conc)
     num_steps <- round((log10(max(conc)) - log10(min(conc)) / log10_step), 0)
@@ -1330,25 +1330,25 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 #'
 #' @param concs numeric vector of concentrations.
 #'
-#' @return numeric value of the dilution ratio for a given set of 
+#' @return numeric value of the dilution ratio for a given set of
 #' concentrations.
 #' @keywords internal
 #' @noRd
 .calculate_dilution_ratio <- function(concs) {
   checkmate::assert_numeric(concs, min.len = 2)
   concs <- unique(sort(concs))
-  
+
   first_removed <- concs[-1]
   first_two_removed <- first_removed[-1]
   last_removed <- concs[-length(concs)]
   last_two_removed <- last_removed[-length(last_removed)]
-  
+
   dil_ratios <- c(
-    log10(first_removed / last_removed), 
+    log10(first_removed / last_removed),
     log10(first_two_removed / last_two_removed)
   )
   rounded_dil_ratios <- round_concentration(dil_ratios, 2)
-  
+
   # Get most frequent dilution ratio.
   highest_freq_ratio <- names(
     sort(table(rounded_dil_ratios), decreasing = TRUE)
@@ -1358,47 +1358,47 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
 
 
 #' Split big table
-#' 
-#' Helper function for saving big tables in an Excel file. Excel has a 
-#' sheet size limit, if the table is too large it will not be possible to save 
-#' such a file. This function allows you to split the table into smaller parts 
+#'
+#' Helper function for saving big tables in an Excel file. Excel has a
+#' sheet size limit, if the table is too large it will not be possible to save
+#' such a file. This function allows you to split the table into smaller parts
 #' so that saving can be possible
-#' 
-#' @param dt_list list of data.tables. Each data.table will be checked and 
+#'
+#' @param dt_list list of data.tables. Each data.table will be checked and
 #'   split if meet the criteria
-#' @param max_row integer defining the maximum number of rows in one sheet, the 
-#'   rows will be divided into portions of this size. Default value, 1 000 000, 
+#' @param max_row integer defining the maximum number of rows in one sheet, the
+#'   rows will be divided into portions of this size. Default value, 1 000 000,
 #'   is based on excel limit - 1 048 576 with extra safety margin
-#' @param max_col integer defining the maximum number of columns in one sheet, 
-#'   the columns will be divided into portions of this size. Default value, 
-#'   16 000, is based on excel limit - 16 384 with extra safety margin 
-#' 
+#' @param max_col integer defining the maximum number of columns in one sheet,
+#'   the columns will be divided into portions of this size. Default value,
+#'   16 000, is based on excel limit - 16 384 with extra safety margin
+#'
 #' @examples
 #' too_large_dt <- list(data.table::data.table(matrix(seq_len(300)), nrow = 10))
 #' split_big_table_for_xlsx(too_large_dt, max_row = 250)
-#' 
+#'
 #' @keywords package_utils
-#' 
-#' @return list of data.tables 
-#' 
+#'
+#' @return list of data.tables
+#'
 #' @export
-#' 
+#'
 split_big_table_for_xlsx <- function(dt_list,
                                      max_row = 1000000,
                                      max_col = 16000) {
-  
+
   checkmate::assert_list(dt_list)
   checkmate::assert_data_table(dt_list[[1]])
   checkmate::assert_number(max_row, null.ok = TRUE)
   checkmate::assert_number(max_col, null.ok = TRUE)
-  
+
   to_big_data_list <- lapply(
     dt_list,
     FUN = function(x) {
       c(isTRUE(NROW(x) > max_row), isTRUE(NCOL(x) > max_col))
     }
   )
-  
+
   out_list <- list()
   if (any(unlist(to_big_data_list))) {
     for (i in seq_along(to_big_data_list)) {
@@ -1427,52 +1427,52 @@ split_big_table_for_xlsx <- function(dt_list,
 }
 
 #' get gDR package and their version installed in the environment
-#' 
+#'
 #' @param pattern string with the pattern to grep R packages from the list of installed packages
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_gDR_session_info()
-#' 
+#'
 #' @keywords package_utils
 #' @return data.table with gDR packages and their versions
 #' @export
-#' 
+#'
 get_gDR_session_info <- function(pattern = "^gDR") {
   checkmate::assert_string(pattern)
   all_packages <- utils::installed.packages()
   matched_packages <- all_packages[grepl(pattern, all_packages[, "Package"]), ]
-  
+
   pkg_data <- data.table::data.table(
     Package = matched_packages[, "Package"],
     Version = matched_packages[, "Version"],
     LibPath = matched_packages[, "LibPath"]
   )
-  
+
   if (NROW(pkg_data) == 0) {
     return(data.table::data.table(Package = character(0), Version = character(0)))
   }
-  
+
   pkg_data[, UsedVersion := Version[order(match(LibPath, .libPaths()))[1]], by = Package] # nolint
   pkg_data[, MaxVersion := max(Version), by = Package]
-  
+
   outdated_pkgs <- pkg_data[LibPath != .Library & UsedVersion < MaxVersion, .(Package, UsedVersion, MaxVersion)]
-  
+
   if (NROW(outdated_pkgs) > 0) {
     warning_msg <- paste("The following packages have a user version older than the system version:",
-                         paste(outdated_pkgs$Package, 
-                               "Used Version:", outdated_pkgs$UsedVersion, 
-                               "Highest Version:", outdated_pkgs$MaxVersion, 
+                         paste(outdated_pkgs$Package,
+                               "Used Version:", outdated_pkgs$UsedVersion,
+                               "Highest Version:", outdated_pkgs$MaxVersion,
                                sep = " ", collapse = "\n"), sep = "\n")
     warning(warning_msg)
   }
-  
+
   unique(pkg_data[, .(Package, Version = UsedVersion)])
 }
 
 #' Average p-values using Fisher's method
-#' Combines a vector of p-values into a single representative p-value. 
-#' It implements Fisher's method, where the test statistic is calculated as 
-#' \deqn{X_{2k}^2 = -2 \sum_{i=1}^{k} \ln(p_i)}. 
+#' Combines a vector of p-values into a single representative p-value.
+#' It implements Fisher's method, where the test statistic is calculated as
+#' \deqn{X_{2k}^2 = -2 \sum_{i=1}^{k} \ln(p_i)}.
 #' This statistic follows a chi-squared distribution with 2k degrees of freedom (where k is the number
 #' of p-values), from which the combined p-value is derived.
 #'
@@ -1483,21 +1483,21 @@ get_gDR_session_info <- function(pattern = "^gDR") {
 #' @keywords internal
 average_pvalues <- function(p_values) {
   checkmate::assert_numeric(p_values, lower = 0, upper = 1, min.len = 1)
-  
+
   p_values <- stats::na.omit(p_values)
   k <- length(p_values)
-  
+
   if (k == 0) {
     return(NA)
   }
-  
+
   if (k == 1) {
     return(p_values)
   }
-  
+
   # Fisher's method formula: chi-squared statistic
   chi_sq_stat <- -2 * sum(log(p_values))
-  
+
   # Combined p-value from the chi-squared distribution with 2k degrees of freedom
   stats::pchisq(chi_sq_stat, df = 2 * k, lower.tail = FALSE)
 }

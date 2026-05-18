@@ -44,10 +44,10 @@ NULL
 
 
 #' @rdname identifiers
-#' 
+#'
 #' @keywords identifiers
 #' @return list or charvec depends on unify param
-#' 
+#'
 #' @export
 get_env_identifiers <- function(k = NULL, simplify = TRUE) {
   if (simplify) {
@@ -64,12 +64,12 @@ get_env_identifiers <- function(k = NULL, simplify = TRUE) {
 
 
 #' @rdname identifiers
-#' 
+#'
 #' @keywords identifiers
 #' @return list or charvec depends on unify param
-#' 
+#'
 #' @export
-#' 
+#'
 get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
   idfs <- get_env_identifiers(k, simplify = simplify)
   pidfs <- prettify_flat_metrics(idfs, human_readable = TRUE)
@@ -87,10 +87,10 @@ get_prettified_identifiers <- function(k = NULL, simplify = TRUE) {
 #' Get identifiers required for downstream analysis.
 #' @keywords identifiers
 #' @return  charvec
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_required_identifiers()
-#' 
+#'
 #' @export
 get_required_identifiers <- function() {
   REQ_COL_IDENTIFIERS
@@ -99,10 +99,10 @@ get_required_identifiers <- function() {
 #' Get gDR default identifiers required for downstream analysis.
 #' @keywords identifiers
 #' @return  charvec
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_default_identifiers()
-#' 
+#'
 #' @export
 get_default_identifiers <- function() {
   IDENTIFIERS_LIST
@@ -114,10 +114,10 @@ get_default_identifiers <- function() {
 #'
 #' @keywords identifiers
 #' @return  charvec
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_idfs_synonyms()
-#' 
+#'
 #' @export
 get_idfs_synonyms <- function() {
   SYNONYMS_LIST
@@ -132,12 +132,12 @@ get_idfs_synonyms <- function() {
 #' @keywords identifiers
 #'
 #' @return list
-#' 
-#' @examples 
+#'
+#' @examples
 #' mdict <- list(duration = "time")
 #' iv <- c("Time", "Duration", "time")
 #' update_idfs_synonyms(iv, dict = mdict)
-#' 
+#'
 #' @export
 update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
 
@@ -165,10 +165,10 @@ update_idfs_synonyms <- function(data, dict = get_idfs_synonyms()) {
 #' Get identifiers that expect only one value for each identifier.
 #' @keywords identifiers
 #' @export
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_expect_one_identifiers()
-#' 
+#'
 #' @return charvec
 get_expect_one_identifiers <- function() {
   EXPECT_ONE_IDENTIFIERS
@@ -180,7 +180,7 @@ get_expect_one_identifiers <- function() {
 #' @export
 #'
 #' @return \code{NULL}
-#' 
+#'
 set_env_identifier <- function(k, v) {
   .set_id(k, v)
 }
@@ -191,7 +191,7 @@ set_env_identifier <- function(k, v) {
 #' @export
 #'
 #' @return \code{NULL}
-#' 
+#'
 reset_env_identifiers <- function() {
   .reset_ids()
 }
@@ -202,12 +202,12 @@ reset_env_identifiers <- function() {
 #' @param get_description return descriptions only, boolean
 #' @param get_example return examples only, boolean
 #' @keywords identifiers
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_identifiers_dt()
-#' 
+#'
 #' @return named list
-#' 
+#'
 #' @export
 get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = FALSE) {
   checkmate::assert_string(k, null.ok = TRUE)
@@ -259,7 +259,7 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 #' update_env_idfs_from_mae(list(get_env_identifiers()))
 #'
 #' @return \code{NULL}
-#' 
+#'
 #' @export
 update_env_idfs_from_mae <- function(mae_idfs) {
   checkmate::assert_list(mae_idfs)

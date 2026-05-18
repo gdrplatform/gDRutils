@@ -1,8 +1,8 @@
-## This global cache maintains a cache of identifiers, 
-## headers, and their respective values. 
+## This global cache maintains a cache of identifiers,
+## headers, and their respective values.
 
 global_cache <- new.env(parent = emptyenv())
-global_cache$identifiers_list <- list() 
+global_cache$identifiers_list <- list()
 
 #############
 # Identifiers
@@ -23,11 +23,11 @@ global_cache$identifiers_list <- list()
   if (length(global_cache$identifiers_list) == 0L) {
     global_cache$identifiers_list <- IDENTIFIERS_LIST
   }
-  
+
   if (!is.null(k)) {
     checkmate::assert_string(k, null.ok = TRUE)
     checkmate::assert_choice(k, choices = names(IDENTIFIERS_LIST))
-    
+
     return(global_cache$identifiers_list[[k]])
   } else {
     return(global_cache$identifiers_list)

@@ -7,13 +7,13 @@ test_that("get_SE_experiment_metadata and set_SE_experiment_metadata work as exp
   se <- set_SE_experiment_metadata(se, exp_md)
   oexp_md <- get_SE_experiment_metadata(se)
   expect_equal(oexp_md, exp_md)
-  
+
   append_md_iga <- list("Iga" = "Swiatek")
   se <- set_SE_experiment_metadata(se, append_md_iga, append = TRUE)
   oexp_md <- get_SE_experiment_metadata(se)
   expected_md_append <- list("Super" = "Star", "Serena" = "Williams", "Iga" = "Swiatek")
   expect_equal(oexp_md, expected_md_append)
-  
+
   overwrite_md_iga <- list("Iga" = "Swiatek")
   expect_warning(se <- set_SE_experiment_metadata(se,
                                                   overwrite_md_iga,
@@ -51,9 +51,9 @@ test_that("get_SE_fit_parameters and set_SE_fit_parameters work as expected", {
                  cap = 0.2)
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
   fit_params <- get_SE_fit_parameters(se)
-  
+
   expect_equal(fit_params, NULL)
-  
+
   se <- set_SE_fit_parameters(se, params)
   expect_equal(get_SE_fit_parameters(se), params)
 })
@@ -65,18 +65,18 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   # No identifier passed.
   obs <- get_SE_identifiers(se, simplify = TRUE)
   expect_equal(obs, exp)
-  
+
   # Single identifier.
   obs <- get_SE_identifiers(se, "cellline_name", simplify = TRUE)
   expect_equal(obs, exp[["cellline_name"]])
-  
+
   # Invalid identifier.
   exp <- list("drug" = "drug", "celllinename" = "CellLineName", "buggy_idfs" = "test", "masked_tag" = "masked")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
   expect_equal(get_SE_identifiers(se), exp, simplify = FALSE)
-  expect_error(get_SE_identifiers(se, "buggy_idfs", simplify = TRUE), 
+  expect_error(get_SE_identifiers(se, "buggy_idfs", simplify = TRUE),
                "Assertion on 'id_type' failed: Must be element of set")
-  expect_error(get_SE_identifiers(se, "INVALID", simplify = TRUE), 
+  expect_error(get_SE_identifiers(se, "INVALID", simplify = TRUE),
                "Assertion on 'id_type' failed: Must be element of set")
 
   # Identifier does not exist on the SummarizedExperiment,
@@ -95,9 +95,9 @@ test_that("get_SE_identifiers and set_SE_identifiers works as expected", {
   # Multiple identifiers.
   exp <- list("drug_name" = "Drugs", "cellline_name" = "Cells", "duration" = "Duration")
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list(identifiers = exp))
-  expect_equal(get_SE_identifiers(se, c("drug_name", "duration"), simplify = FALSE), 
+  expect_equal(get_SE_identifiers(se, c("drug_name", "duration"), simplify = FALSE),
                list(drug_name = "Drugs", duration = "Duration")) # Env and se identifiers.
-  expect_equal(get_SE_identifiers(se, c("cellline_name", "drug_name"), simplify = FALSE), 
+  expect_equal(get_SE_identifiers(se, c("cellline_name", "drug_name"), simplify = FALSE),
                list(cellline_name = "Cells", drug_name = "Drugs")) # Order.
 })
 
@@ -106,9 +106,9 @@ test_that("get_SE_processing_metadata and set_SE_processing_metadata work as exp
                  session_info = sessionInfo())
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
   processing_metadata <- get_SE_processing_metadata(se)
-  
+
   expect_equal(processing_metadata, NULL)
-  
+
   se <- set_SE_processing_metadata(se, params)
   expect_equal(get_SE_processing_metadata(se), params)
 })
@@ -121,4 +121,3 @@ test_that("get_SE_experiment_raw_data and set_SE_experiment_raw_data work as exp
   se <- set_SE_experiment_raw_data(se, raw_data)
   expect_equal(get_SE_experiment_raw_data(se), raw_data)
 })
-

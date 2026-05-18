@@ -1,5 +1,5 @@
 ## The following function utilizes the get_env_identifiers() function which can be
-## changed at run time, which is why it needs to be wrapped in a function. 
+## changed at run time, which is why it needs to be wrapped in a function.
 
 #' @keywords internal
 .getHeadersList <- function() {
@@ -23,7 +23,7 @@
     "maxlog10Concentration",
     "maxlog10Concentration_sd",
     "N_conc",
-    "N_conc_sd", 
+    "N_conc_sd",
     "cotrt_value",
     "cotrt_value_sd",
     "ratio",
@@ -55,41 +55,41 @@
     HEADERS_LIST[["metrics_results"]],
     get_env_identifiers("well_position", simplify = TRUE)
   )
-  
+
   HEADERS_LIST[["ordered_1"]] <- .orderHeaderList(HEADERS_LIST, 1)
   HEADERS_LIST[["ordered_2"]] <- .orderHeaderList(HEADERS_LIST, 2)
-  
+
   HEADERS_LIST[["id"]] <- c("rId", "cId")
-  
-  
+
+
   HEADERS_LIST[["iso_position"]] <- c("iso_level",
                                       "pos_x",
                                       "pos_y",
                                       "pos_x_ref",
                                       "pos_y_ref")
-  
+
   HEADERS_LIST[["excess"]] <- names(get_combo_excess_field_names())
 HEADERS_LIST[["excess_results"]] <- c(names(get_combo_excess_field_names()),
                                       paste0(names(get_combo_excess_field_names()), "_sd"))
-  
-  
+
+
   HEADERS_LIST[["scores"]] <- names(get_combo_score_field_names())
 HEADERS_LIST[["scores_results"]] <- c(names(get_combo_score_field_names()),
                                       paste0(names(get_combo_score_field_names()), "_sd"))
-  
+
   HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
                                       HEADERS_LIST[["iso_position"]],
                                       "log2_CI",
                                       "log10_ratio_conc")
-HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]], 
+HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
                                             paste0(HEADERS_LIST[["isobolograms"]], "_sd"))
-  
+
   HEADERS_LIST[["fit_source"]] <- "fit_source"
-  
+
   HEADERS_LIST[["obsolete"]] <- c("RV",
                                   "GR",
                                   "Excess")
-  
+
 
   HEADERS_LIST
 }
@@ -117,7 +117,7 @@ HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
     "RefRelativeViability"
   )
 }
-  
+
 #' @keywords internal
 .getAveragedResultsList <- function() {
   c(
@@ -233,15 +233,15 @@ HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
 .getMetricAverageFields <- function() {
   list(
     mean = c(
-      "x_mean", 
-      "x_AOC", 
-      "x_AOC_range", 
-      "x_max", 
-      "x_inf", 
+      "x_mean",
+      "x_AOC",
+      "x_AOC_range",
+      "x_max",
+      "x_inf",
       "x_0"
     ),
     geometric_mean = c(
-      "xc50", 
+      "xc50",
       "ec50",
       "GR50",
       "GEC50",
@@ -260,8 +260,8 @@ HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
       "RV_fit_type",
       "GR_fit_type"
    ),
-   # due to the fact that there is some freedom in what values are in individual fields, 
-   # in order to avoid duplicates in the application we have to exclude some fields from 
+   # due to the fact that there is some freedom in what values are in individual fields,
+   # in order to avoid duplicates in the application we have to exclude some fields from
    # recognizing duplicates in averaging
    blacklisted = c(
      # tissue
@@ -289,7 +289,7 @@ HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
       get_env_identifiers("duration", simplify = TRUE),
       get_env_identifiers("drug_name", simplify = TRUE),
       "Concentration",
-      paste0(c(paste0(get_env_identifiers("drug_name", simplify = TRUE), "_"), "Concentration_"), 
+      paste0(c(paste0(get_env_identifiers("drug_name", simplify = TRUE), "_"), "Concentration_"),
              rep(2:10, each = 2))
     )
   } else {

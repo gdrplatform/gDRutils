@@ -4,7 +4,7 @@ test_that("split_SE_components splits the correct columns", {
   expect_true(all(c("Gnumber", "DrugName", "drug_moa") %in% colnames(md$treatment_md)))
   expect_true(all(c("clid", "CellLineName", "Tissue", "Replicate", "ReferenceDivisionTime") %in%
                     colnames(md$condition_md)))
-  expect_equal(sum(ncol(md$treatment_md), ncol(md$condition_md), length(md$data_fields), ncol(md$experiment_md)), 
+  expect_equal(sum(ncol(md$treatment_md), ncol(md$condition_md), length(md$data_fields), ncol(md$experiment_md)),
     ncol(test_df))
   pure <- get_env_identifiers(simplify = TRUE)
   expect_equal(md$identifiers_md[names(pure)], pure)
@@ -14,16 +14,16 @@ test_that("split_SE_components splits the correct columns", {
   expect_true(all(c("Gnumber", "DrugName", "drug_moa") %in% colnames(md2$treatment_md)))
   expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% colnames(md2$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "Replicate") %in% md2$data_fields))
-  expect_equal(ncol(test_df), 
+  expect_equal(ncol(test_df),
     sum(ncol(md2$treatment_md), ncol(md2$condition_md), length(md2$data_fields), ncol(md2$experiment_md)))
 
   # combine_on argument works as expected
   md3 <- split_SE_components(test_df, nested_keys = "Replicate", combine_on = 2L)
   expect_true(all(c("Gnumber", "DrugName", "drug_moa") %in% colnames(md3$treatment_md)))
-  expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in% 
+  expect_true(all(c("clid", "CellLineName", "Tissue", "ReferenceDivisionTime") %in%
     colnames(md3$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "Replicate") %in% md3$data_fields))
-  expect_equal(ncol(test_df), 
+  expect_equal(ncol(test_df),
     sum(ncol(md3$treatment_md), ncol(md3$condition_md), length(md3$data_fields), ncol(md3$experiment_md)))
 
   # nested key is a main identifier.
@@ -32,12 +32,12 @@ test_that("split_SE_components splits the correct columns", {
   expect_true(all(c("clid", "CellLineName", "Replicate", "Tissue", "ReferenceDivisionTime") %in%
                     colnames(md4$condition_md)))
   expect_true(all(c("WellRow", "WellColumn", "drug_moa") %in% md4$data_fields))
-  expect_equal(ncol(test_df), 
+  expect_equal(ncol(test_df),
     sum(ncol(md4$treatment_md), ncol(md4$condition_md), length(md4$data_fields), ncol(md4$experiment_md)))
-  
+
   # order of columns is correct
   expect_equal(names(md$treatment_md), c("Gnumber", "DrugName", "drug_moa", "Duration"))
-  
+
   # split_SE_components with changed identifiers
   new_identifier_name <- "SomeDrug"
   set_env_identifier("drug", new_identifier_name)
@@ -50,9 +50,9 @@ test_that("split_SE_components splits the correct columns", {
 test_that("add_rownames_to_metadata works as expected", {
   cols <- c("a", "b")
   md <- data.frame(a = LETTERS, b = letters, c = paste0(LETTERS, letters))
-  expect_true(all(rownames(md) == as.character(seq(nrow(md)))))
+  expect_true(all(rownames(md) == as.character(seq_len(NROW(md)))))
   out <- add_rownames_to_metadata(md, cols)
-  expect_true(all(rownames(out) != as.character(seq(nrow(md)))))
+  expect_true(all(rownames(out) != as.character(seq_len(NROW(md)))))
   expect_equal(colnames(out), cols)
 })
 
@@ -78,7 +78,7 @@ test_that("split_SE_components sorts non-default columns", {
   md <- split_SE_components(test_df3)
   expect_identical(grep("fix5-aza", names(md$treatment_md), value = TRUE),
                    c("a-fix5-aza", "b-fix5-aza", "fix5-aza"))
-  
+
   md2 <- split_SE_components(test_df3, combine_on = 2)
   expect_identical(grep("fix5-aza", names(md2$condition_md), value = TRUE),
                    c("a-fix5-aza", "b-fix5-aza", "fix5-aza"))
@@ -90,6 +90,3 @@ test_that("split_SE_components sorts non-default columns", {
   md3 <- split_SE_components(test_df4)
   expect_identical(sort(rownames(md$treatment_md)), sort(rownames(md3$treatment_md)))
 })
-
-
-

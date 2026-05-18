@@ -74,10 +74,10 @@ test_that("colData/rowData refinement functions work as expected",  {
                "DataFrame"))
   expect_true(inherits(refine_rowdata(SummarizedExperiment::rowData(mae[[1]]), mae[[1]]),
                "DataFrame"))
-  
+
   expect_error(refine_coldata(mae, mae), "Assertion on 'se' failed:")
   expect_error(refine_rowdata(mae, mae), "Assertion on 'se' failed:")
-  
+
 })
 
 
@@ -87,7 +87,7 @@ test_that("get_optional_rowdata_fields works as expected", {
   opt_idfs <- get_optional_rowdata_fields(se)
   expect_equal(opt_idfs, unlist(idfs[c("drug_moa", "drug_moa2")],
                                 use.names = FALSE))
-  
+
   se2 <- get_synthetic_data("finalMAE_small")[[1]]
   idfs2 <- get_SE_identifiers(se2)
   opt_idfs2 <- get_optional_rowdata_fields(se2)
@@ -101,22 +101,22 @@ test_that("set_unique_names works correctly", {
                                  clid = c("C1", "C2"))
   t_df <- data.frame(CellLineName = c("ID1", "ID1"),
                      clid = c("C1", "C2"))
-  
+
   u_dframe <- set_unique_names_dt(t_dframe,
                                   primary_name = "CellLineName",
                                   secondary_name = "clid")
   u_dt <- set_unique_names_dt(t_dt, primary_name = "CellLineName", secondary_name = "clid")
   u_df <- set_unique_names_dt(t_df, primary_name = "CellLineName", secondary_name = "clid")
-  
+
   expect_equal(data.table::as.data.table(u_df), u_dt)
   expect_equal(data.table::as.data.table(u_dframe), u_dt)
-  
+
   expect_error(set_unique_names_dt(list()), "Must inherit from")
 })
 
 
 test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly", {
-  
+
   # DataFrame
   ## Duplicated CellLineName
   col_data <- S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
@@ -125,7 +125,7 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   expect_equal(col_data, res_1)
   expect_false(identical(col_data, res_2))
   expect_equal(c("ID1 (C1)", "ID1 (C2)"), res_2$CellLineName)
-  
+
   ## Duplicated DrugName
   row_data <- S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
   res_3 <- set_unique_drug_names_dt(row_data)
@@ -133,25 +133,25 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   expect_false(identical(row_data, res_3))
   expect_equal(row_data, res_4)
   expect_equal(c("DrugA (G1)", "DrugA (G2)"), res_3$DrugName)
-  
+
   # data.table
   ## All different
   dt <- data.table::data.table(
-    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD"), 
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD"),
     Gnumber = c("G1", "G2", "G3", "G4"),
-    CellLineName = c("ID1", "ID2", "ID3", "ID4"), 
+    CellLineName = c("ID1", "ID2", "ID3", "ID4"),
     clid = c("C1", "C2", "C3", "C4")
   )
   res_5 <- set_unique_drug_names_dt(dt)
   res_6 <- set_unique_cl_names_dt(dt)
   expect_equal(res_5, dt)
   expect_equal(res_6, dt)
-  
+
   ## Duplicated CellLineName
   dt <- data.table::data.table(
-    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"), 
+    DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
     Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
-    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"), 
+    CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
     clid = c("C1", "C2", "C3", "C4", "C5", "C6")
   )
   res_7 <- set_unique_drug_names_dt(dt)
@@ -162,9 +162,9 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
 
   ## Duplicated DrugName
   dt <- data.table::data.table(
-    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB", "DrugB", "DrugB"), 
+    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB", "DrugB", "DrugB"),
     Gnumber = c("G1", "G2", "G3", "G4", "G5", "G6"),
-    CellLineName = c("ID1", "ID2", "ID3", "ID4", "ID3", "ID4"), 
+    CellLineName = c("ID1", "ID2", "ID3", "ID4", "ID3", "ID4"),
     clid = c("C1", "C2", "C3", "C4", "C3", "C4")
   )
   res_9 <- set_unique_drug_names_dt(dt)
@@ -172,12 +172,12 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   expect_false(identical(res_9, dt))
   expect_equal(length(unique(res_9$DrugName)), 6)
   expect_equal(res_10, dt)
-  
+
   ## Duplicated both
   dt <- data.table::data.table(
-    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB"), 
+    DrugName = c("DrugA", "DrugA", "DrugB", "DrugB"),
     Gnumber = c("G1", "G2", "G3", "G4"),
-    CellLineName = c("ID1", "ID1", "ID2", "ID2"), 
+    CellLineName = c("ID1", "ID1", "ID2", "ID2"),
     clid = c("C1", "C2", "C3", "C4")
   )
   res_11 <- set_unique_drug_names_dt(dt)
@@ -188,7 +188,7 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
   expect_false(identical(res_12, dt))
   expect_equal(length(unique(res_12$DrugName)), 2)
   expect_equal(length(unique(res_12$CellLineName)), 4)
-  
+
   ## Function works in the same way for data.table and DataFrame
   dt <- data.table::data.table(
     DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
@@ -196,12 +196,12 @@ test_that("set_unique_cl_names_dt and set_unique_drug_names_dt works correctly",
     CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
     clid = c("C1", "C2", "C3", "C4", "C5", "C6")
   )
-  res_dt <- set_unique_cl_names_dt(dt) 
+  res_dt <- set_unique_cl_names_dt(dt)
   df <- S4Vectors::DataFrame(
     DrugName = c("DrugA", "DrugB", "DrugC", "DrugD", "DrugC", "DrugD"),
     Gnumber = c("G1", "G2", "G3", "G4", "G3", "G4"),
     CellLineName = c("ID1", "ID1", "ID2", "ID2", "ID2", "ID2"),
-    clid = c("C1", "C2", "C3", "C4", "C5", "C6") 
+    clid = c("C1", "C2", "C3", "C4", "C5", "C6")
   )
   res_S4 <- set_unique_cl_names_dt(df)
   expect_equivalent(res_dt, res_S4)
@@ -215,7 +215,7 @@ test_that("set_unique_cl_names works correctly", {
     colData = S4Vectors::DataFrame(CellLineName = c("ID1", "ID1"), clid = c("C1", "C2"))
   )
   se <- set_unique_cl_names(se)
-  
+
   expect_equal(SummarizedExperiment::colData(se)$CellLineName, c("ID1 (C1)", "ID1 (C2)"))
 })
 
@@ -226,9 +226,9 @@ test_that("set_unique_drug_names works correctly", {
     rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA"), Gnumber = c("G1", "G2"))
   )
   se <- set_unique_drug_names(se)
-  
+
   expect_equal(SummarizedExperiment::rowData(se)$DrugName, c("DrugA (G1)", "DrugA (G2)"))
-  
+
   se2 <- SummarizedExperiment::SummarizedExperiment(
     assays = list(counts = matrix(1:9, ncol = 3)),
     rowData = S4Vectors::DataFrame(DrugName = c("DrugA", "DrugA", "DrugB"),
@@ -236,7 +236,7 @@ test_that("set_unique_drug_names works correctly", {
                                    DrugName_2 = c("DrugC", "DrugC", "DrugD"),
                                    Gnumber_2 = c("G3", "G3", "G5")
     ))
-  
+
   se2 <- set_unique_drug_names(se2)
   expect_equal(SummarizedExperiment::rowData(se2)$DrugName, c("DrugA (G1)", "DrugA (G2)", "DrugB"))
   expect_equal(SummarizedExperiment::rowData(se2)$DrugName_2, c("DrugC", "DrugC", "DrugD"))
@@ -259,7 +259,7 @@ test_that("set_unique_identifiers works correctly", {
   rownames(SummarizedExperiment::rowData(se2)) <- c("Gene3", "Gene4")
   mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = list(se1 = se1, se2 = se2))
   mae <- set_unique_identifiers(mae)
-  
+
   expect_equal(SummarizedExperiment::colData(mae[[1]])$CellLineName, c("ID1 (C1)", "ID1 (C2)"))
   expect_equal(SummarizedExperiment::rowData(mae[[1]])$DrugName, c("DrugA (G1)", "DrugA (G2)"))
   expect_equal(SummarizedExperiment::colData(mae[[2]])$CellLineName, c("ID2 (C3)", "ID2 (C4)"))

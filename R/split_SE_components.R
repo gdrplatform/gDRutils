@@ -42,7 +42,7 @@
 #' Next, any cell line metadata will be heuristically extracted.
 #' Finally, all remaining columns will be combined on either the rows or columns as specified by
 #' \code{combine_on}.
-#' 
+#'
 #' @export
 #'
 split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
@@ -62,8 +62,8 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     identifiers_md$well_position, identifiers_md$template, nested_keys,
     get_header("scores_results"), get_header("excess_results"), get_header("isobolograms_results")))
   data_cols <- data_fields[data_fields %in% all_cols]
-  md_cols <- setdiff(all_cols, data_cols) 
-  md <- unique(df_[, md_cols]) 
+  md_cols <- setdiff(all_cols, data_cols)
+  md <- unique(df_[, md_cols])
   colnames_list <- .extract_colnames(identifiers_md, md_cols)
   remaining_cols <- colnames_list$remaining_cols
   cell_cols <- colnames_list$cell_cols
@@ -102,7 +102,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   cell_id <- identifiers_md$cellline
   cell_fields <- c(cell_id, get_header("add_clid"), identifiers_md["replicate"])
   cell_cols <- cell_fields[cell_fields %in% md_cols]
-  
+
   remaining_cols <- setdiff(md_cols, c(drug_cols, cell_cols))
   list(
     remaining_cols = remaining_cols,
@@ -117,7 +117,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   cell_cols <- unique(c(cell_cols, cl_entries))
   if (combine_on == 1L) {
     # sort remaining columns to assure that rId across the assays will be the same
-    # example "Gnumber_bn" "Media" "fix5.aza"  
+    # example "Gnumber_bn" "Media" "fix5.aza"
     trt_cols <- c(trt_cols, sort(remaining_cols))
   } else if (combine_on == 2L) {
     # sort remaining columns to assure that cId across the assays will be the same
@@ -126,7 +126,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     stop(sprintf("combine_on input: '%s' of class: '%s' is not supported",
                  combine_on, class(combine_on)))
   }
-  
+
   list(
     condition_md = add_rownames_to_metadata(md, cell_cols),
     treatment_md = add_rownames_to_metadata(md, trt_cols)
