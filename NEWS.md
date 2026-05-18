@@ -1,3 +1,6 @@
+## gDRutils 1.11.3 - 2026-05-18
+* fix linting violations from updated gDRstyle rules
+
 ## gDRutils 1.11.2 - 2026-05-05
 * update author email address
 
