@@ -100,7 +100,7 @@ convert_se_assay_to_dt <- function(se,
                                    intersect(unlist(get_header()[c("excess", "scores", "response_metrics")]),
                                              names(dt))))
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
-    dcast_formula <- paste(paste(rest_cols, collapse = " + "), " ~ normalization_type")
+    dcast_formula <- paste0(paste(rest_cols, collapse = " + "), " ~ normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
                                 paste, sep = "_"))
     new_cols_rename <- unlist(lapply(strsplit(new_cols, "_"), function(x) {
