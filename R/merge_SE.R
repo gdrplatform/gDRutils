@@ -79,7 +79,7 @@ merge_MAE <- function(MAElist,
     description <- sprintf("Synthetically merged dataset originating from: %s.", toString(mae_names))
     unique_titles <- unique(original_titles)
     if (length(unique_titles) > 0) {
-      description <- paste(description, " Original Titles: [", paste(unique_titles, collapse = " | "), "]")
+      description <- paste0(description, " Original Titles: [", paste(unique_titles, collapse = " | "), "]")
     }
   }
 
