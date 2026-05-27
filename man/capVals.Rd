@@ -32,7 +32,7 @@ dt <- data.table::data.table(
   `E Max` = c(-0.1, 0, 0.5, 1.2),
   `GR Max` = c(-1.1, -1, 0.5, 1.2),
   `RV AOC within set range` = c(-0.2, -0.1, 0, 3),
-  `GR AOC within set range` = c(-0.2, -0.1, 0, 3), 
+  `GR AOC within set range` = c(-0.2, -0.1, 0, 3),
   `GR50` = c(0, 1e-7, 10, 34),
   `IC50` = c(0, 1e-7, 10, 34),
   `EC50` = c(0, 1e-7, 10, 34),

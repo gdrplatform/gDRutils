@@ -38,11 +38,11 @@ mae <- get_synthetic_data("finalMAE_small.qs2")
 se <- mae[[1]]
 FUN <- function(x) {
   data.table::data.table(Concentration = x$Concentration, CorrectedReadout = x$CorrectedReadout)
-} 
+}
 apply_bumpy_function(
-  se, 
-  FUN = FUN, 
-  req_assay_name = "RawTreated", 
+  se,
+  FUN = FUN,
+  req_assay_name = "RawTreated",
   out_assay_name = "CorrectedReadout"
 )
 

@@ -21,7 +21,7 @@ Merge metadata
 mae <- get_synthetic_data("finalMAE_small.qs2")
 se <- mae[[1]]
 listSE <- list(
-  se, 
+  se,
   se
 )
 metadata_fields <- identify_unique_se_metadata_fields(listSE)

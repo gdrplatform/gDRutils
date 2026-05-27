@@ -30,8 +30,8 @@ with other JSON responses.
 }
 \examples{
 cdata <- data.table::data.table(
-  mycellline = letters, 
-  mycelllinename = letters, 
+  mycellline = letters,
+  mycelllinename = letters,
   mycelllinetissue = letters,
   cellline_ref_div_time = "cellline_ref_div_time")
 identifiers <- list(cellline = "mycellline",

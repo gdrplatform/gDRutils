@@ -20,9 +20,9 @@ md <- list(title = "my awesome experiment",
   description = "description of experiment",
   source = list(name = "GeneData_Screener", id = "QCS-12345"))
 rdata <- data.table::data.table(
- mydrug = letters, 
-  mydrugname = letters, 
-  mydrugmoa = letters, 
+ mydrug = letters,
+  mydrugname = letters,
+  mydrugmoa = letters,
   Duration = 1)
 cdata <- data.table::data.table(mycellline = letters, mycelllinename = letters,
  mycelllinetissue = letters, cellline_ref_div_time = letters)

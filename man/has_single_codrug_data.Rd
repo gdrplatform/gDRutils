@@ -29,7 +29,7 @@ has_single_codrug_data(c("Drug Name", "Cell Lines"))
 has_single_codrug_data(c("Drug Name 2", "Concentration 2"))
 has_single_codrug_data(
   get_prettified_identifiers(
-    c("concentration2", "drug_name2"), 
+    c("concentration2", "drug_name2"),
     simplify = FALSE
   )
 )

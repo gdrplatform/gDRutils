@@ -33,7 +33,7 @@ Merge assay data
 mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
 
 listSE <- list(
-  combo1 = mae[[1]], 
+  combo1 = mae[[1]],
   sa = mae[[2]]
 )
 merge_assay(listSE, "Normalized")
