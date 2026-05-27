@@ -6,7 +6,7 @@ test_that("get_assay_names",  {
   ## all values
   agan <- get_assay_names()
   expect_true(length(agan) > 2)
-  expect_identical("character", class(agan))
+  expect_identical(class(agan), "character")
   expect_named(agan)
 
   ## subset
@@ -39,7 +39,7 @@ test_that("get_combo_assay_names",  {
   ### without SE
   gcan <- get_combo_assay_names()
   expect_true(length(gcan) > 2)
-  expect_identical("character", class(gcan))
+  expect_identical(class(gcan), "character")
   expect_named(gcan)
   pgcan <- get_combo_assay_names(prettify = TRUE)
   expect_true(any(pgcan != gcan))
@@ -62,7 +62,7 @@ test_that("get_combo_assay_names",  {
   ### without SE
   gcan <- get_combo_assay_names()
   expect_true(length(gcan) > 2)
-  expect_identical("character", class(gcan))
+  expect_identical(class(gcan), "character")
   expect_named(gcan)
   pgcan <- get_combo_assay_names(prettify = TRUE)
   expect_true(any(pgcan != gcan))
@@ -85,7 +85,7 @@ test_that("get_combo_base_assay_names",  {
   ### without SE
   gcan <- get_combo_base_assay_names()
   expect_true(length(gcan) == 1)
-  expect_identical("character", class(gcan))
+  expect_identical(class(gcan), "character")
   expect_named(gcan)
   pgcan <- get_combo_base_assay_names(prettify = TRUE)
   expect_true(any(pgcan != gcan))
@@ -108,7 +108,7 @@ test_that("get_combo_score_assay_names",  {
   ### without SE
   gcan <- get_combo_score_assay_names()
   expect_true(length(gcan) == 1)
-  expect_identical("character", class(gcan))
+  expect_identical(class(gcan), "character")
   expect_named(gcan)
   pgcan <- get_combo_score_assay_names(prettify = TRUE)
   expect_true(any(pgcan != gcan))

@@ -76,7 +76,7 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
   }
 
   ## Drop empty elements for successful merge.
-  filtered <- out[lapply(out, nrow) > 0L]
+  filtered <- out[lapply(out, NROW) > 0L]
   Reduce(function(x, y) {
     x[y, on = intersect(names(x), names(y)), allow.cartesian = TRUE]
     }, filtered)

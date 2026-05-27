@@ -3,14 +3,14 @@ library(gDRutils)
 
 test_that(".check_required_identifiers works as expected", {
   # Set up.
-  nrow <- 5
+  n_rows <- 5
   req_ids <- get_required_identifiers()
   nids <- length(req_ids)
 
   ids <- as.list(LETTERS[seq(nids)])
   names(ids) <- req_ids
 
-  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  df <- data.table::as.data.table(matrix(rep(0, nids * n_rows), nrow = n_rows, ncol = nids))
   data.table::setnames(df, unlist(ids))
 
   # Single mapping all exist.
@@ -52,14 +52,14 @@ test_that(".check_required_identifiers works as expected", {
 
 test_that(".check_polymapped_identifiers works as expected", {
   # Set up.
-  nrow <- 5
+  n_rows <- 5
   exp_one_ids <- get_expect_one_identifiers()
   nids <- length(exp_one_ids)
 
   id_map <- as.list(LETTERS[seq(nids)])
   names(id_map) <- exp_one_ids
 
-  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  df <- data.table::as.data.table(matrix(rep(0, nids * n_rows), nrow = n_rows, ncol = nids))
   data.table::setnames(df, unlist(id_map))
 
   # All singletons.
@@ -83,14 +83,14 @@ test_that(".check_polymapped_identifiers works as expected", {
 
 test_that(".modify_polymapped_identifiers works as expected", {
   # Set up.
-  nrow <- 5
+  n_rows <- 5
   exp_one_ids <- get_expect_one_identifiers()
   nids <- length(exp_one_ids)
 
   id_map <- as.list(LETTERS[seq(nids)])
   names(id_map) <- exp_one_ids
 
-  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  df <- data.table::as.data.table(matrix(rep(0, nids * n_rows), nrow = n_rows, ncol = nids))
   data.table::setnames(df, unlist(id_map))
 
   # All singletons.
@@ -118,7 +118,7 @@ test_that(".modify_polymapped_identifiers works as expected", {
 })
 
 test_that("validate_identifiers works as expected", {
-  nrow <- 5
+  n_rows <- 5
   exp_one_ids <- get_expect_one_identifiers()
   req_ids <- get_required_identifiers()
   nids <- length(exp_one_ids)
@@ -126,7 +126,7 @@ test_that("validate_identifiers works as expected", {
   ids <- as.list(LETTERS[seq(nids)])
   names(ids) <- exp_one_ids
 
-  df <- data.table::as.data.table(matrix(rep(0, nids * nrow), nrow = nrow, ncol = nids))
+  df <- data.table::as.data.table(matrix(rep(0, nids * n_rows), nrow = n_rows, ncol = nids))
   data.table::setnames(df, unlist(ids))
 
   # Single mapping all valid.

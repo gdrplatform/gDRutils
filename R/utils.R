@@ -635,19 +635,19 @@ average_biological_replicates_dt <- function(
   }
 
   max_fields <- c("maxlog10Concentration", "N_conc")
-  regex_max_fields <- paste0(c(max_fields, prettify_flat_metrics(max_fields, human_readable = TRUE)),
-                             collapse = "|")
+  regex_max_fields <- paste(c(max_fields, prettify_flat_metrics(max_fields, human_readable = TRUE)),
+                            collapse = "|")
   max_fields <- grep(regex_max_fields, names(data), value = TRUE)
 
 
   p_val_col <- "p_value"
-  regex_p_val_col <- paste0(c(p_val_col, prettify_flat_metrics(p_val_col, human_readable = TRUE)),
-                             collapse = "|")
+  regex_p_val_col <- paste(c(p_val_col, prettify_flat_metrics(p_val_col, human_readable = TRUE)),
+                            collapse = "|")
   p_val_col <- grep(regex_p_val_col, names(data), value = TRUE)
 
   r2_col <- "r2"
-  regex_r2_col <- paste0(c(r2_col, prettify_flat_metrics(r2_col, human_readable = TRUE)),
-                            collapse = "|")
+  regex_r2_col <- paste(c(r2_col, prettify_flat_metrics(r2_col, human_readable = TRUE)),
+                         collapse = "|")
   r2_col <- grep(regex_r2_col, names(data), value = TRUE)
 
   average_fields <- setdiff(names(Filter(is.numeric, data)),

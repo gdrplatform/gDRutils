@@ -44,7 +44,7 @@ test_that("convert_combo_data_to_dt", {
 
 test_that("shorten_normalization_type_name", {
   ### expected values
-  expect_identical("GR", shorten_normalization_type_name("GRvalue"))
+  expect_identical(shorten_normalization_type_name("GRvalue"), "GR")
 
   ### errors
   err_msg <- "Assertion on 'x' failed: Must be element of set"

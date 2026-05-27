@@ -4,7 +4,7 @@ test_that("has_nested_field works as expected", {
   df <- S4Vectors::DataFrame(clids = rep(LETTERS, each = m),
                              drugs = rep(letters[1:n], length(LETTERS) * m / n),
                              group = rep(LETTERS, each = m),
-                             GR_50 = rep(seq(length(LETTERS)), each = m),
+                             GR_50 = rep(seq_along(LETTERS), each = m),
                              IC_50 = rep(seq(m), length(LETTERS))
   )
   asy <- BumpyMatrix::splitAsBumpyMatrix(df[, c("group", "GR_50", "IC_50")], row = df$drugs, column = df$clids)
@@ -22,7 +22,7 @@ test_that(".transform_df_to_matrix works as expected", {
                              drugs = rep(letters[1:n], length(LETTERS) * m / n),
                              drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                              group = rep(LETTERS, each = m),
-                             GR_50 = rep(seq(length(LETTERS)), each = m),
+                             GR_50 = rep(seq_along(LETTERS), each = m),
                              IC_50 = rep(seq(m), length(LETTERS))
   )
   column_fields <- c("clids", "cellline_name")
@@ -50,7 +50,7 @@ test_that("demote_fields works as expected", {
                              drugs = rep(letters[1:n], length(LETTERS) * m / n),
                              drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                              group = rep(LETTERS, each = m),
-                             GR_50 = rep(seq(length(LETTERS)), each = m),
+                             GR_50 = rep(seq_along(LETTERS), each = m),
                              IC_50 = rep(seq(m), length(LETTERS))
   )
 
@@ -101,7 +101,7 @@ test_that("promote_fields works as expected", {
                              drugs = rep(letters[1:n], length(LETTERS) * m / n),
                              drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                              group = rep(LETTERS, each = m),
-                             GR_50 = rep(seq(length(LETTERS)), each = m),
+                             GR_50 = rep(seq_along(LETTERS), each = m),
                              IC_50 = rep(seq(m), length(LETTERS))
   )
   column_fields <- c("clids", "cellline_name")
@@ -140,7 +140,7 @@ test_that("promote_fields and demote_fields are reversible operations", {
                              drugs = rep(letters[1:n], length(LETTERS) * m / n),
                              drug_name = paste0(rep(letters[1:n], length(LETTERS) * m / n), "A"),
                              group = rep(LETTERS, each = m),
-                             GR_50 = rep(seq(length(LETTERS)), each = m),
+                             GR_50 = rep(seq_along(LETTERS), each = m),
                              IC_50 = rep(seq(m), length(LETTERS))
   )
   column_fields <- c("clids", "cellline_name")
@@ -172,7 +172,7 @@ test_that("aggregate_assay works as expected", {
   df <- S4Vectors::DataFrame(clids = rep(LETTERS, each = m),
                              drugs = rep(letters[1:n], length(LETTERS) * m / n),
                              group = rep(LETTERS, each = m),
-                             GR_50 = rep(seq(length(LETTERS)), each = m),
+                             GR_50 = rep(seq_along(LETTERS), each = m),
                              IC_50 = rep(seq(m), length(LETTERS))
   )
   asy <- BumpyMatrix::splitAsBumpyMatrix(df[, c("group", "GR_50", "IC_50")], row = df$drugs, column = df$clids)
