@@ -130,7 +130,7 @@
 * make split_SE_components working correctly for sa assay data, modified with `avearge_biological_duplicates`
 
 ## gDRutils 1.5.4 - 2024-12-09
-* minor improvement in the logic of `average_biological_replicates` (new blacklisted column)
+* improve in the logic of `average_biological_replicates` (new blacklisted column)
 
 ## gDRutils 1.5.3 - 2024-12-02
 * refactor `set_unique_*` functions
@@ -288,7 +288,7 @@
 * add assert for missing rownames
 
 ## gDRutils 0.99.24 - 2023-06-22
-* replaced RDS with qs
+* replace RDS with qs
 
 ## gDRutils 0.99.23 - 2023-06-20
 * fix check in R 4.3
@@ -304,7 +304,7 @@
 * switch from `aggregate` to `data.table`
 
 ## gDRutils 0.99.19 - 2023-06-06
-* replaced reshape2 functions by functions from data.table
+* replace reshape2 functions by functions from data.table
 
 ## gDRutils 0.99.18 - 2023-05-22
 * format the vignette with BiocStyle
@@ -407,7 +407,7 @@
 * add co-dilution to single-agent group
 
 ## gDRutils 0.1.3.8 - 2022-11-30
-* bugfix in validate_SE
+* fix validate_SE
 
 ## gDRutils 0.1.3.7 - 2022-10-18
 * add update_env_idfs_from_mae function
@@ -615,10 +615,10 @@
 * add `prettify_flat_metrics` function
 
 ## gDRutils 0.0.0.41 - 2021-04-29
-* bugfix flattening data.tables
+* fix flattening data.tables
 
 ## gDRutils 0.0.0.40 - 2021-04-29
-* bugfix data.table merge in `convert_se_assay_ref_to_dt`
+* fix data.table merge in `convert_se_assay_ref_to_dt`
 
 ## gDRutils 0.0.0.39 - 2021-04-27
 * add support for flattening data.tables
@@ -656,7 +656,7 @@
 * remove positional naming dependence on assay_to_dt for - merge_metrics = TRUE argument
 
 ## gDRutils 0.0.0.28 - 2021-03-16
-* minor refactor to assay_to_dt
+* refactor to assay_to_dt
 * deprecated support for assay_to_dt- include_controls = TRUE argument - not backwards compatible
 
 ## gDRutils 0.0.0.27 - 2021-03-09
@@ -715,7 +715,7 @@
 * update namespaces
 
 ## gDRutils 0.0.0.10 - 2020-10-05
-* minor refactor
+* refactor
 
 ## gDRutils 0.0.0.9 - 2020-09-14
 * add small fixes for assays with empty DataFrame
