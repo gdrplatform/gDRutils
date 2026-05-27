@@ -255,7 +255,7 @@
 * release Bioc 3.18
 
 ## gDRutils 1.0.0 - 2023-10-24
-* prerelease Bioc 3.18
+* prepare prerelease for Bioc 3.18
 
 ## gDRutils 0.99.34 - 2023-10-18
 * adjust NEWS to Bioc format
@@ -270,7 +270,7 @@
 * add `wide_structure` param to `convert_mae_assay_to_dt`
 
 ## gDRutils 0.99.30 - 2023-09-08
-* updated `experimentalist` description in schema
+* update `experimentalist` description in schema
 
 ## gDRutils 0.99.29 - 2023-09-05
 * add `Replicate` as a new identifier
@@ -456,7 +456,7 @@
 * set r2 value to NA for invalid and 0 for constant fits
 
 ## gDRutils 0.1.0.42 - 2022-04-08
-* added identifier descriptions
+* add identifier descriptions
 
 ## gDRutils 0.1.0.41 - 2022-04-08
 * fix wrong order of elements in rownames in SE
@@ -674,7 +674,7 @@
 * clean-up assay_to_dt
 
 ## gDRutils 0.0.0.23 - 2021-02-04
-* added linter
+* add linter
 
 ## gDRutils 0.0.0.22 - 2021-02-03
 * move assay_to_dt from gDR to gDRutils
