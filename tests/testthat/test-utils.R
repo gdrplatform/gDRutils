@@ -270,7 +270,7 @@ test_that("geometric_mean works as expected", {
     fit_type_average_fields = "fit_type"
   )
 
-  expect_equal(nrow(avg_data), 1)
+  expect_equal(NROW(avg_data), 1)
   expect_equal(avg_data$fit_type, "model1")
   expected_p_val <- 0.004300451
   expect_equal(avg_data$p_value, expected_p_val, tolerance = 1e-7)
@@ -324,9 +324,9 @@ test_that("average_biological_replicates_dt works as expected", {
   )
   av2b <- average_biological_replicates_dt(av2f, var = "source_id")
   expect_true(all(unlist(av1f) %in% unlist(av2b)))
-  expect_true(nrow(av1f) == 1)
+  expect_true(NROW(av1f) == 1)
   av1i <- average_biological_replicates_dt(tdata, var = "source_id", fit_type_average_fields = "bad_value")
-  expect_true(nrow(av1i) == 8)
+  expect_true(NROW(av1i) == 8)
 
   # two additional variables for averaging
   ligand_data <- get_synthetic_data("finalMAE_wLigand")

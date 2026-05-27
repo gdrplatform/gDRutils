@@ -36,7 +36,7 @@ test_that("flatten works as expected", {
                   c("id", "id2", "constant",
                     "RV_GDS_wide", "GR_GDR_wide", "RV_GDR_wide"))
 
-  repgrid3$x <- runif(nrow(repgrid3))
+  repgrid3$x <- runif(NROW(repgrid3))
   out4 <- flatten(repgrid3, groups = "normalization_type", wide_cols = "x")
   expect_setequal(colnames(out4),
                   c("source", "wide", "id", "id2",

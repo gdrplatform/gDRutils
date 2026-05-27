@@ -101,7 +101,7 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   # Test for a pushed constant fit by adding noise.
   df_resp7 <- df_resp_above
-  noise <- sample(seq(-1, 1, 0.1), nrow(df_resp7) / 2)
+  noise <- sample(seq(-1, 1, 0.1), NROW(df_resp7) / 2)
   emax <- 0.8
   df_resp7[df_resp7$normalization_types == "RV", "x"] <-
     pmin(unname(unlist(df_resp7[df_resp7$normalization_types == "RV", "x"])) + noise, emax)

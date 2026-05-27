@@ -68,7 +68,7 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
   )
   expect_equal(get_assay_dt_duplicated_rows(smetrics_data), integer(0))
   empty_dt <- get_assay_dt_duplicated_rows(smetrics_data, output = "data")
-  expect_true(nrow(empty_dt) == 0)
+  expect_true(NROW(empty_dt) == 0)
   expect_is(empty_dt, "data.table")
 
   # combo data
@@ -86,7 +86,7 @@ test_that("[has|get]_assay_dt_duplicated_rows works as expected", {
   )
   expect_equal(get_assay_dt_duplicated_rows(cscores_data), integer(0))
   empty_dt <- get_assay_dt_duplicated_rows(cscores_data, output = "data")
-  expect_true(nrow(empty_dt) == 0)
+  expect_true(NROW(empty_dt) == 0)
   expect_is(empty_dt, "data.table")
 })
 

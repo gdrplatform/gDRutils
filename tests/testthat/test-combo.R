@@ -10,7 +10,7 @@ test_that("convert_combo_data_to_dt", {
   expect_identical(sort(names(res_l)), sort(exp_as))
 
   # check content of data.table
-  expect_true(nrow(res_l[[1]]) > 1 && ncol(res_l[[1]]) > 1)
+  expect_true(NROW(res_l[[1]]) > 1 && NCOL(res_l[[1]]) > 1)
   exp_idfs <- get_prettified_identifiers(c("drug_name", "drug_name2", "cellline"), simplify = FALSE)
   expect_true(all(exp_idfs %in% colnames(res_l[[1]])))
 

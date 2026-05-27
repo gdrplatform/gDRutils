@@ -69,10 +69,10 @@ test_that("demote_fields works as expected", {
     colData = out$colData)
 
   obs <- demote_fields(se, "group")
-  expect_equal(ncol(SummarizedExperiment::rowData(obs)), ncol(SummarizedExperiment::rowData(se)) - 1)
+  expect_equal(NCOL(SummarizedExperiment::rowData(obs)), NCOL(SummarizedExperiment::rowData(se)) - 1)
   expect_setequal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), c(nested_fields, "group"))
-  expect_equal(nrow(obs), nrow(unique(df[, setdiff(row_fields, "group")])))
-  expect_equal(ncol(obs), ncol(se))
+  expect_equal(NROW(obs), NROW(unique(df[, setdiff(row_fields, "group")])))
+  expect_equal(NCOL(obs), NCOL(se))
 
   # Demoting fields in colData.
   column_fields <- c("clids", "cellline_name", "group")
@@ -87,10 +87,10 @@ test_that("demote_fields works as expected", {
     rowData = out$rowData,
     colData = out$colData)
   obs <- demote_fields(se, "group")
-  expect_equal(ncol(SummarizedExperiment::colData(obs)), ncol(SummarizedExperiment::colData(se)) - 1)
+  expect_equal(NCOL(SummarizedExperiment::colData(obs)), NCOL(SummarizedExperiment::colData(se)) - 1)
   expect_setequal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), c(nested_fields, "group"))
-  expect_equal(ncol(obs), nrow(unique(df[, setdiff(column_fields, "group")])))
-  expect_equal(nrow(obs), nrow(se))
+  expect_equal(NCOL(obs), NROW(unique(df[, setdiff(column_fields, "group")])))
+  expect_equal(NROW(obs), NROW(se))
 })
 
 test_that("promote_fields works as expected", {
@@ -118,16 +118,16 @@ test_that("promote_fields works as expected", {
     colData = out$colData)
 
   obs <- promote_fields(se, "group", 1)
-  expect_equal(nrow(obs), nrow(unique(df[, c("group", row_fields)])))
+  expect_equal(NROW(obs), NROW(unique(df[, c("group", row_fields)])))
   expect_equal(colnames(SummarizedExperiment::rowData(obs)), c(row_fields, "group"))
   expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), setdiff(nested_fields, "group"))
-  expect_equal(ncol(obs), ncol(se))
+  expect_equal(NCOL(obs), NCOL(se))
 
   obs <- promote_fields(se, "group", 2)
   expect_equal(colnames(SummarizedExperiment::colData(obs)), c(column_fields, "group"))
-  expect_equal(ncol(obs), nrow(unique(df[, c("group", column_fields)])))
+  expect_equal(NCOL(obs), NROW(unique(df[, c("group", column_fields)])))
   expect_equal(colnames(SummarizedExperiment::assays(obs)[["test"]][1, 1][[1]]), setdiff(nested_fields, "group"))
-  expect_equal(nrow(obs), nrow(se))
+  expect_equal(NROW(obs), NROW(se))
 
   expect_error(promote_fields(se, "cellline_name", 2))
 })
@@ -161,7 +161,7 @@ test_that("promote_fields and demote_fields are reversible operations", {
     convert_se_assay_to_dt(demoted_promoted_se, "test", include_metadata = TRUE)
   )
   obs_df <- sort(obs[, setdiff(colnames(obs), c("rId", "cId"))])
-  expect_equal(ncol(obs_df), ncol(df))
+  expect_equal(NCOL(obs_df), NCOL(df))
   expect_true(all(colnames(obs_df) %in% colnames(df)))
   expect_equal(sort(obs_df[, colnames(df)]), sort(df))
 })
@@ -186,6 +186,6 @@ test_that("aggregate_assay works as expected", {
   expect_true(is(obs_asy, "BumpyMatrix"))
   expect_equal(rownames(obs_asy), rownames(asy))
   expect_equal(colnames(obs_asy), colnames(asy))
-  expect_equal(nrow(obs_df), length(LETTERS) * n)
+  expect_equal(NROW(obs_df), length(LETTERS) * n)
   expect_true(all(obs_df$column == obs_df$group))
 })

@@ -84,13 +84,13 @@ test_that("merge_metrics argument of assay_to_dt works as expected", {
 
   obs <- convert_se_assay_to_dt(se, "Metrics")
 
-  expect_equal(nrow(obs), m * 2)
+  expect_equal(NROW(obs), m * 2)
   expect_true(all(colnames(get_header("metrics_names")) %in% colnames(obs)))
 
   # Insert random column.
   metrics2 <- metrics
   extra_col <- "SERENA_WILLIAMS"
-  extra_val <- rep_len(LETTERS, nrow(metrics2))
+  extra_val <- rep_len(LETTERS, NROW(metrics2))
   metrics2[[extra_col]] <- extra_val
   mat2 <- BumpyMatrix::splitAsBumpyMatrix(metrics2, row = rId, column = cId)
   se2 <- SummarizedExperiment::SummarizedExperiment(assays = list(Metrics = mat2),
