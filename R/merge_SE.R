@@ -34,15 +34,15 @@ merge_MAE <- function(MAElist,
                       description = NULL,
                       source_name = NULL,
                       source_id = NULL) {
-  
+
   checkmate::assert_list(MAElist, types = "MultiAssayExperiment")
   checkmate::assert_string(title, null.ok = TRUE)
   checkmate::assert_string(description, null.ok = TRUE)
   checkmate::assert_string(source_name, null.ok = TRUE)
   checkmate::assert_string(source_id, null.ok = TRUE)
-  
+
   experiments <- unique(unlist(lapply(MAElist, names)))
-  
+
   merged_SE_assays <- lapply(experiments, function(exp_name) {
     exp_list <- lapply(MAElist, function(mae) {
       if (exp_name %in% names(mae)) mae[[exp_name]] else NULL
@@ -51,15 +51,15 @@ merge_MAE <- function(MAElist,
     merge_SE(exp_list)
   })
   names(merged_SE_assays) <- experiments
-  
+
   mae_names <- names(MAElist)
   if (is.null(mae_names) || all(trimws(mae_names) == "")) {
     mae_names <- paste0("Dataset_", seq_along(MAElist))
   }
-  
+
   all_sources <- list()
   original_titles <- c()
-  
+
   for (mae in MAElist) {
     for (exp in names(mae)) {
       meta <- as.list(S4Vectors::metadata(mae[[exp]])$experiment_metadata)
@@ -69,26 +69,26 @@ merge_MAE <- function(MAElist,
       }
     }
   }
-  
+
 
   if (is.null(title)) {
     title <- sprintf("Merged MAE: %s", paste(mae_names, collapse = " + "))
   }
-  
+
   if (is.null(description)) {
-    description <- sprintf("Synthetically merged dataset originating from: %s.", paste(mae_names, collapse = ", "))
+    description <- sprintf("Synthetically merged dataset originating from: %s.", toString(mae_names))
     unique_titles <- unique(original_titles)
     if (length(unique_titles) > 0) {
       description <- paste0(description, " Original Titles: [", paste(unique_titles, collapse = " | "), "]")
     }
   }
-  
+
   if (is.null(source_name)) {
     if (length(all_sources) > 0) {
       unique_names <- unique(vapply(all_sources, function(s) {
         if (!is.null(s$name)) s$name else "unknown"
       }, character(1)))
-      
+
       source_name <- if (length(unique_names) == 1 && unique_names[1] != "unknown") {
         unique_names[1]
       } else {
@@ -98,40 +98,40 @@ merge_MAE <- function(MAElist,
       source_name <- "merged_analysis"
     }
   }
-  
+
   if (is.null(source_id)) {
     source_id <- "merged_dataset"
   }
-  
+
   synthetic_experiment_metadata <- list(
     title = title,
     description = description,
     experimentalist = Sys.info()[["user"]],
     sources = list(list(name = source_name, id = source_id))
   )
-  
+
   for (i in seq_along(merged_SE_assays)) {
     meta_list <- as.list(S4Vectors::metadata(merged_SE_assays[[i]]))
     meta_list$experiment_metadata <- synthetic_experiment_metadata
     S4Vectors::metadata(merged_SE_assays[[i]]) <- meta_list
   }
-  
+
   base_metadata <- as.list(S4Vectors::metadata(MAElist[[1]]))
   if (length(base_metadata) == 0) base_metadata <- list()
-  
+
   if (!is.null(base_metadata$.internal$DataSetDB$dataset)) {
     ds_meta <- as.list(base_metadata$.internal$DataSetDB$dataset)
     ds_meta$title <- synthetic_experiment_metadata$title
     ds_meta$description <- synthetic_experiment_metadata$description
     ds_meta$sources <- synthetic_experiment_metadata$sources
-    
+
     internal_meta <- as.list(base_metadata$.internal)
     internal_meta$DataSetDB <- as.list(internal_meta$DataSetDB)
     internal_meta$DataSetDB$dataset <- ds_meta
-    
+
     base_metadata$.internal <- internal_meta
   }
-  
+
   MultiAssayExperiment::MultiAssayExperiment(
     experiments = MultiAssayExperiment::ExperimentList(merged_SE_assays),
     metadata = base_metadata
@@ -169,12 +169,12 @@ merge_SE <- function(SElist,
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
-  
+
   SE_identifiers <- unique(lapply(SElist, get_SE_identifiers))[[1]]
   lapply(names(SE_identifiers), function(x) {
     set_env_identifier(x, SE_identifiers[[x]])
   })
-  
+
   discard_keys <- c(discard_keys, unique(unlist(
     lapply(SElist, get_SE_identifiers,
            c("barcode",
@@ -189,9 +189,9 @@ merge_SE <- function(SElist,
                 additional_col_name = additional_col_name,
                 discard_keys = discard_keys)
   })
-  
+
   names(merged_assays) <- se_assays
-  
+
   if (!is.null(additional_col_name)) {
     data.table::set(merged_assays$Averaged$DT, ,
                     intersect(names(merged_assays$Averaged$DT),
@@ -207,10 +207,10 @@ merge_SE <- function(SElist,
     metadataNames <- setdiff(metadataNames, identifiersNames)
     identifiers <- S4Vectors::metadata(SElist[[1]])[identifiersNames]
   }
-  
+
   metadata <- merge_metadata(SElist, metadataNames)
   metadata <- c(metadata, identifiers)
-  
+
   assays <- lapply(
     merged_assays,
     FUN = function(x) {
@@ -220,7 +220,7 @@ merge_SE <- function(SElist,
       bm_assay
     }
   )
-  
+
   p_list <-
     list(
       assays = assays,
@@ -246,28 +246,28 @@ merge_SE <- function(SElist,
 #' @keywords SE_operators
 #'
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_combo_2dose_nonoise.qs2")
-#' 
+#'
 #' listSE <- list(
-#'   combo1 = mae[[1]], 
+#'   combo1 = mae[[1]],
 #'   sa = mae[[2]]
 #' )
 #' merge_assay(listSE, "Normalized")
-#' 
+#'
 #' @export
 #'
 merge_assay <- function(SElist,
                         assay_name,
                         additional_col_name = "data_source",
                         discard_keys = NULL) {
-  
+
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
-  
+
   SElist <- lapply(SElist, function(x) {
     if (assay_name %in% SummarizedExperiment::assayNames(x)) {
       x
@@ -278,17 +278,17 @@ merge_assay <- function(SElist,
       x
     }
   })
-  
+
   DT <- data.table::rbindlist(lapply(stats::setNames(names(SElist),
                                                      names(SElist)),
                                      function(y) {
                                        convert_se_assay_to_dt(SElist[[y]], assay_name)
                                      }),  fill = TRUE, idcol = additional_col_name)
-  
+
   drug_cols <- unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE))
   existing_drug_cols <- intersect(drug_cols, names(DT))
   DT[, (existing_drug_cols) := lapply(.SD, remove_drug_batch), .SDcols = existing_drug_cols]
-  
+
   DT$rId <- DT$cId <- NULL
   discard_keys <- intersect(names(DT), c(discard_keys, additional_col_name))
   BM <- df_to_bm_assay(DT, discard_keys = discard_keys)
@@ -301,20 +301,20 @@ merge_assay <- function(SElist,
 #' @keywords SE_operators
 #'
 #' @return character vector of unique names of metadata
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' SElist <- list(
-#'   se, 
+#'   se,
 #'   se
 #' )
 #' identify_unique_se_metadata_fields(SElist)
-#' 
+#'
 #' @export
 identify_unique_se_metadata_fields <- function(SElist) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
-  
+
   unique(unlist(lapply(SElist, function(x) {
     names(S4Vectors::metadata(x))
   })))
@@ -327,72 +327,72 @@ identify_unique_se_metadata_fields <- function(SElist) {
 #' @keywords SE_operators
 #'
 #' @return list of merged metadata
-#' 
-#' @examples 
+#'
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' se <- mae[[1]]
 #' listSE <- list(
-#'   se, 
+#'   se,
 #'   se
 #' )
 #' metadata_fields <- identify_unique_se_metadata_fields(listSE)
 #' merge_metadata(listSE, metadata_fields)
-#' 
+#'
 #' @export
 #'
 merge_metadata <- function(SElist,
                            metadata_fields) {
-  
+
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_character(metadata_fields)
-  
+
   all_metadata <- lapply(metadata_fields, function(x) {
-    
+
     if (x %in% c("experiment_metadata", ".internal")) {
-      
+
       valid_metas <- lapply(SElist, function(se) S4Vectors::metadata(se)[[x]])
       valid_metas <- valid_metas[!vapply(valid_metas, is.null, FUN.VALUE = logical(1))]
-      
+
       if (length(valid_metas) == 0) return(list())
-      
+
       if (x == "experiment_metadata") {
-        synth <- as.list(valid_metas[[1]]) 
-        
+        synth <- as.list(valid_metas[[1]])
+
         all_sources <- list()
         for (vm in valid_metas) {
           vm_list <- as.list(vm)
           if (is.list(vm_list$sources)) all_sources <- c(all_sources, vm_list$sources)
         }
-        
+
         if (length(all_sources) > 0) {
           unique_names <- unique(vapply(all_sources, function(s) {
             if (!is.null(s$name)) s$name else "unknown"
           }, character(1)))
-          
+
           std_name <- if (length(unique_names) == 1 && unique_names[1] != "unknown") {
             unique_names[1]
           } else {
             "merged_analysis"
           }
-          
+
           synth$sources <- list(list(name = std_name, id = "merged_dataset"))
         } else {
           synth$sources <- list()
         }
-        
+
         return(synth)
       }
-      
+
       return(as.list(valid_metas[[1]]))
     }
-    
+
     do.call(c, lapply(names(SElist), function(SE) {
       meta <- list(S4Vectors::metadata(SElist[[SE]])[[x]])
       names(meta) <- SE
       meta
     }))
   })
-  
+
   names(all_metadata) <- metadata_fields
   all_metadata
 }

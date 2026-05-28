@@ -19,7 +19,7 @@ Identify unique metadata fields from a list of \code{SummarizedExperiment}s
 mae <- get_synthetic_data("finalMAE_small.qs2")
 se <- mae[[1]]
 SElist <- list(
-  se, 
+  se,
   se
 )
 identify_unique_se_metadata_fields(SElist)

@@ -44,7 +44,7 @@ test_that("validate works as expected", {
   expect_identical(v_st_att$exit_code, 2)
   expect_true(nchar(v_st_att$error) > 0)
   expect_true(inherits(v_st_att$derror, "data.frame"))
-  expect_true(nrow(v_st_att$derror) > 0)
+  expect_true(NROW(v_st_att$derror) > 0)
 
   # fix validation errors by adding proper metadata
   S4Vectors::metadata(tmae1[[1]]) <-

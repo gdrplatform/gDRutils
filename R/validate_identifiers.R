@@ -17,13 +17,13 @@
 #' @details
 #' Note that this does NOT set the identifiers anywhere (i.e. environment or \code{SummarizedExperiment} object).
 #' If identifiers do not validate, will throw error as side effect.
-#' 
-#' @examples 
+#'
+#' @examples
 #' validate_identifiers(
-#'   S4Vectors::DataFrame("Barcode" = NA, "Duration" = NA, "Template" = NA, "clid" = NA), 
+#'   S4Vectors::DataFrame("Barcode" = NA, "Duration" = NA, "Template" = NA, "clid" = NA),
 #'   req_ids = "barcode"
 #' )
-#' 
+#'
 #' @export
 validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one_ids = NULL) {
   if (is.null(identifiers)) {
@@ -115,13 +115,13 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
   missing <- !req_ids %in% names(id_map)
   if (any(missing)) {
     stop(sprintf("required identifiers: '%s' missing in 'id_map'",
-      paste0(req_ids[missing], collapse = ", ")))
+      toString(req_ids[missing])))
   }
 
   gt_one <- lengths(id_map[req_ids]) != 1L
   if (any(gt_one)) {
     stop(sprintf("more than one identifier value found for required identifiers: '%s'",
-      paste0(names(id_map[req_ids][gt_one]), collapse = ", ")))
+      toString(names(id_map[req_ids][gt_one]))))
   }
 
   msg <- NULL
@@ -145,7 +145,7 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
 
   msg <- NULL
   if (length(polymappings) > 0L) {
-    msg <- sprintf("more than one mapping for identifier(s): '%s'\n", paste0(names(polymappings), collapse = ", "))
+    msg <- sprintf("more than one mapping for identifier(s): '%s'\n", toString(names(polymappings)))
   }
   msg
 }

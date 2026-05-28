@@ -22,8 +22,8 @@ Identify and return additional variables in list of dt
 }
 \examples{
 dt <- data.table::data.table(
-  Gnumber = seq_len(10), 
-  Concentration = runif(10), 
+  Gnumber = seq_len(10),
+  Concentration = runif(10),
   Ligand = c(rep(0.5, 5), rep(0, 5))
 )
 get_additional_variables(dt)

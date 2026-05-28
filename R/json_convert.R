@@ -8,11 +8,11 @@
 #'
 #' @return String representation of a JSON document.
 #'
-#' @examples 
+#' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
 #' convert_mae_to_json(mae)
 #' convert_mae_to_json(mae, with_experiments = FALSE)
-#' 
+#'
 #' @export
 convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 
@@ -62,9 +62,9 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'   description = "description of experiment",
 #'   source = list(name = "GeneData_Screener", id = "QCS-12345"))
 #' rdata <- data.table::data.table(
-#'  mydrug = letters, 
-#'   mydrugname = letters, 
-#'   mydrugmoa = letters, 
+#'  mydrug = letters,
+#'   mydrugname = letters,
+#'   mydrugmoa = letters,
 #'   Duration = 1)
 #' cdata <- data.table::data.table(mycellline = letters, mycelllinename = letters,
 #'  mycelllinetissue = letters, cellline_ref_div_time = letters)
@@ -84,7 +84,7 @@ convert_mae_to_json <- function(mae, with_experiments = TRUE) {
 #'
 #' @export
 convert_se_to_json <- function(se) {
-  
+
   ml <- list(
     mjson = convert_metadata_to_json(se),
     rjson = convert_rowData_to_json(rowData(se), get_SE_identifiers(se)),
@@ -145,9 +145,9 @@ convert_metadata_to_json <- function(se) {
 #'
 #' @examples
 #' rdata <- data.table::data.table(
-#'   mydrug = letters, 
-#'   mydrugname = letters, 
-#'   mydrugmoa = letters, 
+#'   mydrug = letters,
+#'   mydrugname = letters,
+#'   mydrugmoa = letters,
 #'   Duration = 1)
 #' identifiers <- list(drug = "mydrug", drug_name = "mydrugname", drug_moa = "mydrugmoa",
 #' duration = "Duration")
@@ -156,7 +156,7 @@ convert_metadata_to_json <- function(se) {
 #' @details Standardizes the \code{rdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
-#' 
+#'
 #' @keywords json_convert
 #' @export
 convert_rowData_to_json <-
@@ -181,8 +181,8 @@ convert_rowData_to_json <-
 #'
 #' @examples
 #' cdata <- data.table::data.table(
-#'   mycellline = letters, 
-#'   mycelllinename = letters, 
+#'   mycellline = letters,
+#'   mycelllinename = letters,
 #'   mycelllinetissue = letters,
 #'   cellline_ref_div_time = "cellline_ref_div_time")
 #' identifiers <- list(cellline = "mycellline",
@@ -194,7 +194,7 @@ convert_rowData_to_json <-
 #' @details Standardizes the \code{cdata} to common schema fields
 #' and tidies formatting to be condusive to joining
 #' with other JSON responses.
-#' 
+#'
 #' @keywords json_convert
 #' @export
 convert_colData_to_json <-
@@ -227,7 +227,7 @@ convert_colData_to_json <-
   stopifnot(all(req_cols %in% names(mdata)))
 
   mdata <- data.table::as.data.table(as.list(mdata))
-  
+
   main_mdata <- mdata[, req_cols, with = FALSE]
   mjson <- jsonlite::toJSON(main_mdata, "columns")
   mjson <- strip_first_and_last_char(mjson)

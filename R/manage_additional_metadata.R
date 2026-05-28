@@ -11,8 +11,8 @@
 #' @keywords metadata_management
 #'
 #' @return The same object with an added S3 class.
-#' 
-#' @examples 
+#'
+#' @examples
 #' addClass(data.table::data.table(), "someClass")
 #'
 #' @export
@@ -77,14 +77,14 @@ modifyData.drug_name2 <- function(x, option, keep, ...) {
   checkmate::assert_string(option)
   checkmate::assert_choice(option, c("average", "toDrug", "toCellLine"))
   checkmate::assert_string(keep, null.ok = TRUE)
-  
+
   pidfs <- get_prettified_identifiers(simplify = TRUE)
   drug_name <- pidfs[["drug_name"]]
   drug_name2 <- pidfs[["drug_name2"]]
   conc2 <- pidfs[["concentration2"]]
   drug2 <- pidfs[["drug2"]]
   cell_name <- pidfs[["cellline_name"]]
-  
+
   if (option == "average") {
     # drop data and keep only the requested value
     x <- average_biological_replicates_dt(x, drug_name2, prettified = TRUE)
@@ -108,7 +108,7 @@ modifyData.drug_name2 <- function(x, option, keep, ...) {
         sub(" \\(.*? at 0\\.?0* &mu;M\\)", "", x[[cell_name]])
     }
   }
-  
+
   # drop the additional columns
   x[c(drug_name2, conc2, drug2)] <- NULL
   # remove special class
@@ -124,13 +124,13 @@ modifyData.data_source <- function(x, option, keep, ...) {
   checkmate::assert_string(option)
   checkmate::assert_choice(option, c("average", "toDrug", "toCellLine"))
   checkmate::assert_string(keep, null.ok = TRUE)
-  
+
   pidfs <- get_prettified_identifiers(simplify = TRUE)
   dt_src <- pidfs[["data_source"]]
   drug <- pidfs[["drug_name"]]
   clid <- pidfs[["cellline"]]
   cl_name <- pidfs[["cellline_name"]]
-  
+
   if (option == "average") {
     # drop data and keep only the requested value
     x <- average_biological_replicates_dt(x, dt_src, prettified = TRUE)
@@ -142,7 +142,7 @@ modifyData.data_source <- function(x, option, keep, ...) {
       drug_to_replace <- x[drug_idx, drug]
       x[drug_idx, drug] <-
         vapply(
-          seq_len(length(drug_to_replace)),
+          seq_along(drug_to_replace),
           function(y) sprintf("%s (%s)", drug_to_replace[y], x[, dt_src][y]), "string")
     } else if (option == "toCellLine") {
       cell_lines_to_combine <- unique(x[duplicated_rows, cl_name])
@@ -173,10 +173,10 @@ modifyData.default <- function(x, option, keep, ...) {
     pidfs[[additional_var_names]]
   } else {
     additional_var_names
-  }  
+  }
   cell_name <- pidfs[["cellline_name"]]
   drug_name <- pidfs[["drug_name"]]
-  
+
   if (option == "average") {
     # drop data and keep only the requested value
     x <- average_biological_replicates_dt(x, additional_var, prettified = TRUE)

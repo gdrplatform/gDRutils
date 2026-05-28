@@ -22,10 +22,10 @@ ASSAY_INFO_TBL <- data.table::data.table(
 #'    will return single string instead of named vector with single element
 #'    useful when function is expected to return single element/assay only
 #' @keywords assay_names
-#'    
+#'
 #' @return charvec
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_env_assay_names()
 #'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
@@ -66,7 +66,7 @@ get_env_assay_names <-
       df <- df[df[[eval(filter)]] %in% v_filters[[filter]], ]
     }
 
-    if ((nrow(df)) == 0)  {
+    if ((NROW(df)) == 0)  {
       v_filters_str <-
         paste(names(v_filters),
               v_filters,
@@ -93,9 +93,9 @@ get_env_assay_names <-
 #'
 #' @return  charvec
 #'
-#' @examples 
+#' @examples
 #' get_assay_names()
-#' 
+#'
 #' @export
 get_assay_names <- function(se = NULL, ...) {
   if (!is.null(se) &&
@@ -116,9 +116,9 @@ get_assay_names <- function(se = NULL, ...) {
 #' @keywords assay_names
 #' @return charvec of combo assay names.
 #' @export
-#' @examples 
+#' @examples
 #' get_combo_assay_names()
-#' 
+#'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_assay_names <- function(se = NULL, ...) {
@@ -134,7 +134,7 @@ get_combo_assay_names <- function(se = NULL, ...) {
 #' @return  charvec
 #' @export
 #'
-#' @examples 
+#' @examples
 #' get_combo_base_assay_names()
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
@@ -151,10 +151,10 @@ get_combo_base_assay_names <- function(se = NULL, ...) {
 #' @return  charvec
 #'
 #' @export
-#' 
-#' @examples 
+#'
+#' @examples
 #' get_combo_score_assay_names()
-#' 
+#'
 #' @author Arkadiusz Gładki \email{arkadiusz.gladki@@contractors.roche.com}
 #'
 get_combo_score_assay_names <- function(se = NULL, ...) {

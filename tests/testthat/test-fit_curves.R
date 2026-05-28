@@ -31,7 +31,7 @@ test_that("NA values are handled correctly", {
   df_resp_NA <- df_resp
   df_resp_NA[, "x"] <- NA
   expect_warning(fit_curves(df_resp_NA, series_identifiers = "Concentration"))
-  
+
   df_result_NA <- purrr::quietly(fit_curves)(df_resp_NA, series_identifiers = "Concentration")
   expect_length(df_result_NA$warnings, 2)
   expect_true(all(is.na(df_result_NA$result[, "xc50"])))
@@ -101,7 +101,7 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   # Test for a pushed constant fit by adding noise.
   df_resp7 <- df_resp_above
-  noise <- sample(seq(-1, 1, 0.1), nrow(df_resp7) / 2)
+  noise <- sample(seq(-1, 1, 0.1), NROW(df_resp7) / 2)
   emax <- 0.8
   df_resp7[df_resp7$normalization_types == "RV", "x"] <-
     pmin(unname(unlist(df_resp7[df_resp7$normalization_types == "RV", "x"])) + noise, emax)
@@ -269,7 +269,7 @@ test_that(".estimate_xc50 works as expected", {
 test_that("average_dups works as expected", {
   df <- data.table::data.table(concs = rep(seq(5), each = 2),
                                norm_value = seq(10))
-  expect_equal(average_dups(df, "concs"), 
+  expect_equal(average_dups(df, "concs"),
                data.table::data.table(concs = seq(5), norm_value = seq(1.5, 9.5, 2)))
 })
 
@@ -372,7 +372,7 @@ test_that(".calculate_xc50 works as expected", {
 
 test_that("cap_xc50 works as expected", {
   expect_error(cap_xc50(xc50 = c(1, 2), max_conc = c(10, 10), capping_fold = 5))
-  
+
   expect_equal(cap_xc50(xc50 = 26, max_conc = 5, capping_fold = 5), Inf)
   expect_equal(cap_xc50(xc50 = 1e-6, max_conc = 5, capping_fold = 5), -Inf)
   expect_equal(cap_xc50(xc50 = 1, max_conc = 5, capping_fold = 5), 1)
@@ -385,13 +385,13 @@ test_that("predict_efficacy_from_conc works as expected", {
   x_0 <- 1
   ec50 <- 0.5
   conc <- c(0, 10 ^ (seq(-3, 1, 0.5)))
-  
+
   out <- predict_efficacy_from_conc(conc, x_inf, x_0, ec50, h)
-  
-  res <- c(x_0, 
-           vapply(conc[2:NROW(conc)], 
+
+  res <- c(x_0,
+           vapply(conc[2:NROW(conc)],
                   function(c) x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h), numeric(1)))
-  
+
   expect_equal(out, res)
 })
 
@@ -406,26 +406,26 @@ test_that("predict_smooth_from_combo works as expected", {
     x_inf = c(0.1, 0.2, 0.1, 0.3, 0.15),
     x_0 = c(1, 1, 1, 1, 1)
   )
-  
+
   on_grid_pred <- predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = metrics)
-  
-  c1_ongrid <- 0.2 + (1 - 0.2) / (1 + (1 / 1.5)^2) 
-  c2_ongrid <- 0.3 + (1 - 0.3) / (1 + (10 / 6)^2) 
+
+  c1_ongrid <- 0.2 + (1 - 0.2) / (1 + (1 / 1.5)^2)
+  c2_ongrid <- 0.3 + (1 - 0.3) / (1 + (10 / 6)^2)
   c3_ongrid <- 0.15 + (1 - 0.15) / (1 + ((1 + 10) / 10)^2)
   expected_val_ongrid <- mean(c(c1_ongrid, c2_ongrid, c3_ongrid))
   expect_equal(on_grid_pred, expected_val_ongrid, tolerance = 1e-4)
-  
+
   expect_message(
     snapped_pred <- predict_smooth_from_combo(conc_1 = 1.1, conc_2 = 9.8, metrics_merged = metrics),
     "Using models for nearest concentrations"
   )
-  
+
   c1_snapped <- 0.2 + (1 - 0.2) / (1 + (1.1 / 1.5)^2) # Use model for cotrt=10, predict at conc=1.1
   c2_snapped <- 0.3 + (1 - 0.3) / (1 + (9.8 / 6)^2)   # Use model for cotrt=1, predict at conc=9.8
   c3_snapped <- 0.15 + (1 - 0.15) / (1 + ((1.1 + 9.8) / 10)^2) # Use codilution model, predict at sum=10.9
   expected_val_snapped <- mean(c(c1_snapped, c2_snapped, c3_snapped))
   expect_equal(snapped_pred, expected_val_snapped, tolerance = 1e-4)
-  
+
   bad_metrics <- metrics[, -c("ec50")]
   expect_error(
     predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = bad_metrics),
@@ -435,19 +435,19 @@ test_that("predict_smooth_from_combo works as expected", {
 
 test_that(".snap_conc_to_model works as expected", {
   available <- c(0.1, 0.3, 1, 3, 10)
-  
+
   # Snaps to the closest value on a log scale.
   expect_equal(.snap_conc_to_model(user_conc = 1.1, available_concs = available), 1)
   expect_equal(.snap_conc_to_model(user_conc = 0.2, available_concs = available), 0.3)
   expect_equal(.snap_conc_to_model(user_conc = 0.1, available_concs = available), 0.1)
-  
+
   # Snaps to min/max when outside the range.
   expect_equal(.snap_conc_to_model(user_conc = 0.01, available_concs = available), 0.1)
   expect_equal(.snap_conc_to_model(user_conc = 100, available_concs = available), 10)
-  
+
   # Handles empty input.
   expect_true(is.na(.snap_conc_to_model(user_conc = 1, available_concs = numeric(0))))
-  
+
   expect_error(
     .snap_conc_to_model(user_conc = c(1, 2), available_concs = available),
     "Assertion on 'user_conc' failed: Must have length 1."

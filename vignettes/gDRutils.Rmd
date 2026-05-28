@@ -130,9 +130,9 @@ print(validated_identifiers)
 In detail, `validate_identifiers` wraps the following steps:
 
 * modify identifier values to reflect the data, handling many-to-one mappings via the `.modify_polymapped_identifiers` function
-* ensure that all required identifiers are present in the data via  the `.check_required_identifiers` function 
+* ensure that all required identifiers are present in the data via  the `.check_required_identifiers` function
 * check for polymapped identifiers in the data via the `.check_polymapped_identifiers` function
- 
+
 ### Prettifying identifiers
 
 Prettifying identifiers means making them more user-friendly and human-readable and is handled by the `prettify_flat_metrics` function. Please see [the relevant section](#prettifying) for more details.
@@ -178,7 +178,7 @@ Prettifying involves transforming data into a more descriptive and human-readabl
 
 In gdrplatform there are two entities that can be prettified:
 
-* colnames of data.tables 
+* colnames of data.tables
 * assay names
 
 ### Colnames of data.table(s)
@@ -194,16 +194,16 @@ prettify_flat_metrics(colnames(dt), human_readable = TRUE)
 The `prettify_flat_metrics` function is in fact a wrapper for the following actions:
 
 * conversion of the normalization-specific metric names via the `.convert_norm_specific_metrics` function
-* moving the GDS source info to the end of the column name via the `.prettify_GDS_columns` 
-* prettifying the metadata columns via the `.prettify_metadata_columns` function 
-* prettifying the metric columns via the `.prettify_metric_columns` function 
-* prettifying the co-treatment column names. via the `.prettify_cotreatment_columns` 
+* moving the GDS source info to the end of the column name via the `.prettify_GDS_columns`
+* prettifying the metadata columns via the `.prettify_metadata_columns` function
+* prettifying the metric columns via the `.prettify_metric_columns` function
+* prettifying the co-treatment column names. via the `.prettify_cotreatment_columns`
 * minor corrections (removal of 'gDR' and  "_" prefixes, removal of spaces at the end/beginning, other)
 
 In case of data.table(s) with combo excess and score assays some of the columns are prettified with the dedicated helper functions instead of using `prettify_flat_metrics`:
 
 * get_combo_excess_field_names()
-* get_combo_score_field_names() 
+* get_combo_score_field_names()
 
 These helpers depend on the DATA_COMBO_INFO_TBL, (gDRutils) internal data.table.
 
@@ -223,4 +223,3 @@ There are some functions that wrap the `get_assay_names` function for combo data
 ```{r sessionInfo}
 sessionInfo()
 ```
-
