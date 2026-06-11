@@ -416,6 +416,13 @@ logisticFit <-
 #'
 #' @export
 predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
+  checkmate::assert_numeric(c)
+  checkmate::assert_numeric(x_inf)
+  checkmate::assert_numeric(x_0)
+  checkmate::assert_numeric(ec50)
+  checkmate::assert_numeric(h)
+  assert_equal_input_len(outlier = c, x_inf, x_0, ec50, h)
+
   as.numeric(ifelse(c > 0,
                     x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h),
                     x_0))
