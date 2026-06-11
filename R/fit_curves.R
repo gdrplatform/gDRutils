@@ -258,7 +258,7 @@ logisticFit <-
     ## Perform a 3-param or 4-param fit.
     ## Fit type is determined based on number of free variables available.
     fit_param <- c("h", "x_inf", "x_0", "ec50")
-    controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
+    controls <- drc::drmc(relTol = 1e-04, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
 
     out <-
       .setLogisticFit(out = out, df_ = df_, n_point_cutoff = n_point_cutoff, fit_param = fit_param,
@@ -416,16 +416,9 @@ logisticFit <-
 #'
 #' @export
 predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
-  checkmate::assert_numeric(c)
-  checkmate::assert_numeric(x_inf)
-  checkmate::assert_numeric(x_0)
-  checkmate::assert_numeric(ec50)
-  checkmate::assert_numeric(h)
-  assert_equal_input_len(outlier = c, x_inf, x_0, ec50, h)
-
   as.numeric(ifelse(c > 0,
                     x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h),
-                    x_0)) # avoid issues with c=0 for DRCConstantFitResult
+                    x_0))
 }
 
 
@@ -636,8 +629,7 @@ logistic_metrics <- function(c, x_metrics) {
 
 #' @keywords internal
 has_dups <- function(vec) {
-  freq <- table(vec)
-  any(freq != 1L)
+  anyDuplicated(vec) > 0L
 }
 
 
