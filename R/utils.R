@@ -367,7 +367,9 @@ apply_bumpy_function <- function(se,
     }
   }, parallelize = parallelize)
 
-  out <- S4Vectors::DataFrame(do.call(rbind, out))
+  out <- out[!vapply(out, is.null, logical(1))]
+  out <- data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
+  out <- S4Vectors::DataFrame(out)
 
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
                                                row = out$row,
