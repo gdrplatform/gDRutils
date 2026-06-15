@@ -679,6 +679,9 @@ average_dups <- function(dt, col) {
 #' @keywords internal
 .set_too_few_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCTooFewPointsToFit"
+  mean_norm_value <- mean(norm_values, na.rm = TRUE)
+  out$x_mean <- mean_norm_value
+  out$x_AOC <- out$x_AOC_range <- .calculate_complement(mean_norm_value)
   out$xc50 <- .estimate_xc50(norm_values)
   out
 }
@@ -723,6 +726,9 @@ set_constant_fit_params <- function(out, mean_norm_value) {
 .set_invalid_fit_params <- function(out, norm_values) {
   out$fit_type <- "DRCInvalidFitResult"
   out$r2 <- NA
+  mean_norm_value <- mean(norm_values, na.rm = TRUE)
+  out$x_mean <- mean_norm_value
+  out$x_AOC <- out$x_AOC_range <- .calculate_complement(mean_norm_value)
   out$xc50 <- .estimate_xc50(norm_values)
   out
 }
