@@ -1,3 +1,6 @@
+## gDRutils 1.11.4 - 2026-06-15
+* set x_AOC_range in too_few and invalid fit fallback paths
+
 ## gDRutils 1.11.3 - 2026-05-27
 * apply updated gDRstyle rules
 
