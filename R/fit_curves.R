@@ -607,15 +607,22 @@ logistic_metrics <- function(c, x_metrics) {
 #' @keywords fit_curves
 #' @export
 .setup_metric_output <- function() {
-  resp_metric_all_cols <- get_header("response_metrics")
-  # remove cols ending with "_sd"
-  # they are not present in the primary assays
-  # but only with the assays followed by averaging of biological replicates
-  resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
+  template <- .metric_output_template()
+  lapply(template, function(x) NA)
+}
 
-  out <- as.list(rep(NA, length(resp_metric_cols)))
-  names(out) <- resp_metric_cols
-  out
+.metric_output_template_cache <- new.env(parent = emptyenv())
+
+#' @keywords internal
+.metric_output_template <- function() {
+  if (is.null(.metric_output_template_cache$cols)) {
+    resp_metric_all_cols <- get_header("response_metrics")
+    resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
+    out <- as.list(rep(NA, length(resp_metric_cols)))
+    names(out) <- resp_metric_cols
+    .metric_output_template_cache$cols <- out
+  }
+  .metric_output_template_cache$cols
 }
 
 
@@ -667,9 +674,10 @@ average_dups <- function(dt, col) {
 
 #' @keywords internal
 .set_model_fit_params <- function(out, model, fit_param) {
-  for (p in fit_param) {
-    # drm will output model with the ":(Intercept)" term concatenated at end.
-    out[[p]] <- stats::coef(model)[[paste0(p, ":(Intercept)")]]
+  coefs <- stats::coef(model)
+  param_names <- paste0(fit_param, ":(Intercept)")
+  for (i in seq_along(fit_param)) {
+    out[[fit_param[i]]] <- coefs[[param_names[i]]]
   }
   out
 }
@@ -734,7 +742,7 @@ set_constant_fit_params <- function(out, mean_norm_value) {
 .predict_mean_from_model <- function(model, min, max, intervals = 100) {
   lg_min_con <- log10(min)
   lg_max_con <- log10(max)
-  inputs <- data.table::data.table(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
+  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
   mean(stats::predict(model, inputs), na.rm = TRUE)
 }
 

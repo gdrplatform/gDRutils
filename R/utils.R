@@ -177,14 +177,13 @@ loop <- function(x,
   checkmate::assert_string(temp_dir)
   checkmate::assert_count(batch_size, positive = TRUE)
 
-  parent_call <- sys.call(-1)
-  parent_name <- if (!is.null(parent_call)) {
-    deparse(parent_call[[1]])
-  } else {
-    "unknown_parent_fun"
-  }
-
   if (use_batch) {
+    parent_call <- sys.call(-1)
+    parent_name <- if (!is.null(parent_call)) {
+      deparse(parent_call[[1]])
+    } else {
+      "unknown_parent_fun"
+    }
     if (!dir.exists(temp_dir)) {
       dir.create(temp_dir, recursive = TRUE)
     }
@@ -231,29 +230,19 @@ loop <- function(x,
       })
     }
 
-    final_results <- list()
-    for (start_index in indices) {
+    final_results <- vector("list", length(indices))
+    for (bi in seq_along(indices)) {
       file_path <- file.path(temp_dir,
                              paste0(fun_name, "_",
                                     unique_id, "_",
-                                    start_index, "_of_",
+                                    indices[bi], "_of_",
                                     total_iterations, "_batch.qs2"))
       if (file.exists(file_path)) {
-        batch_results <- qs2::qs_read(file_path)
-        final_results <- c(final_results, batch_results)
-      }
-    }
-
-    for (start_index in indices) {
-      file_path <- file.path(temp_dir,
-                             paste0(fun_name, "_",
-                                    unique_id, "_",
-                                    start_index, "_of_",
-                                    total_iterations, "_batch.qs2"))
-      if (file.exists(file_path)) {
+        final_results[[bi]] <- qs2::qs_read(file_path)
         file.remove(file_path)
       }
     }
+    final_results <- unlist(final_results, recursive = FALSE)
 
     return(final_results)
   } else {
