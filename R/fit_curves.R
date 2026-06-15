@@ -742,7 +742,7 @@ set_constant_fit_params <- function(out, mean_norm_value) {
 .predict_mean_from_model <- function(model, min, max, intervals = 100) {
   lg_min_con <- log10(min)
   lg_max_con <- log10(max)
-  inputs <- data.frame(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
+  inputs <- data.table::data.table(concs = 10 ^ (seq(lg_min_con, lg_max_con, (lg_max_con - lg_min_con) / intervals)))
   mean(stats::predict(model, inputs), na.rm = TRUE)
 }
 
