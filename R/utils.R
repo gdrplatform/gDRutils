@@ -173,11 +173,10 @@ loop <- function(x,
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
-  checkmate::assert_flag(use_batch)
-  checkmate::assert_string(temp_dir)
-  checkmate::assert_count(batch_size, positive = TRUE)
 
   if (use_batch) {
+    checkmate::assert_string(temp_dir)
+    checkmate::assert_count(batch_size, positive = TRUE)
     parent_call <- sys.call(-1)
     parent_name <- if (!is.null(parent_call)) {
       deparse(parent_call[[1]])
