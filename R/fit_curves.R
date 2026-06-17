@@ -676,9 +676,7 @@ average_dups <- function(dt, col) {
 .set_model_fit_params <- function(out, model, fit_param) {
   coefs <- stats::coef(model)
   param_names <- paste0(fit_param, ":(Intercept)")
-  for (i in seq_along(fit_param)) {
-    out[[fit_param[i]]] <- coefs[[param_names[i]]]
-  }
+  out[fit_param] <- coefs[param_names]
   out
 }
 

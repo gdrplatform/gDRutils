@@ -66,13 +66,9 @@ standardize_se <- function(se, use_default = TRUE) {
                                           from_idfs)
   }
   # Create mapping vector
-  mapping_df <- do.call(rbind,
-                        lapply(seq_along(diff_names),
-                               function(x) {
-                                 data.table::data.table(x = unlist(diff_identifiers$default[x]),
-                                                        y = unlist(diff_identifiers$se[x]))
-                               }
-                        )
+  mapping_df <- data.table::data.table(
+    x = unlist(diff_identifiers$default),
+    y = unlist(diff_identifiers$se)
   )
   if (length(mapping_df)) {
     mapping_vector <- mapping_df$x
