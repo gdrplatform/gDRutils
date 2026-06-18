@@ -180,6 +180,11 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   parallel::clusterCall(cl, function(pkgs) {
     for (pkg in pkgs) library(pkg, character.only = TRUE)
   }, loaded_pkgs)
+  caller_env <- parent.frame(2L)
+  vars_to_export <- ls(caller_env)
+  if (length(vars_to_export)) {
+    parallel::clusterExport(cl, varlist = vars_to_export, envir = caller_env)
+  }
   parallel::parLapply(cl, x, FUN, ...)
 }
 
