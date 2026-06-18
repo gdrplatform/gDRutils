@@ -162,6 +162,16 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #'
 #' @keywords package_utils
 #' @export
+
+#' @keywords internal
+.can_use_biocparallel <- function() {
+  if (!requireNamespace("BiocParallel", quietly = TRUE)) return(FALSE)
+  bp <- BiocParallel::bpparam()
+  if (inherits(bp, "SerialParam")) return(FALSE)
+  if (BiocParallel::bpnworkers(bp) <= 1L) return(FALSE)
+  TRUE
+}
+
 loop <- function(x,
                  FUN,
                  parallelize = TRUE,
@@ -173,6 +183,8 @@ loop <- function(x,
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
+
+  can_parallel <- parallelize && .can_use_biocparallel()
 
   if (use_batch) {
     checkmate::assert_string(temp_dir)
@@ -215,19 +227,12 @@ loop <- function(x,
       start_index <- indices[length(indices)] + batch_size
     }
 
-    if (parallelize) {
-      BiocParallel::bplapply(indices[indices >= start_index], function(start_index) {
-        end_index <- min(start_index, total_iterations)
-        process_batch(x[(start_index - batch_size + 1):end_index],
-                      start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
-      })
-    } else {
-      lapply(indices[indices >= start_index], function(start_index) {
-        end_index <- min(start_index, total_iterations)
-        process_batch(x[(start_index - batch_size + 1):end_index],
-                      start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
-      })
-    }
+    apply_fun <- if (can_parallel) BiocParallel::bplapply else lapply
+    apply_fun(indices[indices >= start_index], function(start_index) {
+      end_index <- min(start_index, total_iterations)
+      process_batch(x[(start_index - batch_size + 1):end_index],
+                    start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+    })
 
     final_results <- vector("list", length(indices))
     for (bi in seq_along(indices)) {
@@ -245,7 +250,7 @@ loop <- function(x,
 
     return(final_results)
   } else {
-    if (parallelize) {
+    if (can_parallel) {
       return(BiocParallel::bplapply(x, FUN, ...))
     } else {
       return(lapply(x, FUN, ...))
