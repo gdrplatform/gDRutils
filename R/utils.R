@@ -164,12 +164,17 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' @export
 
 #' @keywords internal
-.can_use_biocparallel <- function() {
-  if (!requireNamespace("BiocParallel", quietly = TRUE)) return(FALSE)
-  bp <- BiocParallel::bpparam()
-  if (inherits(bp, "SerialParam")) return(FALSE)
-  if (BiocParallel::bpnworkers(bp) <= 1L) return(FALSE)
-  TRUE
+.get_parallel_workers <- function() {
+  n <- as.integer(Sys.getenv("GDR_WORKERS", parallel::detectCores() - 1L))
+  max(1L, min(n, parallel::detectCores()))
+}
+
+.parallel_lapply <- function(x, FUN, ...) {
+  n_workers <- .get_parallel_workers()
+  if (n_workers <= 1L || .Platform$OS.type == "windows" || length(x) <= 1L) {
+    return(lapply(x, FUN, ...))
+  }
+  parallel::mclapply(x, FUN, ..., mc.cores = n_workers)
 }
 
 loop <- function(x,
@@ -184,7 +189,7 @@ loop <- function(x,
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
 
-  can_parallel <- parallelize && .can_use_biocparallel()
+  apply_fun <- if (parallelize) .parallel_lapply else lapply
 
   if (use_batch) {
     checkmate::assert_string(temp_dir)
@@ -227,7 +232,6 @@ loop <- function(x,
       start_index <- indices[length(indices)] + batch_size
     }
 
-    apply_fun <- if (can_parallel) BiocParallel::bplapply else lapply
     apply_fun(indices[indices >= start_index], function(start_index) {
       end_index <- min(start_index, total_iterations)
       process_batch(x[(start_index - batch_size + 1):end_index],
@@ -250,11 +254,7 @@ loop <- function(x,
 
     return(final_results)
   } else {
-    if (can_parallel) {
-      return(BiocParallel::bplapply(x, FUN, ...))
-    } else {
-      return(lapply(x, FUN, ...))
-    }
+    apply_fun(x, FUN, ...)
   }
 }
 
