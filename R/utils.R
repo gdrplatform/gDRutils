@@ -174,13 +174,13 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   if (n_workers <= 1L || length(x) <= 1L) {
     return(lapply(x, FUN, ...))
   }
-  if (.Platform$OS.type == "windows") {
-    cl <- parallel::makeCluster(n_workers)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-    parallel::parLapply(cl, x, FUN, ...)
-  } else {
-    parallel::mclapply(x, FUN, ..., mc.cores = n_workers, mc.preschedule = TRUE)
-  }
+  cl <- parallel::makeCluster(n_workers)
+  on.exit(parallel::stopCluster(cl), add = TRUE)
+  loaded_pkgs <- .packages()
+  parallel::clusterCall(cl, function(pkgs) {
+    for (pkg in pkgs) library(pkg, character.only = TRUE)
+  }, loaded_pkgs)
+  parallel::parLapply(cl, x, FUN, ...)
 }
 
 loop <- function(x,
