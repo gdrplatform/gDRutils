@@ -171,14 +171,16 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 
 .parallel_lapply <- function(x, FUN, ...) {
   n_workers <- .get_parallel_workers()
-  can_fork <- n_workers > 1L &&
-    .Platform$OS.type != "windows" &&
-    Sys.info()[["sysname"]] != "Darwin" &&
-    length(x) > 1L
-  if (!can_fork) {
+  if (n_workers <= 1L || length(x) <= 1L) {
     return(lapply(x, FUN, ...))
   }
-  parallel::mclapply(x, FUN, ..., mc.cores = n_workers)
+  if (.Platform$OS.type == "windows") {
+    cl <- parallel::makeCluster(n_workers)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
+    parallel::parLapply(cl, x, FUN, ...)
+  } else {
+    parallel::mclapply(x, FUN, ..., mc.cores = n_workers, mc.preschedule = TRUE)
+  }
 }
 
 loop <- function(x,
