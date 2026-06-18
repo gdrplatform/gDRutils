@@ -171,7 +171,11 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 
 .parallel_lapply <- function(x, FUN, ...) {
   n_workers <- .get_parallel_workers()
-  if (n_workers <= 1L || .Platform$OS.type == "windows" || length(x) <= 1L) {
+  can_fork <- n_workers > 1L &&
+    .Platform$OS.type != "windows" &&
+    Sys.info()[["sysname"]] != "Darwin" &&
+    length(x) > 1L
+  if (!can_fork) {
     return(lapply(x, FUN, ...))
   }
   parallel::mclapply(x, FUN, ..., mc.cores = n_workers)
