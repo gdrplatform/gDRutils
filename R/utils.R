@@ -190,7 +190,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 
 loop <- function(x,
                  FUN,
-                 parallelize = TRUE,
+                 parallelize = as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE")),
                  use_batch = as.logical(Sys.getenv("GDR_USE_BATCH", "FALSE")),
                  temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
                  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
