@@ -265,7 +265,7 @@ loop <- function(x,
 
     return(final_results)
   } else {
-    apply_fun(x, FUN, ...)
+    invisible(apply_fun(x, FUN, ...))
   }
 }
 
