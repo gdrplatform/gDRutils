@@ -423,6 +423,7 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
   checkmate::assert_numeric(h)
   assert_equal_input_len(outlier = c, x_inf, x_0, ec50, h)
 
+  # avoid issues with c=0 for DRCConstantFitResult
   as.numeric(ifelse(c > 0,
                     x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h),
                     x_0))
@@ -611,18 +612,14 @@ logistic_metrics <- function(c, x_metrics) {
   lapply(template, function(x) NA)
 }
 
-.metric_output_template_cache <- new.env(parent = emptyenv())
-
+#' Build a named list of NA values for all response metric columns.
 #' @keywords internal
 .metric_output_template <- function() {
-  if (is.null(.metric_output_template_cache$cols)) {
-    resp_metric_all_cols <- get_header("response_metrics")
-    resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
-    out <- as.list(rep(NA, length(resp_metric_cols)))
-    names(out) <- resp_metric_cols
-    .metric_output_template_cache$cols <- out
-  }
-  .metric_output_template_cache$cols
+  resp_metric_all_cols <- get_header("response_metrics")
+  resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
+  out <- as.list(rep(NA, length(resp_metric_cols)))
+  names(out) <- resp_metric_cols
+  out
 }
 
 

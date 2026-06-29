@@ -165,8 +165,10 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 
 #' @keywords internal
 .get_parallel_workers <- function() {
-  n <- as.integer(Sys.getenv("GDR_WORKERS", parallel::detectCores() - 1L))
-  max(1L, min(n, parallel::detectCores()))
+  cores <- parallel::detectCores()
+  if (is.na(cores)) cores <- 1L
+  n <- as.integer(Sys.getenv("GDR_WORKERS", max(1L, cores - 1L)))
+  max(1L, min(n, cores))
 }
 
 .parallel_lapply <- function(x, FUN, ...) {
@@ -199,6 +201,7 @@ loop <- function(x,
   checkmate::assert_vector(x, null.ok = FALSE)
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
+  checkmate::assert_flag(use_batch)
 
   apply_fun <- if (parallelize) .parallel_lapply else lapply
 
