@@ -1,5 +1,8 @@
 ## gDRutils 1.11.4 - 2026-06-30
 * add `precomputed_metadata` parameter to `df_to_bm_assay` to skip redundant `split_SE_components` calls
+* optimize `split_SE_components` to use data.table operations instead of S4 DataFrame intermediates
+* vectorize `add_rownames_to_metadata` with `do.call(paste, ...)` replacing row-wise `apply`
+* optimize `identify_linear_dependence` with `data.table::uniqueN` replacing `split` + `lapply`
 
 ## gDRutils 1.11.3 - 2026-05-27
 * apply updated gDRstyle rules
