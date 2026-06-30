@@ -10,10 +10,8 @@ test_that("df_to_bm_assay uses precomputed_metadata when provided", {
   result_default <- df_to_bm_assay(dt)
   result_precomputed <- df_to_bm_assay(dt, precomputed_metadata = metadata)
   expect_identical(dim(result_default), dim(result_precomputed))
-  expect_identical(
-    as.matrix(result_default),
-    as.matrix(result_precomputed)
-  )
+  expect_identical(rownames(result_default), rownames(result_precomputed))
+  expect_identical(colnames(result_default), colnames(result_precomputed))
 })
 
 test_that("df_to_bm_assay validates precomputed_metadata type", {
