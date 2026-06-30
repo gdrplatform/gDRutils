@@ -10,6 +10,8 @@
 #'
 #' @param data data.table with drug-response data
 #' @param discard_keys a vector of keys that should be discarded
+#' @param precomputed_metadata optional named list from a prior
+#'   \code{\link{split_SE_components}} call to avoid recomputation
 #' @keywords convert
 #'
 #' @examples
@@ -20,11 +22,17 @@
 #' @export
 df_to_bm_assay <-
   function(data,
-           discard_keys = NULL) {
+           discard_keys = NULL,
+           precomputed_metadata = NULL) {
     stopifnot(any(inherits(data, "data.table"), checkmate::test_character(data)))
     checkmate::assert_character(discard_keys, null.ok = TRUE)
+    checkmate::assert_list(precomputed_metadata, null.ok = TRUE)
 
-    allMetadata <- split_SE_components(data, nested_keys = discard_keys)
+    if (!is.null(precomputed_metadata)) {
+      allMetadata <- precomputed_metadata
+    } else {
+      allMetadata <- split_SE_components(data, nested_keys = discard_keys)
+    }
 
     seColData <- data.table::as.data.table(allMetadata$condition_md)
     seRowData <- data.table::as.data.table(allMetadata$treatment_md)

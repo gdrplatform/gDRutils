@@ -1,3 +1,6 @@
+## gDRutils 1.11.4 - 2026-06-30
+* add `precomputed_metadata` parameter to `df_to_bm_assay` to skip redundant `split_SE_components` calls
+
 ## gDRutils 1.11.3 - 2026-05-27
 * apply updated gDRstyle rules
 
