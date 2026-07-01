@@ -1,6 +1,6 @@
-# Conditional lapply or bplapply with optional batch processing.
+# Conditional lapply with optional batch processing.
 
-Conditional lapply or bplapply with optional batch processing.
+Conditional lapply with optional batch processing.
 
 ## Usage
 
@@ -8,7 +8,7 @@ Conditional lapply or bplapply with optional batch processing.
 loop(
   x,
   FUN,
-  parallelize = TRUE,
+  parallelize = as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE")),
   use_batch = as.logical(Sys.getenv("GDR_USE_BATCH", "FALSE")),
   temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
   batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
@@ -31,7 +31,7 @@ loop(
 - parallelize:
 
   Logical indicating whether or not to parallelize the computation.
-  Defaults to `TRUE`.
+  Defaults to `as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE"))`.
 
 - use_batch:
 
@@ -52,8 +52,6 @@ loop(
 - ...:
 
   Optional arguments passed to
-  [bplapply](https://rdrr.io/pkg/BiocParallel/man/bplapply.html) if
-  `parallelize == TRUE`, else to
   [lapply](https://rdrr.io/r/base/lapply.html).
 
 ## Value
@@ -66,8 +64,7 @@ at the end of processing.
 
 The function operates in two modes:
 
-1.  Regular mode: Directly applies `FUN` to the elements using `lapply`
-    or `bplapply`.
+1.  Regular mode: Directly applies `FUN` to the elements using `lapply`.
 
 2.  Batch mode: Saves results in batches to disk, allowing computation
     to resume from the last saved step. Batch mode is activated by
@@ -78,15 +75,6 @@ The function operates in two modes:
 ``` r
 # Regular processing
 loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
-#> [[1]]
-#> [1] 1
-#> 
-#> [[2]]
-#> [1] 4
-#> 
-#> [[3]]
-#> [1] 9
-#> 
 
 # Batch processing
 loop(1:10, function(x) x^2, parallelize = TRUE, use_batch = TRUE)

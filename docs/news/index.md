@@ -1,5 +1,9 @@
 # Changelog
 
+## gDRutils 1.11.4 - 2026-06-11
+
+- improve curve fitting performance
+
 ## gDRutils 1.11.3 - 2026-05-27
 
 - apply updated gDRstyle rules

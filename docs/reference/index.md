@@ -315,7 +315,7 @@
 - [`is_mae_empty()`](https://gdrplatform.github.io/gDRstyle/reference/is_mae_empty.md)
   : is_mae_empty
 - [`loop()`](https://gdrplatform.github.io/gDRstyle/reference/loop.md) :
-  Conditional lapply or bplapply with optional batch processing.
+  Conditional lapply with optional batch processing.
 - [`map_conc_to_standardized_conc()`](https://gdrplatform.github.io/gDRstyle/reference/map_conc_to_standardized_conc.md)
   : Create a mapping of concentrations to standardized concentrations.
 - [`mcolData()`](https://gdrplatform.github.io/gDRstyle/reference/mcolData.md)
