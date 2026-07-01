@@ -631,6 +631,7 @@ average_biological_replicates_dt <- function(
   checkmate::assert_character(geometric_average_fields)
   checkmate::assert_character(fit_type_average_fields)
   checkmate::assert_flag(add_sd)
+  checkmate::assert_flag(copy_dt)
 
   if (copy_dt) {
     data <- data.table::copy(dt)
@@ -702,18 +703,18 @@ average_biological_replicates_dt <- function(
   }
 
   if (length(geometric_average_fields) > 0L) {
-    log_cols <- paste0(".log_", geometric_average_fields)
-    data[, (log_cols) := lapply(.SD, log), .SDcols = geometric_average_fields]
     if (fixed) {
-      log_lo <- log(1e-5)
-      log_hi <- log(50)
-      for (f in log_cols) {
+      lo <- 1e-5
+      hi <- 50
+      for (f in geometric_average_fields) {
         v <- data[[f]]
-        v[v < log_lo] <- log_lo
-        v[v > log_hi] <- log_hi
+        v[which(v < lo)] <- lo
+        v[which(v > hi)] <- hi
         data.table::set(data, j = f, value = v)
       }
     }
+    log_cols <- paste0(".log_", geometric_average_fields)
+    data[, (log_cols) := lapply(.SD, log), .SDcols = geometric_average_fields]
     data[, (log_cols) := lapply(.SD, mean, na.rm = TRUE),
          .SDcols = log_cols, by = group_by]
     data[, (geometric_average_fields) := lapply(.SD, exp), .SDcols = log_cols]
