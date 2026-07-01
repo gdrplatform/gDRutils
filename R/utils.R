@@ -128,41 +128,6 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
-#' Conditional lapply or bplapply with optional batch processing.
-#'
-#' @param x Vector (atomic or list) or an expression object.
-#' Other objects (including classed objects) will be coerced by
-#' \link[base]{as.list}
-#' @param FUN A user-defined function to apply to each element of `x`.
-#' @param parallelize Logical indicating whether or not to parallelize the computation.
-#' Defaults to \code{as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE"))}.
-#' @param use_batch Logical indicating whether to use batch processing to save intermediate results.
-#' Defaults to \code{FALSE}.
-#' @param temp_dir Character string specifying the directory where batch results are saved.
-#' Defaults to \code{tempdir()}.
-#' @param batch_size Integer specifying the number of elements to process in each batch during batch mode.
-#' Defaults to \code{100}.
-#' @param ... Optional arguments passed to \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
-#' else to \link[base]{lapply}.
-#'
-#' @return List containing output of \code{FUN} applied to every element in \code{x}.
-#' When batch processing is enabled, results are saved incrementally and merged at the end of processing.
-#'
-#' @details The function operates in two modes:
-#' 1. Regular mode: Directly applies \code{FUN} to the elements using \code{lapply} or \code{bplapply}.
-#' 2. Batch mode: Saves results in batches to disk, allowing computation to resume from the last saved step.
-#' Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
-#'
-#' @examples
-#' # Regular processing
-#' loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
-#'
-#' # Batch processing
-#' loop(1:10, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
-#'
-#' @keywords package_utils
-#' @export
-
 #' @keywords internal
 .get_parallel_workers <- function() {
   cores <- parallel::detectCores()
@@ -190,6 +155,39 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   parallel::parLapply(cl, x, FUN, ...)
 }
 
+#' Conditional lapply with optional batch processing.
+#'
+#' @param x Vector (atomic or list) or an expression object.
+#' Other objects (including classed objects) will be coerced by
+#' \link[base]{as.list}
+#' @param FUN A user-defined function to apply to each element of `x`.
+#' @param parallelize Logical indicating whether or not to parallelize the computation.
+#' Defaults to \code{as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE"))}.
+#' @param use_batch Logical indicating whether to use batch processing to save intermediate results.
+#' Defaults to \code{FALSE}.
+#' @param temp_dir Character string specifying the directory where batch results are saved.
+#' Defaults to \code{tempdir()}.
+#' @param batch_size Integer specifying the number of elements to process in each batch during batch mode.
+#' Defaults to \code{100}.
+#' @param ... Optional arguments passed to \link[base]{lapply}.
+#'
+#' @return List containing output of \code{FUN} applied to every element in \code{x}.
+#' When batch processing is enabled, results are saved incrementally and merged at the end of processing.
+#'
+#' @details The function operates in two modes:
+#' 1. Regular mode: Directly applies \code{FUN} to the elements using \code{lapply}.
+#' 2. Batch mode: Saves results in batches to disk, allowing computation to resume from the last saved step.
+#' Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
+#'
+#' @examples
+#' # Regular processing
+#' loop(list(1, 2, 3), function(x) x^2, parallelize = FALSE, use_batch = FALSE)
+#'
+#' # Batch processing
+#' loop(1:10, function(x) x^2, parallelize = TRUE, use_batch = TRUE)
+#'
+#' @keywords package_utils
+#' @export
 loop <- function(x,
                  FUN,
                  parallelize = as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE")),
