@@ -135,7 +135,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' \link[base]{as.list}
 #' @param FUN A user-defined function to apply to each element of `x`.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
-#' Defaults to \code{TRUE}.
+#' Defaults to \code{as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE"))}.
 #' @param use_batch Logical indicating whether to use batch processing to save intermediate results.
 #' Defaults to \code{FALSE}.
 #' @param temp_dir Character string specifying the directory where batch results are saved.

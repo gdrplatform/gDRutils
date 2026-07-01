@@ -24,7 +24,6 @@ LazyLoad: yes
 Depends:
     R (>= 4.2)
 Imports:
-    BiocParallel,
     BumpyMatrix,
     checkmate,
     data.table,
