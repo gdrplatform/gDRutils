@@ -150,7 +150,7 @@ identify_linear_dependence <- function(df, identifier) {
   ids <- df[[identifier]]
   n_id <- data.table::uniqueN(ids)
   for (j in setdiff(colnames(df), identifier)) {
-    n_id_val <- data.table::uniqueN(data.table::data.table(ids, df[[j]]))
+    n_id_val <- data.table::uniqueN(df, by = c(identifier, j))
     if (n_id == n_id_val) {
       entries <- c(entries, j)
     }
@@ -164,11 +164,12 @@ add_rownames_to_metadata <- function(md, cols) {
   col_names <- unname(unlist(cols))
   if (inherits(md, "data.table")) {
     md <- unique(md[, col_names, with = FALSE])
-    rn <- do.call(paste, c(lapply(col_names, function(cn) md[[cn]]), sep = "_"))
-    md <- S4Vectors::DataFrame(md, check.names = FALSE)
   } else {
     md <- unique(md[, col_names, drop = FALSE])
-    rn <- do.call(paste, c(lapply(col_names, function(cn) md[[cn]]), sep = "_"))
+  }
+  rn <- do.call(paste, c(as.list(md), sep = "_"))
+  if (inherits(md, "data.table")) {
+    md <- S4Vectors::DataFrame(md, check.names = FALSE)
   }
   rownames(md) <- rn
   md <- md[!names(md) %in% c("unique_id")]

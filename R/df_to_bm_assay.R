@@ -29,6 +29,10 @@ df_to_bm_assay <-
     checkmate::assert_list(precomputed_metadata, null.ok = TRUE)
 
     if (!is.null(precomputed_metadata)) {
+      checkmate::assert_names(
+        names(precomputed_metadata),
+        must.include = c("condition_md", "treatment_md", "data_fields")
+      )
       allMetadata <- precomputed_metadata
     } else {
       allMetadata <- split_SE_components(data, nested_keys = discard_keys)
