@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{loop}
 \alias{loop}
-\title{Conditional lapply or bplapply with optional batch processing.}
+\title{Conditional lapply with optional batch processing.}
 \usage{
 loop(
   x,
   FUN,
-  parallelize = TRUE,
+  parallelize = as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE")),
   use_batch = as.logical(Sys.getenv("GDR_USE_BATCH", "FALSE")),
   temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
   batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
@@ -22,7 +22,7 @@ Other objects (including classed objects) will be coerced by
 \item{FUN}{A user-defined function to apply to each element of \code{x}.}
 
 \item{parallelize}{Logical indicating whether or not to parallelize the computation.
-Defaults to \code{TRUE}.}
+Defaults to \code{as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE"))}.}
 
 \item{use_batch}{Logical indicating whether to use batch processing to save intermediate results.
 Defaults to \code{FALSE}.}
@@ -33,20 +33,19 @@ Defaults to \code{tempdir()}.}
 \item{batch_size}{Integer specifying the number of elements to process in each batch during batch mode.
 Defaults to \code{100}.}
 
-\item{...}{Optional arguments passed to \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
-else to \link[base]{lapply}.}
+\item{...}{Optional arguments passed to \link[base]{lapply}.}
 }
 \value{
 List containing output of \code{FUN} applied to every element in \code{x}.
 When batch processing is enabled, results are saved incrementally and merged at the end of processing.
 }
 \description{
-Conditional lapply or bplapply with optional batch processing.
+Conditional lapply with optional batch processing.
 }
 \details{
 The function operates in two modes:
 \enumerate{
-\item Regular mode: Directly applies \code{FUN} to the elements using \code{lapply} or \code{bplapply}.
+\item Regular mode: Directly applies \code{FUN} to the elements using \code{lapply}.
 \item Batch mode: Saves results in batches to disk, allowing computation to resume from the last saved step.
 Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
 }
