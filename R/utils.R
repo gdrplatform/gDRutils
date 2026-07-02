@@ -1417,36 +1417,37 @@ split_big_table_for_xlsx <- function(dt_list,
   checkmate::assert_number(max_row, null.ok = TRUE)
   checkmate::assert_number(max_col, null.ok = TRUE)
 
-  to_big_data_list <- lapply(
-    dt_list,
-    FUN = function(x) {
-      c(isTRUE(NROW(x) > max_row), isTRUE(NCOL(x) > max_col))
-    }
-  )
-
   out_list <- list()
-  if (any(unlist(to_big_data_list))) {
-    for (i in seq_along(to_big_data_list)) {
-      if (to_big_data_list[[i]][1] && to_big_data_list[[i]][2]) {
-        stop("the array is too large in both dimensions, run the functions one dimension at a time")
-      } else if (to_big_data_list[[i]][1]) {
-        # using seq_len here causes the output format to change, e.g. from data.table to integer
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][c(seq_len(max_row)), ])
-        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][(max_row + 1):NROW(dt_list[[i]]), ])
-        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
-      } else if (to_big_data_list[[i]][2]) {
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][, .SD, .SDcols = seq_len(max_col)])
-        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_1")
-        out_list[length(out_list) + 1] <- list(dt_list[[i]][, (max_col + 1):NCOL(dt_list[[i]])])
-        names(out_list)[length(out_list)] <- paste0(names(to_big_data_list[i]), "_2")
-      } else {
-        out_list[length(out_list) + 1] <- list(dt_list[[i]])
-        names(out_list)[length(out_list)] <- names(to_big_data_list[i])
+  for (i in seq_along(dt_list)) {
+    dt <- dt_list[[i]]
+    nm <- names(dt_list)[i]
+    nr <- NROW(dt)
+    nc <- NCOL(dt)
+    too_many_rows <- isTRUE(nr > max_row)
+    too_many_cols <- isTRUE(nc > max_col)
+
+    if (too_many_rows && too_many_cols) {
+      stop("the array is too large in both dimensions, ",
+           "run the functions one dimension at a time")
+    } else if (too_many_rows) {
+      n_parts <- ceiling(nr / max_row)
+      for (p in seq_len(n_parts)) {
+        start <- (p - 1L) * max_row + 1L
+        end <- min(p * max_row, nr)
+        suffix <- if (n_parts > 1L) paste0("_", p) else ""
+        out_list[[paste0(nm, suffix)]] <- dt[start:end]
       }
+    } else if (too_many_cols) {
+      n_parts <- ceiling(nc / max_col)
+      for (p in seq_len(n_parts)) {
+        start <- (p - 1L) * max_col + 1L
+        end <- min(p * max_col, nc)
+        suffix <- if (n_parts > 1L) paste0("_", p) else ""
+        out_list[[paste0(nm, suffix)]] <- dt[, .SD, .SDcols = start:end]
+      }
+    } else {
+      out_list[[nm]] <- dt
     }
-  } else {
-    out_list <- dt_list
   }
   out_list
 }

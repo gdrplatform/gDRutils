@@ -1130,6 +1130,15 @@ test_that("split_big_table_for_xlsx works as expected", {
   out_2 <- split_big_table_for_xlsx(dt_list_2, max_row = 2, max_col = NULL)
   out_2 <- split_big_table_for_xlsx(out_2, max_row = NULL, max_col = 2)
   expect_equal(length(out_2), 4)
+
+  # tables >2x the limit must produce >2 sheets
+  dt_big <- list(big = data.table::data.table(x = seq_len(25), y = seq_len(25)))
+  out_3 <- split_big_table_for_xlsx(dt_big, max_row = 10)
+  expect_equal(length(out_3), 3L)
+  expect_equal(names(out_3), c("big_1", "big_2", "big_3"))
+  expect_equal(NROW(out_3[[1]]), 10L)
+  expect_equal(NROW(out_3[[2]]), 10L)
+  expect_equal(NROW(out_3[[3]]), 5L)
 })
 
 test_that("get_gDR_session_info behaves correctly under various conditions", {
