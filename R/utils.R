@@ -128,28 +128,54 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
-#' Conditional lapply or bplapply with optional batch processing.
+#' @keywords internal
+.get_parallel_workers <- function() {
+  cores <- parallel::detectCores()
+  if (is.na(cores)) cores <- 1L
+  n <- as.integer(Sys.getenv("GDR_WORKERS", max(1L, cores - 1L)))
+  max(1L, min(n, cores))
+}
+
+.parallel_lapply <- function(x, FUN, ...) {
+  n_workers <- .get_parallel_workers()
+  if (n_workers <= 1L || length(x) <= 1L) {
+    return(lapply(x, FUN, ...))
+  }
+  cl <- parallel::makeCluster(n_workers)
+  on.exit(parallel::stopCluster(cl), add = TRUE)
+  loaded_pkgs <- .packages()
+  parallel::clusterCall(cl, function(pkgs) {
+    for (pkg in pkgs) library(pkg, character.only = TRUE)
+  }, loaded_pkgs)
+  caller_env <- parent.frame(2L)
+  vars_to_export <- ls(caller_env)
+  if (length(vars_to_export)) {
+    parallel::clusterExport(cl, varlist = vars_to_export, envir = caller_env)
+  }
+  parallel::parLapply(cl, x, FUN, ...)
+}
+
+#' Conditional lapply with optional batch processing.
 #'
 #' @param x Vector (atomic or list) or an expression object.
 #' Other objects (including classed objects) will be coerced by
 #' \link[base]{as.list}
 #' @param FUN A user-defined function to apply to each element of `x`.
 #' @param parallelize Logical indicating whether or not to parallelize the computation.
-#' Defaults to \code{TRUE}.
+#' Defaults to \code{as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE"))}.
 #' @param use_batch Logical indicating whether to use batch processing to save intermediate results.
 #' Defaults to \code{FALSE}.
 #' @param temp_dir Character string specifying the directory where batch results are saved.
 #' Defaults to \code{tempdir()}.
 #' @param batch_size Integer specifying the number of elements to process in each batch during batch mode.
 #' Defaults to \code{100}.
-#' @param ... Optional arguments passed to \link[BiocParallel]{bplapply} if \code{parallelize == TRUE},
-#' else to \link[base]{lapply}.
+#' @param ... Optional arguments passed to \link[base]{lapply}.
 #'
 #' @return List containing output of \code{FUN} applied to every element in \code{x}.
 #' When batch processing is enabled, results are saved incrementally and merged at the end of processing.
 #'
 #' @details The function operates in two modes:
-#' 1. Regular mode: Directly applies \code{FUN} to the elements using \code{lapply} or \code{bplapply}.
+#' 1. Regular mode: Directly applies \code{FUN} to the elements using \code{lapply}.
 #' 2. Batch mode: Saves results in batches to disk, allowing computation to resume from the last saved step.
 #' Batch mode is activated by setting \code{use_batch} to \code{TRUE}.
 #'
@@ -164,7 +190,7 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
 #' @export
 loop <- function(x,
                  FUN,
-                 parallelize = TRUE,
+                 parallelize = as.logical(Sys.getenv("GDR_PARALLELIZE", "FALSE")),
                  use_batch = as.logical(Sys.getenv("GDR_USE_BATCH", "FALSE")),
                  temp_dir = Sys.getenv("GDR_TEMP_DIR", tempdir()),
                  batch_size = as.numeric(Sys.getenv("GDR_BATCH_SIZE", 100)),
@@ -174,17 +200,18 @@ loop <- function(x,
   checkmate::assert_function(FUN)
   checkmate::assert_flag(parallelize)
   checkmate::assert_flag(use_batch)
-  checkmate::assert_string(temp_dir)
-  checkmate::assert_count(batch_size, positive = TRUE)
 
-  parent_call <- sys.call(-1)
-  parent_name <- if (!is.null(parent_call)) {
-    deparse(parent_call[[1]])
-  } else {
-    "unknown_parent_fun"
-  }
+  apply_fun <- if (parallelize) .parallel_lapply else lapply
 
   if (use_batch) {
+    checkmate::assert_string(temp_dir)
+    checkmate::assert_count(batch_size, positive = TRUE)
+    parent_call <- sys.call(-1)
+    parent_name <- if (!is.null(parent_call)) {
+      deparse(parent_call[[1]])
+    } else {
+      "unknown_parent_fun"
+    }
     if (!dir.exists(temp_dir)) {
       dir.create(temp_dir, recursive = TRUE)
     }
@@ -217,51 +244,29 @@ loop <- function(x,
       start_index <- indices[length(indices)] + batch_size
     }
 
-    if (parallelize) {
-      BiocParallel::bplapply(indices[indices >= start_index], function(start_index) {
-        end_index <- min(start_index, total_iterations)
-        process_batch(x[(start_index - batch_size + 1):end_index],
-                      start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
-      })
-    } else {
-      lapply(indices[indices >= start_index], function(start_index) {
-        end_index <- min(start_index, total_iterations)
-        process_batch(x[(start_index - batch_size + 1):end_index],
-                      start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
-      })
-    }
+    apply_fun(indices[indices >= start_index], function(start_index) {
+      end_index <- min(start_index, total_iterations)
+      process_batch(x[(start_index - batch_size + 1):end_index],
+                    start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+    })
 
-    final_results <- list()
-    for (start_index in indices) {
+    final_results <- vector("list", length(indices))
+    for (bi in seq_along(indices)) {
       file_path <- file.path(temp_dir,
                              paste0(fun_name, "_",
                                     unique_id, "_",
-                                    start_index, "_of_",
+                                    indices[bi], "_of_",
                                     total_iterations, "_batch.qs2"))
       if (file.exists(file_path)) {
-        batch_results <- qs2::qs_read(file_path)
-        final_results <- c(final_results, batch_results)
-      }
-    }
-
-    for (start_index in indices) {
-      file_path <- file.path(temp_dir,
-                             paste0(fun_name, "_",
-                                    unique_id, "_",
-                                    start_index, "_of_",
-                                    total_iterations, "_batch.qs2"))
-      if (file.exists(file_path)) {
+        final_results[[bi]] <- qs2::qs_read(file_path)
         file.remove(file_path)
       }
     }
+    final_results <- unlist(final_results, recursive = FALSE)
 
     return(final_results)
   } else {
-    if (parallelize) {
-      return(BiocParallel::bplapply(x, FUN, ...))
-    } else {
-      return(lapply(x, FUN, ...))
-    }
+    invisible(apply_fun(x, FUN, ...))
   }
 }
 
@@ -378,7 +383,9 @@ apply_bumpy_function <- function(se,
     }
   }, parallelize = parallelize)
 
-  out <- S4Vectors::DataFrame(do.call(rbind, out))
+  out <- out[!vapply(out, is.null, logical(1))]
+  out <- data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
+  out <- S4Vectors::DataFrame(out)
 
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
                                                row = out$row,

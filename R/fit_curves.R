@@ -258,7 +258,7 @@ logisticFit <-
     ## Perform a 3-param or 4-param fit.
     ## Fit type is determined based on number of free variables available.
     fit_param <- c("h", "x_inf", "x_0", "ec50")
-    controls <- drc::drmc(relTol = 1e-06, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
+    controls <- drc::drmc(relTol = 1e-04, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
 
     out <-
       .setLogisticFit(out = out, df_ = df_, n_point_cutoff = n_point_cutoff, fit_param = fit_param,
@@ -423,9 +423,10 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
   checkmate::assert_numeric(h)
   assert_equal_input_len(outlier = c, x_inf, x_0, ec50, h)
 
+  # avoid issues with c=0 for DRCConstantFitResult
   as.numeric(ifelse(c > 0,
                     x_inf + (x_0 - x_inf) / (1 + (c / ec50) ^ h),
-                    x_0)) # avoid issues with c=0 for DRCConstantFitResult
+                    x_0))
 }
 
 
@@ -607,12 +608,15 @@ logistic_metrics <- function(c, x_metrics) {
 #' @keywords fit_curves
 #' @export
 .setup_metric_output <- function() {
-  resp_metric_all_cols <- get_header("response_metrics")
-  # remove cols ending with "_sd"
-  # they are not present in the primary assays
-  # but only with the assays followed by averaging of biological replicates
-  resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
+  template <- .metric_output_template()
+  lapply(template, function(x) NA)
+}
 
+#' Build a named list of NA values for all response metric columns.
+#' @keywords internal
+.metric_output_template <- function() {
+  resp_metric_all_cols <- get_header("response_metrics")
+  resp_metric_cols <- resp_metric_all_cols[!endsWith(resp_metric_all_cols, "_sd")]
   out <- as.list(rep(NA, length(resp_metric_cols)))
   names(out) <- resp_metric_cols
   out
@@ -636,8 +640,7 @@ logistic_metrics <- function(c, x_metrics) {
 
 #' @keywords internal
 has_dups <- function(vec) {
-  freq <- table(vec)
-  any(freq != 1L)
+  anyDuplicated(vec) > 0L
 }
 
 
@@ -668,10 +671,9 @@ average_dups <- function(dt, col) {
 
 #' @keywords internal
 .set_model_fit_params <- function(out, model, fit_param) {
-  for (p in fit_param) {
-    # drm will output model with the ":(Intercept)" term concatenated at end.
-    out[[p]] <- stats::coef(model)[[paste0(p, ":(Intercept)")]]
-  }
+  coefs <- stats::coef(model)
+  param_names <- paste0(fit_param, ":(Intercept)")
+  out[fit_param] <- coefs[param_names]
   out
 }
 
