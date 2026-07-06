@@ -707,10 +707,7 @@ average_biological_replicates_dt <- function(
       lo <- 1e-5
       hi <- 50
       for (f in geometric_average_fields) {
-        v <- data[[f]]
-        v[which(v < lo)] <- lo
-        v[which(v > hi)] <- hi
-        data.table::set(data, j = f, value = v)
+        data.table::set(data, j = f, value = pmax(lo, pmin(hi, data[[f]])))
       }
     }
     log_cols <- paste0(".log_", geometric_average_fields)
@@ -724,7 +721,7 @@ average_biological_replicates_dt <- function(
   if (NROW(r2_col)) {
     r2_group <- setdiff(group_by, fit_type_average_fields)
     data <- data.table::rbindlist(lapply(r2_col, function(col) {
-      data[data[, .I[which.max(get(col))], by = r2_group]$V1]
+      data[data[, .I[which.max(replace(get(col), is.na(get(col)), -Inf))], by = r2_group]$V1]
     }), use.names = TRUE, fill = TRUE)
   }
 
