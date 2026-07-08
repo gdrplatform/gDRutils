@@ -1,5 +1,5 @@
 ## gDRutils 1.11.5 - 2026-07-01
-* optimize average_biological_replicates_dt with GForce-friendly operations
+* improve average_biological_replicates_dt performance with GForce-friendly operations
 
 ## gDRutils 1.11.4 - 2026-06-11
 * improve curve fitting performance
