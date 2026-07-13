@@ -1,5 +1,4 @@
 
-
 #' df_to_bm_assay
 #'
 #' Convert data.table with dose-response data into a BumpyMatrix assay.
@@ -28,11 +27,10 @@ df_to_bm_assay <-
     checkmate::assert_character(discard_keys, null.ok = TRUE)
     checkmate::assert_list(precomputed_metadata, null.ok = TRUE)
 
-    if (!is.null(precomputed_metadata)) {
-      checkmate::assert_names(
-        names(precomputed_metadata),
-        must.include = c("condition_md", "treatment_md", "data_fields")
-      )
+    required <- c("condition_md", "treatment_md", "data_fields")
+    if (!is.null(precomputed_metadata) &&
+        checkmate::test_names(names(precomputed_metadata),
+                              must.include = required)) {
       allMetadata <- precomputed_metadata
     } else {
       allMetadata <- split_SE_components(data, nested_keys = discard_keys)

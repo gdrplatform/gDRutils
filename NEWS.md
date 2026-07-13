@@ -1,5 +1,6 @@
-## gDRutils 1.11.4 - 2026-06-30
+## gDRutils 1.11.5 - 2026-07-13
 * optimize `split_SE_components` and `df_to_bm_assay` performance
+* fall back to recomputation when `precomputed_metadata` is incomplete
 
 ## gDRutils 1.11.4 - 2026-06-11
 * improve curve fitting performance

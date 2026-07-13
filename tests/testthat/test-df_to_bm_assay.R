@@ -21,3 +21,11 @@ test_that("df_to_bm_assay validates precomputed_metadata type", {
     "list"
   )
 })
+
+test_that("df_to_bm_assay falls back to recomputation for incomplete precomputed_metadata", {
+  dt <- data.table::data.table(Gnumber = "G1", clid = "CL1", x = 1)
+  incomplete <- list(condition_md = data.table::data.table(clid = "CL1"))
+  result_fallback <- df_to_bm_assay(dt, precomputed_metadata = incomplete)
+  result_default <- df_to_bm_assay(dt)
+  expect_identical(dim(result_fallback), dim(result_default))
+})
