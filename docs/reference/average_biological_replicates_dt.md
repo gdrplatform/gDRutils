@@ -13,7 +13,8 @@ average_biological_replicates_dt(
   geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
   fit_type_average_fields = get_header("metric_average_fields")$fit_type,
   blacklisted_fields = get_header("metric_average_fields")$blacklisted,
-  add_sd = FALSE
+  add_sd = FALSE,
+  copy_dt = TRUE
 )
 ```
 
@@ -53,6 +54,11 @@ average_biological_replicates_dt(
 - add_sd:
 
   Flag indicating whether to add standard deviation and count columns.
+
+- copy_dt:
+
+  Flag indicating whether to copy the input data.table before modifying.
+  Set to `FALSE` when the caller already provides a copy.
 
 ## Value
 
