@@ -12,7 +12,8 @@ average_biological_replicates_dt(
   geometric_average_fields = get_header("metric_average_fields")$geometric_mean,
   fit_type_average_fields = get_header("metric_average_fields")$fit_type,
   blacklisted_fields = get_header("metric_average_fields")$blacklisted,
-  add_sd = FALSE
+  add_sd = FALSE,
+  copy_dt = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ that should be treated as a column with fit type data}
 that should be skipped in averaging}
 
 \item{add_sd}{Flag indicating whether to add standard deviation and count columns.}
+
+\item{copy_dt}{Flag indicating whether to copy the input data.table before
+modifying. Set to \code{FALSE} when the caller already provides a copy.}
 }
 \value{
 data.table without replicates
