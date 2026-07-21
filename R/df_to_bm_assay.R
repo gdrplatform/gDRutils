@@ -1,4 +1,3 @@
-
 #' df_to_bm_assay
 #'
 #' Convert data.table with dose-response data into a BumpyMatrix assay.

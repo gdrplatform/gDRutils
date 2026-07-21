@@ -1,5 +1,5 @@
 ## gDRutils 1.11.6 - 2026-07-20
-* optimize `split_SE_components` and `df_to_bm_assay` performance
+* remove redundant `split_SE_components` calls
 * fall back to recomputation when `precomputed_metadata` is incomplete
 
 ## gDRutils 1.11.5 - 2026-07-01
