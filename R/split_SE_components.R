@@ -80,7 +80,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     logical(1))
   # Get experiment columns.
   constant_cols <- remaining_cols[singletons]
-  exp_md <- unique(md[, constant_cols, with = FALSE])
+  exp_md <- as.data.frame(unique(md[, constant_cols, with = FALSE]))
   remaining_cols <- remaining_cols[!singletons]
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
   cl_subset_cols <- c(unname(unlist(cell_cols)), remaining_cols)
