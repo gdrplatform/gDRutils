@@ -1,6 +1,5 @@
 ## gDRutils 1.11.6 - 2026-07-20
 * remove redundant `split_SE_components` calls
-* recompute when `precomputed_metadata` is incomplete instead of raising an error
 
 ## gDRutils 1.11.5 - 2026-07-01
 * improve average_biological_replicates_dt performance with GForce-friendly operations
