@@ -1476,9 +1476,11 @@ get_gDR_session_info <- function(pattern = "^gDR") {
   }
 
   pkg_data[, UsedVersion := Version[order(match(LibPath, .libPaths()))[1]], by = Package] # nolint
-  pkg_data[, MaxVersion := max(Version), by = Package]
+  pkg_data[, MaxVersion := as.character(max(numeric_version(Version))), by = Package]
 
-  outdated_pkgs <- pkg_data[LibPath != .Library & UsedVersion < MaxVersion, .(Package, UsedVersion, MaxVersion)]
+  outdated_pkgs <- pkg_data[LibPath != .Library &
+                              numeric_version(UsedVersion) < numeric_version(MaxVersion),
+                            .(Package, UsedVersion, MaxVersion)]
 
   if (NROW(outdated_pkgs) > 0) {
     warning_msg <- paste("The following packages have a user version older than the system version:",

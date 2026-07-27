@@ -1,3 +1,6 @@
+## gDRutils 1.11.6 - 2026-07-27
+* fix `get_gDR_session_info` to compare versions numerically, avoiding false "outdated" warnings (e.g. 0.2.100 vs 0.2.99)
+
 ## gDRutils 1.11.5 - 2026-07-01
 * improve average_biological_replicates_dt performance with GForce-friendly operations
 
