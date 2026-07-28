@@ -560,25 +560,25 @@ sessionInfo()
 #>  [5] Seqinfo_1.2.0               IRanges_2.46.0             
 #>  [7] S4Vectors_0.50.1            BiocGenerics_0.58.1        
 #>  [9] generics_0.1.4              MatrixGenerics_1.24.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.5            
+#> [11] matrixStats_1.5.0           gDRutils_1.11.6            
 #> [13] BiocStyle_2.40.0           
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] sass_0.4.10           SparseArray_1.12.2    stringi_1.8.7        
-#>  [4] lattice_0.22-9        magrittr_2.0.5        digest_0.6.39        
-#>  [7] evaluate_1.0.5        grid_4.6.1            bookdown_0.47        
-#> [10] fastmap_1.2.0         qs2_0.2.2             jsonlite_2.0.0       
-#> [13] Matrix_1.7-5          backports_1.5.1       BiocManager_1.30.27  
-#> [16] textshaping_1.0.5     jquerylib_0.1.4       abind_1.4-8          
-#> [19] cli_3.6.6             rlang_1.3.0           XVector_0.52.0       
-#> [22] cachem_1.1.0          DelayedArray_0.38.2   yaml_2.3.12          
-#> [25] otel_0.2.0            S4Arrays_1.12.0       tools_4.6.1          
-#> [28] checkmate_2.3.4       vctrs_0.7.3           R6_2.6.1             
-#> [31] lifecycle_1.0.5       stringr_1.6.0         stringfish_0.19.0    
-#> [34] fs_2.1.0              BumpyMatrix_1.20.0    ragg_1.5.2           
-#> [37] desc_1.4.3            pillar_1.11.1         pkgdown_2.2.1        
-#> [40] RcppParallel_5.1.11-2 bslib_0.11.0          glue_1.8.1           
-#> [43] data.table_1.18.4     Rcpp_1.1.2            systemfonts_1.3.2    
-#> [46] xfun_0.60             knitr_1.51            htmltools_0.5.9      
-#> [49] rmarkdown_2.31        compiler_4.6.1
+#>  [1] sass_0.4.10         SparseArray_1.12.2  stringi_1.8.7      
+#>  [4] lattice_0.22-9      magrittr_2.0.5      digest_0.6.39      
+#>  [7] evaluate_1.0.5      grid_4.6.1          bookdown_0.47      
+#> [10] fastmap_1.2.0       qs2_0.2.2           jsonlite_2.0.0     
+#> [13] Matrix_1.7-5        backports_1.5.1     BiocManager_1.30.27
+#> [16] textshaping_1.0.5   jquerylib_0.1.4     abind_1.4-8        
+#> [19] cli_3.6.6           rlang_1.3.0         XVector_0.52.0     
+#> [22] cachem_1.1.0        DelayedArray_0.38.2 yaml_2.3.12        
+#> [25] otel_0.2.0          S4Arrays_1.12.0     tools_4.6.1        
+#> [28] checkmate_2.3.4     vctrs_0.7.3         R6_2.6.1           
+#> [31] lifecycle_1.0.5     stringr_1.6.0       stringfish_0.19.0  
+#> [34] fs_2.1.0            BumpyMatrix_1.20.0  ragg_1.5.2         
+#> [37] desc_1.4.3          pillar_1.11.1       pkgdown_2.2.1      
+#> [40] RcppParallel_6.1.0  bslib_0.11.0        glue_1.8.1         
+#> [43] data.table_1.18.4   Rcpp_1.1.2          systemfonts_1.3.2  
+#> [46] xfun_0.60           knitr_1.51          htmltools_0.5.9    
+#> [49] rmarkdown_2.31      compiler_4.6.1
 ```

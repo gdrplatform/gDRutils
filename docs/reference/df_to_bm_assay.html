@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">df_to_bm_assay</span><span class="op">(</span><span class="va">data</span>, discard_keys <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">df_to_bm_assay</span><span class="op">(</span><span class="va">data</span>, discard_keys <span class="op">=</span> <span class="cn">NULL</span>, precomputed_metadata <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -53,6 +53,11 @@
 
 <dt id="arg-discard-keys">discard_keys<a class="anchor" aria-label="anchor" href="#arg-discard-keys"></a></dt>
 <dd><p>a vector of keys that should be discarded</p></dd>
+
+
+<dt id="arg-precomputed-metadata">precomputed_metadata<a class="anchor" aria-label="anchor" href="#arg-precomputed-metadata"></a></dt>
+<dd><p>optional named list from a prior
+<code><a href="split_SE_components.html">split_SE_components</a></code> call to avoid recomputation</p></dd>
 
 </dl></div>
     <div class="section level2">

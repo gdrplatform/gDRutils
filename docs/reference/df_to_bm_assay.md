@@ -5,7 +5,7 @@ Convert data.table with dose-response data into a BumpyMatrix assay.
 ## Usage
 
 ``` r
-df_to_bm_assay(data, discard_keys = NULL)
+df_to_bm_assay(data, discard_keys = NULL, precomputed_metadata = NULL)
 ```
 
 ## Arguments
@@ -17,6 +17,12 @@ df_to_bm_assay(data, discard_keys = NULL)
 - discard_keys:
 
   a vector of keys that should be discarded
+
+- precomputed_metadata:
+
+  optional named list from a prior
+  [`split_SE_components`](https://gdrplatform.github.io/gDRstyle/reference/split_SE_components.md)
+  call to avoid recomputation
 
 ## Value
 
