@@ -4,12 +4,15 @@
 \alias{df_to_bm_assay}
 \title{df_to_bm_assay}
 \usage{
-df_to_bm_assay(data, discard_keys = NULL)
+df_to_bm_assay(data, discard_keys = NULL, precomputed_metadata = NULL)
 }
 \arguments{
 \item{data}{data.table with drug-response data}
 
 \item{discard_keys}{a vector of keys that should be discarded}
+
+\item{precomputed_metadata}{optional named list from a prior
+\code{\link{split_SE_components}} call to avoid recomputation}
 }
 \value{
 BumpyMatrix object

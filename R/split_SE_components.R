@@ -49,11 +49,15 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
   stopifnot(any(inherits(df_, "data.table"), inherits(df_, "DataFrame")))
   checkmate::assert_character(nested_keys, null.ok = TRUE)
   checkmate::assert_choice(combine_on, c(1, 2))
+
+  if (inherits(df_, "DataFrame")) {
+    df_ <- data.table::as.data.table(df_)
+  }
+
   nested_keys <- .clean_key_inputs(nested_keys, colnames(df_))
   identifiers_md <- get_env_identifiers(simplify = TRUE)
   identifiers_md$nested_keys <- nested_keys
 
-  df_ <- S4Vectors::DataFrame(df_, check.names = FALSE)
   all_cols <- colnames(df_)
   # Identify known data fields.
   data_fields <- unique(c(get_header("raw_data"), get_header("normalized_results"),
@@ -63,7 +67,7 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
     get_header("scores_results"), get_header("excess_results"), get_header("isobolograms_results")))
   data_cols <- data_fields[data_fields %in% all_cols]
   md_cols <- setdiff(all_cols, data_cols)
-  md <- unique(df_[, md_cols])
+  md <- unique(df_[, md_cols, with = FALSE])
   colnames_list <- .extract_colnames(identifiers_md, md_cols)
   remaining_cols <- colnames_list$remaining_cols
   cell_cols <- colnames_list$cell_cols
@@ -71,15 +75,18 @@ split_SE_components <- function(df_, nested_keys = NULL, combine_on = 1L) {
 
   singletons <- vapply(remaining_cols,
     function(x) {
-      NROW(unique(md[, x, drop = FALSE])) == 1L
-      },
+      data.table::uniqueN(md[[x]]) == 1L
+    },
     logical(1))
   # Get experiment columns.
   constant_cols <- remaining_cols[singletons]
-  exp_md <- unique(md[, constant_cols, drop = FALSE])
+  exp_md <- as.data.frame(unique(md[, constant_cols, with = FALSE])) # nolint
   remaining_cols <- remaining_cols[!singletons]
   # Identify cellline properties by checking what columns have only a 1:1 mapping for each cell line.
-  cl_entries <- identify_linear_dependence(md[c(unname(unlist(cell_cols)), remaining_cols)], identifiers_md$cellline)
+  cl_subset_cols <- c(unname(unlist(cell_cols)), remaining_cols)
+  cl_entries <- identify_linear_dependence(
+    md[, cl_subset_cols, with = FALSE], identifiers_md$cellline
+  )
   remaining_cols <- setdiff(remaining_cols, cl_entries)
   md_list <- .combine_drug_and_trt_cols(md, drug_cols, cell_cols, combine_on, cl_entries, remaining_cols)
   out <- list(
@@ -140,12 +147,11 @@ identify_linear_dependence <- function(df, identifier) {
     stop(sprintf("identifier: '%s' not found, but is required for calculating linear dependence", identifier))
   }
   entries <- identifier
+  ids <- df[[identifier]]
+  n_id <- data.table::uniqueN(ids)
   for (j in setdiff(colnames(df), identifier)) {
-    prop <- split(df[[j]], as.factor(df[, identifier]))
-    prop <- lapply(prop, function(grp) {
-      length(unique(grp)) == 1L
-      })
-    if (all(unlist(prop))) {
+    n_id_val <- data.table::uniqueN(df, by = c(identifier, j))
+    if (n_id == n_id_val) {
       entries <- c(entries, j)
     }
   }
@@ -155,10 +161,17 @@ identify_linear_dependence <- function(df, identifier) {
 
 #' @keywords internal
 add_rownames_to_metadata <- function(md, cols) {
-  md <- unique(md[, unname(unlist(cols)), drop = FALSE])
-  rownames(md) <- apply(md, 1, function(x) {
-    paste(x, collapse = "_")
-    })
-  md <- md[! names(md) %in% c("unique_id")]
+  col_names <- unname(unlist(cols))
+  if (inherits(md, "data.table")) {
+    md <- unique(md[, col_names, with = FALSE])
+  } else {
+    md <- unique(md[, col_names, drop = FALSE])
+  }
+  rn <- do.call(paste, c(as.list(md), sep = "_"))
+  if (inherits(md, "data.table")) {
+    md <- S4Vectors::DataFrame(md, check.names = FALSE)
+  }
+  rownames(md) <- rn
+  md <- md[!names(md) %in% c("unique_id")]
   md
 }
