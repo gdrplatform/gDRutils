@@ -1,3 +1,6 @@
+## gDRutils 1.11.7 - 2026-07-28
+* fix `get_gDR_session_info` to compare versions numerically, avoiding false "outdated" warnings (e.g. 0.2.100 vs 0.2.99)
+
 ## gDRutils 1.11.6 - 2026-07-20
 * remove redundant `split_SE_components` calls
 

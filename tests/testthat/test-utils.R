@@ -1166,4 +1166,19 @@ test_that("get_gDR_session_info behaves correctly under various conditions", {
                 how = ip_correct_versions)
 
   expect_equal(get_gDR_session_info(), exp_dt_correct_versions)
+
+  # Version comparison must be numeric, not lexicographic (GDR-3499):
+  # 0.2.100 is newer than 0.2.99 and must NOT be flagged as outdated.
+  ip_semver <- matrix(c(
+    "gDRdummyPackage3", "0.2.100", .Library,
+    "gDRdummyPackage3", "0.2.99", .Library
+  ), nrow = 2, byrow = TRUE)
+  colnames(ip_semver) <- c("Package", "Version", "LibPath")
+
+  mockery::stub(where = get_gDR_session_info,
+                what = "utils::installed.packages",
+                how = ip_semver)
+
+  expect_no_warning(res_semver <- get_gDR_session_info(pattern = "gDRdummyPackage3"))
+  expect_equal(res_semver$Version, "0.2.100")
 })
