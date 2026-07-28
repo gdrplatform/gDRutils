@@ -560,7 +560,7 @@ sessionInfo()
 #>  [5] Seqinfo_1.2.0               IRanges_2.46.0             
 #>  [7] S4Vectors_0.50.1            BiocGenerics_0.58.1        
 #>  [9] generics_0.1.4              MatrixGenerics_1.24.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.6            
+#> [11] matrixStats_1.5.0           gDRutils_1.11.7            
 #> [13] BiocStyle_2.40.0           
 #> 
 #> loaded via a namespace (and not attached):
@@ -577,7 +577,7 @@ sessionInfo()
 #> [31] lifecycle_1.0.5     stringr_1.6.0       stringfish_0.19.0  
 #> [34] fs_2.1.0            BumpyMatrix_1.20.0  ragg_1.5.2         
 #> [37] desc_1.4.3          pillar_1.11.1       pkgdown_2.2.1      
-#> [40] RcppParallel_6.1.0  bslib_0.11.0        glue_1.8.1         
+#> [40] RcppParallel_6.1.1  bslib_0.11.0        glue_1.8.1         
 #> [43] data.table_1.18.4   Rcpp_1.1.2          systemfonts_1.3.2  
 #> [46] xfun_0.60           knitr_1.51          htmltools_0.5.9    
 #> [49] rmarkdown_2.31      compiler_4.6.1
