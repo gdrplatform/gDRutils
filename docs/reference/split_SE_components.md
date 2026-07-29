@@ -94,7 +94,7 @@ split_SE_components(data.table::data.table(clid = "CL1", Gnumber = "DrugA"))
 #> character(0)
 #> 
 #> $experiment_md
-#> data frame with 0 columns and 0 rows
+#> named list()
 #> 
 #> $identifiers_md
 #> $identifiers_md$duration

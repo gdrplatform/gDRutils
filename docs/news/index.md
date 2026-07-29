@@ -1,5 +1,10 @@
 # Changelog
 
+## gDRutils 1.11.8 - 2026-07-29
+
+- fix `split_SE_components` to return empty list instead of empty
+  data.frame when no constant columns exist
+
 ## gDRutils 1.11.7 - 2026-07-28
 
 - fix `get_gDR_session_info` to compare versions numerically, avoiding
