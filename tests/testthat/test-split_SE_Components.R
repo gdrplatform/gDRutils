@@ -70,6 +70,39 @@ test_that("split_SE_components works with colnames with -", {
   expect_true("fix5-aza" %in% names(md$treatment_md))
 })
 
+test_that("split_SE_components always returns experiment_md as a list", {
+  # Case 1: no constant columns -> empty list
+  df_no_const <- data.table::data.table(
+    clid = c("CL1", "CL2"),
+    Gnumber = c("DrugA", "DrugB"),
+    ReadoutValue = c(1.0, 2.0)
+  )
+  md_no_const <- split_SE_components(df_no_const)
+  expect_true(is.list(md_no_const$experiment_md))
+  expect_false(is.data.frame(md_no_const$experiment_md))
+  expect_equal(length(md_no_const$experiment_md), 0L)
+
+  # Case 2: constant columns present -> named list with the constant value
+  # BatchNumber is not a known identifier so it lands in experiment_md when constant
+  df_const <- data.table::data.table(
+    clid = c("CL1", "CL2"),
+    Gnumber = c("DrugA", "DrugB"),
+    Duration = c(72, 72),
+    BatchNumber = c("B1", "B1"),
+    ReadoutValue = c(1.0, 2.0)
+  )
+  md_const <- split_SE_components(df_const)
+  expect_true(is.list(md_const$experiment_md))
+  expect_false(is.data.frame(md_const$experiment_md))
+  expect_true(length(md_const$experiment_md) > 0L)
+  expect_equal(md_const$experiment_md[["BatchNumber"]], "B1")
+
+  # Case 3: standard test_df -> still a list
+  md_std <- split_SE_components(test_df)
+  expect_true(is.list(md_std$experiment_md))
+  expect_false(is.data.frame(md_std$experiment_md))
+})
+
 test_that("split_SE_components sorts non-default columns", {
   test_df3 <- data.table::copy(test_df)
   test_df3$`fix5-aza` <- sample(c(0.5, 0), size = NROW(test_df3), replace = TRUE)
