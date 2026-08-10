@@ -65,6 +65,9 @@ convert_se_assay_to_dt <- function(se,
     }
   }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
+  if (NROW(dt) == 0L && include_metadata) {
+    return(.empty_dt_with_metadata(se, dt))
+  }
   if (NROW(dt) == 0L) {
     return(dt)
   }
@@ -125,6 +128,18 @@ convert_se_assay_to_dt <- function(se,
     dt <- gDRutils::set_unique_cl_names_dt(dt)
   }
   dt
+}
+
+#' @keywords internal
+#' @return empty data.table with all columns from the assay plus rowData/colData.
+#' @noRd
+.empty_dt_with_metadata <- function(se, dt) {
+  rData <- data.table::as.data.table(rowData(se))
+  cData <- data.table::as.data.table(colData(se))
+  all_cols <- Reduce(union, list(names(dt), names(rData), names(cData)))
+  empty <- data.table::data.table(matrix(character(0), nrow = 0, ncol = length(all_cols)))
+  data.table::setnames(empty, all_cols)
+  empty
 }
 
 #' @keywords internal
