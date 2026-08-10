@@ -172,6 +172,12 @@ convert_se_assay_to_dt <- function(se,
       }
     }
     as_dt <- data.table::as.data.table(as_df)
+    # BumpyMatrix stores character columns as factors in the underlying DataFrame;
+    # coerce all factor columns to character so callers always receive strings.
+    factor_cols <- names(as_dt)[vapply(as_dt, is.factor, logical(1L))]
+    if (length(factor_cols) > 0L) {
+      as_dt[, (factor_cols) := lapply(.SD, as.character), .SDcols = factor_cols]
+    }
 
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
