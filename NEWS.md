@@ -1,3 +1,6 @@
+## gDRutils 1.11.9 - 2026-08-10
+* coerce BumpyMatrix factor columns to character in `convert_se_assay_to_dt`
+
 ## gDRutils 1.11.8 - 2026-07-29
 * fix `split_SE_components` to return empty list instead of empty data.frame when no constant columns exist
 
