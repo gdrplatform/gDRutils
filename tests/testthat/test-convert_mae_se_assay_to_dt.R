@@ -360,6 +360,77 @@ test_that("update_drug_name works as expected", {
   expect_warning(update_drug_name(dt, c("Var1", "NonExistent")), "Additional variable 'NonExistent'")
 })
 
+test_that("convert_se_assay_to_dt returns empty dt with full schema when assay has 0 rows", {
+  m <- 4
+  n <- 3
+  rnames <- LETTERS[1:m]
+  cnames <- letters[1:n]
+
+  # Build a non-empty BM first to get the correct dims, then subset to 0 rows
+  df <- S4Vectors::DataFrame(
+    r = factor(rnames, levels = rnames),
+    c = factor(rep(cnames[1], m), levels = cnames),
+    normalization_type = rep("GR", m),
+    fit_source = rep("gDR", m),
+    x = runif(m)
+  )
+  norm_full <- BumpyMatrix::splitAsBumpyMatrix(df, row = df$r, column = df$c)
+  # Create an empty BM with the same column schema by taking 0 rows of the DataFrame
+  empty_df <- df[integer(0), ]
+  norm_empty <- BumpyMatrix::splitAsBumpyMatrix(empty_df, row = empty_df$r, column = empty_df$c)
+
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(Metrics = norm_empty),
+    rowData = S4Vectors::DataFrame(DrugName = rownames(norm_empty),
+                                   Gnumber = paste0("G", seq_len(nrow(norm_empty)))),
+    colData = S4Vectors::DataFrame(CellLineName = colnames(norm_empty),
+                                   clid = paste0("C", seq_len(ncol(norm_empty))))
+  )
+
+  # include_metadata = FALSE: returns empty dt with assay columns
+  dt_no_meta <- convert_se_assay_to_dt(se, "Metrics", include_metadata = FALSE)
+  checkmate::expect_data_table(dt_no_meta, nrows = 0)
+  expect_true(all(c("normalization_type", "fit_source", "x") %in% names(dt_no_meta)))
+
+  # include_metadata = TRUE: returns empty dt with assay + rowData + colData columns
+  dt_with_meta <- convert_se_assay_to_dt(se, "Metrics", include_metadata = TRUE)
+  checkmate::expect_data_table(dt_with_meta, nrows = 0)
+  expect_true(all(c("normalization_type", "fit_source", "x") %in% names(dt_with_meta)))
+  expect_true(all(c("DrugName", "Gnumber") %in% names(dt_with_meta)))
+  expect_true(all(c("CellLineName", "clid") %in% names(dt_with_meta)))
+})
+
+
+test_that(".empty_dt_with_metadata returns correct schema", {
+  rnames <- c("A", "B")
+  cnames <- c("x", "y")
+
+  # Minimal SE with a regular matrix assay (non-BM) — testing the helper directly
+  mat <- matrix(runif(4), nrow = 2, ncol = 2, dimnames = list(rnames, cnames))
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(vals = mat),
+    rowData = S4Vectors::DataFrame(drug = rnames),
+    colData = S4Vectors::DataFrame(cell = cnames)
+  )
+  empty_assay_dt <- data.table::data.table(
+    value = numeric(0),
+    normalization_type = character(0)
+  )
+
+  result <- gDRutils:::.empty_dt_with_metadata(se, empty_assay_dt)
+
+  checkmate::expect_data_table(result, nrows = 0)
+  # all assay-schema columns present
+  expect_true(all(c("value", "normalization_type") %in% names(result)))
+  # all rowData columns present
+  expect_true("drug" %in% names(result))
+  # all colData columns present
+  expect_true("cell" %in% names(result))
+  # no duplicate column names
+  expect_equal(length(names(result)), length(unique(names(result))))
+})
+
+
 test_that("convert_se_assay_to_dt merges additional variables", {
   m <- 4
   n <- 1
