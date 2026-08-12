@@ -65,6 +65,9 @@ convert_se_assay_to_dt <- function(se,
     }
   }
   dt <- .convert_se_assay_to_dt(se, assay_name, retain_nested_rownames = retain_nested_rownames)
+  if (NROW(dt) == 0L && include_metadata) {
+    return(.empty_dt_with_metadata(se, dt))
+  }
   if (NROW(dt) == 0L) {
     return(dt)
   }
@@ -128,6 +131,18 @@ convert_se_assay_to_dt <- function(se,
 }
 
 #' @keywords internal
+#' @return empty data.table with all columns from the assay plus rowData/colData.
+#' @noRd
+.empty_dt_with_metadata <- function(se, dt) {
+  rData <- data.table::as.data.table(rowData(se))
+  cData <- data.table::as.data.table(colData(se))
+  all_cols <- Reduce(union, list(names(dt), names(rData), names(cData)))
+  empty <- data.table::data.table(matrix(character(0), nrow = 0, ncol = length(all_cols)))
+  data.table::setnames(empty, all_cols)
+  empty
+}
+
+#' @keywords internal
 #' @return data.table containing merged assay data and metadata.
 #' @noRd
 .extract_and_merge_metadata <- function(se, dt) {
@@ -172,6 +187,12 @@ convert_se_assay_to_dt <- function(se,
       }
     }
     as_dt <- data.table::as.data.table(as_df)
+    # BumpyMatrix stores character columns as factors in the underlying DataFrame;
+    # coerce all factor columns to character so callers always receive strings.
+    factor_cols <- names(as_dt)[vapply(as_dt, is.factor, logical(1L))]
+    if (length(factor_cols) > 0L) {
+      as_dt[, (factor_cols) := lapply(.SD, as.character), .SDcols = factor_cols]
+    }
 
   } else if (methods::is(object, "matrix")) {
     first <- object[1, 1][[1]]
