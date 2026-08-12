@@ -50,7 +50,7 @@ listSE <- list(
 merge_assay(listSE, "Normalized")
 #> $DT
 #>       data_source Concentration Concentration_2 normalization_type     x
-#>            <char>         <num>           <num>             <fctr> <num>
+#>            <char>         <num>           <num>             <char> <num>
 #>    1:      combo1   0.001000000             0.0                 RV 0.957
 #>    2:      combo1   0.001000000             0.2                 RV 0.957
 #>    3:      combo1   0.001000000             1.0                 RV 0.957
@@ -96,7 +96,7 @@ merge_assay(listSE, "Normalized")
 #> preview [1,1]:
 #>   DataFrame with 54 rows and 4 columns
 #>               x Concentration data_source normalization_type
-#>       <numeric>     <numeric> <character>           <factor>
+#>       <numeric>     <numeric> <character>        <character>
 #>   1      0.9570    0.00100000      combo1                 RV
 #>   2      0.7120    0.00316228      combo1                 RV
 #>   3      0.4119    0.01000000      combo1                 RV
