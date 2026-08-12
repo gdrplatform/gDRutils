@@ -382,9 +382,9 @@ test_that("convert_se_assay_to_dt returns empty dt with full schema when assay h
   se <- SummarizedExperiment::SummarizedExperiment(
     assays = list(Metrics = norm_empty),
     rowData = S4Vectors::DataFrame(DrugName = rownames(norm_empty),
-                                   Gnumber = paste0("G", seq_len(nrow(norm_empty)))),
+                                   Gnumber = paste0("G", seq_len(NROW(norm_empty)))),
     colData = S4Vectors::DataFrame(CellLineName = colnames(norm_empty),
-                                   clid = paste0("C", seq_len(ncol(norm_empty))))
+                                   clid = paste0("C", seq_len(NCOL(norm_empty))))
   )
 
   # include_metadata = FALSE: returns empty dt with assay columns
