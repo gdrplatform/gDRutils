@@ -185,6 +185,7 @@ rename_bumpy <- function(bumpy, mapping_vector) {
 #'
 #' @return a charvec containing the names of the optional identifiers in the SE colData
 #'
+#' @keywords internal
 get_optional_coldata_fields <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
   idfs <- get_SE_identifiers(se)
@@ -199,6 +200,7 @@ get_optional_coldata_fields <- function(se) {
 #'
 #' @return a charvec containing the names of the optional identifiers in the SE rowData
 #'
+#' @keywords internal
 get_optional_rowdata_fields <- function(se) {
   checkmate::assert_class(se, "SummarizedExperiment")
   idfs <- get_SE_identifiers(se)

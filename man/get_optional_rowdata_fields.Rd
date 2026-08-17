@@ -15,4 +15,5 @@ a charvec containing the names of the optional identifiers in the SE rowData
 \description{
 get optional rowData fields
 }
+\keyword{internal}
 \keyword{standardize_MAE}

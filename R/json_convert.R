@@ -249,6 +249,7 @@ convert_colData_to_json <-
 #'
 #' @return String with first and last characters stripped.
 #' @details This is most often used to remove the JSON brackets \code{'{'} and \code{'}'}.
+#' @keywords internal
 strip_first_and_last_char <- function(jstring) {
   stopifnot(nchar(jstring) > 1)
   substr(jstring, 2, nchar(jstring) - 1)

@@ -9,6 +9,7 @@
 #' @keywords experiment
 #' @return \code{NULL}
 #'
+#' @keywords internal
 validate_dimnames <- function(obj, obj2, skip_empty = TRUE) {
 
   dn1 <- dimnames(obj)
