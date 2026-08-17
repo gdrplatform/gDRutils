@@ -62,7 +62,7 @@ test_that("validate_mae works as expected", {
   rnames <- LETTERS[1:m]
   cnames <- letters[1:n]
 
-  ref_gr_value <-  matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
+  ref_gr_value <- matrix(runif(m * n), nrow = m, ncol = n, dimnames = list(rnames, cnames))
   se1 <- SummarizedExperiment::SummarizedExperiment(assays = list(RefGRvalue = ref_gr_value[1:10, ]),
                                                     rowData = S4Vectors::DataFrame(rnames)[1:10, , drop = FALSE],
                                                     colData = S4Vectors::DataFrame(cnames))

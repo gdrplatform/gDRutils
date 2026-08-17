@@ -310,7 +310,7 @@ set_unique_names_dt <- function(dt, primary_name, secondary_name, sep = " ") {
   if (!is.null(dt[[primary_name]])) {
     unique_sets <- if (inherits(dt, "data.table")) {
       unique(dt[, c(primary_name, secondary_name), with = FALSE])
-    } else  {
+    } else {
       unique(dt[, c(primary_name, secondary_name)])
     }
     dup_tbl <- table(unique_sets[[primary_name]])

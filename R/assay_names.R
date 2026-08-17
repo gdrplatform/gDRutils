@@ -66,7 +66,7 @@ get_env_assay_names <-
       df <- df[df[[eval(filter)]] %in% v_filters[[filter]], ]
     }
 
-    if ((NROW(df)) == 0)  {
+    if ((NROW(df)) == 0) {
       v_filters_str <-
         paste(names(v_filters),
               v_filters,

@@ -283,7 +283,7 @@ merge_assay <- function(SElist,
                                                      names(SElist)),
                                      function(y) {
                                        convert_se_assay_to_dt(SElist[[y]], assay_name)
-                                     }),  fill = TRUE, idcol = additional_col_name)
+                                     }), fill = TRUE, idcol = additional_col_name)
 
   drug_cols <- unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE))
   existing_drug_cols <- intersect(drug_cols, names(DT))

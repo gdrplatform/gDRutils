@@ -76,7 +76,7 @@ validate_identifiers <- function(df, identifiers = NULL, req_ids = NULL, exp_one
         new_v <- NA
       } else if (nshared == 1L) {
         new_v <- shared
-      }  else {
+      } else {
         stop(sprintf("multiple valid identifier values found for identifier: '%s'", id))
       }
       id_map[[id]] <- new_v

@@ -48,7 +48,7 @@ test_that("assert_equal_input_len works as expected", {
   expect_equal(assert_equal_input_len(outlier = efficacy, ec50, x_0, x_inf, h), NULL)
 })
 
-test_that("assert_choices",  {
+test_that("assert_choices", {
   ### expected values
   expect_null(assert_choices(letters[1], letters))
   expect_null(assert_choices(letters[1:2], letters))
@@ -557,7 +557,7 @@ test_that("remove_codrug_data works as expected", {
     )
 
   sdt <- remove_codrug_data(dt2, prettify_identifiers = FALSE)
-  exp_cols <-  c("DrugName", "Concentration", "DrugName_3", "Concentration_3")
+  exp_cols <- c("DrugName", "Concentration", "DrugName_3", "Concentration_3")
   expect_identical(colnames(sdt), exp_cols)
 
   expect_error(
@@ -1089,7 +1089,7 @@ test_that(".calculate_dilution_ratio works as expected", {
   expect_equal(obs, ratio)
 
   ratio_2 <- 0.3
-  concs_2 <-  10 ^ (seq(-3, 1, ratio_2))
+  concs_2 <- 10 ^ (seq(-3, 1, ratio_2))
   obs <- .calculate_dilution_ratio(c(concs, concs_2))
   expect_equal(obs, c(ratio, ratio_2)[which.max(c(NROW(concs), NROW(concs_2)))])
 

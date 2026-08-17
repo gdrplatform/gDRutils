@@ -838,7 +838,7 @@ has_valid_codrug_data <-
       # codrug data not present for drug_name and/or concentration data
       if (!has_single_codrug_data(dcols, prettify_identifiers, codrug_v)) {
         FALSE
-      }  else {
+      } else {
         codrug_cols <- as.character(idfs[codrug_v])
 
         # codrug data not valid (for drug names and/or concentration data)

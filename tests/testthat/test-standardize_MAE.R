@@ -3,19 +3,19 @@ context("standardize_MAE")
 mapping_vector <- as.character(seq_len(5))
 names(mapping_vector) <- names(iris)
 
-test_that("rename_bumpy works as expected",  {
+test_that("rename_bumpy works as expected", {
   bumpy <- BumpyMatrix::splitAsBumpyMatrix(iris, iris$Species, iris$Sepal.Length)
   bumpy_renamed <- rename_bumpy(bumpy, mapping_vector)
   expect_equal(BumpyMatrix::commonColnames(bumpy_renamed), unname(mapping_vector))
 })
 
-test_that("rename_DFrame works as expected",  {
+test_that("rename_DFrame works as expected", {
   dframe <- S4Vectors::DataFrame(iris)
   dframe_renamed <- rename_DFrame(dframe, mapping_vector)
   expect_equal(names(dframe_renamed), unname(mapping_vector))
 })
 
-test_that("standardize_se works as expected",  {
+test_that("standardize_se works as expected", {
   se_original <- get_synthetic_data("finalMAE_combo_matrix_small")[[1]]
   se <- se_original
   se@metadata$identifiers$drug <- "druuug"
@@ -27,7 +27,7 @@ test_that("standardize_se works as expected",  {
                convert_se_assay_to_dt(se_original, "RawTreated"))
 })
 
-test_that("standardize_se works as expected with default = FALSE",  {
+test_that("standardize_se works as expected with default = FALSE", {
   se_original <- get_synthetic_data("finalMAE_combo_matrix_small")[[1]]
   se <- se_original
   se@metadata$identifiers$drug <- "druuug"
@@ -40,7 +40,7 @@ test_that("standardize_se works as expected with default = FALSE",  {
 })
 
 
-test_that("standardize_MAE works as expected",  {
+test_that("standardize_MAE works as expected", {
   mae_original <- get_synthetic_data("finalMAE_combo_matrix_small")
   mae <- mae_original
   mae[[1]]@metadata$identifiers$drug <- "druuug"
@@ -54,7 +54,7 @@ test_that("standardize_MAE works as expected",  {
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })
 
-test_that("standardize_MAE works with polymapped identifiers",  {
+test_that("standardize_MAE works with polymapped identifiers", {
   mae_original <- get_synthetic_data("finalMAE_combo_matrix_small")
   mae <- mae_original
   mae[[1]]@metadata$identifiers$drug <- c("druuug", "Drug")
@@ -68,7 +68,7 @@ test_that("standardize_MAE works with polymapped identifiers",  {
                convert_mae_assay_to_dt(mae_original, "RawTreated"))
 })
 
-test_that("colData/rowData refinement functions work as expected",  {
+test_that("colData/rowData refinement functions work as expected", {
   mae <- get_synthetic_data("finalMAE_combo_matrix_small")
   expect_true(inherits(refine_coldata(SummarizedExperiment::colData(mae[[1]]), mae[[1]]),
                "DataFrame"))

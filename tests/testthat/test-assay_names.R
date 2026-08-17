@@ -1,7 +1,7 @@
 library(testthat)
 context("assay_name")
 
-test_that("get_assay_names",  {
+test_that("get_assay_names", {
   ### without SE
   ## all values
   agan <- get_assay_names()
@@ -35,7 +35,7 @@ test_that("get_assay_names",  {
 
 })
 
-test_that("get_combo_assay_names",  {
+test_that("get_combo_assay_names", {
   ### without SE
   gcan <- get_combo_assay_names()
   expect_true(length(gcan) > 2)
@@ -58,7 +58,7 @@ test_that("get_combo_assay_names",  {
                "Assertion on 'bad_type' failed")
 })
 
-test_that("get_combo_assay_names",  {
+test_that("get_combo_assay_names", {
   ### without SE
   gcan <- get_combo_assay_names()
   expect_true(length(gcan) > 2)
@@ -81,7 +81,7 @@ test_that("get_combo_assay_names",  {
                "Assertion on 'bad_type' failed")
 })
 
-test_that("get_combo_base_assay_names",  {
+test_that("get_combo_base_assay_names", {
   ### without SE
   gcan <- get_combo_base_assay_names()
   expect_true(length(gcan) == 1)
@@ -104,7 +104,7 @@ test_that("get_combo_base_assay_names",  {
                "Assertion on 'bad_type' failed")
 })
 
-test_that("get_combo_score_assay_names",  {
+test_that("get_combo_score_assay_names", {
   ### without SE
   gcan <- get_combo_score_assay_names()
   expect_true(length(gcan) == 1)
