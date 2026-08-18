@@ -1,6 +1,6 @@
 ## gDRutils 1.11.10 - 2026-08-17
 * remove alignment whitespace flagged by the gDRstyle linter
-* mark internal helper functions with @keywords internal
+* document internal helper functions with @keywords internal
 
 ## gDRutils 1.11.9 - 2026-08-10
 * convert BumpyMatrix factor columns to character in `convert_se_assay_to_dt`
