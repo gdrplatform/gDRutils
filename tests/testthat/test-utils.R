@@ -1167,7 +1167,7 @@ test_that("get_gDR_session_info behaves correctly under various conditions", {
 
   expect_equal(get_gDR_session_info(), exp_dt_correct_versions)
 
-  # Version comparison must be numeric, not lexicographic (GDR-3499):
+  # Version comparison must be numeric, not lexicographic (GDR-3499): # nolint: ticket_ref_linter.
   # 0.2.100 is newer than 0.2.99 and must NOT be flagged as outdated.
   ip_semver <- matrix(c(
     "gDRdummyPackage3", "0.2.100", .Library,
