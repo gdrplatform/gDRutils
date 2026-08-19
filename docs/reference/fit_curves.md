@@ -101,7 +101,7 @@ fit_curves(df_, "Concentration", normalization_type = "RV")
 #> 1: 0.9994663 0.0005336782  0.07214082   Inf 0.9964143 0.2030077 0.8446057     1
 #>           h    r2      p_value          rss maxlog10Concentration N_conc
 #>       <num> <num>        <num>        <num>                 <num>  <int>
-#> 1: 2.014503     1 3.799066e-08 3.425795e-13                  -1.5      4
+#> 1: 2.014503     1 3.799064e-08 3.425792e-13                  -1.5      4
 #>    x_sd_avg               fit_type normalization_type fit_source
 #>       <num>                 <char>             <char>     <char>
 #> 1:      0.1 DRC3pHillFitModelFixS0                 RV        gDR
