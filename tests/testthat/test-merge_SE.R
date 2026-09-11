@@ -24,6 +24,19 @@ test_that("merge_assay works as expected", {
   checkmate::expect_class(normalizedMerged[[2]], "BumpyDataFrameMatrix")
 })
 
+test_that("merge_assay backfills missing fit_source to 'gDR'", {
+  # drop fit_source from one SE so rbindlist(fill = TRUE) yields NA for its rows
+  se2 <- listSE[[2]]
+  dt2 <- convert_se_assay_to_dt(se2, "Metrics")
+  dt2[, fit_source := NULL]
+  SummarizedExperiment::assay(se2, "Metrics", withDimnames = FALSE) <-
+    df_to_bm_assay(dt2)
+
+  merged <- merge_assay(list(a = listSE[[1]], b = se2), "Metrics")
+  expect_false(any(is.na(merged$DT$fit_source)))
+  expect_identical(unique(merged$DT$fit_source), "gDR")
+})
+
 test_that("merge_metadata and identify_unique_se_metadata_fields work as expected", {
   metadata_fields <- identify_unique_se_metadata_fields(listSE)
   mergedMetadata <- merge_metadata(listSE, metadata_fields)

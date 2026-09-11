@@ -285,6 +285,13 @@ merge_assay <- function(SElist,
                                        convert_se_assay_to_dt(SElist[[y]], assay_name)
                                      }), fill = TRUE, idcol = additional_col_name)
 
+  # A dataset missing the "fit_source" column contributes NA via fill = TRUE.
+  # NA only ever comes from an absent column (real fits carry an explicit source),
+  # so treat it as a gDR fit; otherwise flatten() would drop those rows.
+  if ("fit_source" %in% names(DT)) {
+    DT[is.na(fit_source), fit_source := "gDR"]
+  }
+
   drug_cols <- unlist(get_env_identifiers(c("drug", "drug2", "drug3"), simplify = FALSE))
   existing_drug_cols <- intersect(drug_cols, names(DT))
   DT[, (existing_drug_cols) := lapply(.SD, remove_drug_batch), .SDcols = existing_drug_cols]
