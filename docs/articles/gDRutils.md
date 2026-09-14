@@ -535,7 +535,7 @@ combo data:
 sessionInfo()
 #> R version 4.6.1 (2026-06-24)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.4 LTS
+#> Running under: Ubuntu 24.04.5 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -558,16 +558,16 @@ sessionInfo()
 #>  [1] MultiAssayExperiment_1.38.0 SummarizedExperiment_1.42.0
 #>  [3] Biobase_2.72.0              GenomicRanges_1.64.0       
 #>  [5] Seqinfo_1.2.0               IRanges_2.46.0             
-#>  [7] S4Vectors_0.50.1            BiocGenerics_0.58.1        
+#>  [7] S4Vectors_0.50.2            BiocGenerics_0.58.1        
 #>  [9] generics_0.1.4              MatrixGenerics_1.24.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.10           
+#> [11] matrixStats_1.5.0           gDRutils_1.11.11           
 #> [13] BiocStyle_2.40.0           
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10         SparseArray_1.12.2  stringi_1.8.9      
 #>  [4] lattice_0.22-9      magrittr_2.0.5      digest_0.6.39      
-#>  [7] evaluate_1.0.5      grid_4.6.1          bookdown_0.47      
-#> [10] fastmap_1.2.0       qs2_0.2.2           jsonlite_2.0.0     
+#>  [7] evaluate_1.0.5      grid_4.6.1          bookdown_0.48      
+#> [10] fastmap_1.2.0       qs2_0.3.1           jsonlite_2.0.0     
 #> [13] Matrix_1.7-5        backports_1.5.1     BiocManager_1.30.27
 #> [16] textshaping_1.0.5   jquerylib_0.1.4     abind_1.4-8        
 #> [19] cli_3.6.6           rlang_1.3.0         XVector_0.52.0     
@@ -577,8 +577,8 @@ sessionInfo()
 #> [31] lifecycle_1.0.5     stringr_1.6.0       stringfish_0.19.2  
 #> [34] fs_2.1.0            BumpyMatrix_1.20.0  ragg_1.5.2         
 #> [37] desc_1.4.3          pillar_1.11.1       pkgdown_2.2.1      
-#> [40] RcppParallel_6.2.0  bslib_0.12.0        glue_1.8.1         
-#> [43] data.table_1.18.4   Rcpp_1.1.2          systemfonts_1.3.2  
-#> [46] xfun_0.60           knitr_1.51          htmltools_0.5.9    
-#> [49] rmarkdown_2.31      compiler_4.6.1
+#> [40] RcppParallel_6.2.1  bslib_0.12.0        glue_1.8.1         
+#> [43] data.table_1.18.6.1 Rcpp_1.1.2          systemfonts_1.3.2  
+#> [46] xfun_0.60           knitr_1.52          htmltools_0.5.9    
+#> [49] rmarkdown_2.32      compiler_4.6.1
 ```
