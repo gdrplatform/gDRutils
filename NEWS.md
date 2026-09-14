@@ -1,3 +1,6 @@
+## gDRutils 1.11.11 - 2026-09-11
+* set missing `fit_source` to "gDR" when merging assays so merged data keeps all cell lines
+
 ## gDRutils 1.11.10 - 2026-08-17
 * remove alignment whitespace flagged by the gDRstyle linter
 * document internal helper functions with @keywords internal
