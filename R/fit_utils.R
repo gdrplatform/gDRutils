@@ -591,26 +591,22 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
 
 
 # Starting value and lower bounds for the asymptote parameters, per normalization type.
-# RV and GR restate logisticFit() in gDRutils (fit_curves.R:113-131). NGR is the
-# time-course rate: GrowthRate / rate_0, a plain ratio of lm(LogFoldChange ~ Duration)
-# slopes rather than Hafner's 2^(ratio) - 1, so nothing bounds it at -1 and a compound
-# killing faster than the control grows plateaus below it. -10 stands in for "no floor"
-# — ten times the control rate is past anything measurable, and unlike -Inf it keeps
-# drc's L-BFGS-B in finite arithmetic (-Inf reaches the same estimate but evaluates the
-# objective outside the feasible region and warns "NaNs produced").
-# Unregistered types get the RV bounds, as they did before this was tabulated.
+# The values, the fallback and the rationale for each live in the fit_config block of
+# inst/extdata/fit_profiles.json — adding or retuning a type is a data edit, not a code
+# change. Keyed by normalization type rather than nested per profile because fit_fn
+# receives only the data.table, never the resolved profile.
 #' @keywords internal
 .fit_bounds_for <- function(norm_type) {
   if (length(norm_type) != 1L || is.na(norm_type)) {
     stop("normalization_type must be a single non-missing value, got: ",
          toString(norm_type))
   }
-  bounds <- list(
-    RV = list(x_inf_prior = 0.4, lower_x_inf = 0, lower_x_0 = 0),
-    GR = list(x_inf_prior = 0.1, lower_x_inf = -1, lower_x_0 = -1),
-    NGR = list(x_inf_prior = 0.1, lower_x_inf = -10, lower_x_0 = -10)
-  )
-  bounds[[norm_type]] %||% bounds[["RV"]]
+  cfg <- .fit_config_env[[norm_type]] %||% .fit_config_env[[.fit_config_env[["_default"]]]]
+  if (is.null(cfg)) {
+    stop("no fit configuration for normalization_type '", norm_type,
+         "' and no usable default in fit_profiles.json")
+  }
+  lapply(cfg, as.numeric)
 }
 
 
