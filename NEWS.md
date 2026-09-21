@@ -4,7 +4,8 @@
 ## gDRutils 1.11.12 - 2026-09-19
 * move the generic fitting layer here from gDRcore: `apply_fit()`, `apply_fits()`,
   `apply_fit_to_se()`, the fit profile registry and the reference fit function
-* add `persist_fit_assay()` for writing fit results into a BumpyMatrix assay
+* add `persist_fit_assay()` for writing fit results into a BumpyMatrix assay, shaped over the
+  full SE dimensions and raising an error for row or column names the SE does not have
 
 ## gDRutils 1.11.11 - 2026-09-11
 * set missing `fit_source` to "gDR" when merging assays so merged data keeps all cell lines
