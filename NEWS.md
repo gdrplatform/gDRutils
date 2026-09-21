@@ -1,4 +1,4 @@
-## gDRutils 1.11.13 - 2026-09-19
+## gDRutils 1.11.13 - 2026-09-21
 * move per-normalization-type fit configuration from code into `fit_profiles.json`
 
 ## gDRutils 1.11.12 - 2026-09-19
