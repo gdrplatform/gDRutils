@@ -1,3 +1,7 @@
+## gDRutils 1.11.14 - 2026-09-21
+* move the response threshold that decides the constant-fit xc50 sign from code into
+  the `fit_config` block, keyed by normalization type
+
 ## gDRutils 1.11.13 - 2026-09-19
 * move per-normalization-type fit configuration from code into `fit_profiles.json`
 

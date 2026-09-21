@@ -1261,3 +1261,40 @@ test_that("persist_fit_assay rejects row/column names absent from the SE", {
     "absent from the SE"
   )
 })
+
+
+test_that("the xc50 threshold comes from fit_config, per normalization type", {
+  # 0.5 everywhere for now, so this change moves no numbers — the point is that the
+  # value is readable per type instead of being hardcoded in two functions
+  expect_equal(.xc50_threshold_for("RV"), 0.5)
+  expect_equal(.xc50_threshold_for("GR"), 0.5)
+  expect_equal(.xc50_threshold_for("NGR"), 0.5)
+  # an unregistered type falls back to the configured default rather than erroring
+  expect_equal(.xc50_threshold_for("not_a_type"), .xc50_threshold_for("RV"))
+})
+
+
+test_that(".estimate_xc50_fallback honours the threshold it is given", {
+  # default keeps the historical behaviour
+  expect_equal(.estimate_xc50_fallback(c(0.6, 0.7)), Inf)
+  expect_equal(.estimate_xc50_fallback(c(0.4, 0.5)), -Inf)
+  # a different threshold moves the boundary, and 0.5 sits on the -Inf side of it
+  expect_equal(.estimate_xc50_fallback(c(0.6, 0.7), threshold = 0.8), -Inf)
+  expect_equal(.estimate_xc50_fallback(c(0.4, 0.5), threshold = 0.3), Inf)
+  # mixed and all-NA are unchanged by the threshold
+  expect_true(is.na(.estimate_xc50_fallback(c(0.4, 0.6), threshold = 0.5)))
+  expect_true(is.na(.estimate_xc50_fallback(c(NA_real_, NA_real_))))
+})
+
+
+test_that("routing the threshold through config leaves constant-fit signs unchanged", {
+  # guards the claim that this refactor is numerically inert: the same inputs that
+  # produced +/-Inf before must still produce them, for every normalization type
+  conc <- c(0.01, 0.1, 1, 10)
+  for (nt in c("RV", "GR", "NGR")) {
+    inactive <- .constant_fit_result(nt, rep(0.9, 4), conc, rep(0.01, 4), 1, range(conc))
+    active <- .constant_fit_result(nt, rep(0.1, 4), conc, rep(0.01, 4), 1, range(conc))
+    expect_equal(inactive$xc50, Inf, info = nt)
+    expect_equal(active$xc50, -Inf, info = nt)
+  }
+})
