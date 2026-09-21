@@ -1016,24 +1016,25 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
   }
 
   data_cols <- names(merged_dt)[!names(merged_dt) %in% c(row, col)]
+
+  # A name absent from the SE would be dropped by the factor levels below, so
+  # reject it here rather than silently losing the rows.
+  unknown <- c(setdiff(unique(merged_dt[[row]]), rownames(se)),
+               setdiff(unique(merged_dt[[col]]), colnames(se)))
+  if (length(unknown) > 0L) {
+    stop(sprintf("new_dt references row/column names absent from the SE: %s",
+                 toString(unknown)))
+  }
+
+  # Build over the full SE dimensions: splitAsBumpyMatrix takes them from the
+  # factor levels, so a cell with no results comes out empty rather than absent
+  # and assay<- does not trip on "rownames not identical". Reshaping afterwards
+  # cannot do this — `[` selects existing entries, it does not create them.
   mx <- BumpyMatrix::splitAsBumpyMatrix(
     merged_dt[, data_cols, with = FALSE],
-    row = merged_dt[[row]], col = merged_dt[[col]]
+    row = factor(merged_dt[[row]], levels = rownames(se)),
+    column = factor(merged_dt[[col]], levels = colnames(se))
   )
-  # Reindex to full SE dimensions — splitAsBumpyMatrix only includes rows/cols
-  # present in merged_dt; if some cells returned no results (partial SE), mx
-  # has fewer dimensions than se and assay<- would throw "rownames not identical".
-  se_rows <- rownames(se)
-  se_cols <- colnames(se)
-  missing_rows <- setdiff(se_rows, rownames(mx))
-  missing_cols <- setdiff(se_cols, colnames(mx))
-  if (length(missing_rows) > 0L || length(missing_cols) > 0L) {
-    mx <- mx[
-      c(intersect(se_rows, rownames(mx)), missing_rows),
-      c(intersect(se_cols, colnames(mx)), missing_cols)
-    ]
-    mx <- mx[se_rows, se_cols]
-  }
   SummarizedExperiment::assay(se, assay_name) <- mx
   se
 }

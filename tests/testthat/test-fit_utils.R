@@ -1221,3 +1221,43 @@ test_that("all-NA input yields an invalid fit here and a too-few-points fit upst
   expect_equal(got$fit_type, "DRCInvalidFitResult")
   expect_equal(ref$fit_type, "DRCTooFewPointsToFit")
 })
+
+
+test_that("persist_fit_assay writes a partial result over the full SE dimensions", {
+  # results for a single cell must still produce an assay shaped like the SE:
+  # cells with no results come out empty, not absent. Reshaping the BumpyMatrix
+  # after the fact cannot achieve this, because `[` only selects entries that
+  # already exist — which is why a partial result used to abort with
+  # "subscript out of bounds".
+  mae <- get_synthetic_data("finalMAE_small.qs2")
+  se <- mae[["single-agent"]]
+  dt <- data.table::data.table(
+    row = rownames(se)[1], column = colnames(se)[1],
+    fit_source = "demo", x_mean = 0.5
+  )
+
+  out <- persist_fit_assay(se, dt, "merge", "custom_mean", "row", "column", "fit_source")
+  mx <- SummarizedExperiment::assay(out, "custom_mean")
+
+  expect_identical(rownames(mx), rownames(se))
+  expect_identical(colnames(mx), colnames(se))
+  expect_equal(NROW(mx[rownames(se)[1], colnames(se)[1]][[1]]), 1L)
+  expect_equal(NROW(mx[rownames(se)[2], colnames(se)[1]][[1]]), 0L)
+})
+
+
+test_that("persist_fit_assay rejects row/column names absent from the SE", {
+  # silently dropping them would be worse: the factor levels that shape the
+  # matrix would turn an unknown name into NA and the rows would vanish
+  mae <- get_synthetic_data("finalMAE_small.qs2")
+  se <- mae[["single-agent"]]
+  dt <- data.table::data.table(
+    row = "not_a_row", column = colnames(se)[1],
+    fit_source = "demo", x_mean = 0.5
+  )
+
+  expect_error(
+    persist_fit_assay(se, dt, "merge", "custom_mean", "row", "column", "fit_source"),
+    "absent from the SE"
+  )
+})
