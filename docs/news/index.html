@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,12 @@
       <small>Source: <a href="https://github.com/gdrplatform/gDRutils/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.12" id="gdrutils-11112---2026-09-19">gDRutils 1.11.12 - 2026-09-19<a class="anchor" aria-label="anchor" href="#gdrutils-11112---2026-09-19"></a></h2>
+<ul><li>move the generic fitting layer here from gDRcore: <code><a href="../reference/apply_fit.html">apply_fit()</a></code>, <code><a href="../reference/apply_fits.html">apply_fits()</a></code>, <code><a href="../reference/apply_fit_to_se.html">apply_fit_to_se()</a></code>, the fit profile registry and the reference fit function</li>
+<li>add <code><a href="../reference/persist_fit_assay.html">persist_fit_assay()</a></code> for writing fit results into a BumpyMatrix assay, shaped over the full SE dimensions and raising an error for row or column names the SE does not have</li>
+<li>fix the package becoming unloadable where the fit profile file does not resolve, by reading the profiles on first use instead of during package load</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.11" id="gdrutils-11111---2026-09-11">gDRutils 1.11.11 - 2026-09-11<a class="anchor" aria-label="anchor" href="#gdrutils-11111---2026-09-11"></a></h2>
 <ul><li>set missing <code>fit_source</code> to “gDR” when merging assays so merged data keeps all cell lines</li>

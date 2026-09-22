@@ -195,6 +195,36 @@
 - [`set_constant_fit_params()`](https://gdrplatform.github.io/gDRstyle/reference/set_constant_fit_params.md)
   : Set fit parameters for a constant fit.
 
+## Custom fitting
+
+Generic interface for applying custom fit functions to
+SummarizedExperiment objects, plus the reference single-agent fit.
+
+- [`apply_fit()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md)
+  : apply_fit
+- [`apply_fit_to_se()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit_to_se.md)
+  : apply_fit_to_se
+- [`apply_fits()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fits.md)
+  : apply_fits
+- [`persist_fit_assay()`](https://gdrplatform.github.io/gDRstyle/reference/persist_fit_assay.md)
+  : Persist a data.table into a BumpyMatrix assay
+- [`fit_drug_response_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md)
+  : fit_drug_response_metrics
+- [`fit_drug_response_metrics_4p()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_4p.md)
+  : fit_drug_response_metrics_4p
+
+## Fit profile registry
+
+Register and retrieve fit profiles that define slicing behaviour for
+each experiment type.
+
+- [`get_fit_profiles()`](https://gdrplatform.github.io/gDRstyle/reference/get_fit_profiles.md)
+  : Get all registered fit profiles
+- [`get_fit_profile()`](https://gdrplatform.github.io/gDRstyle/reference/get_fit_profile.md)
+  : Get a single fit profile by name
+- [`register_fit_profile()`](https://gdrplatform.github.io/gDRstyle/reference/register_fit_profile.md)
+  : Register or update a fit profile
+
 ## JSON conversion
 
 - [`convert_colData_to_json()`](https://gdrplatform.github.io/gDRstyle/reference/convert_colData_to_json.md)

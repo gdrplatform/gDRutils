@@ -11,6 +11,9 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/addClass.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/aggregate_assay.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/apply_bumpy_function.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/apply_fit.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/apply_fit_to_se.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/apply_fits.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/assert_choices.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/average_biological_replicates_dt.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/average_pvalues.html</loc></url>
@@ -31,8 +34,10 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/define_matrix_grid_positions.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/demote_fields.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/df_to_bm_assay.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-apply_summary_fn.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_mae_summary_to_json.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_norm_specific_metrics.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-make_fit_wrapper.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-metric_output_template.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-prep_cd_conc_cap_dict.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-set_invalid_fit_params.html</loc></url>
@@ -40,6 +45,8 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-standardize_conc.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/extend_normalization_type_name.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_curves.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_4p.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/flatten.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/gDRutils-package.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/gen_synthetic_data.html</loc></url>
@@ -60,6 +67,8 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_env_var.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_expect_one_identifiers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_experiment_groups.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_fit_profile.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_fit_profiles.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_gDR_session_info.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_identifiers_dt.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_idfs_synonyms.html</loc></url>
@@ -96,6 +105,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/merge_metadata.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/modifyData.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/mrowData.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/persist_fit_assay.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/predict_conc_from_efficacy.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/predict_efficacy_from_conc.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/predict_smooth_from_combo.html</loc></url>
@@ -104,6 +114,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/promote_fields.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/refine_coldata.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/refine_rowdata.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/register_fit_profile.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/remove_codrug_data.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/remove_drug_batch.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/rename_DFrame.html</loc></url>

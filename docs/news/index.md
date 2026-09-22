@@ -1,5 +1,21 @@
 # Changelog
 
+## gDRutils 1.11.12 - 2026-09-19
+
+- move the generic fitting layer here from gDRcore:
+  [`apply_fit()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md),
+  [`apply_fits()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fits.md),
+  [`apply_fit_to_se()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit_to_se.md),
+  the fit profile registry and the reference fit function
+- add
+  [`persist_fit_assay()`](https://gdrplatform.github.io/gDRstyle/reference/persist_fit_assay.md)
+  for writing fit results into a BumpyMatrix assay, shaped over the full
+  SE dimensions and raising an error for row or column names the SE does
+  not have
+- fix the package becoming unloadable where the fit profile file does
+  not resolve, by reading the profiles on first use instead of during
+  package load
+
 ## gDRutils 1.11.11 - 2026-09-11
 
 - set missing `fit_source` to “gDR” when merging assays so merged data
