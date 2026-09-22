@@ -20,6 +20,27 @@
 #   register_fit_profile(name, ...) — add or update a profile at runtime
 
 .fit_profile_env <- new.env(parent = emptyenv())
+.fit_profile_state <- new.env(parent = emptyenv())
+
+# Read the profiles on first use rather than at package load. Doing this in .onLoad()
+# made gDRutils unloadable wherever system.file() does not resolve — mustWork = TRUE
+# turns a missing file into an error raised during loadNamespace(), which takes down
+# every package that imports gDRutils, not just the fitting layer. It also charged the
+# file read to callers that never fit anything.
+#' @keywords internal
+.ensure_fit_profiles <- function() {
+  # an explicit flag, not "is the environment empty": register_fit_profile() can put a
+  # profile in before anything reads, and testing for emptiness would then skip the
+  # built-ins entirely. Not unit-tested, because forcing the unloaded state means
+  # clearing a package environment that is locked once the package is installed —
+  # the register-before-read path was verified interactively instead.
+  if (!isTRUE(.fit_profile_state$loaded)) {
+    .load_fit_profiles()
+    .fit_profile_state$loaded <- TRUE
+  }
+  invisible(NULL)
+}
+
 
 # Fit configuration lives in its own environment rather than alongside the profiles,
 # so that get_fit_profiles() keeps returning profiles and nothing else.
@@ -75,6 +96,7 @@
 #'
 #' @export
 get_fit_profiles <- function() {
+  .ensure_fit_profiles()
   as.list(.fit_profile_env)
 }
 
@@ -109,6 +131,7 @@ get_fit_profiles <- function() {
 #' @export
 get_fit_profile <- function(name) {
   checkmate::assert_string(name)
+  .ensure_fit_profiles()
   p <- .fit_profile_env[[name]]
   if (is.null(p)) {
     stop(sprintf(
@@ -165,6 +188,7 @@ register_fit_profile <- function(name,
     input_assay = input_assay,
     description = description
   )
+  .ensure_fit_profiles()
   .fit_profile_env[[name]] <- profile
   invisible(profile)
 }
