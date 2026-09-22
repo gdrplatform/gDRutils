@@ -601,6 +601,9 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
     stop("normalization_type must be a single non-missing value, got: ",
          toString(norm_type))
   }
+  # the config is read from JSON on first use; without this, a caller that reaches the
+  # fitting layer directly rather than through apply_fit() sees an empty environment
+  .ensure_fit_profiles()
   cfg <- .fit_config_env[[norm_type]] %||% .fit_config_env[[.fit_config_env[["_default"]]]]
   if (is.null(cfg)) {
     stop("no fit configuration for normalization_type '", norm_type,

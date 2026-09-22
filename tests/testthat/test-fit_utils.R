@@ -1298,3 +1298,34 @@ test_that("routing the threshold through config leaves constant-fit signs unchan
     expect_equal(active$xc50, -Inf, info = nt)
   }
 })
+
+
+test_that("the fitting layer reads its configuration when entered cold", {
+  # The configuration is read from JSON on first use, and only the three public profile
+  # functions trigger that read. A caller landing on fit_drug_response_metrics() first —
+  # the documented reference fit — therefore met an empty environment and an error from
+  # subsetting it, not the stop() below in .fit_config_for().
+  #
+  # Nothing else in this file can catch that: apply_fit() resolves a profile some 600
+  # lines earlier and warms the registry, so every later test runs warm. Hence the
+  # explicit reset. Clearing the contents of these environments is allowed even once the
+  # package is installed — locking the namespace locks its bindings, not the child
+  # environments they point at.
+  rm(list = ls(.fit_config_env), envir = .fit_config_env)
+  rm(list = ls(.fit_profile_env), envir = .fit_profile_env)
+  .fit_profile_state$loaded <- FALSE
+
+  dt <- data.table::data.table(
+    Concentration = c(0.001, 0.01, 0.1, 1, 10),
+    x = c(0.95, 0.8, 0.5, 0.2, 0.1),
+    normalization_type = "RV"
+  )
+  cold <- tryCatch(fit_drug_response_metrics(dt), error = function(e) e)
+
+  # restore the loaded state before asserting, so a failure here does not cascade
+  .ensure_fit_profiles()
+  warm <- fit_drug_response_metrics(dt)
+
+  expect_false(inherits(cold, "error"))
+  expect_equal(cold, warm)
+})
