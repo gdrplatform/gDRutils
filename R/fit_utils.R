@@ -590,23 +590,42 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
 }
 
 
-# Starting value and lower bounds for the asymptote parameters, per normalization type.
-# The values, the fallback and the rationale for each live in the fit_config block of
-# inst/extdata/fit_profiles.json — adding or retuning a type is a data edit, not a code
-# change. Keyed by normalization type rather than nested per profile because fit_fn
-# receives only the data.table, never the resolved profile.
+# Fit configuration for one normalization type. The values, the fallback and the
+# rationale for each live in the fit_config block of inst/extdata/fit_profiles.json —
+# adding or retuning a type is a data edit, not a code change. Keyed by normalization
+# type rather than nested per profile because fit_fn receives only the data.table,
+# never the resolved profile.
 #' @keywords internal
-.fit_bounds_for <- function(norm_type) {
+.fit_config_for <- function(norm_type) {
   if (length(norm_type) != 1L || is.na(norm_type)) {
     stop("normalization_type must be a single non-missing value, got: ",
          toString(norm_type))
   }
+  # the config is read from JSON on first use; without this, a caller that reaches the
+  # fitting layer directly rather than through apply_fit() sees an empty environment
+  .ensure_fit_profiles()
   cfg <- .fit_config_env[[norm_type]] %||% .fit_config_env[[.fit_config_env[["_default"]]]]
   if (is.null(cfg)) {
     stop("no fit configuration for normalization_type '", norm_type,
          "' and no usable default in fit_profiles.json")
   }
   lapply(cfg, as.numeric)
+}
+
+
+# Starting value and lower bounds for the asymptote parameters, per normalization type.
+#' @keywords internal
+.fit_bounds_for <- function(norm_type) {
+  .fit_config_for(norm_type)
+}
+
+
+# Response level at which a curve counts as having crossed 50%. Hardcoded as 0.5 in two
+# places before; carried in configuration so the value is visible per normalization type
+# — see the note in fit_profiles.json for why it is not self-evident on the NGR scale.
+#' @keywords internal
+.xc50_threshold_for <- function(norm_type) {
+  .fit_config_for(norm_type)[["xc50_threshold"]] %||% 0.5
 }
 
 
@@ -809,7 +828,7 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
       N_conc = N_conc,
       maxlog10Concentration = maxlog10Conc,
       ec50 = NA_real_,
-      xc50 = .estimate_xc50_fallback(x),
+      xc50 = .estimate_xc50_fallback(x, .xc50_threshold_for(norm_type)),
       h = NA_real_,
       r2 = NA_real_,
       rss = NA_real_,
@@ -1058,9 +1077,10 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     NA_real_
   }
   # xc50 sign follows the mean normalized value, as .set_mean_params() does in
-  # gDRutils/fit_curves.R: above 0.5 the curve never reaches 50% (Inf), at or below
-  # it is already past 50% at the lowest dose (-Inf)
-  xc50_val <- .estimate_xc50_fallback(mn)
+  # gDRutils/fit_curves.R: above the threshold the curve never reaches 50% (Inf), at or
+  # below it is already past 50% at the lowest dose (-Inf). The threshold is per
+  # normalization type — see fit_config in fit_profiles.json
+  xc50_val <- .estimate_xc50_fallback(mn, .xc50_threshold_for(norm_type))
   list(
     normalization_type = norm_type,
     x_mean = mn,
@@ -1108,13 +1128,13 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
 
 
 #' @keywords internal
-.estimate_xc50_fallback <- function(x) {
+.estimate_xc50_fallback <- function(x, threshold = 0.5) {
   x_clean <- x[!is.na(x)]
   if (length(x_clean) == 0L) {
     NA_real_
-  } else if (all(x_clean > 0.5)) {
+  } else if (all(x_clean > threshold)) {
     Inf
-  } else if (all(x_clean <= 0.5)) {
+  } else if (all(x_clean <= threshold)) {
     -Inf
   } else {
     NA_real_

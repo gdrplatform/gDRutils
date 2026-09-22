@@ -1261,3 +1261,71 @@ test_that("persist_fit_assay rejects row/column names absent from the SE", {
     "absent from the SE"
   )
 })
+
+
+test_that("the xc50 threshold comes from fit_config, per normalization type", {
+  # 0.5 everywhere for now, so this change moves no numbers — the point is that the
+  # value is readable per type instead of being hardcoded in two functions
+  expect_equal(.xc50_threshold_for("RV"), 0.5)
+  expect_equal(.xc50_threshold_for("GR"), 0.5)
+  expect_equal(.xc50_threshold_for("NGR"), 0.5)
+  # an unregistered type falls back to the configured default rather than erroring
+  expect_equal(.xc50_threshold_for("not_a_type"), .xc50_threshold_for("RV"))
+})
+
+
+test_that(".estimate_xc50_fallback honours the threshold it is given", {
+  # default keeps the historical behaviour
+  expect_equal(.estimate_xc50_fallback(c(0.6, 0.7)), Inf)
+  expect_equal(.estimate_xc50_fallback(c(0.4, 0.5)), -Inf)
+  # a different threshold moves the boundary, and 0.5 sits on the -Inf side of it
+  expect_equal(.estimate_xc50_fallback(c(0.6, 0.7), threshold = 0.8), -Inf)
+  expect_equal(.estimate_xc50_fallback(c(0.4, 0.5), threshold = 0.3), Inf)
+  # mixed and all-NA are unchanged by the threshold
+  expect_true(is.na(.estimate_xc50_fallback(c(0.4, 0.6), threshold = 0.5)))
+  expect_true(is.na(.estimate_xc50_fallback(c(NA_real_, NA_real_))))
+})
+
+
+test_that("routing the threshold through config leaves constant-fit signs unchanged", {
+  # guards the claim that this refactor is numerically inert: the same inputs that
+  # produced +/-Inf before must still produce them, for every normalization type
+  conc <- c(0.01, 0.1, 1, 10)
+  for (nt in c("RV", "GR", "NGR")) {
+    inactive <- .constant_fit_result(nt, rep(0.9, 4), conc, rep(0.01, 4), 1, range(conc))
+    active <- .constant_fit_result(nt, rep(0.1, 4), conc, rep(0.01, 4), 1, range(conc))
+    expect_equal(inactive$xc50, Inf, info = nt)
+    expect_equal(active$xc50, -Inf, info = nt)
+  }
+})
+
+
+test_that("the fitting layer reads its configuration when entered cold", {
+  # The configuration is read from JSON on first use, and only the three public profile
+  # functions trigger that read. A caller landing on fit_drug_response_metrics() first —
+  # the documented reference fit — therefore met an empty environment and an error from
+  # subsetting it, not the stop() below in .fit_config_for().
+  #
+  # Nothing else in this file can catch that: apply_fit() resolves a profile some 600
+  # lines earlier and warms the registry, so every later test runs warm. Hence the
+  # explicit reset. Clearing the contents of these environments is allowed even once the
+  # package is installed — locking the namespace locks its bindings, not the child
+  # environments they point at.
+  rm(list = ls(.fit_config_env), envir = .fit_config_env)
+  rm(list = ls(.fit_profile_env), envir = .fit_profile_env)
+  .fit_profile_state$loaded <- FALSE
+
+  dt <- data.table::data.table(
+    Concentration = c(0.001, 0.01, 0.1, 1, 10),
+    x = c(0.95, 0.8, 0.5, 0.2, 0.1),
+    normalization_type = "RV"
+  )
+  cold <- tryCatch(fit_drug_response_metrics(dt), error = function(e) e)
+
+  # restore the loaded state before asserting, so a failure here does not cascade
+  .ensure_fit_profiles()
+  warm <- fit_drug_response_metrics(dt)
+
+  expect_false(inherits(cold, "error"))
+  expect_equal(cold, warm)
+})

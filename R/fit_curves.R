@@ -624,6 +624,14 @@ logistic_metrics <- function(c, x_metrics) {
 
 
 # Estimate values for undefined IC/GR50 values.
+#
+# The 0.5 here is the same threshold that fit_config in inst/extdata/fit_profiles.json
+# carries per normalization type, but it is NOT read from there: nothing below
+# .applyLogisticFit() knows the normalization type, and routing it down would mean adding
+# an argument to the exported logisticFit(). Harmless while every type is configured at
+# 0.5 — but setting a different xc50_threshold for a type in the JSON would make the
+# fit_utils path follow the configuration while this one stayed at 0.5, and the two would
+# disagree silently. Change both together, or convert this path first.
 #' @keywords internal
 .estimate_xc50 <- function(param) {
   if (all(is.na(param))) {
