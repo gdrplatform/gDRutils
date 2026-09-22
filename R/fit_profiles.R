@@ -42,6 +42,10 @@
 }
 
 
+# Fit configuration lives in its own environment rather than alongside the profiles,
+# so that get_fit_profiles() keeps returning profiles and nothing else.
+.fit_config_env <- new.env(parent = emptyenv())
+
 #' @keywords internal
 .load_fit_profiles <- function() {
   json_path <- system.file(
@@ -51,7 +55,11 @@
   # Use read_json; extract each field by numeric index to avoid partial
   # matching on named lists. Field order must match fit_profiles.json keys:
   # slicing_cols, slicing_values, input_assay, nested_cols, nested_cols_note, description
-  profiles <- jsonlite::read_json(json_path)
+  doc <- jsonlite::read_json(json_path)
+  profiles <- doc[[which(names(doc) == "profiles")]]
+  for (nm in names(doc[[which(names(doc) == "fit_config")]])) {
+    .fit_config_env[[nm]] <- doc[[which(names(doc) == "fit_config")]][[nm]]
+  }
   for (nm in names(profiles)) {
     p <- profiles[[nm]]
     field <- function(key) unlist(p[[which(names(p) == key)]])

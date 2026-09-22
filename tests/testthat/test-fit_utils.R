@@ -1099,6 +1099,42 @@ test_that("an unregistered normalization type keeps the relative-viability bound
 })
 
 
+test_that("the shipped fit configuration covers every declared normalization type", {
+  # Every value any profile can slice by must have somewhere to read its priors from,
+  # otherwise it silently falls back to relative viability — which is how time-course
+  # ended up being fitted with a floor of zero on a routinely negative asymptote.
+  declared <- unique(unlist(lapply(get_fit_profiles(), `[[`, "slicing_values")))
+  configured <- setdiff(ls(gDRutils:::.fit_config_env), c("_note", "_default"))
+
+  expect_setequal(declared, c("RV", "GR", "NGR"))
+  expect_true(all(declared %in% configured))
+  expect_true(gDRutils:::.fit_config_env[["_default"]] %in% configured)
+})
+
+
+test_that("fit configuration is read from the JSON, not from a copy in code", {
+  # Without this the JSON could drift from the behaviour and nothing would notice.
+  # Swapping NGR's floor for RV's must change the fit of a curve that plateaus below zero.
+  x <- .parity_fitted_shapes[["response plateauing below zero"]]
+  before <- suppressWarnings(fit_drug_response_metrics(.parity_avg_dt(x, "NGR")))
+
+  original <- gDRutils:::.fit_config_env[["NGR"]]
+  on.exit(assign("NGR", original, envir = gDRutils:::.fit_config_env), add = TRUE)
+  assign("NGR", list(x_inf_prior = 0.4, lower_x_inf = 0, lower_x_0 = 0),
+         envir = gDRutils:::.fit_config_env)
+  after <- suppressWarnings(fit_drug_response_metrics(.parity_avg_dt(x, "NGR")))
+
+  expect_lt(before$x_inf, 0)
+  expect_equal(after$x_inf, 0)
+})
+
+
+test_that("the fit configuration does not leak into the profile registry", {
+  expect_false("fit_config" %in% names(get_fit_profiles()))
+  expect_error(get_fit_profile("fit_config"), "Unknown fit profile")
+})
+
+
 test_that("a missing normalization type is rejected by name", {
   x <- .parity_fitted_shapes[["ordinary sigmoid"]]
   dt <- .parity_avg_dt(x, NA_character_)
