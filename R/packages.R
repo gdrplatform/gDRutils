@@ -1,6 +1,7 @@
 #' @import SummarizedExperiment
 #' @importFrom data.table := .N .SD
 #' @importFrom methods is
+#' @importFrom stats na.omit
 
 .datatable.aware <- TRUE
 

@@ -461,3 +461,22 @@ test_that(".snap_conc_to_model works as expected", {
     "Assertion on 'available_concs' failed: Must be of type 'numeric'"
   )
 })
+
+test_that("fitting does not change the global na.action option", {
+  # drc >= 4.0-0 records its na.action argument in the global option exactly as
+  # written and never restores it. Passing stats::na.omit therefore left the option
+  # set to "stats::na.omit", and every later stats::lm() in the session died in
+  # model.frame() on could not find function "stats::na.omit" - which is how the
+  # time-course growth-rate code broke while the fits themselves looked fine.
+  #
+  # A deliberately non-default value: it catches both the qualified name and any
+  # clobbering of a caller's own setting. Note this can only fail where drc is
+  # 4.0-0 or newer; on drc 3.0.1 nothing touches the option either way.
+  withr::local_options(na.action = "na.exclude")
+
+  fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RV")
+
+  expect_identical(getOption("na.action"), "na.exclude")
+  lm_fit <- stats::lm(y ~ x, data = data.frame(x = seq_len(5), y = c(1.1, 2, 3.2, 3.9, 5.1)))
+  expect_length(stats::coef(lm_fit), 2L)
+})

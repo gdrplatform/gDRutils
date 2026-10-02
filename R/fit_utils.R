@@ -716,6 +716,11 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
     upperl <- c(5, min(x_0 + cap, 1), max_conc * 10)
   }
 
+  # See the note in .prepareFitModel() - drc leaks na.action into the global
+  # option, and a qualified name there breaks every later stats::lm().
+  old_na_action <- getOption("na.action")
+  on.exit(options(na.action = old_na_action), add = TRUE)
+
   fit <- tryCatch(
     drc::drm(x ~ conc,
              data = data.table::data.table(x = x, conc = conc),
@@ -725,7 +730,8 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
              lowerl = lowerl,
              upperl = upperl,
              control = controls,
-             na.action = stats::na.omit),
+             # Unqualified on purpose - see the note in .prepareFitModel().
+             na.action = na.omit),
     error = function(e) NULL
   )
 

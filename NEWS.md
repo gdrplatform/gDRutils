@@ -1,3 +1,7 @@
+## gDRutils 1.11.15 - 2026-10-02
+* restore the global na.action option after curve fitting
+* pass na.omit unqualified to drm so the option it stores stays resolvable
+
 ## gDRutils 1.11.14 - 2026-09-21
 * move the response threshold that decides the constant-fit xc50 sign from code into
   the `fit_config` block, keyed by normalization type
