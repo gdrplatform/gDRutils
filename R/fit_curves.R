@@ -379,6 +379,14 @@ logisticFit <-
     x$fit_type <- "DRC4pHillFitModel"
   }
 
+  # drc >= 4.0-0 writes its na.action argument into the global option and never
+  # restores it, so one fit changes how every later model.frame() in the session
+  # behaves. Restore it ourselves, and keep the name unqualified: stored as
+  # "stats::na.omit" the option breaks stats::lm() with
+  # could not find function "stats::na.omit".
+  old_na_action <- getOption("na.action")
+  on.exit(options(na.action = old_na_action), add = TRUE)
+
   drc::drm(
     norm_values ~ concs,
     data = df_,
@@ -388,7 +396,11 @@ logisticFit <-
     lowerl = lower,
     upperl = upperl,
     control = controls,
-    na.action = stats::na.omit
+    # Unqualified on purpose. drm() stores this argument in the global na.action
+    # option as it was written, and never restores it; with the stats:: prefix
+    # every later stats::lm() in the session dies on
+    # could not find function "stats::na.omit".
+    na.action = na.omit
   )
 }
 
