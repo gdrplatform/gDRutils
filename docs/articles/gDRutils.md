@@ -555,27 +555,27 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#>  [1] MultiAssayExperiment_1.38.0 SummarizedExperiment_1.42.0
-#>  [3] Biobase_2.72.0              GenomicRanges_1.64.0       
-#>  [5] Seqinfo_1.2.0               IRanges_2.46.0             
-#>  [7] S4Vectors_0.50.3            BiocGenerics_0.58.1        
-#>  [9] generics_0.1.4              MatrixGenerics_1.24.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.14           
-#> [13] BiocStyle_2.40.0           
+#>  [1] MultiAssayExperiment_1.39.1 SummarizedExperiment_1.43.0
+#>  [3] Biobase_2.73.2              GenomicRanges_1.65.4       
+#>  [5] Seqinfo_1.3.2               IRanges_2.47.5             
+#>  [7] S4Vectors_0.51.10           BiocGenerics_0.59.12       
+#>  [9] generics_0.1.4              MatrixGenerics_1.25.0      
+#> [11] matrixStats_1.5.0           gDRutils_1.11.15           
+#> [13] BiocStyle_2.41.0           
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] sass_0.4.10         SparseArray_1.12.2  stringi_1.8.9      
+#>  [1] sass_0.4.10         SparseArray_1.13.4  stringi_1.8.9      
 #>  [4] lattice_0.22-9      magrittr_2.0.5      digest_0.6.39      
 #>  [7] evaluate_1.0.5      grid_4.6.1          bookdown_0.48      
 #> [10] fastmap_1.2.0       qs2_0.3.1           jsonlite_2.0.0     
 #> [13] Matrix_1.7-5        backports_1.5.1     BiocManager_1.30.27
 #> [16] textshaping_1.0.5   jquerylib_0.1.4     abind_1.4-8        
-#> [19] cli_3.6.6           rlang_1.3.0         XVector_0.52.0     
-#> [22] cachem_1.1.0        DelayedArray_0.38.2 yaml_2.3.12        
-#> [25] otel_0.2.0          S4Arrays_1.12.0     tools_4.6.1        
+#> [19] cli_3.6.6           rlang_1.3.0         XVector_0.53.0     
+#> [22] cachem_1.1.0        DelayedArray_0.39.8 yaml_2.3.12        
+#> [25] otel_0.2.0          S4Arrays_1.13.2     tools_4.6.1        
 #> [28] checkmate_2.3.4     vctrs_0.7.3         R6_2.6.1           
 #> [31] lifecycle_1.0.5     stringr_1.6.0       stringfish_0.19.2  
-#> [34] fs_2.1.0            BumpyMatrix_1.20.0  ragg_1.5.2         
+#> [34] fs_2.1.0            BumpyMatrix_1.21.0  ragg_1.5.2         
 #> [37] desc_1.4.3          pillar_1.11.1       pkgdown_2.2.1      
 #> [40] RcppParallel_6.2.1  bslib_0.12.0        glue_1.8.1         
 #> [43] data.table_1.18.6.1 Rcpp_1.1.2          systemfonts_1.3.2  

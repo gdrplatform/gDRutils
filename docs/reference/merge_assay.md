@@ -51,10 +51,10 @@ merge_assay(listSE, "Normalized")
 #> $DT
 #>       data_source Concentration Concentration_2 normalization_type     x
 #>            <char>         <num>           <num>             <char> <num>
-#>    1:      combo1   0.001000000             0.0                 RV 0.957
+#>    1:      combo1   0.001000000             0.2                 RV 0.957
 #>    2:      combo1   0.001000000             0.2                 RV 0.957
-#>    3:      combo1   0.001000000             1.0                 RV 0.957
-#>    4:      combo1   0.003162278             0.0                 RV 0.712
+#>    3:      combo1   0.001000000             0.2                 RV 0.957
+#>    4:      combo1   0.003162278             0.2                 RV 0.712
 #>    5:      combo1   0.003162278             0.2                 RV 0.712
 #>   ---                                                                   
 #> 2804:          sa   1.000000000              NA                 GR 1.000
@@ -94,19 +94,19 @@ merge_assay(listSE, "Normalized")
 #> rownames: 1 2 ... 12 13 
 #> colnames: 1 2 3 
 #> preview [1,1]:
-#>   DataFrame with 54 rows and 4 columns
+#>   DataFrame with 90 rows and 4 columns
 #>               x Concentration data_source normalization_type
 #>       <numeric>     <numeric> <character>        <character>
-#>   1      0.9570    0.00100000      combo1                 RV
-#>   2      0.7120    0.00316228      combo1                 RV
-#>   3      0.4119    0.01000000      combo1                 RV
-#>   4      0.3501    0.03162278      combo1                 RV
-#>   5      0.3317    0.10000000      combo1                 RV
+#>   1       0.957    0.00100000      combo1                 RV
+#>   2       0.957    0.00100000      combo1                 RV
+#>   3       0.957    0.00100000      combo1                 RV
+#>   4       0.712    0.00316228      combo1                 RV
+#>   5       0.712    0.00316228      combo1                 RV
 #>   ...       ...           ...         ...                ...
-#>   50     0.3427      0.100000      combo1                 GR
-#>   51     0.2086      0.316228      combo1                 GR
-#>   52     0.1019      1.000000      combo1                 GR
-#>   53     0.0908      3.162278      combo1                 GR
-#>   54     0.0902     10.000000      combo1                 GR
+#>   86          1             0      combo1                 GR
+#>   87          1             0      combo1                 GR
+#>   88          1             0      combo1                 GR
+#>   89          1             0      combo1                 GR
+#>   90          1             0      combo1                 GR
 #> 
 ```

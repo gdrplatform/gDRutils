@@ -49,7 +49,7 @@ demote_fields(se, "ReadoutValue")
 #> metadata(5): identifiers experiment_metadata Keys fit_parameters
 #>   .internal
 #> assays(1): RawTreated
-#> rownames(10): 1 14 ... 111 127
+#> rownames(10): 1 4 ... 115 127
 #> rowData names(4): Gnumber DrugName drug_moa Duration
 #> colnames(10): 1 271 ... 2161 2431
 #> colData names(4): clid CellLineName Tissue ReferenceDivisionTime

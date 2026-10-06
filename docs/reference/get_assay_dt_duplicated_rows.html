@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_synthetic_data.html">get_synthetic_data</a></span><span class="op">(</span><span class="st">"finalMAE_small.qs2"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">smetrics_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="convert_se_assay_to_dt.html">convert_se_assay_to_dt</a></span><span class="op">(</span><span class="va">sdata</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"Metrics"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_assay_dt_duplicated_rows</span><span class="op">(</span><span class="va">smetrics_data</span>, output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 28 cols): rId,cId,x_mean,x_AOC,x_AOC_range,xc50...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 28 cols): rId,cId,normalization_type,x_mean,x_AOC,x_AOC_range...</span>
 <span class="r-in"><span><span class="fu">get_assay_dt_duplicated_rows</span><span class="op">(</span><span class="va">smetrics_data</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> integer(0)</span>
 </code></pre></div>

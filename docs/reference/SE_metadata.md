@@ -104,7 +104,7 @@ get_SE_experiment_raw_data(se)
 mae <- get_synthetic_data("finalMAE_small.qs2")
 se <- mae[[1]]
 get_SE_experiment_metadata(se)
-#> DataFrame with 0 rows and 0 columns
+#> named list()
 
 mae <- get_synthetic_data("finalMAE_small.qs2")
 se <- mae[[1]]

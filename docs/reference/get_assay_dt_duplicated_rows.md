@@ -28,7 +28,7 @@ integer vector or data.table with duplicated rows
 sdata <- get_synthetic_data("finalMAE_small.qs2")
 smetrics_data <- convert_se_assay_to_dt(sdata[[1]], "Metrics")
 get_assay_dt_duplicated_rows(smetrics_data, output = "data")
-#> Empty data.table (0 rows and 28 cols): rId,cId,x_mean,x_AOC,x_AOC_range,xc50...
+#> Empty data.table (0 rows and 28 cols): rId,cId,normalization_type,x_mean,x_AOC,x_AOC_range...
 get_assay_dt_duplicated_rows(smetrics_data)
 #> integer(0)
 ```
