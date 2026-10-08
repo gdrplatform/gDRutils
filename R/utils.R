@@ -128,16 +128,19 @@ MAEpply <- function(mae, FUN, unify = FALSE, ...) {
   }
 }
 
+# one R connection per PSOCK worker; R's connection table holds 128 in total
+MAX_PARALLEL_WORKERS <- 64L
+
 #' @keywords internal
-.get_parallel_workers <- function() {
+.get_parallel_workers <- function(n_items) {
   cores <- parallel::detectCores()
   if (is.na(cores)) cores <- 1L
   n <- as.integer(Sys.getenv("GDR_WORKERS", max(1L, cores - 1L)))
-  max(1L, min(n, cores))
+  max(1L, min(n, cores, n_items, MAX_PARALLEL_WORKERS))
 }
 
 .parallel_lapply <- function(x, FUN, ...) {
-  n_workers <- .get_parallel_workers()
+  n_workers <- .get_parallel_workers(length(x))
   if (n_workers <= 1L || length(x) <= 1L) {
     return(lapply(x, FUN, ...))
   }

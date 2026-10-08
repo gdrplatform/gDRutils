@@ -1,3 +1,7 @@
+## gDRutils 1.11.16 - 2026-10-08
+* cap the number of parallel workers so a large node cannot exhaust R's connection table
+* start no more workers than there are elements to process
+
 ## gDRutils 1.11.15 - 2026-10-02
 * restore the global na.action option after curve fitting
 * use an unqualified na.omit in the drm call so the option it stores stays resolvable
