@@ -179,6 +179,25 @@ test_that("loop works as expected", {
   expect_equal(names(sumOfNamedListBatch), names(namedListRunif))
 })
 
+test_that(".get_parallel_workers caps the number of workers", {
+  mockery::stub(.get_parallel_workers, "parallel::detectCores", 256L)
+
+  withr::with_envvar(c(GDR_WORKERS = NA), {
+    # a large node must not ask for more connections than R owns
+    expect_equal(.get_parallel_workers(1000000L), MAX_PARALLEL_WORKERS)
+    # and never more workers than there are elements to process
+    expect_equal(.get_parallel_workers(10L), 10L)
+    expect_equal(.get_parallel_workers(0L), 1L)
+  })
+
+  withr::with_envvar(c(GDR_WORKERS = "1000"), {
+    expect_equal(.get_parallel_workers(1000000L), MAX_PARALLEL_WORKERS)
+  })
+  withr::with_envvar(c(GDR_WORKERS = "2"), {
+    expect_equal(.get_parallel_workers(1000000L), 2L)
+  })
+})
+
 test_that("process_batch works as expected", {
   temp_dir <- tempdir()
 
