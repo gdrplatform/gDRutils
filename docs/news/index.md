@@ -1,5 +1,11 @@
 # Changelog
 
+## gDRutils 1.11.16 - 2026-10-08
+
+- restrict the number of parallel workers so a large node cannot exhaust
+  R’s connection table
+- prevent starting more workers than there are elements to process
+
 ## gDRutils 1.11.15 - 2026-10-02
 
 - restore the global na.action option after curve fitting
