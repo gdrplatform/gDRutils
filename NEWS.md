@@ -1,3 +1,6 @@
+## gDRutils 1.11.17 - 2026-10-08
+* update authors data
+
 ## gDRutils 1.11.16 - 2026-10-08
 * restrict the number of parallel workers so a large node cannot exhaust R's connection table
 * prevent starting more workers than there are elements to process
