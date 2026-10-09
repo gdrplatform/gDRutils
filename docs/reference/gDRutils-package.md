@@ -31,6 +31,9 @@ Useful links:
 
 Authors:
 
+- Arkadiusz Gladki <gladki.arkadiusz@gmail.com>
+  ([ORCID](https://orcid.org/0000-0002-7059-6378))
+
 - Bartosz Czech ([ORCID](https://orcid.org/0000-0002-9908-3007))
 
 - Aleksander Chlebowski
@@ -41,7 +44,7 @@ Authors:
 
 - Dariusz Scigocki
 
-- Janina Smola
+- Janina Smola ([ORCID](https://orcid.org/0009-0007-4347-7748))
 
 - Sergiu Mocanu
 

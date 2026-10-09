@@ -15,7 +15,7 @@
 
 - **Dariusz Scigocki**. Author.
 
-- **Janina Smola**. Author.
+- **Janina Smola**. Author. [](https://orcid.org/0009-0007-4347-7748)
 
 - **Sergiu Mocanu**. Author.
 
@@ -28,13 +28,13 @@ Source:
 
 Czech B, Gladki A, Chlebowski A, Hafner M, Piatkowski P, Scigocki D,
 Smola J, Mocanu S, Vuong A (2026). *gDRutils: A package with helper
-functions for processing drug response data*. R package version 1.11.16,
+functions for processing drug response data*. R package version 1.11.17,
 <https://github.com/gdrplatform/gDRutils>.
 
     @Manual{,
       title = {gDRutils: A package with helper functions for processing drug response data},
       author = {Bartosz Czech and Arkadiusz Gladki and Aleksander Chlebowski and Marc Hafner and Pawel Piatkowski and Dariusz Scigocki and Janina Smola and Sergiu Mocanu and Allison Vuong},
       year = {2026},
-      note = {R package version 1.11.16},
+      note = {R package version 1.11.17},
       url = {https://github.com/gdrplatform/gDRutils},
     }
