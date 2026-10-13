@@ -409,9 +409,13 @@ apply_fits <- function(se,
       }
       if (NROW(sub_dt) == 0L) next
       label <- if (!is.na(val)) sprintf("%s=%s", slice_col, val) else "all"
+      # a multi-output function is listed once per assay it fills, but one call
+      # already returns rows for all of them; calling it again duplicated the rows
+      multi_done <- list()
 
       for (fn_nm in out_assay_names) {
         fn <- fit_fns[[fn_nm]]
+        if (any(vapply(multi_done, identical, logical(1), fn))) next
         result_dt <- tryCatch({
           res <- fn(sub_dt)
           # Detect multi-output pattern: named list of named lists
@@ -431,6 +435,7 @@ apply_fits <- function(se,
                 )
               }
             }
+            multi_done <- c(multi_done, list(fn))
             next
           }
           data.table::as.data.table(as.list(res))
