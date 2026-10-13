@@ -1329,3 +1329,22 @@ test_that("the fitting layer reads its configuration when entered cold", {
   expect_false(inherits(cold, "error"))
   expect_equal(cold, warm)
 })
+
+
+test_that("apply_fits calls a multi-output function once per slice", {
+  shared_fn <- function(dt) {
+    m <- mean(dt$x, na.rm = TRUE)
+    list(a_assay = list(a = m), b_assay = list(b = 2 * m))
+  }
+  out <- apply_fits(
+    se_small,
+    fit_fns = list(a_assay = shared_fn, b_assay = shared_fn),
+    data_type = "single-agent",
+    fit_source = "shared"
+  )
+  for (assay_nm in c("a_assay", "b_assay")) {
+    rows <- BumpyMatrix::unsplitAsDataFrame(SummarizedExperiment::assay(out, assay_nm))
+    # one row per cell and normalization type, not one per listed function
+    expect_identical(NROW(rows), 2L * NROW(se_small) * NCOL(se_small))
+  }
+})
