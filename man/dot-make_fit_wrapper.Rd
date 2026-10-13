@@ -4,7 +4,14 @@
 \alias{.make_fit_wrapper}
 \title{Build a per-cell wrapper for apply_bumpy_function}
 \usage{
-.make_fit_wrapper(fit_fn, slicing_cols, slicing_values, on_error, fit_source)
+.make_fit_wrapper(
+  fit_fn,
+  slicing_cols,
+  slicing_values,
+  on_error,
+  fit_source,
+  fit_args = list()
+)
 }
 \arguments{
 \item{fit_fn}{user-supplied fit function}
@@ -16,6 +23,8 @@
 \item{on_error}{\code{"warn"} or \code{"stop"}}
 
 \item{fit_source}{fit_source label}
+
+\item{fit_args}{named list of extra arguments passed to \code{fit_fn}}
 }
 \value{
 function(DFrame) -> data.table

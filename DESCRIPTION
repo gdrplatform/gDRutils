@@ -27,6 +27,7 @@ Depends:
 Imports:
     BumpyMatrix,
     checkmate,
+    codetools,
     data.table,
     digest,
     drc,

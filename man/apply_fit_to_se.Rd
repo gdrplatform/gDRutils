@@ -12,7 +12,8 @@ apply_fit_to_se(
   metrics_assay = "Metrics",
   merge = "merge",
   on_error = "warn",
-  fit_source = "custom"
+  fit_source = "custom",
+  fit_args = list()
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ an Averaged assay}
 \item{on_error}{\code{"warn"} (skip + warning) or \code{"stop"}}
 
 \item{fit_source}{string recorded in the \code{fit_source} column}
+
+\item{fit_args}{named list of extra arguments passed to \code{fit_fn}}
 }
 \value{
 updated \code{SummarizedExperiment}

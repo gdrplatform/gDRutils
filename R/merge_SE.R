@@ -355,6 +355,10 @@ merge_metadata <- function(SElist,
 
   all_metadata <- lapply(metadata_fields, function(x) {
 
+    # every merged SE keeps its own fit recipes, under the name its rows carry in
+    # the data_source column
+    if (x == "provenance") return(.merge_provenance(SElist))
+
     if (x %in% c("experiment_metadata", ".internal")) {
 
       valid_metas <- lapply(SElist, function(se) S4Vectors::metadata(se)[[x]])

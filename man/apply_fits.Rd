@@ -13,7 +13,8 @@ apply_fits(
   input_assay = NULL,
   merge = "merge",
   on_error = "warn",
-  fit_source
+  fit_source,
+  fit_args = list()
 )
 }
 \arguments{
@@ -38,10 +39,15 @@ list of named lists for the shared pre-computation pattern).}
 
 \item{fit_source}{character string stamped as \code{fit_source} in every
 output row.}
+
+\item{fit_args}{named list of argument lists, keyed by names of
+\code{fit_fns}, e.g. \code{list(custom_bliss = list(q = 0.9))}.  Each list
+is passed to its function after the data and recorded in the provenance.}
 }
 \value{
 updated \code{SummarizedExperiment} with one new (or updated) assay
-per entry in \code{fit_fns}.
+per entry in \code{fit_fns}, and the recipe of each fit in
+\code{metadata(se)$provenance} (see \code{\link{get_fit_provenance}}).
 }
 \description{
 Apply multiple fit functions in a \strong{single pass} over each BumpyMatrix
