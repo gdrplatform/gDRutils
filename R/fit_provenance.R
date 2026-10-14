@@ -236,11 +236,17 @@ refit_from_provenance <- function(se, assay, fit_source, allow_source = FALSE) {
   }
   fit_args <- recipe[["fit_args"]]
   if (is.null(fit_args)) fit_args <- list()
+  # functions passed as arguments (e.g. a score function) are stored as records
+  fn_args <- lapply(recipe[["fn_args"]], .restore_fn, allow_source = allow_source)
+  fit_args <- c(fit_args, fn_args)
   output_assay <- recipe$output_assay
 
   # Re-run with merge = "merge" whatever the original call used: "replace" would
   # also remove the rows of every other fit_source in the assay.
-  se <- if (identical(recipe$called_by, "apply_fits")) {
+  se <- if (identical(recipe$called_by, "se_function")) {
+    # a function of the whole SE (e.g. a combination step) records its own recipe again
+    do.call(fn, c(list(se), fit_args))
+  } else if (identical(recipe$called_by, "apply_fits")) {
     apply_fits(
       se,
       fit_fns = stats::setNames(list(fn), output_assay),
@@ -346,6 +352,129 @@ check_reproducibility <- function(se,
 }
 
 
+#' Record provenance from code that does not use apply_fit()
+#'
+#' \code{\link{apply_fit}} and \code{\link{apply_fits}} record their recipes
+#' themselves. Code that writes results another way uses these functions to
+#' add to the same \code{metadata(se)$provenance} entry.
+#'
+#' @details
+#' \code{record_fit_provenance()} is for a function of the whole SE that
+#' writes an assay, e.g. a combination scoring step. The recipe keeps the
+#' function and its arguments, so \code{\link{refit_from_provenance}} can call
+#' it again as \code{fn(se, ...)}. Functions passed among the arguments (e.g.
+#' a score function) are stored as function records.
+#'
+#' \code{record_processing_step()} is for a step whose result cannot be
+#' recomputed from the object it returns, e.g. growth rates computed from an
+#' assay that the output no longer carries. It stores the functions and
+#' settings of the step under \code{provenance$steps[[step]]}.
+#'
+#' @param se \code{\link[SummarizedExperiment]{SummarizedExperiment}}
+#' @param assay string; assay the function wrote.
+#' @param fit_source string; \code{fit_source} of the written rows. Assays
+#'   without a \code{fit_source} column use it only as a key.
+#' @param fn function of the whole SE that wrote \code{assay}, called as
+#'   \code{fn(se, ...)}.
+#' @param fit_args named list of the arguments \code{fn} was called with,
+#'   other than \code{se}.
+#' @param input_assay string or \code{NULL}; assay the results were computed
+#'   from, hashed to tell later whether a re-run used the same data.
+#' @param step string; name of the processing step.
+#' @param settings named list of plain-data settings of the step.
+#' @param fns named list of the functions the step used, e.g.
+#'   \code{list(rate_fn = rate_fn)}.
+#'
+#' @return \code{se} with the provenance entry updated.
+#'
+#' @examples
+#' mae <- get_synthetic_data("finalMAE_small.qs2")
+#' se <- mae[["single-agent"]]
+#' se <- record_processing_step(
+#'   se, "growth_rates",
+#'   settings = list(periods = list(early = c(0, 48))),
+#'   fns = list(rate_fn = function(dt) 0)
+#' )
+#' names(get_SE_provenance(se)$steps)
+#'
+#' @name record_provenance
+#' @keywords provenance
+NULL
+
+
+#' @rdname record_provenance
+#' @export
+#'
+record_fit_provenance <- function(se, assay, fit_source, fn, fit_args = list(), input_assay = NULL) {
+  fn_name <- .call_name(substitute(fn))
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(assay)
+  checkmate::assert_string(fit_source)
+  checkmate::assert_function(fn)
+  checkmate::assert_list(fit_args, names = "unique")
+  checkmate::assert_string(input_assay, null.ok = TRUE)
+
+  recipe <- .fit_recipe(
+    called_by = "se_function",
+    fn_record = .describe_fn(fn, fn_name),
+    fit_args = fit_args,
+    summary_record = NULL,
+    data_type = NULL,
+    input_assay = input_assay,
+    output_assay = assay,
+    summary_assay = NULL,
+    slicing_cols = NULL,
+    slicing_values = NULL,
+    merge = NULL,
+    input_hash = if (!is.null(input_assay)) .assay_hash(se, input_assay),
+    n_rows = NROW(.fit_rows(se, assay, fit_source))
+  )
+  .record_fit(se, assay, fit_source, recipe)
+}
+
+
+#' @rdname record_provenance
+#' @export
+#'
+record_processing_step <- function(se, step, settings = list(), fns = list()) {
+  fn_names <- .list_call_names(substitute(fns))
+  checkmate::assert_class(se, "SummarizedExperiment")
+  checkmate::assert_string(step)
+  checkmate::assert_list(settings, names = "unique")
+  checkmate::assert_list(fns, types = "function", names = "unique")
+
+  stored <- .split_storable(settings)
+  functions <- lapply(names(fns), function(role) .describe_fn(fns[[role]], fn_names[[role]]))
+  names(functions) <- names(fns)
+  entry <- .drop_null(list(
+    functions = if (length(functions) > 0L) functions,
+    settings = if (length(stored$stored) > 0L) stored$stored,
+    settings_not_stored = if (length(stored$not_stored) > 0L) stored$not_stored,
+    run = list(
+      R = paste(R.version$major, R.version$minor, sep = "."),
+      gDRutils = as.character(utils::packageVersion("gDRutils"))
+    )
+  ))
+
+  prov <- S4Vectors::metadata(se)[["provenance"]]
+  if (is.null(prov)) {
+    prov <- list(schema_version = .provenance_schema_version, fits = list(), steps = list())
+  }
+  prov$steps[[step]] <- entry
+  S4Vectors::metadata(se)[["provenance"]] <- prov
+
+  not_stored <- c(entry$settings_not_stored,
+                  unlist(lapply(functions, `[[`, "not_stored"), use.names = FALSE))
+  if (length(not_stored) > 0L) {
+    .provenance_warning(sprintf(
+      "step '%s' cannot be fully reproduced from the object: %s not stored",
+      step, toString(sQuote(unique(not_stored), FALSE))
+    ))
+  }
+  se
+}
+
+
 ####
 # Recording
 ####
@@ -365,11 +494,14 @@ check_reproducibility <- function(se,
                         merge,
                         input_hash,
                         n_rows) {
-  stored_args <- .split_storable(fit_args)
+  is_fn <- vapply(fit_args, is.function, logical(1))
+  fn_args <- lapply(fit_args[is_fn], .describe_fn)
+  stored_args <- .split_storable(fit_args[!is_fn])
   .drop_null(list(
     called_by = called_by,
     fn = fn_record,
     fit_args = if (length(stored_args$stored) > 0L) stored_args$stored,
+    fn_args = if (length(fn_args) > 0L) fn_args,
     args_not_stored = if (length(stored_args$not_stored) > 0L) stored_args$not_stored,
     summary_fn = summary_record,
     data_type = data_type,
@@ -407,7 +539,8 @@ check_reproducibility <- function(se,
   }
   S4Vectors::metadata(se)[["provenance"]] <- prov
 
-  not_stored <- c(recipe$fn$not_stored, recipe$summary_fn$not_stored, recipe$args_not_stored)
+  not_stored <- c(recipe$fn$not_stored, recipe$summary_fn$not_stored, recipe$args_not_stored,
+                  unlist(lapply(recipe[["fn_args"]], `[[`, "not_stored"), use.names = FALSE))
   if (length(not_stored) > 0L) {
     .provenance_warning(sprintf(
       paste0("fit '%s' cannot be fully reproduced from the object: %s not stored because ",
@@ -780,7 +913,7 @@ check_reproducibility <- function(se,
   recipe <- get_fit_provenance(se, assay, fit_source)
   notes <- character(0)
   input_assay <- recipe$input_assay
-  if (input_assay %in% SummarizedExperiment::assayNames(se) &&
+  if (!is.null(input_assay) && input_assay %in% SummarizedExperiment::assayNames(se) &&
       !identical(.assay_hash(se, input_assay), recipe$run$input_hash)) {
     notes <- c(notes, sprintf("the %s assay changed since the fit", input_assay))
   }
@@ -834,11 +967,13 @@ check_reproducibility <- function(se,
   dt <- data.table::as.data.table(BumpyMatrix::unsplitAsDataFrame(
     SummarizedExperiment::assay(se, assay), row.field = "row", column.field = "column"
   ))
-  if (!"fit_source" %in% names(dt)) return(data.table::data.table())
-  # compute the filter outside [.data.table, where `fit_source` would name the column;
-  # a single symbol in i is evaluated in the calling scope
-  keep <- as.character(dt[["fit_source"]]) == fit_source
-  dt <- dt[keep]
+  # an assay without a fit_source column (e.g. combination excess) holds one fit
+  if ("fit_source" %in% names(dt)) {
+    # compute the filter outside [.data.table, where `fit_source` would name the column;
+    # a single symbol in i is evaluated in the calling scope
+    keep <- as.character(dt[["fit_source"]]) == fit_source
+    dt <- dt[keep]
+  }
   for (col in names(dt)) {
     if (is.factor(dt[[col]])) data.table::set(dt, j = col, value = as.character(dt[[col]]))
   }
