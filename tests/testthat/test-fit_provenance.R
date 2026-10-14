@@ -352,3 +352,62 @@ test_that(".qualified_packages and .is_plain_data cover their edge cases", {
   expect_false(.is_plain_data(list(f = function() 1)))
   expect_false(.is_plain_data(new.env()))
 })
+
+
+test_that("record_fit_provenance keeps a function of the whole SE and re-runs it", {
+  # stands in for a combination step: reads Averaged, writes an assay without a
+  # fit_source column, and takes a function among its arguments
+  step_fn <- .as_user_fn(function(se, k = 1, agg = mean) {
+    dt <- data.table::as.data.table(BumpyMatrix::unsplitAsDataFrame(
+      SummarizedExperiment::assay(se, "Averaged"), row.field = "row", column.field = "column"
+    ))
+    out <- dt[, list(score = agg(x, na.rm = TRUE) * k), by = c("row", "column")]
+    se <- persist_fit_assay(se, out, "replace", "step_assay", "row", "column", character(0))
+    record_fit_provenance(se, "step_assay", "gDR", fn = step_fn,
+                          fit_args = list(k = k, agg = agg), input_assay = "Averaged")
+  })
+  assign("step_fn", step_fn, envir = environment(step_fn))
+
+  se <- step_fn(se_prov, k = 3, agg = stats::median)
+  recipe <- get_fit_provenance(se, "step_assay", "gDR")
+  expect_identical(recipe$called_by, "se_function")
+  expect_identical(recipe$fit_args, list(k = 3))
+  expect_identical(recipe$fn_args$agg$name, "median")
+  expect_identical(recipe$fn_args$agg$package, "stats")
+  expect_identical(recipe$run$n_rows, NROW(se_prov) * NCOL(se_prov))
+
+  res <- check_reproducibility(se, allow_source = TRUE)
+  expect_true(res$reproducible)
+
+  # the check reads all rows of an assay without a fit_source column
+  dt <- data.table::as.data.table(BumpyMatrix::unsplitAsDataFrame(
+    SummarizedExperiment::assay(se, "step_assay"), row.field = "row", column.field = "column"
+  ))
+  dt$score <- dt$score * 2
+  se_bad <- persist_fit_assay(se, dt, "replace", "step_assay", "row", "column", character(0))
+  expect_false(check_reproducibility(se_bad, allow_source = TRUE)$reproducible)
+})
+
+
+test_that("record_processing_step stores functions and settings of a step", {
+  rate_fn <- .as_user_fn(function(dt) 24 * stats::median(diff(dt$y) / diff(dt$t)))
+  se <- record_processing_step(
+    se_prov, "growth_rates",
+    settings = list(periods = list(early = c(0, 48)), normalization_map = c(early = "None")),
+    fns = list(rate_fn = rate_fn)
+  )
+  step <- get_SE_provenance(se)$steps$growth_rates
+  expect_identical(step$settings$normalization_map, c(early = "None"))
+  expect_identical(step$functions$rate_fn$name, "rate_fn")
+  expect_match(step$functions$rate_fn$source, "median", fixed = TRUE)
+  expect_true(.is_plain_data(get_SE_provenance(se)))
+
+  # recording the step again replaces it
+  se <- record_processing_step(se, "growth_rates", settings = list(periods = list()))
+  expect_null(get_SE_provenance(se)$steps$growth_rates$functions)
+
+  expect_warning(
+    record_processing_step(se_prov, "big", settings = list(table = seq_len(1e5))),
+    class = "gDRutils_provenance_warning"
+  )
+})
