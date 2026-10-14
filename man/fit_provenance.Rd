@@ -49,10 +49,10 @@ dependencies.}
 \item{\code{called_by}, \code{data_type}, \code{input_assay},
 \code{output_assay}, \code{summary_assay}, \code{slicing_cols},
 \code{slicing_values}, \code{merge}}{settings of the call.}
-\item{\code{run}}{time of the fit, R and gDRutils versions, hash of the
-input assay and the number of rows written.}
+\item{\code{run}}{R and gDRutils versions, hash of the input assay and
+the number of rows written.}
 }
-Names listed under \code{not_stored} or \code{fit_args_not_stored} were too
+Names listed under \code{not_stored} or \code{args_not_stored} were too
 large or not plain data, so the fit cannot be fully reproduced from the
 object alone.
 

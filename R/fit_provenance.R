@@ -111,8 +111,8 @@ set_fit_fn_info <- function(fn,
 #'   \item{\code{called_by}, \code{data_type}, \code{input_assay},
 #'     \code{output_assay}, \code{summary_assay}, \code{slicing_cols},
 #'     \code{slicing_values}, \code{merge}}{settings of the call.}
-#'   \item{\code{run}}{time of the fit, R and gDRutils versions, hash of the
-#'     input assay and the number of rows written.}
+#'   \item{\code{run}}{R and gDRutils versions, hash of the input assay and
+#'     the number of rows written.}
 #' }
 #' Names listed under \code{not_stored} or \code{args_not_stored} were too
 #' large or not plain data, so the fit cannot be fully reproduced from the
@@ -379,8 +379,9 @@ check_reproducibility <- function(se,
     slicing_cols = slicing_cols,
     slicing_values = slicing_values,
     merge = merge,
+    # no timestamp: the same data fitted with the same code gives an identical
+    # object, which downstream checks rely on
     run = list(
-      time = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
       R = paste(R.version$major, R.version$minor, sep = "."),
       gDRutils = as.character(utils::packageVersion("gDRutils")),
       input_hash = input_hash,
@@ -894,8 +895,7 @@ check_reproducibility <- function(se,
         fit_source = s,
         fn = .format_fn(fn),
         fit_args = if (is_summary) "" else .format_args(recipe[["fit_args"]]),
-        model = if (is.null(fn$info$model)) NA_character_ else fn$info$model,
-        time = recipe$run$time
+        model = if (is.null(fn$info$model)) NA_character_ else fn$info$model
       )
     }
   }
