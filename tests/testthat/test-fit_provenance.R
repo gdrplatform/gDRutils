@@ -41,6 +41,19 @@ test_that("apply_fit records a package function by reference with its fit_args",
 })
 
 
+test_that("fitting the same data twice gives an identical object", {
+  # downstream pipelines compare whole processed objects, so the recipe must not
+  # carry anything that changes between runs, such as a timestamp
+  fit_twice <- lapply(seq_len(2L), function(i) {
+    suppressWarnings(apply_fit(
+      se_prov, fit_drug_response_metrics, "single-agent",
+      output_assay = "Metrics", fit_source = "gDR", fit_args = list(pcutoff = 0.1)
+    ))
+  })
+  expect_identical(fit_twice[[1]], fit_twice[[2]])
+})
+
+
 test_that("fit_args reach the fit function and give the same result as a closure", {
   closure_fn <- .as_user_fn(
     function(dt) fit_drug_response_metrics(dt, pcutoff = p),
