@@ -386,6 +386,11 @@ test_that("record_fit_provenance keeps a function of the whole SE and re-runs it
   dt$score <- dt$score * 2
   se_bad <- persist_fit_assay(se, dt, "replace", "step_assay", "row", "column", character(0))
   expect_false(check_reproducibility(se_bad, allow_source = TRUE)$reproducible)
+
+  # replace = TRUE drops the recipes of other fit sources in the overwritten assay
+  se <- record_fit_provenance(se, "step_assay", "other", fn = step_fn)
+  se <- record_fit_provenance(se, "step_assay", "gDR", fn = step_fn, replace = TRUE)
+  expect_identical(names(get_SE_provenance(se)$fits$step_assay), "gDR")
 })
 
 
