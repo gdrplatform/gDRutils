@@ -12,7 +12,8 @@ record_fit_provenance(
   fit_source,
   fn,
   fit_args = list(),
-  input_assay = NULL
+  input_assay = NULL,
+  replace = FALSE
 )
 
 record_processing_step(se, step, settings = list(), fns = list())
@@ -33,6 +34,9 @@ other than \code{se}.}
 
 \item{input_assay}{string or \code{NULL}; assay the results were computed
 from, hashed to tell later whether a re-run used the same data.}
+
+\item{replace}{logical; \code{TRUE} when \code{fn} overwrote the whole
+assay, so the recipes of other fit sources in it no longer apply.}
 
 \item{step}{string; name of the processing step.}
 

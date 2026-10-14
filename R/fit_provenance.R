@@ -380,6 +380,8 @@ check_reproducibility <- function(se,
 #'   other than \code{se}.
 #' @param input_assay string or \code{NULL}; assay the results were computed
 #'   from, hashed to tell later whether a re-run used the same data.
+#' @param replace logical; \code{TRUE} when \code{fn} overwrote the whole
+#'   assay, so the recipes of other fit sources in it no longer apply.
 #' @param step string; name of the processing step.
 #' @param settings named list of plain-data settings of the step.
 #' @param fns named list of the functions the step used, e.g.
@@ -405,7 +407,13 @@ NULL
 #' @rdname record_provenance
 #' @export
 #'
-record_fit_provenance <- function(se, assay, fit_source, fn, fit_args = list(), input_assay = NULL) {
+record_fit_provenance <- function(se,
+                                  assay,
+                                  fit_source,
+                                  fn,
+                                  fit_args = list(),
+                                  input_assay = NULL,
+                                  replace = FALSE) {
   fn_name <- .call_name(substitute(fn))
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay)
@@ -413,6 +421,7 @@ record_fit_provenance <- function(se, assay, fit_source, fn, fit_args = list(), 
   checkmate::assert_function(fn)
   checkmate::assert_list(fit_args, names = "unique")
   checkmate::assert_string(input_assay, null.ok = TRUE)
+  checkmate::assert_flag(replace)
 
   recipe <- .fit_recipe(
     called_by = "se_function",
@@ -429,7 +438,7 @@ record_fit_provenance <- function(se, assay, fit_source, fn, fit_args = list(), 
     input_hash = if (!is.null(input_assay)) .assay_hash(se, input_assay),
     n_rows = NROW(.fit_rows(se, assay, fit_source))
   )
-  .record_fit(se, assay, fit_source, recipe)
+  .record_fit(se, assay, fit_source, recipe, replace = replace)
 }
 
 
