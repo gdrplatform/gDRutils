@@ -415,4 +415,8 @@ test_that("record_processing_step stores functions and settings of a step", {
     record_processing_step(se_prov, "big", settings = list(table = seq_len(1e5))),
     class = "gDRutils_provenance_warning"
   )
+  # a step whose settings are large by nature can raise the limit
+  files <- data.frame(name = sprintf("plate_%04d.xlsx", seq_len(300)), md5 = strrep("a", 32))
+  se <- record_processing_step(se_prov, "import", settings = list(files = files), max_bytes = 1e6)
+  expect_identical(get_SE_provenance(se)$steps$import$settings$files, files)
 })
