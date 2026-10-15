@@ -32,6 +32,13 @@
 #'                      summary_assay = "musyc_summary", ...)
 #' }
 #'
+#' Each call records the recipe of the fit in \code{metadata(se)$provenance}:
+#' which function produced it (package and version, or its source code when it
+#' does not come from a package), the arguments in \code{fit_args} and the call
+#' settings.  Pass settings through \code{fit_args} rather than wrapping the
+#' function in a closure, so they are visible in the recipe.  See
+#' \code{\link{get_fit_provenance}} and \code{\link{check_reproducibility}}.
+#'
 #' @param se \code{\link[SummarizedExperiment]{SummarizedExperiment}}
 #' @param fit_fn function(\code{data.table}) returning a named list or
 #'   single-row data.frame.  Receives data already filtered to one
@@ -63,9 +70,12 @@
 #'   \code{"stop"} (propagate the error).
 #' @param fit_source character string recorded in the \code{fit_source} column
 #'   of every output row.  Forms part of the upsert key.
+#' @param fit_args named list of extra arguments passed to \code{fit_fn} after
+#'   the data, e.g. \code{list(pcutoff = 0.1)}.  Recorded in the provenance.
 #'
 #' @return updated \code{SummarizedExperiment} with \code{output_assay} (and
-#'   optionally \code{summary_assay}) added or updated.
+#'   optionally \code{summary_assay}) added or updated, and the recipe of the
+#'   fit in \code{metadata(se)$provenance}.
 #'
 #' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
@@ -90,7 +100,12 @@ apply_fit <- function(se,
                       summary_assay = NULL,
                       merge = "merge",
                       on_error = "warn",
-                      fit_source) {
+                      fit_source,
+                      fit_args = list()) {
+
+  # names as the caller wrote them, for the recipe; read before anything is evaluated
+  fit_fn_name <- .call_name(substitute(fit_fn))
+  summary_fn_name <- .call_name(substitute(summary_fn))
 
   checkmate::assert_string(data_type)
   profile <- get_fit_profile(data_type)  # errors with list of valid profiles if unknown
@@ -108,6 +123,7 @@ apply_fit <- function(se,
   checkmate::assert_choice(merge, c("merge", "replace"))
   checkmate::assert_choice(on_error, c("warn", "stop"))
   checkmate::assert_string(fit_source)
+  checkmate::assert_list(fit_args, names = "unique")
   if (!is.null(summary_fn)) {
     checkmate::assert_function(summary_fn)
     checkmate::assert_string(summary_assay)
@@ -116,10 +132,11 @@ apply_fit <- function(se,
   if (!input_assay %in% SummarizedExperiment::assayNames(se)) {
     stop(sprintf("%s assay is required", input_assay))
   }
+  input_hash <- .assay_hash(se, input_assay)
 
   tmp_assay <- "__custom_fit_tmp__"
   wrapper_fn <- .make_fit_wrapper(
-    fit_fn, slicing_cols, slicing_values, on_error, fit_source
+    fit_fn, slicing_cols, slicing_values, on_error, fit_source, fit_args
   )
 
   se_out <- tryCatch(
@@ -159,6 +176,24 @@ apply_fit <- function(se,
           se, new_metrics, summary_fn, summary_assay, merge, fit_source, on_error
         )
       }
+
+      recipe <- .fit_recipe(
+        called_by = "apply_fit",
+        fn_record = .describe_fn(fit_fn, fit_fn_name),
+        fit_args = fit_args,
+        summary_record = if (!is.null(summary_fn)) .describe_fn(summary_fn, summary_fn_name),
+        data_type = data_type,
+        input_assay = input_assay,
+        output_assay = output_assay,
+        summary_assay = summary_assay,
+        slicing_cols = slicing_cols,
+        slicing_values = slicing_values,
+        merge = merge,
+        input_hash = input_hash,
+        n_rows = NROW(new_metrics)
+      )
+      se <- .record_fit(se, output_assay, fit_source, recipe,
+                        replace = merge == "replace", summary_assay = summary_assay)
     }
   }
 
@@ -183,6 +218,7 @@ apply_fit <- function(se,
 #' @param merge \code{"merge"} (idempotent upsert) or \code{"replace"}
 #' @param on_error \code{"warn"} (skip + warning) or \code{"stop"}
 #' @param fit_source string recorded in the \code{fit_source} column
+#' @param fit_args named list of extra arguments passed to \code{fit_fn}
 #'
 #' @return updated \code{SummarizedExperiment}
 #'
@@ -202,7 +238,8 @@ apply_fit_to_se <- function(se,
                             metrics_assay = "Metrics",
                             merge = "merge",
                             on_error = "warn",
-                            fit_source = "custom") {
+                            fit_source = "custom",
+                            fit_args = list()) {
 
   # Warn for missing standard metric columns before delegating
   # (apply_fit does not impose column expectations on custom assays)
@@ -215,7 +252,8 @@ apply_fit_to_se <- function(se,
     output_assay = metrics_assay,
     merge = merge,
     on_error = on_error,
-    fit_source = fit_source
+    fit_source = fit_source,
+    fit_args = fit_args
   )
 
   # Warn only for the standard Metrics assay — custom assays (e.g. "musyc_params")
@@ -317,9 +355,13 @@ apply_fit_to_se <- function(se,
 #' @param on_error \code{"warn"} or \code{"stop"}.
 #' @param fit_source character string stamped as \code{fit_source} in every
 #'   output row.
+#' @param fit_args named list of argument lists, keyed by names of
+#'   \code{fit_fns}, e.g. \code{list(custom_bliss = list(q = 0.9))}.  Each list
+#'   is passed to its function after the data and recorded in the provenance.
 #'
 #' @return updated \code{SummarizedExperiment} with one new (or updated) assay
-#'   per entry in \code{fit_fns}.
+#'   per entry in \code{fit_fns}, and the recipe of each fit in
+#'   \code{metadata(se)$provenance} (see \code{\link{get_fit_provenance}}).
 #'
 #' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
@@ -344,7 +386,11 @@ apply_fits <- function(se,
                        input_assay = NULL,
                        merge = "merge",
                        on_error = "warn",
-                       fit_source) {
+                       fit_source,
+                       fit_args = list()) {
+
+  # names as the caller wrote them, for the recipes
+  fn_names <- .list_call_names(substitute(fit_fns))
 
   checkmate::assert_string(data_type)
   profile <- get_fit_profile(data_type)
@@ -361,12 +407,18 @@ apply_fits <- function(se,
   checkmate::assert_choice(merge, c("merge", "replace"))
   checkmate::assert_choice(on_error, c("warn", "stop"))
   checkmate::assert_string(fit_source)
+  checkmate::assert_list(fit_args, types = "list", names = "unique")
+  checkmate::assert_subset(names(fit_args), names(fit_fns))
 
   if (!input_assay %in% SummarizedExperiment::assayNames(se)) {
     stop(sprintf("%s assay is required", input_assay))
   }
 
+  input_hash <- .assay_hash(se, input_assay)
   out_assay_names <- names(fit_fns)
+  # function that wrote each assay: with the shared pre-computation pattern one
+  # function can fill several assays
+  producers <- character(0)
   slice_col <- slicing_cols[1L]
 
   # Unsplit the BumpyMatrix ONCE into a flat data.table, then split by
@@ -409,11 +461,15 @@ apply_fits <- function(se,
       }
       if (NROW(sub_dt) == 0L) next
       label <- if (!is.na(val)) sprintf("%s=%s", slice_col, val) else "all"
+      # a multi-output function is listed once per assay it fills, but one call
+      # already returns rows for all of them; calling it again duplicated the rows
+      multi_done <- list()
 
       for (fn_nm in out_assay_names) {
         fn <- fit_fns[[fn_nm]]
+        if (any(vapply(multi_done, identical, logical(1), fn))) next
         result_dt <- tryCatch({
-          res <- fn(sub_dt)
+          res <- .call_fit_fn(fn, sub_dt, fit_args[[fn_nm]])
           # Detect multi-output pattern: named list of named lists
           if (is.list(res) && length(res) > 0L &&
               is.list(res[[1L]]) && !is.null(names(res))) {
@@ -429,8 +485,10 @@ apply_fits <- function(se,
                 assay_results[[assay_nm]] <- c(
                   assay_results[[assay_nm]], list(row_dt)
                 )
+                if (is.na(producers[assay_nm])) producers[[assay_nm]] <- fn_nm
               }
             }
+            multi_done <- c(multi_done, list(fn))
             next
           }
           data.table::as.data.table(as.list(res))
@@ -450,6 +508,7 @@ apply_fits <- function(se,
           result_dt[[slice_col]] <- val
         }
         assay_results[[fn_nm]] <- c(assay_results[[fn_nm]], list(result_dt))
+        if (is.na(producers[fn_nm])) producers[[fn_nm]] <- fn_nm
       }
     }
   }
@@ -461,6 +520,24 @@ apply_fits <- function(se,
     if (length(rows) == 0L) next
     merged_dt <- data.table::rbindlist(rows, fill = TRUE)
     se <- persist_fit_assay(se, merged_dt, merge, assay_nm, "row", "column", upsert_key)
+
+    producer <- producers[[assay_nm]]
+    recipe <- .fit_recipe(
+      called_by = "apply_fits",
+      fn_record = .describe_fn(fit_fns[[producer]], fn_names[[producer]]),
+      fit_args = fit_args[[producer]],
+      summary_record = NULL,
+      data_type = data_type,
+      input_assay = input_assay,
+      output_assay = assay_nm,
+      summary_assay = NULL,
+      slicing_cols = slicing_cols,
+      slicing_values = slicing_values,
+      merge = merge,
+      input_hash = input_hash,
+      n_rows = NROW(merged_dt)
+    )
+    se <- .record_fit(se, assay_nm, fit_source, recipe, replace = merge == "replace")
   }
 
   se
@@ -588,6 +665,29 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
                                   force_fit = force_fit,
                                   cap = cap)
 }
+
+# What the reference fits do, copied into the recipe apply_fit() records.
+fit_drug_response_metrics <- set_fit_fn_info(
+  fit_drug_response_metrics,
+  model = "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1",
+  description = paste(
+    "Hill curve of the response against concentration, fitted per normalization type.",
+    "Falls back to a constant fit when fewer than n_point_cutoff concentrations are",
+    "available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."
+  ),
+  reference = "Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021"
+)
+
+fit_drug_response_metrics_4p <- set_fit_fn_info(
+  fit_drug_response_metrics_4p,
+  model = "4-parameter log-logistic (drc::LL.4), upper asymptote fitted",
+  description = paste(
+    "Hill curve of the response against concentration with a free upper asymptote,",
+    "fitted per normalization type. Falls back to a constant fit like",
+    "fit_drug_response_metrics()."
+  ),
+  reference = "Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021"
+)
 
 
 # Fit configuration for one normalization type. The values, the fallback and the
@@ -863,12 +963,13 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
 #' @param slicing_values character vector of values to iterate, or NULL for all
 #' @param on_error \code{"warn"} or \code{"stop"}
 #' @param fit_source fit_source label
+#' @param fit_args named list of extra arguments passed to \code{fit_fn}
 #'
 #' @return function(DFrame) -> data.table
 #'
 #' @keywords internal
 .make_fit_wrapper <- function(fit_fn, slicing_cols, slicing_values,
-                              on_error, fit_source) {
+                              on_error, fit_source, fit_args = list()) {
   function(avg_df) {
     avg_dt <- data.table::as.data.table(avg_df)
     results <- list()
@@ -903,7 +1004,7 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
 
       label <- if (!is.na(val)) sprintf("%s=%s", slice_col, val) else "all"
       result_dt <- tryCatch({
-        res <- fit_fn(sub_dt)
+        res <- .call_fit_fn(fit_fn, sub_dt, fit_args)
         data.table::as.data.table(as.list(res))
       }, error = function(e) {
         if (on_error == "stop") stop(e)

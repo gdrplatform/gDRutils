@@ -1,3 +1,8 @@
+## gDRutils 1.11.18 - 2026-10-13
+* add a provenance entry that `apply_fit()` and `apply_fits()` fill and `merge_SE()` keeps, and `check_reproducibility()`
+* add `fit_args`, `set_fit_fn_info()`, `record_fit_provenance()` and `record_processing_step()`
+* fix duplicated rows when `apply_fits()` lists one multi-output function under several assays
+
 ## gDRutils 1.11.17 - 2026-10-08
 * update authors data
 

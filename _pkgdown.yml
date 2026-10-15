@@ -32,6 +32,12 @@ reference:
   - has_keyword("metrics")
   - fit_drug_response_metrics
   - fit_drug_response_metrics_4p
+- title: Fit provenance
+  desc: >
+    Read, re-run and check the recipe that each fit records in the
+    metadata of a SummarizedExperiment.
+- contents:
+  - has_keyword("provenance")
 - title: Fit profile registry
   desc: >
     Register and retrieve fit profiles that define slicing behaviour

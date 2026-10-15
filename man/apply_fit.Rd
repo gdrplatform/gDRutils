@@ -16,7 +16,8 @@ apply_fit(
   summary_assay = NULL,
   merge = "merge",
   on_error = "warn",
-  fit_source
+  fit_source,
+  fit_args = list()
 )
 }
 \arguments{
@@ -64,10 +65,14 @@ Required when \code{summary_fn} is provided.}
 
 \item{fit_source}{character string recorded in the \code{fit_source} column
 of every output row.  Forms part of the upsert key.}
+
+\item{fit_args}{named list of extra arguments passed to \code{fit_fn} after
+the data, e.g. \code{list(pcutoff = 0.1)}.  Recorded in the provenance.}
 }
 \value{
 updated \code{SummarizedExperiment} with \code{output_assay} (and
-optionally \code{summary_assay}) added or updated.
+optionally \code{summary_assay}) added or updated, and the recipe of the
+fit in \code{metadata(se)$provenance}.
 }
 \description{
 Generic layer for applying a user-supplied fit function across all
@@ -97,6 +102,13 @@ Use the pipe to apply several custom fits to the same SE:
                      summary_fn   = musyc_summary_fn,
                      summary_assay = "musyc_summary", ...)
 }
+
+Each call records the recipe of the fit in \code{metadata(se)$provenance}:
+which function produced it (package and version, or its source code when it
+does not come from a package), the arguments in \code{fit_args} and the call
+settings.  Pass settings through \code{fit_args} rather than wrapping the
+function in a closure, so they are visible in the recipe.  See
+\code{\link{get_fit_provenance}} and \code{\link{check_reproducibility}}.
 }
 \examples{
 mae <- get_synthetic_data("finalMAE_small.qs2")
