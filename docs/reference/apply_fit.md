@@ -20,7 +20,8 @@ apply_fit(
   summary_assay = NULL,
   merge = "merge",
   on_error = "warn",
-  fit_source
+  fit_source,
+  fit_args = list()
 )
 ```
 
@@ -91,10 +92,16 @@ apply_fit(
   character string recorded in the `fit_source` column of every output
   row. Forms part of the upsert key.
 
+- fit_args:
+
+  named list of extra arguments passed to `fit_fn` after the data, e.g.
+  `list(pcutoff = 0.1)`. Recorded in the provenance.
+
 ## Value
 
 updated `SummarizedExperiment` with `output_assay` (and optionally
-`summary_assay`) added or updated.
+`summary_assay`) added or updated, and the recipe of the fit in
+`metadata(se)$provenance`.
 
 ## Details
 
@@ -118,6 +125,15 @@ Use the pipe to apply several custom fits to the same SE:
                          output_assay = "musyc_params",
                          summary_fn   = musyc_summary_fn,
                          summary_assay = "musyc_summary", ...)
+
+Each call records the recipe of the fit in `metadata(se)$provenance`:
+which function produced it (package and version, or its source code when
+it does not come from a package), the arguments in `fit_args` and the
+call settings. Pass settings through `fit_args` rather than wrapping the
+function in a closure, so they are visible in the recipe. See
+[`get_fit_provenance`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
+and
+[`check_reproducibility`](https://gdrplatform.github.io/gDRstyle/reference/check_reproducibility.md).
 
 ## Examples
 

@@ -14,7 +14,8 @@ apply_fit_to_se(
   metrics_assay = "Metrics",
   merge = "merge",
   on_error = "warn",
-  fit_source = "custom"
+  fit_source = "custom",
+  fit_args = list()
 )
 ```
 
@@ -52,6 +53,10 @@ apply_fit_to_se(
 - fit_source:
 
   string recorded in the `fit_source` column
+
+- fit_args:
+
+  named list of extra arguments passed to `fit_fn`
 
 ## Value
 

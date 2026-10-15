@@ -213,6 +213,25 @@ SummarizedExperiment objects, plus the reference single-agent fit.
 - [`fit_drug_response_metrics_4p()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_4p.md)
   : fit_drug_response_metrics_4p
 
+## Fit provenance
+
+Read, re-run and check the recipe that each fit records in the metadata
+of a SummarizedExperiment.
+
+- [`check_reproducibility()`](https://gdrplatform.github.io/gDRstyle/reference/check_reproducibility.md)
+  : Check that recorded fits can be reproduced
+- [`get_SE_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
+  [`get_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
+  [`summarize_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
+  : Get the provenance of fits stored in a SummarizedExperiment
+- [`record_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/record_provenance.md)
+  [`record_processing_step()`](https://gdrplatform.github.io/gDRstyle/reference/record_provenance.md)
+  : Record provenance from code that does not use apply_fit()
+- [`refit_from_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/refit_from_provenance.md)
+  : Re-run a recorded fit
+- [`set_fit_fn_info()`](https://gdrplatform.github.io/gDRstyle/reference/set_fit_fn_info.md)
+  : Describe a fit function
+
 ## Fit profile registry
 
 Register and retrieve fit profiles that define slicing behaviour for

@@ -7,7 +7,14 @@ values, and rbinds all results. Respects on_error semantics.
 ## Usage
 
 ``` r
-.make_fit_wrapper(fit_fn, slicing_cols, slicing_values, on_error, fit_source)
+.make_fit_wrapper(
+  fit_fn,
+  slicing_cols,
+  slicing_values,
+  on_error,
+  fit_source,
+  fit_args = list()
+)
 ```
 
 ## Arguments
@@ -31,6 +38,10 @@ values, and rbinds all results. Respects on_error semantics.
 - fit_source:
 
   fit_source label
+
+- fit_args:
+
+  named list of extra arguments passed to `fit_fn`
 
 ## Value
 

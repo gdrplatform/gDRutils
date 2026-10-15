@@ -15,7 +15,8 @@ apply_fits(
   input_assay = NULL,
   merge = "merge",
   on_error = "warn",
-  fit_source
+  fit_source,
+  fit_args = list()
 )
 ```
 
@@ -59,10 +60,18 @@ apply_fits(
 
   character string stamped as `fit_source` in every output row.
 
+- fit_args:
+
+  named list of argument lists, keyed by names of `fit_fns`, e.g.
+  `list(custom_bliss = list(q = 0.9))`. Each list is passed to its
+  function after the data and recorded in the provenance.
+
 ## Value
 
 updated `SummarizedExperiment` with one new (or updated) assay per entry
-in `fit_fns`.
+in `fit_fns`, and the recipe of each fit in `metadata(se)$provenance`
+(see
+[`get_fit_provenance`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)).
 
 ## Details
 

@@ -1,5 +1,24 @@
 # Changelog
 
+## gDRutils 1.11.18 - 2026-10-13
+
+- add a provenance entry that
+  [`apply_fit()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md)
+  and
+  [`apply_fits()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fits.md)
+  fill and
+  [`merge_SE()`](https://gdrplatform.github.io/gDRstyle/reference/merge_SE.md)
+  keeps, and
+  [`check_reproducibility()`](https://gdrplatform.github.io/gDRstyle/reference/check_reproducibility.md)
+- add `fit_args`,
+  [`set_fit_fn_info()`](https://gdrplatform.github.io/gDRstyle/reference/set_fit_fn_info.md),
+  [`record_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/record_provenance.md)
+  and
+  [`record_processing_step()`](https://gdrplatform.github.io/gDRstyle/reference/record_provenance.md)
+- fix duplicated rows when
+  [`apply_fits()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fits.md)
+  lists one multi-output function under several assays
+
 ## gDRutils 1.11.17 - 2026-10-08
 
 - update authors data
