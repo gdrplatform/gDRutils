@@ -16,7 +16,13 @@ record_fit_provenance(
   replace = FALSE
 )
 
-record_processing_step(se, step, settings = list(), fns = list())
+record_processing_step(
+  se,
+  step,
+  settings = list(),
+  fns = list(),
+  max_bytes = .provenance_max_value_bytes
+)
 }
 \arguments{
 \item{se}{\code{\link[SummarizedExperiment]{SummarizedExperiment}}}
@@ -44,6 +50,10 @@ assay, so the recipes of other fit sources in it no longer apply.}
 
 \item{fns}{named list of the functions the step used, e.g.
 \code{list(rate_fn = rate_fn)}.}
+
+\item{max_bytes}{numeric; largest size in bytes of one setting that is
+stored. Larger settings are listed in \code{settings_not_stored}. Raise it
+for settings that are large by nature, such as the list of input files.}
 }
 \value{
 \code{se} with the provenance entry updated.

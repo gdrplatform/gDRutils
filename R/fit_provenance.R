@@ -386,6 +386,9 @@ check_reproducibility <- function(se,
 #' @param settings named list of plain-data settings of the step.
 #' @param fns named list of the functions the step used, e.g.
 #'   \code{list(rate_fn = rate_fn)}.
+#' @param max_bytes numeric; largest size in bytes of one setting that is
+#'   stored. Larger settings are listed in \code{settings_not_stored}. Raise it
+#'   for settings that are large by nature, such as the list of input files.
 #'
 #' @return \code{se} with the provenance entry updated.
 #'
@@ -445,14 +448,19 @@ record_fit_provenance <- function(se,
 #' @rdname record_provenance
 #' @export
 #'
-record_processing_step <- function(se, step, settings = list(), fns = list()) {
+record_processing_step <- function(se,
+                                   step,
+                                   settings = list(),
+                                   fns = list(),
+                                   max_bytes = .provenance_max_value_bytes) {
   fn_names <- .list_call_names(substitute(fns))
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(step)
   checkmate::assert_list(settings, names = "unique")
   checkmate::assert_list(fns, types = "function", names = "unique")
+  checkmate::assert_number(max_bytes, lower = 0)
 
-  stored <- .split_storable(settings)
+  stored <- .split_storable(settings, max_bytes)
   functions <- lapply(names(fns), function(role) .describe_fn(fns[[role]], fn_names[[role]]))
   names(functions) <- names(fns)
   entry <- .drop_null(list(
@@ -749,8 +757,8 @@ record_processing_step <- function(se, step, settings = list(), fns = list()) {
 # Plain data (NULL, atomic vectors, lists and data frames made of them) small enough
 # to keep in the object.
 #' @keywords internal
-.is_storable <- function(x) {
-  .is_plain_data(x) && as.numeric(utils::object.size(x)) <= .provenance_max_value_bytes
+.is_storable <- function(x, max_bytes = .provenance_max_value_bytes) {
+  .is_plain_data(x) && as.numeric(utils::object.size(x)) <= max_bytes
 }
 
 
@@ -765,9 +773,9 @@ record_processing_step <- function(se, step, settings = list(), fns = list()) {
 
 
 #' @keywords internal
-.split_storable <- function(x) {
+.split_storable <- function(x, max_bytes = .provenance_max_value_bytes) {
   if (length(x) == 0L) return(list(stored = list(), not_stored = character(0)))
-  ok <- vapply(x, .is_storable, logical(1))
+  ok <- vapply(x, .is_storable, logical(1), max_bytes = max_bytes)
   list(stored = x[ok], not_stored = names(x)[!ok])
 }
 
