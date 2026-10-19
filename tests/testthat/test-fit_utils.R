@@ -1135,6 +1135,14 @@ test_that("the fit configuration does not leak into the profile registry", {
 })
 
 
+test_that("every supported experiment type has a fit profile", {
+  expect_true(all(get_supported_experiments() %in% names(get_fit_profiles())))
+  # a co-dilution experiment has the single-agent layout and is fitted the same way
+  fields <- c("slicing_cols", "slicing_values", "input_assay", "nested_cols")
+  expect_equal(get_fit_profile("co-dilution")[fields], get_fit_profile("single-agent")[fields])
+})
+
+
 test_that("a missing normalization type is rejected by name", {
   x <- .parity_fitted_shapes[["ordinary sigmoid"]]
   dt <- .parity_avg_dt(x, NA_character_)

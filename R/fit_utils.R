@@ -43,8 +43,8 @@
 #' @param fit_fn function(\code{data.table}) returning a named list or
 #'   single-row data.frame.  Receives data already filtered to one
 #'   \code{slicing_cols} combination.
-#' @param data_type one of \code{"single-agent"}, \code{"combination"},
-#'   \code{"time-course"}.  Resolves profile defaults.
+#' @param data_type one of \code{"single-agent"}, \code{"co-dilution"},
+#'   \code{"combination"}, \code{"time-course"}.  Resolves profile defaults.
 #' @param slicing_cols character vector of column name(s) used to split each
 #'   BumpyMatrix cell into sub-experiments.  \code{NULL} uses the profile
 #'   default.
@@ -346,8 +346,8 @@ apply_fit_to_se <- function(se,
 #' @param fit_fns named list of functions.  Each name becomes an output assay
 #'   name; each value is a function(\code{data.table}) → named list (or a named
 #'   list of named lists for the shared pre-computation pattern).
-#' @param data_type one of \code{"single-agent"}, \code{"combination"},
-#'   \code{"time-course"}.
+#' @param data_type one of \code{"single-agent"}, \code{"co-dilution"},
+#'   \code{"combination"}, \code{"time-course"}.
 #' @param slicing_cols character vector; \code{NULL} uses profile default.
 #' @param slicing_values character vector; \code{NULL} uses profile default.
 #' @param input_assay string; \code{NULL} uses profile default.

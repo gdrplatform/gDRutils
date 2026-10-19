@@ -24,8 +24,8 @@ apply_fits(
 name; each value is a function(\code{data.table}) → named list (or a named
 list of named lists for the shared pre-computation pattern).}
 
-\item{data_type}{one of \code{"single-agent"}, \code{"combination"},
-\code{"time-course"}.}
+\item{data_type}{one of \code{"single-agent"}, \code{"co-dilution"},
+\code{"combination"}, \code{"time-course"}.}
 
 \item{slicing_cols}{character vector; \code{NULL} uses profile default.}
 
