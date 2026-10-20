@@ -109,7 +109,7 @@ se <- apply_fit(
 summarize_fit_provenance(se)
 #>          assay fit_source                                            fn
 #>         <char>     <char>                                        <char>
-#> 1: custom_hill hill_loose gDRutils::fit_drug_response_metrics (1.11.18)
+#> 1: custom_hill hill_loose gDRutils::fit_drug_response_metrics (1.11.19)
 #>         fit_args
 #>           <char>
 #> 1: pcutoff = 0.1

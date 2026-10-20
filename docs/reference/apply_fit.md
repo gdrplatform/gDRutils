@@ -39,8 +39,8 @@ apply_fit(
 
 - data_type:
 
-  one of `"single-agent"`, `"combination"`, `"time-course"`. Resolves
-  profile defaults.
+  one of `"single-agent"`, `"co-dilution"`, `"combination"`,
+  `"time-course"`. Resolves profile defaults.
 
 - slicing_cols:
 

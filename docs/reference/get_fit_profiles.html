@@ -11,7 +11,7 @@ slicing configuration."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.19</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +77,26 @@ slicing configuration.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`single-agent`$description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1D dose-response curve; fit_fn receives one data.table per normalization_type slice, rows indexed by concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`$slicing_cols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "normalization_type"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`$slicing_values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GR" "RV"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`$input_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Averaged"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`$nested_cols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`$nested_cols_note</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "identifier keys resolved at runtime via gDRutils::get_env_identifiers() — actual column names may differ in custom environments"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`co-dilution`$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Two drugs mixed at a fixed concentration ratio; the experiment has the single-agent layout (partner drug and its concentration in rowData), so it is fitted as a 1D dose-response curve like single-agent"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`time-course`</span>

@@ -41,6 +41,26 @@ get_fit_profiles()
 #> [1] "1D dose-response curve; fit_fn receives one data.table per normalization_type slice, rows indexed by concentration"
 #> 
 #> 
+#> $`co-dilution`
+#> $`co-dilution`$slicing_cols
+#> [1] "normalization_type"
+#> 
+#> $`co-dilution`$slicing_values
+#> [1] "GR" "RV"
+#> 
+#> $`co-dilution`$input_assay
+#> [1] "Averaged"
+#> 
+#> $`co-dilution`$nested_cols
+#> [1] "concentration"
+#> 
+#> $`co-dilution`$nested_cols_note
+#> [1] "identifier keys resolved at runtime via gDRutils::get_env_identifiers() — actual column names may differ in custom environments"
+#> 
+#> $`co-dilution`$description
+#> [1] "Two drugs mixed at a fixed concentration ratio; the experiment has the single-agent layout (partner drug and its concentration in rowData), so it is fitted as a 1D dose-response curve like single-agent"
+#> 
+#> 
 #> $`time-course`
 #> $`time-course`$slicing_cols
 #> [1] "normalization_type"

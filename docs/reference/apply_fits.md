@@ -34,7 +34,8 @@ apply_fits(
 
 - data_type:
 
-  one of `"single-agent"`, `"combination"`, `"time-course"`.
+  one of `"single-agent"`, `"co-dilution"`, `"combination"`,
+  `"time-course"`.
 
 - slicing_cols:
 
