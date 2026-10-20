@@ -15,6 +15,21 @@
       "nested_cols_note": "identifier keys resolved at runtime via gDRutils::get_env_identifiers() \u2014 actual column names may differ in custom environments",
       "description": "1D dose-response curve; fit_fn receives one data.table per normalization_type slice, rows indexed by concentration"
     },
+    "co-dilution": {
+      "slicing_cols": [
+        "normalization_type"
+      ],
+      "slicing_values": [
+        "GR",
+        "RV"
+      ],
+      "input_assay": "Averaged",
+      "nested_cols": [
+        "concentration"
+      ],
+      "nested_cols_note": "identifier keys resolved at runtime via gDRutils::get_env_identifiers() \u2014 actual column names may differ in custom environments",
+      "description": "Two drugs mixed at a fixed concentration ratio; the experiment has the single-agent layout (partner drug and its concentration in rowData), so it is fitted as a 1D dose-response curve like single-agent"
+    },
     "combination": {
       "slicing_cols": [
         "normalization_type"

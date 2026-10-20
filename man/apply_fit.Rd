@@ -27,8 +27,8 @@ apply_fit(
 single-row data.frame.  Receives data already filtered to one
 \code{slicing_cols} combination.}
 
-\item{data_type}{one of \code{"single-agent"}, \code{"combination"},
-\code{"time-course"}.  Resolves profile defaults.}
+\item{data_type}{one of \code{"single-agent"}, \code{"co-dilution"},
+\code{"combination"}, \code{"time-course"}.  Resolves profile defaults.}
 
 \item{slicing_cols}{character vector of column name(s) used to split each
 BumpyMatrix cell into sub-experiments.  \code{NULL} uses the profile

@@ -231,12 +231,29 @@ set_SE_identifiers <- function(se, value) {
 }
 
 
+# TRUE for NULL and for entries with no content. S4Vectors::isEmpty() covers S4
+# objects; plain lists are checked here, because isEmpty() descends into them and
+# stops on S3 objects it does not know, such as the sessionInfo stored in .internal.
+#' @keywords internal
+.is_empty_metadata <- function(x) {
+  if (is.null(x) || length(x) == 0L) {
+    TRUE
+  } else if (isS4(x)) {
+    S4Vectors::isEmpty(x)
+  } else if (is.list(x)) {
+    all(vapply(x, .is_empty_metadata, logical(1)))
+  } else {
+    FALSE
+  }
+}
+
+
 #' The primary purpose of this function is to allow other functions to create exposed setter functions.
 #' @noRd
 .set_SE_metadata <- function(se, name, value, append = FALSE) {
   current_metadata <- .get_SE_metadata(se, name)
 
-  if (is.null(current_metadata) || S4Vectors::isEmpty(current_metadata)) {
+  if (.is_empty_metadata(current_metadata)) {
     current_metadata <- NULL
   }
 

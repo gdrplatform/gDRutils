@@ -113,6 +113,24 @@ test_that("get_SE_processing_metadata and set_SE_processing_metadata work as exp
   expect_equal(get_SE_processing_metadata(se), params)
 })
 
+test_that("set_SE_processing_metadata replaces an entry that holds a sessionInfo", {
+  params <- list(date_processed = Sys.Date(), session_info = sessionInfo())
+  se <- set_SE_processing_metadata(SummarizedExperiment::SummarizedExperiment(), params)
+  expect_warning(se <- set_SE_processing_metadata(se, params),
+                 "overwriting existing metadata entry")
+  expect_equal(get_SE_processing_metadata(se), params)
+})
+
+test_that(".is_empty_metadata treats only entries without content as empty", {
+  expect_true(.is_empty_metadata(NULL))
+  expect_true(.is_empty_metadata(list()))
+  expect_true(.is_empty_metadata(list(a = NULL, b = list())))
+  expect_true(.is_empty_metadata(S4Vectors::DataFrame()))
+  expect_false(.is_empty_metadata(list(session_info = sessionInfo())))
+  expect_false(.is_empty_metadata(Sys.Date()))
+  expect_false(.is_empty_metadata(S4Vectors::DataFrame(a = 1)))
+})
+
 test_that("get_SE_experiment_raw_data and set_SE_experiment_raw_data work as expected", {
   se <- SummarizedExperiment::SummarizedExperiment(metadata = list())
   experiment_raw_data <- get_SE_experiment_raw_data(se)
