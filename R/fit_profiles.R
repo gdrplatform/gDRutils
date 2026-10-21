@@ -148,6 +148,7 @@ get_fit_profile <- function(name) {
 #' Adds a new experiment-type profile or overwrites an existing one.
 #' The profile is available immediately in the current R session and is
 #' picked up by \code{\link{apply_fit}} and \code{\link{apply_fits}}.
+#' It is not saved anywhere: register it again after restarting R.
 #'
 #' @param name string; unique profile identifier (e.g.
 #'   \code{"biochemical"}).
