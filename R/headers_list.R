@@ -80,6 +80,7 @@ HEADERS_LIST[["scores_results"]] <- c(names(get_combo_score_field_names()),
   HEADERS_LIST[["isobolograms"]] <- c("normalization_type",
                                       HEADERS_LIST[["iso_position"]],
                                       "log2_CI",
+                                      "CI_100x",
                                       "log10_ratio_conc")
 HEADERS_LIST[["isobolograms_results"]] <- c(HEADERS_LIST[["isobolograms"]],
                                             paste0(HEADERS_LIST[["isobolograms"]], "_sd"))

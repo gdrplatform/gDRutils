@@ -1,3 +1,6 @@
+## gDRutils 1.11.20 - 2026-10-21
+* add `CI_100x` to the isobologram headers, so it is not taken for an additional variable
+
 ## gDRutils 1.11.19 - 2026-10-19
 * add a `co-dilution` fit profile, so `fit_SE()` and `apply_fit()` accept co-dilution experiments
 * fix setting SE metadata over an entry that holds a `sessionInfo`, which failed every refit of a processed SE
