@@ -390,9 +390,11 @@ apply_bumpy_function <- function(se,
   out <- data.table::rbindlist(lapply(out, data.table::as.data.table), fill = TRUE)
   out <- S4Vectors::DataFrame(out)
 
+  # Build over the full input dimensions, as persist_fit_assay() does: a row or
+  # column for which FUN returned nothing comes out as empty cells, not absent.
   out_assay <- BumpyMatrix::splitAsBumpyMatrix(out[!colnames(out) %in% c("row", "column")],
-                                               row = out$row,
-                                               col = out$column)
+                                               row = factor(out$row, levels = rownames(asy)),
+                                               col = factor(out$column, levels = colnames(asy)))
   SummarizedExperiment::assays(se)[[out_assay_name]] <- out_assay
   se
 }

@@ -144,6 +144,18 @@ test_that("apply_bumpy_function works as expected", {
   bumpy_out_df <- BumpyMatrix::unsplitAsDataFrame(SummarizedExperiment::assay(bumpy_out, "bumpy_mtx"))
   keep_cols <- c("row", "column", "y", "z")
   expect_equal(sort(bumpy_in_df[, keep_cols]), sort(bumpy_out_df[, keep_cols]))
+
+  # a row with no results comes out as empty cells over the full SE dimensions
+  empty_row <- rownames(se)[1]
+  FUN_skip <- function(x) {
+    if (all(x$a %in% df[row == empty_row, a])) data.table::data.table() else FUN(x)
+  }
+  partial <- apply_bumpy_function(se, FUN = FUN_skip, req_assay_name = "bumpy", out_assay_name = "partial")
+  mx <- SummarizedExperiment::assay(partial, "partial")
+  expect_identical(dimnames(mx), dimnames(se))
+  out_df <- BumpyMatrix::unsplitAsDataFrame(mx)
+  expect_false(empty_row %in% out_df$row)
+  expect_equal(NROW(out_df), sum(df$row != empty_row))
 })
 
 test_that("loop works as expected", {
