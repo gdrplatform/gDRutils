@@ -139,25 +139,11 @@ apply_fit <- function(se,
     fit_fn, slicing_cols, slicing_values, on_error, fit_source, fit_args
   )
 
-  se_out <- tryCatch(
-    apply_bumpy_function(
-      se = se,
-      FUN = wrapper_fn,
-      req_assay_name = input_assay,
-      out_assay_name = tmp_assay
-    ),
-    error = function(e) {
-      # apply_bumpy_function errors on SE dimnames mismatch when all cells
-      # return empty data.tables (nothing to split back into BumpyMatrix).
-      # Distinguish from user fit_fn errors propagated with on_error="stop".
-      msg <- conditionMessage(e)
-      if (grepl("rownames|colnames|dimnames|withDimnames", msg,
-                ignore.case = TRUE)) {
-        se   # treat as all-empty — return original SE
-      } else {
-        stop(e)
-      }
-    }
+  se_out <- apply_bumpy_function(
+    se = se,
+    FUN = wrapper_fn,
+    req_assay_name = input_assay,
+    out_assay_name = tmp_assay
   )
 
   if (tmp_assay %in% SummarizedExperiment::assayNames(se_out)) {

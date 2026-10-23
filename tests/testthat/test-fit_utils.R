@@ -801,6 +801,53 @@ test_that("apply_fit merge upsert replaces rows with matching fit_source + slice
   expect_true(all(as.numeric(df[["val"]]) == 9.9))
 })
 
+test_that("apply_fit keeps the output assay when a whole row or column fails", {
+  avg_rows <- data.table::CJ(
+    row = c("D1", "D2", "D3"), column = c("CL1", "CL2"),
+    normalization_type = c("GR", "RV"), Concentration = c(0.01, 0.1, 1)
+  )
+  avg_rows[, `:=`(x = 0.5, cell = paste(row, column))]
+  bumpy <- BumpyMatrix::splitAsBumpyMatrix(
+    avg_rows[, c("normalization_type", "Concentration", "x", "cell")],
+    row = avg_rows$row, col = avg_rows$column
+  )
+  se <- SummarizedExperiment::SummarizedExperiment(assays = list(Averaged = bumpy))
+
+  fit_failing <- function(bad) {
+    function(dt) {
+      if (dt$cell[1] %in% bad) stop("deliberate test error")
+      list(x_mean = mean(dt$x))
+    }
+  }
+  cases <- list(
+    one_cell = "D1 CL1",
+    diagonal = c("D1 CL1", "D2 CL2"),
+    whole_row = c("D1 CL1", "D1 CL2"),
+    whole_column = c("D1 CL1", "D2 CL1", "D3 CL1")
+  )
+  for (case in names(cases)) {
+    bad <- cases[[case]]
+    se_out <- suppressWarnings(apply_fit(
+      se, fit_failing(bad), "single-agent", output_assay = "out", fit_source = "test"
+    ))
+    expect_true("out" %in% SummarizedExperiment::assayNames(se_out), info = case)
+    mx <- SummarizedExperiment::assay(se_out, "out")
+    expect_identical(dimnames(mx), dimnames(se), info = case)
+    df <- BumpyMatrix::unsplitAsDataFrame(mx, row.field = "row", column.field = "column")
+    expect_equal(NROW(df), 2L * (6L - length(bad)), info = case)
+    expect_false(any(paste(df$row, df$column) %in% bad), info = case)
+    expect_equal(get_fit_provenance(se_out, "out", "test")$run$n_rows, NROW(df), info = case)
+  }
+
+  # nothing succeeded: no assay to write, the failures surface as warnings
+  expect_warning(
+    se_none <- apply_fit(se, fit_failing(avg_rows$cell), "single-agent",
+                         output_assay = "out", fit_source = "test"),
+    "deliberate test error"
+  )
+  expect_false("out" %in% SummarizedExperiment::assayNames(se_none))
+})
+
 
 ####
 # apply_fits (single-pass multi-fit)

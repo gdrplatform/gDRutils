@@ -69,3 +69,69 @@ df_to_bm_assay <-
 
     bm
   }
+
+
+#' Build a SummarizedExperiment from a long table
+#'
+#' Turns a long table, one row per measurement, into an SE with a single
+#' BumpyMatrix assay. Meant for assays that do not come out of the gDR pipeline,
+#' e.g. compounds x targets in a biochemical screen; register a profile with
+#' \code{\link{register_fit_profile}} and pass the result to \code{\link{apply_fit}}.
+#'
+#' Several \code{row_cols} or \code{col_cols} are pasted with \code{"_"} into the
+#' row or column names. Combinations absent from \code{dt} come out as empty cells.
+#'
+#' @param dt data.table with one row per measurement.
+#' @param row_cols character vector of columns identifying an SE row.
+#' @param col_cols character vector of columns identifying an SE column.
+#' @param assay_name string; name of the assay.
+#'
+#' @return \code{SummarizedExperiment} with \code{row_cols} in \code{rowData},
+#'   \code{col_cols} in \code{colData} and the remaining columns nested in
+#'   assay \code{assay_name}.
+#'
+#' @examples
+#' dt <- data.table::CJ(compound = c("cA", "cB"), target = "t1", Concentration = c(0.1, 1))
+#' dt$Activity <- c(90, 40, 80, 20)
+#' convert_dt_to_se(dt, "compound", "target", "Biochemical")
+#'
+#' @keywords convert
+#' @export
+convert_dt_to_se <- function(dt, row_cols, col_cols, assay_name) {
+  checkmate::assert_data_table(dt, min.rows = 1L)
+  checkmate::assert_character(row_cols, min.len = 1L)
+  checkmate::assert_character(col_cols, min.len = 1L)
+  checkmate::assert_disjunct(row_cols, col_cols)
+  checkmate::assert_subset(c(row_cols, col_cols), names(dt))
+  checkmate::assert_string(assay_name)
+
+  data_cols <- setdiff(names(dt), c(row_cols, col_cols))
+  if (length(data_cols) == 0L) {
+    stop("dt has no columns besides row_cols and col_cols")
+  }
+
+  row_data <- unique(dt[, row_cols, with = FALSE])
+  col_data <- unique(dt[, col_cols, with = FALSE])
+  row_names <- .paste_id_cols(row_data)
+  col_names <- .paste_id_cols(col_data)
+  clashing <- c(row_names[duplicated(row_names)], col_names[duplicated(col_names)])
+  if (length(clashing) > 0L) {
+    stop(sprintf("identifier columns paste to the same name: %s", toString(unique(clashing))))
+  }
+
+  bm <- BumpyMatrix::splitAsBumpyMatrix(
+    dt[, data_cols, with = FALSE],
+    row = factor(.paste_id_cols(dt[, row_cols, with = FALSE]), levels = row_names),
+    column = factor(.paste_id_cols(dt[, col_cols, with = FALSE]), levels = col_names)
+  )
+  SummarizedExperiment::SummarizedExperiment(
+    assays = stats::setNames(list(bm), assay_name),
+    rowData = S4Vectors::DataFrame(row_data, row.names = row_names),
+    colData = S4Vectors::DataFrame(col_data, row.names = col_names)
+  )
+}
+
+#' @keywords internal
+.paste_id_cols <- function(id_dt) {
+  do.call(paste, c(as.list(id_dt), sep = "_"))
+}
