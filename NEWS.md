@@ -1,3 +1,6 @@
+## gDRutils 1.11.21 - 2026-10-23
+* add `CI_100x` to the isobologram headers, so it is not taken for an additional variable
+
 ## gDRutils 1.11.20 - 2026-10-21
 * fix `apply_fit()` dropping the output assay when a whole row or column of the SE has no successful fit
 * add `convert_dt_to_se()`, which builds an SE with one BumpyMatrix assay from a long table
