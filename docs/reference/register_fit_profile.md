@@ -6,6 +6,7 @@ up by
 [`apply_fit`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md)
 and
 [`apply_fits`](https://gdrplatform.github.io/gDRstyle/reference/apply_fits.md).
+It is not saved anywhere: register it again after restarting R.
 
 ## Usage
 

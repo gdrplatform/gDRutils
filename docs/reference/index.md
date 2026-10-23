@@ -60,6 +60,8 @@
 
 ## Converters
 
+- [`convert_dt_to_se()`](https://gdrplatform.github.io/gDRstyle/reference/convert_dt_to_se.md)
+  : Build a SummarizedExperiment from a long table
 - [`convert_mae_assay_to_dt()`](https://gdrplatform.github.io/gDRstyle/reference/convert_mae_assay_to_dt.md)
   : Convert a MultiAssayExperiment assay to a long data.table
 - [`convert_se_assay_to_custom_dt()`](https://gdrplatform.github.io/gDRstyle/reference/convert_se_assay_to_custom_dt.md)

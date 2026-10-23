@@ -1,5 +1,18 @@
 # Changelog
 
+## gDRutils 1.11.20 - 2026-10-21
+
+- fix
+  [`apply_fit()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md)
+  dropping the output assay when a whole row or column of the SE has no
+  successful fit
+- add
+  [`convert_dt_to_se()`](https://gdrplatform.github.io/gDRstyle/reference/convert_dt_to_se.md),
+  which builds an SE with one BumpyMatrix assay from a long table
+- document that a profile added with
+  [`register_fit_profile()`](https://gdrplatform.github.io/gDRstyle/reference/register_fit_profile.md)
+  lasts only for the current R session
+
 ## gDRutils 1.11.19 - 2026-10-19
 
 - add a `co-dilution` fit profile, so `fit_SE()` and

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,12 @@
       <small>Source: <a href="https://github.com/gdrplatform/gDRutils/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.20" id="gdrutils-11120---2026-10-21">gDRutils 1.11.20 - 2026-10-21<a class="anchor" aria-label="anchor" href="#gdrutils-11120---2026-10-21"></a></h2>
+<ul><li>fix <code><a href="../reference/apply_fit.html">apply_fit()</a></code> dropping the output assay when a whole row or column of the SE has no successful fit</li>
+<li>add <code><a href="../reference/convert_dt_to_se.html">convert_dt_to_se()</a></code>, which builds an SE with one BumpyMatrix assay from a long table</li>
+<li>document that a profile added with <code><a href="../reference/register_fit_profile.html">register_fit_profile()</a></code> lasts only for the current R session</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.19" id="gdrutils-11119---2026-10-19">gDRutils 1.11.19 - 2026-10-19<a class="anchor" aria-label="anchor" href="#gdrutils-11119---2026-10-19"></a></h2>
 <ul><li>add a <code>co-dilution</code> fit profile, so <code>fit_SE()</code> and <code><a href="../reference/apply_fit.html">apply_fit()</a></code> accept co-dilution experiments</li>
