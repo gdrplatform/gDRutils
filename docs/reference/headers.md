@@ -1066,15 +1066,15 @@ get_header(k = NULL)
 #> $isobolograms
 #> [1] "normalization_type" "iso_level"          "pos_x"             
 #> [4] "pos_y"              "pos_x_ref"          "pos_y_ref"         
-#> [7] "log2_CI"            "log10_ratio_conc"  
+#> [7] "log2_CI"            "CI_100x"            "log10_ratio_conc"  
 #> 
 #> $isobolograms_results
 #>  [1] "normalization_type"    "iso_level"             "pos_x"                
 #>  [4] "pos_y"                 "pos_x_ref"             "pos_y_ref"            
-#>  [7] "log2_CI"               "log10_ratio_conc"      "normalization_type_sd"
-#> [10] "iso_level_sd"          "pos_x_sd"              "pos_y_sd"             
-#> [13] "pos_x_ref_sd"          "pos_y_ref_sd"          "log2_CI_sd"           
-#> [16] "log10_ratio_conc_sd"  
+#>  [7] "log2_CI"               "CI_100x"               "log10_ratio_conc"     
+#> [10] "normalization_type_sd" "iso_level_sd"          "pos_x_sd"             
+#> [13] "pos_y_sd"              "pos_x_ref_sd"          "pos_y_ref_sd"         
+#> [16] "log2_CI_sd"            "CI_100x_sd"            "log10_ratio_conc_sd"  
 #> 
 #> $fit_source
 #> [1] "fit_source"

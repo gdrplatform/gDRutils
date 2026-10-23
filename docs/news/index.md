@@ -1,5 +1,10 @@
 # Changelog
 
+## gDRutils 1.11.21 - 2026-10-23
+
+- add `CI_100x` to the isobologram headers, so it is not taken for an
+  additional variable
+
 ## gDRutils 1.11.20 - 2026-10-21
 
 - fix
