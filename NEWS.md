@@ -1,5 +1,10 @@
-## gDRutils 1.11.20 - 2026-10-21
+## gDRutils 1.11.21 - 2026-10-23
 * add `CI_100x` to the isobologram headers, so it is not taken for an additional variable
+
+## gDRutils 1.11.20 - 2026-10-21
+* fix `apply_fit()` dropping the output assay when a whole row or column of the SE has no successful fit
+* add `convert_dt_to_se()`, which builds an SE with one BumpyMatrix assay from a long table
+* document that a profile added with `register_fit_profile()` lasts only for the current R session
 
 ## gDRutils 1.11.19 - 2026-10-19
 * add a `co-dilution` fit profile, so `fit_SE()` and `apply_fit()` accept co-dilution experiments
@@ -796,3 +801,4 @@
 
 ## gDRutils 0.0.0.4 - 2020-06-10
 * including the masked field to be able to remove the masked data from averages
+
