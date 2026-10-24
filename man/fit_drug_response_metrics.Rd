@@ -51,7 +51,18 @@ Named list of fit metrics fully compatible with the standard gDR
 \code{x_inf}, \code{x_0}, \code{r2}, \code{rss}, \code{p_value},
 \code{x_mean}, \code{x_AOC}, \code{x_AOC_range}, \code{x_max},
 \code{x_sd_avg}, \code{N_conc}, \code{maxlog10Concentration},
-\code{fit_type}, \code{normalization_type}.
+\code{fit_type}, \code{normalization_type}. \code{fit_type} is one of:
+\itemize{
+\item \code{"DRC3pHillFitModelFixS0"} (\code{"DRC4pHillFitModel"} for the
+4-parameter variant): the curve was fitted;
+\item \code{"DRCConstantFitResult"}: all responses are equal, or the fit is not
+significant at \code{pcutoff} (its \code{p_value} and \code{rss} are kept);
+the curve is flat at the mean response;
+\item \code{"DRCTooFewPointsToFit"}: fewer than \code{n_point_cutoff}
+concentrations with a response; no curve parameters;
+\item \code{"DRCInvalidFitResult"}: the solver failed; no curve parameters.
+}
+The same labels as \code{\link{logisticFit}} gives for the same data.
 }
 \description{
 Reference fit function replicating standard gDR Hill curve fitting
