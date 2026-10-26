@@ -750,6 +750,17 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   x <- x[keep]
   conc <- conc[keep]
 
+  # Cap x values as logisticFit does (pmin to x_0 + cap), before anything is decided
+  # or summarized from them: a flat response above the cap is then one value, and
+  # x_mean and x_max of every outcome use the capped values
+  checkmate::assert_number(cap, lower = 0)
+  if (is.na(x_0)) {
+    x_cap_limit <- 1 + cap
+  } else {
+    x_cap_limit <- x_0 + cap
+  }
+  x <- pmin(x, x_cap_limit)
+
   # The three ways a curve ends up without a dose-response fit, as in logisticFit():
   # - fewer than n_point_cutoff concentrations (none at all included): nothing to fit
   #   a curve to, so no curve parameters -> DRCTooFewPointsToFit
@@ -784,15 +795,6 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   min_conc <- min(conc)
   max_conc <- max(conc)
   controls <- drc::drmc(relTol = 1e-04, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
-  checkmate::assert_number(cap, lower = 0)
-
-  # Cap x values as logisticFit does (pmin to x_0 + cap)
-  if (is.na(x_0)) {
-    x_cap_limit <- 1 + cap
-  } else {
-    x_cap_limit <- x_0 + cap
-  }
-  x <- pmin(x, x_cap_limit)
 
   # Compute mean on capped x (must be after capping so rss1 uses consistent data)
   x_mean_obs <- mean(x, na.rm = TRUE)

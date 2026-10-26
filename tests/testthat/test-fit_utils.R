@@ -1230,6 +1230,27 @@ test_that("a response with no variance is a constant fit in both implementations
 })
 
 
+test_that("a response above the cap is capped before the fit type is decided", {
+  # Capped at x_0 + cap = 1.1, both responses are one value, so both sides call them
+  # constant with x_mean 1.1 instead of sending a flat curve to drc::drm()
+  inputs <- list(
+    "varying above the cap" = c(1.3, 1.25, 1.4, 1.35, 1.2, 1.3, 1.25, 1.4),
+    "one value above the cap" = rep(1.3, 8)
+  )
+  for (nm in names(inputs)) {
+    x <- inputs[[nm]]
+    got <- purrr::quietly(fit_drug_response_metrics)(.parity_avg_dt(x, "RV"))$result
+    ref <- purrr::quietly(.logistic_fit_reference)(.parity_conc, x, rep(0.02, length(x)))$result
+    expect_equal(got$fit_type, "DRCConstantFitResult", info = nm)
+    expect_equal(ref$fit_type, "DRCConstantFitResult", info = nm)
+    expect_equal(got$x_mean, 1.1, info = nm)
+    expect_equal(got$x_mean, ref$x_mean, info = nm)
+    expect_equal(got$x_max, ref$x_max, info = nm)
+    expect_equal(got$xc50, ref$xc50, info = nm)
+  }
+})
+
+
 test_that("too-few-points input is labelled the same way in both implementations", {
   inputs <- list(
     "three concentrations" = list(conc = c(0.1, 1, 10), x = c(0.9, 0.6, 0.3)),
