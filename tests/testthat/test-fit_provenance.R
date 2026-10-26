@@ -3,6 +3,8 @@ suppressWarnings(
     system.file("testdata/finalMAE_small.qs2", package = "gDRtestData")
   )[["single-agent"]]
 )
+# the reference data is processed with provenance; the tests start without it
+S4Vectors::metadata(se_prov)$provenance <- NULL
 
 # Tests run in an environment that inherits from the gDRutils namespace, so a
 # function defined here would look like package code. Functions standing in for
