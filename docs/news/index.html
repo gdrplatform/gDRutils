@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.22</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,14 @@
       <small>Source: <a href="https://github.com/gdrplatform/gDRutils/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.22" id="gdrutils-11122---2026-10-24">gDRutils 1.11.22 - 2026-10-24<a class="anchor" aria-label="anchor" href="#gdrutils-11122---2026-10-24"></a></h2>
+<ul><li>fix <code><a href="../reference/fit_drug_response_metrics.html">fit_drug_response_metrics()</a></code> labelling too few concentrations as a flat curve, not <code>DRCTooFewPointsToFit</code>
+</li>
+<li>fix a flat response, also one above the cap, being an invalid fit, and keep p-value and rss of a rejected fit</li>
+<li>fix <code><a href="../reference/fit_curves.html">fit_curves()</a></code> stopping on a solver error, by labelling the curve <code>DRCInvalidFitResult</code>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.21" id="gdrutils-11121---2026-10-23">gDRutils 1.11.21 - 2026-10-23<a class="anchor" aria-label="anchor" href="#gdrutils-11121---2026-10-23"></a></h2>
 <ul><li>add <code>CI_100x</code> to the isobologram headers, so it is not taken for an additional variable</li>

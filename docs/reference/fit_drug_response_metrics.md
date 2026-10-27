@@ -77,6 +77,23 @@ Named list of fit metrics fully compatible with the standard gDR
 `Metrics` assay schema: `ec50`, `xc50`, `h`, `x_inf`, `x_0`, `r2`,
 `rss`, `p_value`, `x_mean`, `x_AOC`, `x_AOC_range`, `x_max`, `x_sd_avg`,
 `N_conc`, `maxlog10Concentration`, `fit_type`, `normalization_type`.
+`fit_type` is one of:
+
+- `"DRC3pHillFitModelFixS0"` (`"DRC4pHillFitModel"` for the 4-parameter
+  variant): the curve was fitted;
+
+- `"DRCConstantFitResult"`: all responses are equal, or the fit is not
+  significant at `pcutoff` (its `p_value` and `rss` are kept); the curve
+  is flat at the mean response;
+
+- `"DRCTooFewPointsToFit"`: fewer than `n_point_cutoff` concentrations
+  with a response; no curve parameters;
+
+- `"DRCInvalidFitResult"`: the solver failed; no curve parameters.
+
+The same labels as
+[`logisticFit`](https://gdrplatform.github.io/gDRstyle/reference/logisticFit.md)
+gives for the same data.
 
 ## See also
 

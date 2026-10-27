@@ -19,7 +19,7 @@ on single-agent or time-course data."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.22</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,7 +126,15 @@ range. Default <code>0.1</code>.</p></dd>
 <code>x_inf</code>, <code>x_0</code>, <code>r2</code>, <code>rss</code>, <code>p_value</code>,
 <code>x_mean</code>, <code>x_AOC</code>, <code>x_AOC_range</code>, <code>x_max</code>,
 <code>x_sd_avg</code>, <code>N_conc</code>, <code>maxlog10Concentration</code>,
-<code>fit_type</code>, <code>normalization_type</code>.</p>
+<code>fit_type</code>, <code>normalization_type</code>. <code>fit_type</code> is one of:</p><ul><li><p><code>"DRC3pHillFitModelFixS0"</code> (<code>"DRC4pHillFitModel"</code> for the
+4-parameter variant): the curve was fitted;</p></li>
+<li><p><code>"DRCConstantFitResult"</code>: all responses are equal, or the fit is not
+significant at <code>pcutoff</code> (its <code>p_value</code> and <code>rss</code> are kept);
+the curve is flat at the mean response;</p></li>
+<li><p><code>"DRCTooFewPointsToFit"</code>: fewer than <code>n_point_cutoff</code>
+concentrations with a response; no curve parameters;</p></li>
+<li><p><code>"DRCInvalidFitResult"</code>: the solver failed; no curve parameters.</p></li>
+</ul><p>The same labels as <code><a href="logisticFit.html">logisticFit</a></code> gives for the same data.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
