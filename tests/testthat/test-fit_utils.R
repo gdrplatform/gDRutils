@@ -429,7 +429,7 @@ test_that("fit_drug_response_metrics returns NA metrics for all-NA input", {
   )
   result <- fit_drug_response_metrics(dt)
 
-  expect_equal(result$fit_type, "DRCInvalidFitResult")
+  expect_equal(result$fit_type, "DRCTooFewPointsToFit")
   expect_true(is.na(result$xc50))
   expect_true(is.na(result$h))
   expect_equal(result$N_conc, 0L)
@@ -501,30 +501,27 @@ test_that("fit_drug_response_metrics x_mean is model-predicted (not arithmetic m
 })
 
 
-test_that("fit_drug_response_metrics estimates xc50 fallback when fit fails", {
-  # Fewer unique concentrations than n_point_cutoff — constant fit, not a curve
-  dt_high <- data.table::data.table(
-    Concentration = c(0.1, 1),
-    x = c(0.9, 0.8),
-    normalization_type = "RV"
-  )
-  result_high <- fit_drug_response_metrics(dt_high)
-  expect_equal(result_high$fit_type, "DRCConstantFitResult")
-  # All x > 0.5 — the curve never reaches 50%, so xc50 is +Inf
+test_that("fit_drug_response_metrics does not fit a curve to too few concentrations", {
+  # Fewer unique concentrations than n_point_cutoff: no curve parameters, and xc50
+  # only when every response is on the same side of 50%
+  too_few <- function(x_vals) {
+    dt <- data.table::data.table(Concentration = c(0.1, 1), x = x_vals, normalization_type = "RV")
+    fit_drug_response_metrics(dt)
+  }
+  result_high <- too_few(c(0.9, 0.8))
+  expect_equal(result_high$fit_type, "DRCTooFewPointsToFit")
+  expect_true(all(is.na(c(result_high$ec50, result_high$h, result_high$x_inf, result_high$r2))))
+  # All x > 0.5 — the response never reaches 50%, so xc50 is +Inf
   expect_equal(result_high$xc50, Inf)
-
-  dt_low <- data.table::data.table(
-    Concentration = c(0.1, 1),
-    x = c(0.3, 0.1),
-    normalization_type = "RV"
-  )
-  result_low <- fit_drug_response_metrics(dt_low)
-  expect_equal(result_low$fit_type, "DRCConstantFitResult")
   # All x <= 0.5 — already past 50% at the lowest dose, so xc50 is -Inf
-  expect_equal(result_low$xc50, -Inf)
+  expect_equal(too_few(c(0.3, 0.1))$xc50, -Inf)
 
-  # The invalid-fit path is a different branch and keeps xc50 as NA; it is covered
-  # by "returns NA metrics for all-NA input" above. Neither input here can reach it.
+  # A clear response measured at two doses must not be reported as inactive: before,
+  # this was a constant fit with xc50 = Inf from the mean of 0.55
+  result_mixed <- too_few(c(0.9, 0.2))
+  expect_equal(result_mixed$fit_type, "DRCTooFewPointsToFit")
+  expect_true(is.na(result_mixed$xc50))
+  expect_equal(result_mixed$x_mean, 0.55)
 })
 
 
@@ -533,24 +530,25 @@ test_that("constant fit derives the xc50 sign from the mean, matching logisticFi
   # value. A flat, inactive response must not be reported as maximally potent.
   constant_fit_xc50 <- function(x_vals) {
     dt <- data.table::data.table(
-      Concentration = c(0.1, 1),
+      Concentration = c(0.001, 0.01, 0.1, 1, 10),
       x = x_vals,
       normalization_type = "RV"
     )
-    res <- fit_drug_response_metrics(dt)
+    res <- purrr::quietly(fit_drug_response_metrics)(dt)$result
     expect_equal(res$fit_type, "DRCConstantFitResult")
     res$xc50
   }
 
-  expect_equal(constant_fit_xc50(c(1, 1)), Inf)
-  expect_equal(constant_fit_xc50(c(0.51, 0.51)), Inf)
+  # a single response value: nothing to fit
+  expect_equal(constant_fit_xc50(rep(1, 5)), Inf)
+  expect_equal(constant_fit_xc50(rep(0.51, 5)), Inf)
   # boundary: 0.5 counts as reached, so the sign flips here and not above
-  expect_equal(constant_fit_xc50(c(0.5, 0.5)), -Inf)
-  expect_equal(constant_fit_xc50(c(0.49, 0.49)), -Inf)
-  expect_equal(constant_fit_xc50(c(0, 0)), -Inf)
-  # the sign follows the mean, not the individual values: mean(0.9, 0.2) is 0.55
-  expect_equal(constant_fit_xc50(c(0.9, 0.2)), Inf)
-  expect_equal(constant_fit_xc50(c(0.8, 0.1)), -Inf)
+  expect_equal(constant_fit_xc50(rep(0.5, 5)), -Inf)
+  expect_equal(constant_fit_xc50(rep(0.49, 5)), -Inf)
+  expect_equal(constant_fit_xc50(rep(0, 5)), -Inf)
+  # a fit that is not significant: the sign follows the mean, 0.55 and 0.45 here
+  expect_equal(constant_fit_xc50(c(0.9, 0.2, 0.9, 0.2, 0.55)), Inf)
+  expect_equal(constant_fit_xc50(c(0.8, 0.1, 0.8, 0.1, 0.45)), -Inf)
 })
 
 
@@ -1197,84 +1195,93 @@ test_that("a missing normalization type is rejected by name", {
 })
 
 
-test_that("the constant-fit branch drops the statistics that produced it", {
-  # gDRutils keeps the rss and p_value of the attempted fit and overrides x_0 with the
-  # plateau; this implementation returns NA for the first two and keeps the x_0 it was
-  # given. A consumer cannot tell from our output how far the fit was from significance.
+test_that("the constant-fit branch keeps the statistics of the rejected fit", {
+  # Like logisticFit(), a fit rejected at pcutoff keeps its rss and p_value, so a consumer
+  # can tell how far it was from significance. x_0 still differs: logisticFit() overrides
+  # it with the plateau, this implementation keeps the x_0 it was given; both describe a
+  # flat curve at the mean, since ec50 is 0.
   x <- .parity_constant_shapes[["noisy flat response above half"]]
-  got <- suppressWarnings(fit_drug_response_metrics(.parity_avg_dt(x, "RV")))
-  ref <- suppressWarnings(.logistic_fit_reference(.parity_conc, x, rep(0.02, length(x))))
+  got <- purrr::quietly(fit_drug_response_metrics)(.parity_avg_dt(x, "RV"))$result
+  ref <- purrr::quietly(.logistic_fit_reference)(.parity_conc, x, rep(0.02, length(x)))$result
 
+  expect_equal(got$fit_type, "DRCConstantFitResult")
+  expect_equal(got$p_value, ref$p_value, tolerance = 1e-6)
+  expect_equal(got$rss, ref$rss, tolerance = 1e-6)
   expect_equal(got$x_0, 1)
   expect_equal(ref$x_0, mean(x))
-  expect_true(is.na(got$rss) && is.finite(ref$rss))
-  expect_true(is.na(got$p_value) && is.finite(ref$p_value))
 })
 
-# The four cases below are known differences, not agreements. They are pinned so
-# that unifying the two implementations fails here and has to be decided on, rather
-# than changing fit_type or the averaging behaviour for downstream consumers by
-# accident.
+# The cases below used to be pinned as known differences between the two
+# implementations. They now agree, so a fit_type does not depend on which path fitted
+# the curve (fit_SE() for single agents, fit_curves() for the single-agent fits of a
+# combination).
 
-test_that("a response with no variance is an invalid fit here and a constant fit upstream", {
-  # With every response identical, drc::drm() has nothing to fit and errors, so this
-  # implementation falls to its invalid-fit branch while gDRutils classifies the same
-  # data as a constant fit. xc50 agrees; ec50, h, x_inf, x_0 and r2 do not. A flat
-  # response reaches this branch only at exactly zero variance: with any noise the
-  # significance test routes it to .constant_fit_result() and the two agree, as the
-  # tests above show.
+test_that("a response with no variance is a constant fit in both implementations", {
+  # With every response identical, drc::drm() has nothing to fit; both sides catch
+  # that before calling it
   x <- rep(0.95, 8)
-  got <- suppressWarnings(fit_drug_response_metrics(.parity_avg_dt(x, "RV")))
-  ref <- suppressWarnings(.logistic_fit_reference(.parity_conc, x, rep(0.02, length(x))))
+  got <- purrr::quietly(fit_drug_response_metrics)(.parity_avg_dt(x, "RV"))$result
+  ref <- purrr::quietly(.logistic_fit_reference)(.parity_conc, x, rep(0.02, length(x)))$result
 
-  expect_equal(got$fit_type, "DRCInvalidFitResult")
+  expect_equal(got$fit_type, "DRCConstantFitResult")
   expect_equal(ref$fit_type, "DRCConstantFitResult")
-  # The sign of the infinity, which is what this change fixes, agrees regardless.
   expect_equal(got$xc50, ref$xc50)
-  expect_true(all(is.na(c(got$ec50, got$h, got$x_inf, got$r2))))
-  expect_equal(c(ref$ec50, ref$x_inf, ref$r2), c(0, mean(x), 0))
+  expect_equal(c(got$ec50, got$x_inf, got$r2), c(ref$ec50, ref$x_inf, ref$r2))
 })
 
 
-test_that("the two implementations label too-few-points input differently", {
-  conc <- c(0.1, 1, 10)
-  x <- c(0.9, 0.6, 0.3)
-  dt <- data.table::data.table(Concentration = conc, x = x, normalization_type = "RV")
-
-  got <- suppressWarnings(fit_drug_response_metrics(dt))
-  ref <- suppressWarnings(.logistic_fit_reference(conc, x))
-
-  expect_equal(got$fit_type, "DRCConstantFitResult")
-  expect_equal(ref$fit_type, "DRCTooFewPointsToFit")
+test_that("a response above the cap is capped before the fit type is decided", {
+  # Capped at x_0 + cap = 1.1, both responses are one value, so both sides call them
+  # constant with x_mean 1.1 instead of sending a flat curve to drc::drm()
+  inputs <- list(
+    "varying above the cap" = c(1.3, 1.25, 1.4, 1.35, 1.2, 1.3, 1.25, 1.4),
+    "one value above the cap" = rep(1.3, 8)
+  )
+  for (nm in names(inputs)) {
+    x <- inputs[[nm]]
+    got <- purrr::quietly(fit_drug_response_metrics)(.parity_avg_dt(x, "RV"))$result
+    ref <- purrr::quietly(.logistic_fit_reference)(.parity_conc, x, rep(0.02, length(x)))$result
+    expect_equal(got$fit_type, "DRCConstantFitResult", info = nm)
+    expect_equal(ref$fit_type, "DRCConstantFitResult", info = nm)
+    expect_equal(got$x_mean, 1.1, info = nm)
+    expect_equal(got$x_mean, ref$x_mean, info = nm)
+    expect_equal(got$x_max, ref$x_max, info = nm)
+    expect_equal(got$xc50, ref$xc50, info = nm)
+  }
 })
 
 
-test_that("the two implementations apply the point cutoff to different quantities", {
-  # Five measurements at two unique concentrations: gDRcore counts unique
-  # concentrations and falls back to a constant fit, gDRutils counts non-NA
-  # responses, clears the cutoff and attempts a fit.
-  conc <- c(0.1, 0.1, 0.1, 10, 10)
-  x <- c(0.92, 0.90, 0.88, 0.22, 0.20)
-  dt <- data.table::data.table(Concentration = conc, x = x, normalization_type = "RV")
-
-  got <- suppressWarnings(fit_drug_response_metrics(dt))
-  ref <- suppressWarnings(.logistic_fit_reference(conc, x))
-
-  expect_equal(got$fit_type, "DRCConstantFitResult")
-  expect_false(identical(ref$fit_type, "DRCConstantFitResult"))
+test_that("too-few-points input is labelled the same way in both implementations", {
+  inputs <- list(
+    "three concentrations" = list(conc = c(0.1, 1, 10), x = c(0.9, 0.6, 0.3)),
+    # five measurements at two concentrations: the duplicates are averaged, two points remain
+    "two concentrations with replicates" =
+      list(conc = c(0.1, 0.1, 0.1, 10, 10), x = c(0.92, 0.90, 0.88, 0.22, 0.20)),
+    "no response at all" = list(conc = c(0.1, 1, 10), x = rep(NA_real_, 3))
+  )
+  for (nm in names(inputs)) {
+    i <- inputs[[nm]]
+    dt <- data.table::data.table(Concentration = i$conc, x = i$x, normalization_type = "RV")
+    got <- purrr::quietly(fit_drug_response_metrics)(dt)$result
+    ref <- purrr::quietly(.logistic_fit_reference)(i$conc, i$x)$result
+    expect_equal(got$fit_type, "DRCTooFewPointsToFit", info = nm)
+    expect_equal(ref$fit_type, "DRCTooFewPointsToFit", info = nm)
+    expect_true(all(is.na(c(got$ec50, got$h, got$x_inf, got$r2))), info = nm)
+  }
 })
 
 
-test_that("all-NA input yields an invalid fit here and a too-few-points fit upstream", {
-  conc <- c(0.1, 1, 10)
-  x <- rep(NA_real_, 3)
-  dt <- data.table::data.table(Concentration = conc, x = x, normalization_type = "GR")
-
-  got <- suppressWarnings(fit_drug_response_metrics(dt))
-  ref <- suppressWarnings(.logistic_fit_reference(conc, x, norm_type = "GR"))
-
+test_that("a solver failure is an invalid fit in both implementations", {
+  # A -Inf response makes drc::drm() stop with "0 (non-NA) cases". fit_curves() used to
+  # pass that error on, so apply_fit() dropped the whole cell; now both sides label the
+  # curve and keep the row.
+  x <- c(0.98, 0.95, 0.88, -Inf, 0.45, 0.25, 0.14, 0.10)
+  got <- purrr::quietly(fit_drug_response_metrics)(.parity_avg_dt(x, "RV"))$result
+  # on main this call stopped with the drc error
+  ref <- purrr::quietly(.logistic_fit_reference)(.parity_conc, x, rep(0.02, length(x)))
   expect_equal(got$fit_type, "DRCInvalidFitResult")
-  expect_equal(ref$fit_type, "DRCTooFewPointsToFit")
+  expect_equal(ref$result$fit_type, "DRCInvalidFitResult")
+  expect_true(any(grepl("fitting failed with", ref$warnings)))
 })
 
 

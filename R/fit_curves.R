@@ -275,7 +275,12 @@ logisticFit <-
                             range_conc, pcutoff, capping_fold, mean_norm_value) {
   out <- tryCatch({
     .checkNonNaAvgNorm(df_ = df_, n_point_cutoff = n_point_cutoff)
-    fit_model <- .prepareFitModel(out, df_, x_0, fit_param, priors, lower, cap, concs, controls)
+    # a solver error becomes an invalid fit, so the curve is labelled instead of
+    # stopping the whole fit
+    fit_model <- tryCatch(
+      .prepareFitModel(out, df_, x_0, fit_param, priors, lower, cap, concs, controls),
+      error = function(e) stop(fitting_handler("invalid_fit", message = conditionMessage(e)))
+    )
     out$fit_type <- "DRC4pHillFitModel"
     if (!is.na(x_0)) {
       fit_param <- fit_param[-3]
@@ -315,7 +320,7 @@ logisticFit <-
     }
     out <- set_constant_fit_params(out, mean_norm_value)
   }, invalid_fit = function(e) {
-    warning(sprintf("fitting failed with: '%s'", e))
+    warning(sprintf("fitting failed with: '%s'", conditionMessage(e)))
     out <- .set_invalid_fit_params(out, df_$norm_values)
   }, error = function(e) {
     stop(e)

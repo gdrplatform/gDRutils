@@ -571,7 +571,18 @@ apply_fits <- function(se,
 #'   \code{x_inf}, \code{x_0}, \code{r2}, \code{rss}, \code{p_value},
 #'   \code{x_mean}, \code{x_AOC}, \code{x_AOC_range}, \code{x_max},
 #'   \code{x_sd_avg}, \code{N_conc}, \code{maxlog10Concentration},
-#'   \code{fit_type}, \code{normalization_type}.
+#'   \code{fit_type}, \code{normalization_type}. \code{fit_type} is one of:
+#'   \itemize{
+#'     \item \code{"DRC3pHillFitModelFixS0"} (\code{"DRC4pHillFitModel"} for the
+#'       4-parameter variant): the curve was fitted;
+#'     \item \code{"DRCConstantFitResult"}: all responses are equal, or the fit is not
+#'       significant at \code{pcutoff} (its \code{p_value} and \code{rss} are kept);
+#'       the curve is flat at the mean response;
+#'     \item \code{"DRCTooFewPointsToFit"}: fewer than \code{n_point_cutoff}
+#'       concentrations with a response; no curve parameters;
+#'     \item \code{"DRCInvalidFitResult"}: the solver failed; no curve parameters.
+#'   }
+#'   The same labels as \code{\link{logisticFit}} gives for the same data.
 #'
 #' @seealso \code{\link{fit_drug_response_metrics_4p}} for a 4-parameter
 #'   variant that fits \code{x_0} freely.
@@ -739,15 +750,26 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   x <- x[keep]
   conc <- conc[keep]
 
-  # All-NA/NaN input → empty/invalid result (no data at all).
-  # Note: is.na(NaN) == TRUE in R, so NaN values are caught here, not below.
-  # logisticFit labels this "DRCTooFewPointsToFit" via a separate
-  # condition handler; here we use "DRCInvalidFitResult" (semantically equivalent —
-  # both are treated identically by all downstream consumers).
-  if (length(x) == 0L) {
-    .empty_fit_result(norm_type)
-  } else if (length(unique(conc)) < n_point_cutoff) {
-    # n_point_cutoff: too few unique concentrations → constant fit (matches logisticFit)
+  # Cap x values as logisticFit does (pmin to x_0 + cap), before anything is decided
+  # or summarized from them: a flat response above the cap is then one value, and
+  # x_mean and x_max of every outcome use the capped values
+  checkmate::assert_number(cap, lower = 0)
+  if (is.na(x_0)) {
+    x_cap_limit <- 1 + cap
+  } else {
+    x_cap_limit <- x_0 + cap
+  }
+  x <- pmin(x, x_cap_limit)
+
+  # The three ways a curve ends up without a dose-response fit, as in logisticFit():
+  # - fewer than n_point_cutoff concentrations (none at all included): nothing to fit
+  #   a curve to, so no curve parameters -> DRCTooFewPointsToFit
+  # - one distinct response: nothing to fit (drc would stop on it) -> DRCConstantFitResult
+  # - the solver fails -> DRCInvalidFitResult, further down
+  # (is.na(NaN) is TRUE, so NaN responses were dropped with the NAs above)
+  if (length(unique(conc)) < n_point_cutoff) {
+    .too_few_fit_result(norm_type, x, conc, x_std)
+  } else if (length(unique(x)) == 1L) {
     .constant_fit_result(norm_type, x, conc, x_std, x_0, range_conc)
   } else {
 
@@ -773,15 +795,6 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   min_conc <- min(conc)
   max_conc <- max(conc)
   controls <- drc::drmc(relTol = 1e-04, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
-  checkmate::assert_number(cap, lower = 0)
-
-  # Cap x values as logisticFit does (pmin to x_0 + cap)
-  if (is.na(x_0)) {
-    x_cap_limit <- 1 + cap
-  } else {
-    x_cap_limit <- x_0 + cap
-  }
-  x <- pmin(x, x_cap_limit)
 
   # Compute mean on capped x (must be after capping so rss1 uses consistent data)
   x_mean_obs <- mean(x, na.rm = TRUE)
@@ -838,10 +851,11 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
     f_value <- ((rss1 - rss) / df1) / (rss / df2)
     p_value <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
 
-    # pcutoff: if fit is not statistically significant, fall back to constant fit
-    # (matches logisticFit behaviour: set_constant_fit_params when p >= pcutoff)
+    # pcutoff: a fit that is not statistically significant falls back to a constant
+    # fit, which keeps the p-value and rss of the rejected fit, as logisticFit() does
     if (!force_fit && !is.na(p_value) && p_value >= pcutoff) {
-      .constant_fit_result(norm_type, x, conc, x_std, x_0, range_conc)
+      .constant_fit_result(norm_type, x, conc, x_std, x_0, range_conc,
+                           p_value = p_value, rss = rss)
     } else {
       # Helper: mean of model predictions over a concentration range
       .predict_mean <- function(model, lo, hi) {
@@ -1155,7 +1169,8 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
 # Constant fit: p_value >= pcutoff or too few points — matches set_constant_fit_params()
 # in gDRutils/fit_curves.R (ec50=0, h=0.0001, r2=0, x_mean=x_inf=x_0=mean(x))
 #' @keywords internal
-.constant_fit_result <- function(norm_type, x, conc, x_std, x_0, range_conc) {
+.constant_fit_result <- function(norm_type, x, conc, x_std, x_0, range_conc,
+                                 p_value = NA_real_, rss = NA_real_) {
   mn <- mean(x, na.rm = TRUE)
   N_conc <- length(unique(conc))
   maxlog10Conc <- if (length(conc) > 0L) log10(max(conc)) else NA_real_
@@ -1187,12 +1202,34 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     xc50 = xc50_val,
     h = 0.0001,
     r2 = 0,
-    rss = NA_real_,
-    p_value = NA_real_,
+    rss = rss,
+    p_value = p_value,
     x_0 = if (is.na(x_0)) mn else x_0,
     x_inf = mn,
     fit_type = "DRCConstantFitResult"
   )
+}
+
+
+# Too few concentrations to fit a curve: the summary of the measured values, without
+# curve parameters. xc50 is +/-Inf only when every response is on the same side of the
+# threshold, as .set_too_few_fit_params() does in fit_curves.R.
+#' @keywords internal
+.too_few_fit_result <- function(norm_type, x, conc, x_std) {
+  out <- .empty_fit_result(norm_type)
+  out$fit_type <- "DRCTooFewPointsToFit"
+  if (length(x) == 0L) return(out)
+  mn <- mean(x)
+  x_ordered <- x[order(conc)]
+  n_x <- length(x_ordered)
+  out$x_mean <- mn
+  out$x_AOC <- 1 - mn
+  out$x_max <- if (n_x >= 2L) min(x_ordered[(n_x - 1L):n_x]) else x_ordered
+  out$x_sd_avg <- mean(x_std, na.rm = TRUE)
+  out$N_conc <- length(unique(conc))
+  out$maxlog10Concentration <- log10(max(conc))
+  out$xc50 <- .estimate_xc50_fallback(x, .xc50_threshold_for(norm_type))
+  out
 }
 
 

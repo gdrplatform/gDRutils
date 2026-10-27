@@ -1,3 +1,8 @@
+## gDRutils 1.11.22 - 2026-10-24
+* fix `fit_drug_response_metrics()` labelling too few concentrations as a flat curve, not `DRCTooFewPointsToFit`
+* fix a flat response, also one above the cap, being an invalid fit, and keep p-value and rss of a rejected fit
+* fix `fit_curves()` stopping on a solver error, by labelling the curve `DRCInvalidFitResult`
+
 ## gDRutils 1.11.21 - 2026-10-23
 * add `CI_100x` to the isobologram headers, so it is not taken for an additional variable
 
