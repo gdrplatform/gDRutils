@@ -12,7 +12,9 @@ predict_smooth_from_combo(conc_1, conc_2, metrics_merged)
 \item{conc_2}{A single numeric value for the desired concentration of the second drug.}
 
 \item{metrics_merged}{A data.table containing all pre-calculated curve fit parameters.
-Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.}
+Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.
+The co-dilution fit used is the one whose 'ratio' equals
+\code{round_concentration(conc_2 / conc_1, ndigit = 1)} for the snapped concentrations.}
 }
 \value{
 A single numeric value for the predicted 'smooth' response.

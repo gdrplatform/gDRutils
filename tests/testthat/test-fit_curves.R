@@ -426,6 +426,19 @@ test_that("predict_smooth_from_combo works as expected", {
   expected_val_snapped <- mean(c(c1_snapped, c2_snapped, c3_snapped))
   expect_equal(snapped_pred, expected_val_snapped, tolerance = 1e-4)
 
+  # several co-dilution fits: only the one with the ratio of the snapped point is used
+  diagonals <- data.table::data.table(
+    dilution_drug = "codilution", cotrt_value = NA, ratio = c(0.1, 1, 10),
+    ec50 = c(0.5, 2, 10), h = 2, x_inf = c(0.05, 0.25, 0.15), x_0 = 1
+  )
+  several <- rbind(metrics[dilution_drug != "codilution"], diagonals)
+  expect_equal(predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = several),
+               expected_val_ongrid, tolerance = 1e-4)
+  # no fit for that ratio: the mean of the two single-drug curves
+  no_match <- rbind(metrics[dilution_drug != "codilution"], diagonals[ratio != 10])
+  expect_equal(predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = no_match),
+               mean(c(c1_ongrid, c2_ongrid)), tolerance = 1e-4)
+
   bad_metrics <- metrics[, -c("ec50")]
   expect_error(
     predict_smooth_from_combo(conc_1 = 1, conc_2 = 10, metrics_merged = bad_metrics),
