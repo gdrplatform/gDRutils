@@ -1182,9 +1182,10 @@ test_that("the fit configuration does not leak into the profile registry", {
 
 test_that("every supported experiment type has a fit profile", {
   expect_true(all(get_supported_experiments() %in% names(get_fit_profiles())))
-  # a co-dilution experiment has the single-agent layout and is fitted the same way
-  fields <- c("slicing_cols", "slicing_values", "input_assay", "nested_cols")
+  # a co-dilution experiment nests both concentrations and is sliced like single-agent
+  fields <- c("slicing_cols", "slicing_values", "input_assay")
   expect_equal(get_fit_profile("co-dilution")[fields], get_fit_profile("single-agent")[fields])
+  expect_identical(get_fit_profile("co-dilution")$nested_cols, c("concentration", "concentration2"))
 })
 
 
@@ -1409,4 +1410,55 @@ test_that("apply_fits calls a multi-output function once per slice", {
     # one row per cell and normalization type, not one per listed function
     expect_identical(NROW(rows), 2L * NROW(se_small) * NCOL(se_small))
   }
+})
+
+
+test_that("fit_codilution_metrics fits each ratio along the total concentration", {
+  dose <- 10 ^ seq(-3, 1, 0.5)
+  response <- function(d) 0.1 + 0.9 / (1 + (d / 0.3) ^ 1.5)
+  ratio_1 <- data.table::data.table(Concentration = dose / 2, Concentration_2 = dose / 2,
+                                    x = response(dose), normalization_type = "RV")
+  res <- fit_codilution_metrics(ratio_1)
+  expect_identical(NROW(res), 1L)
+  expect_identical(res$ratio, 1)
+  expect_identical(res$fit_type, "DRC3pHillFitModelFixS0")
+  expect_identical(res$N_conc, 9L)
+  # the curve is placed on the total dose
+  expect_equal(res$ec50, 0.3, tolerance = 1e-3)
+  expect_equal(res$maxlog10Concentration, 1)
+
+  # a second ratio gives a second row; wells with one drug only are left out
+  ratio_3 <- data.table::data.table(Concentration = dose / 4, Concentration_2 = 3 * dose / 4,
+                                    x = response(dose), normalization_type = "RV")
+  single <- data.table::data.table(Concentration = c(0.1, 0), Concentration_2 = c(0, 0.1),
+                                   x = 0.9, normalization_type = "RV")
+  res <- fit_codilution_metrics(rbind(ratio_3, ratio_1, single))
+  expect_identical(res$ratio, c(1, 3))
+  expect_identical(res$N_conc, c(9L, 9L))
+
+  # fewer points than n_point_cutoff
+  res <- fit_codilution_metrics(ratio_1[1:3])
+  expect_identical(res$fit_type, "DRCTooFewPointsToFit")
+
+  # no well with both drugs
+  res <- fit_codilution_metrics(single)
+  expect_identical(res$fit_type, "DRCTooFewPointsToFit")
+  expect_true(is.na(res$ratio))
+
+  expect_error(fit_codilution_metrics(ratio_1[, -"Concentration_2"]), "Concentration_2")
+})
+
+
+test_that("fit_codilution_metrics works through apply_fit on a co-dilution profile", {
+  dose <- 10 ^ seq(-3, 1, 0.5)
+  avg <- data.table::data.table(
+    Concentration = rep(dose / 2, 2), Concentration_2 = rep(dose / 2, 2),
+    x = rep(0.1 + 0.9 / (1 + (dose / 0.3) ^ 1.5), 2), x_std = 0,
+    normalization_type = rep(c("RV", "GR"), each = length(dose))
+  )
+  wrapper <- .make_fit_wrapper(fit_codilution_metrics, "normalization_type", c("GR", "RV"),
+                               on_error = "stop", fit_source = "test")
+  res <- wrapper(S4Vectors::DataFrame(avg))
+  expect_setequal(res$normalization_type, c("GR", "RV"))
+  expect_identical(res$ratio, c(1, 1))
 })

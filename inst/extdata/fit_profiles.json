@@ -25,10 +25,11 @@
       ],
       "input_assay": "Averaged",
       "nested_cols": [
-        "concentration"
+        "concentration",
+        "concentration2"
       ],
       "nested_cols_note": "identifier keys resolved at runtime via gDRutils::get_env_identifiers() \u2014 actual column names may differ in custom environments",
-      "description": "Two drugs mixed at a fixed concentration ratio; the experiment has the single-agent layout (partner drug and its concentration in rowData), so it is fitted as a 1D dose-response curve like single-agent"
+      "description": "Two drugs diluted together at a fixed concentration ratio; both concentrations are nested, and fit_codilution_metrics() fits one 1D dose-response curve per ratio along the total concentration"
     },
     "combination": {
       "slicing_cols": [

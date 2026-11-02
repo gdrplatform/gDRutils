@@ -1,3 +1,8 @@
+## gDRutils 1.11.23 - 2026-11-02
+* add `fit_codilution_metrics()` to fit co-dilution data along the total concentration, one curve per ratio
+* add co-dilution as its own experiment group, with both concentrations nested in its fit profile
+* add co-dilution to `cap_assay_infinities()`, capped with the total concentration range of each ratio
+
 ## gDRutils 1.11.22 - 2026-10-24
 * fix `fit_drug_response_metrics()` labelling too few concentrations as a flat curve, not `DRCTooFewPointsToFit`
 * fix a flat response, also one above the cap, being an invalid fit, and keep p-value and rss of a rejected fit

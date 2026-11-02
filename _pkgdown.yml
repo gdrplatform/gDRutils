@@ -27,11 +27,12 @@ reference:
 - title: Custom fitting
   desc: >
     Generic interface for applying custom fit functions to SummarizedExperiment
-    objects, plus the reference single-agent fit.
+    objects, plus the reference single-agent and co-dilution fits.
 - contents:
   - has_keyword("metrics")
   - fit_drug_response_metrics
   - fit_drug_response_metrics_4p
+  - fit_codilution_metrics
 - title: Fit provenance
   desc: >
     Read, re-run and check the recipe that each fit records in the

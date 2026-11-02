@@ -622,6 +622,73 @@ fit_drug_response_metrics <- function(avg_dt, x_col = "x",
 }
 
 
+#' fit_codilution_metrics
+#'
+#' Fit function for co-dilution data, where two drugs are diluted together at a
+#' fixed ratio. The wells are grouped by the ratio of the two concentrations and
+#' each group is fitted with \code{\link{fit_drug_response_metrics}} along the
+#' total concentration (\code{Concentration + Concentration_2}). Wells with only
+#' one of the two drugs are left out. For use with \code{\link{apply_fit}} on the
+#' co-dilution experiment, where both concentrations are nested.
+#'
+#' @inheritParams fit_drug_response_metrics
+#' @param avg_dt \code{data.table} of averaged data for one
+#'   (drug pair x cell line x normalization_type) triplet, with the columns
+#'   \code{Concentration}, \code{Concentration_2}, the response column named by
+#'   \code{x_col}, \code{normalization_type} and optionally \code{x_std}.
+#'
+#' @return \code{data.table} with one row per ratio: the metrics of
+#'   \code{\link{fit_drug_response_metrics}} and \code{ratio}, the ratio
+#'   \code{Concentration_2 / Concentration} rounded with
+#'   \code{round_concentration(ndigit = 1)}, as for the co-dilution fits of
+#'   combination data. The concentration metrics (\code{ec50}, \code{xc50},
+#'   \code{maxlog10Concentration}, \code{x_AOC_range}) refer to the total
+#'   concentration. Without any well holding both drugs, one
+#'   \code{"DRCTooFewPointsToFit"} row with \code{ratio = NA}.
+#'
+#' @examples
+#' dt <- data.table::data.table(
+#'   Concentration = c(0.0005, 0.005, 0.05, 0.5, 5),
+#'   Concentration_2 = c(0.0005, 0.005, 0.05, 0.5, 5),
+#'   x = c(0.95, 0.8, 0.5, 0.2, 0.1),
+#'   normalization_type = "RV"
+#' )
+#' fit_codilution_metrics(dt)
+#'
+#' @export
+fit_codilution_metrics <- function(avg_dt, x_col = "x",
+                                   capping_fold = 5,
+                                   range_conc = c(5e-3, 5),
+                                   pcutoff = 0.05,
+                                   n_point_cutoff = 4L,
+                                   force_fit = FALSE,
+                                   cap = 0.1) {
+  checkmate::assert_data_table(avg_dt)
+  conc <- get_env_identifiers("concentration")
+  conc2 <- get_env_identifiers("concentration2")
+  checkmate::assert_names(names(avg_dt), must.include = c(conc, conc2))
+
+  dt <- data.table::as.data.table(avg_dt)
+  both <- !is.na(dt[[conc]]) & !is.na(dt[[conc2]]) & dt[[conc]] > 0 & dt[[conc2]] > 0
+  dt <- dt[both]
+  fit_one <- function(series, ratio) {
+    res <- fit_drug_response_metrics(series, x_col = x_col, capping_fold = capping_fold,
+                                     range_conc = range_conc, pcutoff = pcutoff,
+                                     n_point_cutoff = n_point_cutoff, force_fit = force_fit,
+                                     cap = cap)
+    data.table::data.table(data.table::as.data.table(res), ratio = ratio)
+  }
+  if (NROW(dt) == 0L) return(fit_one(dt, NA_real_))
+
+  ratio <- round_concentration(dt[[conc2]] / dt[[conc]], ndigit = 1)
+  # the dose of a series is the total concentration of the two drugs
+  dt[, (conc) := dt[[conc]] + dt[[conc2]]]
+  # split() rather than dt[ratio == r], which would read a "ratio" column of dt if there were one
+  series <- split(dt, factor(ratio, levels = sort(unique(ratio))))
+  data.table::rbindlist(Map(fit_one, series, as.numeric(names(series))))
+}
+
+
 #' fit_drug_response_metrics_4p
 #'
 #' Variant of \code{\link{fit_drug_response_metrics}} using a 4-parameter
