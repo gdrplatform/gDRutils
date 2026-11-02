@@ -1123,15 +1123,15 @@ cap_assay_infinities <- function(conc_assay_dt,
   }
 
   if (!experiment_name %in% c(get_supported_experiments("sa"),
-                              get_supported_experiments("combo"))) {
-    # this function does not support "co-dilution" yet
+                              get_supported_experiments("combo"),
+                              get_supported_experiments("cd"))) {
     stop(sprintf("unsupported experiment:'%s'", experiment_name))
   }
 
   conc <- get_env_identifiers("concentration")
   conc_2 <- get_env_identifiers("concentration2")
 
-  min_conc <- max_conc <- min_conc_2 <- max_conc_2 <- min_val_conc_cd <- min_conc_cd <- min_conc_cd <- NULL
+  min_conc <- max_conc <- min_conc_2 <- max_conc_2 <- min_val_conc_cd <- min_conc_cd <- min_conc_cd <- ratio <- NULL
 
   out_dt <- if (any(assay_dt[[col]] %in% c(Inf, -Inf))) { # check whether capping is required
     if (experiment_name == get_supported_experiments("sa")) {
@@ -1206,6 +1206,27 @@ cap_assay_infinities <- function(conc_assay_dt,
         mt <- mt[, orig_col_order, with = FALSE]
       }
       mt
+    } else if (experiment_name == get_supported_experiments("cd")) {
+      # one fit per ratio along the total concentration (fit_codilution_metrics()), so cap
+      # with the range of the total concentration of that ratio
+      group_cols <- c(
+        as.character(get_env_identifiers(c("drug_name", "drug_name2", "cellline_name"), simplify = FALSE)),
+        additional_group_cols)
+      mt <- data.table::copy(assay_dt)
+      orig_col_order <- colnames(mt)
+
+      cd <- conc_assay_dt[get(conc) > 0 & get(conc_2) > 0]
+      cd[, ratio := round_concentration(get(conc_2) / get(conc), ndigit = 1)]
+      min_max_conc <- cd[, .(min_conc_cd = min(get(conc) + get(conc_2)),
+                             max_conc_cd = max(get(conc) + get(conc_2))),
+                         by = c(group_cols, "ratio")]
+
+      mt <- merge(mt, min_max_conc, by = c(group_cols, "ratio"), all.x = TRUE)
+      mt[get(col) == -Inf, col] <- mt[get(col) == -Inf, "min_conc_cd"] / capping_fold
+      mt[get(col) == Inf, col] <- mt[get(col) == Inf, "max_conc_cd"] * capping_fold
+
+      data.table::setkey(mt, NULL)
+      mt[, orig_col_order, with = FALSE]
     }
   } else {
     assay_dt

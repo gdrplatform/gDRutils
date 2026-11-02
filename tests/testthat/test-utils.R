@@ -1068,10 +1068,6 @@ test_that("cap_assay_infinities works as expected", {
                "Must be element of set ")
   expect_error(cap_assay_infinities(saveraged_data,
                                     smetrics_data,
-                                    experiment_name = get_supported_experiments("cd")),
-               "unsupported experiment:'co-dilution'")
-  expect_error(cap_assay_infinities(saveraged_data,
-                                    smetrics_data,
                                     experiment_name = get_supported_experiments("sa"),
                                     col = 2),
                "Must be of type 'string'")
@@ -1212,4 +1208,21 @@ test_that("get_gDR_session_info behaves correctly under various conditions", {
 
   expect_no_warning(res_semver <- get_gDR_session_info(pattern = "gDRdummyPackage3"))
   expect_equal(res_semver$Version, "0.2.100")
+})
+
+
+test_that("cap_assay_infinities caps co-dilution fits with the range of the total concentration", {
+  dose <- 10 ^ seq(-3, 1, 0.5)
+  averaged <- data.table::data.table(
+    DrugName = "drug_A", DrugName_2 = "drug_B", CellLineName = "cl_1",
+    Concentration = c(dose / 2, dose / 4), Concentration_2 = c(dose / 2, 3 * dose / 4),
+    normalization_type = "RV"
+  )
+  metrics <- data.table::data.table(
+    DrugName = "drug_A", DrugName_2 = "drug_B", CellLineName = "cl_1",
+    normalization_type = "RV", ratio = c(1, 3), xc50 = c(Inf, -Inf), fit_type = "DRCConstantFitResult"
+  )
+  capped <- cap_assay_infinities(averaged, metrics, experiment_name = get_supported_experiments("cd"))
+  expect_identical(dim(capped), dim(metrics))
+  expect_equal(capped$xc50, c(max(dose) * 5, min(dose) / 5))
 })

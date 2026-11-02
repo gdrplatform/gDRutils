@@ -104,7 +104,9 @@ get_testdata_codilution <- function() {
                          "x_max", "maxlog10Concentration", "Concentration_2"),
                        c("Cell Line Name", "Drug Name", "Drug MOA", "Drug Name 2", "Drug MOA2",
                          "GR Inf", "GR 0", "GEC50", "h GR", "E Inf", "E0", "EC50", "h RV",
-                         "GR Max", "Concentration", "Concentration 2"))
+                         "GR Max", "Concentration", "Concentration 2"),
+                       # Concentration_2 is nested in the co-dilution experiment, not in rowData
+                       skip_absent = TRUE)
   dt$GR50 <- dt$EC50
   dt$IC50 <- dt$EC50
   dt$`E Max` <- dt$EC50
