@@ -1,3 +1,6 @@
+## gDRutils 1.11.23 - 2026-11-02
+* fix `predict_smooth_from_combo()` ignoring the co-dilution fits when there is more than one ratio
+
 ## gDRutils 1.11.22 - 2026-10-24
 * fix `fit_drug_response_metrics()` labelling too few concentrations as a flat curve, not `DRCTooFewPointsToFit`
 * fix a flat response, also one above the cap, being an invalid fit, and keep p-value and rss of a rejected fit

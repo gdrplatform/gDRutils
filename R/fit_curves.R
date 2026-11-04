@@ -458,6 +458,8 @@ predict_efficacy_from_conc <- function(c, x_inf, x_0, ec50, h) {
 #' @param conc_2 A single numeric value for the desired concentration of the second drug.
 #' @param metrics_merged A data.table containing all pre-calculated curve fit parameters.
 #'   Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.
+#'   The co-dilution fit used is the one whose 'ratio' equals
+#'   \code{round_concentration(conc_2 / conc_1, ndigit = 1)} for the snapped concentrations.
 #'
 #' @return A single numeric value for the predicted 'smooth' response.
 #'
@@ -512,9 +514,13 @@ predict_smooth_from_combo <- function(conc_1, conc_2, metrics_merged) {
     }
 
   codil_value <- NA
-  if (!is.na(snapped_conc_1) && snapped_conc_1 != 0) {
-    ratio <- snapped_conc_2 / snapped_conc_1
-    codil_params <- metrics_merged[dilution_drug == "codilution" & round(ratio, 2) == round(ratio, 2), ]
+  if (!is.na(snapped_conc_1) && !is.na(snapped_conc_2) && snapped_conc_1 > 0 && snapped_conc_2 > 0) {
+    # the ratio as the co-dilution fits store it; compared outside [.data.table, where
+    # `ratio` would be the column itself and the condition always TRUE
+    target_ratio <- round_concentration(snapped_conc_2 / snapped_conc_1, ndigit = 1)
+    is_codil <- metrics_merged$dilution_drug %in% "codilution" & !is.na(metrics_merged$ratio) &
+      abs(metrics_merged$ratio - target_ratio) <= 1e-8 * target_ratio
+    codil_params <- metrics_merged[is_codil]
     codil_value <- if (NROW(codil_params) == 1) {
       predict_efficacy_from_conc(conc_1 + conc_2,
                                  codil_params$x_inf,
