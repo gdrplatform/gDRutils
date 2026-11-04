@@ -13,7 +13,7 @@ their predictions. This is the combination equivalent of
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.22</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.23</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,9 @@ their predictions. This is the combination equivalent of
 
 <dt id="arg-metrics-merged">metrics_merged<a class="anchor" aria-label="anchor" href="#arg-metrics-merged"></a></dt>
 <dd><p>A data.table containing all pre-calculated curve fit parameters.
-Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.</p></dd>
+Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 'x_0'.
+The co-dilution fit used is the one whose 'ratio' equals
+<code>round_concentration(conc_2 / conc_1, ndigit = 1)</code> for the snapped concentrations.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -81,7 +83,7 @@ Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h', 'x_inf', 
 <span class="r-in"><span><span class="va">dt_metrics</span> <span class="op">&lt;-</span> <span class="fu">gDRutils</span><span class="fu">::</span><span class="fu"><a href="convert_se_assay_to_dt.html">convert_se_assay_to_dt</a></span><span class="op">(</span><span class="va">se</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span>, <span class="st">"Metrics"</span><span class="op">)</span><span class="op">[</span><span class="va">normalization_type</span> <span class="op">==</span> <span class="st">"RV"</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">predict_smooth_from_combo</span><span class="op">(</span>conc_1 <span class="op">=</span> <span class="fl">1.2</span>, conc_2 <span class="op">=</span> <span class="fl">9.8</span>, metrics_merged <span class="op">=</span> <span class="va">dt_metrics</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Requested: (1.20, 9.80) ==&gt; Using models for nearest concentrations: (1.00, 10.00)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3168861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.319069</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

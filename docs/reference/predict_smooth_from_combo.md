@@ -27,7 +27,9 @@ predict_smooth_from_combo(conc_1, conc_2, metrics_merged)
 
   A data.table containing all pre-calculated curve fit parameters.
   Expects columns: 'dilution_drug', 'cotrt_value', 'ratio', 'ec50', 'h',
-  'x_inf', 'x_0'.
+  'x_inf', 'x_0'. The co-dilution fit used is the one whose 'ratio'
+  equals `round_concentration(conc_2 / conc_1, ndigit = 1)` for the
+  snapped concentrations.
 
 ## Value
 
@@ -41,5 +43,5 @@ se <- mae[[gDRutils::get_supported_experiments("combo")]]
 dt_metrics <- gDRutils::convert_se_assay_to_dt(se[1, 1], "Metrics")[normalization_type == "RV"]
 predict_smooth_from_combo(conc_1 = 1.2, conc_2 = 9.8, metrics_merged = dt_metrics)
 #> Requested: (1.20, 9.80) ==> Using models for nearest concentrations: (1.00, 10.00)
-#> [1] 0.3168861
+#> [1] 0.319069
 ```

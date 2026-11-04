@@ -126,31 +126,36 @@ head(mdt, 3)
 #> 1: G00004_drug_004_moa_A_G00021_drug_021_moa_D_72
 #> 2: G00004_drug_004_moa_A_G00021_drug_021_moa_D_72
 #> 3: G00004_drug_004_moa_A_G00021_drug_021_moa_D_72
-#>                                cId  x_mean  x_AOC x_AOC_range  xc50   x_max
-#>                             <char>   <num>  <num>       <num> <num>   <num>
-#> 1: CL00016_cellline_GB_tissue_y_46 -0.7046 1.7046      1.7046  -Inf -0.7046
-#> 2: CL00016_cellline_GB_tissue_y_46 -0.7039 1.7039      1.7039  -Inf -0.7039
-#> 3: CL00016_cellline_GB_tissue_y_46 -0.6920 1.6920      1.6920  -Inf -0.6920
-#>     ec50   x_inf     x_0     h    r2 p_value   rss maxlog10Concentration N_conc
-#>    <num>   <num>   <num> <num> <num>   <num> <num>                 <num>  <int>
-#> 1:     0 -0.7046 -0.7046 1e-04     0      NA    NA             0.4996871      8
-#> 2:     0 -0.7039 -0.7039 1e-04     0      NA    NA             0.4996871      8
-#> 3:     0 -0.6920 -0.6920 1e-04     0      NA    NA             0.4996871      8
-#>    x_sd_avg             fit_type normalization_type fit_source cotrt_value
-#>       <num>               <char>             <char>     <char>       <num>
-#> 1:        0 DRCConstantFitResult                 GR        gDR       3.160
-#> 2:        0 DRCConstantFitResult                 GR        gDR       1.000
-#> 3:        0 DRCConstantFitResult                 GR        gDR       0.316
-#>    ratio dilution_drug Gnumber DrugName drug_moa Gnumber_2 DrugName_2
-#>    <num>        <char>  <char>   <char>   <char>    <char>     <char>
-#> 1:    NA        drug_2  G00004 drug_004    moa_A    G00021   drug_021
-#> 2:    NA        drug_2  G00004 drug_004    moa_A    G00021   drug_021
-#> 3:    NA        drug_2  G00004 drug_004    moa_A    G00021   drug_021
-#>    drug_moa_2 Duration    clid CellLineName   Tissue ReferenceDivisionTime
-#>        <char>    <num>  <char>       <char>   <char>                 <num>
-#> 1:      moa_D       72 CL00016  cellline_GB tissue_y                    46
-#> 2:      moa_D       72 CL00016  cellline_GB tissue_y                    46
-#> 3:      moa_D       72 CL00016  cellline_GB tissue_y                    46
+#>                                cId     x_mean    x_AOC x_AOC_range        xc50
+#>                             <char>      <num>    <num>       <num>       <num>
+#> 1: CL00016_cellline_GB_tissue_y_46 -0.3662448 1.366245    1.612468 0.002839358
+#> 2: CL00016_cellline_GB_tissue_y_46 -0.3662448 1.366245    1.612468 0.002839358
+#> 3: CL00016_cellline_GB_tissue_y_46 -0.3662448 1.366245    1.612468 0.002839358
+#>      x_max        ec50      x_inf   x_0        h        r2      p_value
+#>      <num>       <num>      <num> <num>    <num>     <num>        <num>
+#> 1: -0.7046 0.004155247 -0.6702389     1 2.233111 0.9971451 2.326869e-08
+#> 2: -0.7046 0.004155247 -0.6702389     1 2.233111 0.9971451 2.326869e-08
+#> 3: -0.7046 0.004155247 -0.6702389     1 2.233111 0.9971451 2.326869e-08
+#>            rss maxlog10Concentration N_conc x_sd_avg               fit_type
+#>          <num>                 <num>  <int>    <num>                 <char>
+#> 1: 0.007949021             0.4996871      8        0 DRC3pHillFitModelFixS0
+#> 2: 0.007949021             0.4996871      8        0 DRC3pHillFitModelFixS0
+#> 3: 0.007949021             0.4996871      8        0 DRC3pHillFitModelFixS0
+#>    normalization_type fit_source cotrt_value ratio dilution_drug Gnumber
+#>                <char>     <char>       <num> <num>        <char>  <char>
+#> 1:                 GR        gDR     0.00100    NA        drug_1  G00004
+#> 2:                 GR        gDR     0.00316    NA        drug_1  G00004
+#> 3:                 GR        gDR     0.01000    NA        drug_1  G00004
+#>    DrugName drug_moa Gnumber_2 DrugName_2 drug_moa_2 Duration    clid
+#>      <char>   <char>    <char>     <char>     <char>    <num>  <char>
+#> 1: drug_004    moa_A    G00021   drug_021      moa_D       72 CL00016
+#> 2: drug_004    moa_A    G00021   drug_021      moa_D       72 CL00016
+#> 3: drug_004    moa_A    G00021   drug_021      moa_D       72 CL00016
+#>    CellLineName   Tissue ReferenceDivisionTime
+#>          <char>   <char>                 <num>
+#> 1:  cellline_GB tissue_y                    46
+#> 2:  cellline_GB tissue_y                    46
+#> 3:  cellline_GB tissue_y                    46
 ```
 
 or alternatively for `SummarizedExperiment` object:
@@ -164,31 +169,36 @@ head(sdt, 3)
 #> 1: G00004_drug_004_moa_A_G00021_drug_021_moa_D_72
 #> 2: G00004_drug_004_moa_A_G00021_drug_021_moa_D_72
 #> 3: G00004_drug_004_moa_A_G00021_drug_021_moa_D_72
-#>                                cId  x_mean  x_AOC x_AOC_range  xc50   x_max
-#>                             <char>   <num>  <num>       <num> <num>   <num>
-#> 1: CL00016_cellline_GB_tissue_y_46 -0.7046 1.7046      1.7046  -Inf -0.7046
-#> 2: CL00016_cellline_GB_tissue_y_46 -0.7039 1.7039      1.7039  -Inf -0.7039
-#> 3: CL00016_cellline_GB_tissue_y_46 -0.6920 1.6920      1.6920  -Inf -0.6920
-#>     ec50   x_inf     x_0     h    r2 p_value   rss maxlog10Concentration N_conc
-#>    <num>   <num>   <num> <num> <num>   <num> <num>                 <num>  <int>
-#> 1:     0 -0.7046 -0.7046 1e-04     0      NA    NA             0.4996871      8
-#> 2:     0 -0.7039 -0.7039 1e-04     0      NA    NA             0.4996871      8
-#> 3:     0 -0.6920 -0.6920 1e-04     0      NA    NA             0.4996871      8
-#>    x_sd_avg             fit_type normalization_type fit_source cotrt_value
-#>       <num>               <char>             <char>     <char>       <num>
-#> 1:        0 DRCConstantFitResult                 GR        gDR       3.160
-#> 2:        0 DRCConstantFitResult                 GR        gDR       1.000
-#> 3:        0 DRCConstantFitResult                 GR        gDR       0.316
-#>    ratio dilution_drug Gnumber DrugName drug_moa Gnumber_2 DrugName_2
-#>    <num>        <char>  <char>   <char>   <char>    <char>     <char>
-#> 1:    NA        drug_2  G00004 drug_004    moa_A    G00021   drug_021
-#> 2:    NA        drug_2  G00004 drug_004    moa_A    G00021   drug_021
-#> 3:    NA        drug_2  G00004 drug_004    moa_A    G00021   drug_021
-#>    drug_moa_2 Duration    clid CellLineName   Tissue ReferenceDivisionTime
-#>        <char>    <num>  <char>       <char>   <char>                 <num>
-#> 1:      moa_D       72 CL00016  cellline_GB tissue_y                    46
-#> 2:      moa_D       72 CL00016  cellline_GB tissue_y                    46
-#> 3:      moa_D       72 CL00016  cellline_GB tissue_y                    46
+#>                                cId     x_mean    x_AOC x_AOC_range        xc50
+#>                             <char>      <num>    <num>       <num>       <num>
+#> 1: CL00016_cellline_GB_tissue_y_46 -0.3662448 1.366245    1.612468 0.002839358
+#> 2: CL00016_cellline_GB_tissue_y_46 -0.3662448 1.366245    1.612468 0.002839358
+#> 3: CL00016_cellline_GB_tissue_y_46 -0.3662448 1.366245    1.612468 0.002839358
+#>      x_max        ec50      x_inf   x_0        h        r2      p_value
+#>      <num>       <num>      <num> <num>    <num>     <num>        <num>
+#> 1: -0.7046 0.004155247 -0.6702389     1 2.233111 0.9971451 2.326869e-08
+#> 2: -0.7046 0.004155247 -0.6702389     1 2.233111 0.9971451 2.326869e-08
+#> 3: -0.7046 0.004155247 -0.6702389     1 2.233111 0.9971451 2.326869e-08
+#>            rss maxlog10Concentration N_conc x_sd_avg               fit_type
+#>          <num>                 <num>  <int>    <num>                 <char>
+#> 1: 0.007949021             0.4996871      8        0 DRC3pHillFitModelFixS0
+#> 2: 0.007949021             0.4996871      8        0 DRC3pHillFitModelFixS0
+#> 3: 0.007949021             0.4996871      8        0 DRC3pHillFitModelFixS0
+#>    normalization_type fit_source cotrt_value ratio dilution_drug Gnumber
+#>                <char>     <char>       <num> <num>        <char>  <char>
+#> 1:                 GR        gDR     0.00100    NA        drug_1  G00004
+#> 2:                 GR        gDR     0.00316    NA        drug_1  G00004
+#> 3:                 GR        gDR     0.01000    NA        drug_1  G00004
+#>    DrugName drug_moa Gnumber_2 DrugName_2 drug_moa_2 Duration    clid
+#>      <char>   <char>    <char>     <char>     <char>    <num>  <char>
+#> 1: drug_004    moa_A    G00021   drug_021      moa_D       72 CL00016
+#> 2: drug_004    moa_A    G00021   drug_021      moa_D       72 CL00016
+#> 3: drug_004    moa_A    G00021   drug_021      moa_D       72 CL00016
+#>    CellLineName   Tissue ReferenceDivisionTime
+#>          <char>   <char>                 <num>
+#> 1:  cellline_GB tissue_y                    46
+#> 2:  cellline_GB tissue_y                    46
+#> 3:  cellline_GB tissue_y                    46
 ```
 
 ### Managing gDR identifiers
@@ -457,7 +467,7 @@ validate_SE(se)
 assay(se, "Normalized") <- NULL
 validate_SE(se)
 #> Error in `validate_SE()`:
-#> ! Assertion on 'exp_assay_names' failed: Must be a subset of {'RawTreated','Controls','Averaged','excess','all_iso_points','isobolograms','scores','Metrics'}, but has additional elements {'Normalized'}.
+#> ! Assertion on 'exp_assay_names' failed: Must be a subset of {'RawTreated','Controls','Averaged','Metrics','excess','isobolograms','all_iso_points','scores'}, but has additional elements {'Normalized'}.
 ```
 
 There is also a group of functions to validate data used in the gDR
@@ -533,7 +543,7 @@ combo data:
 
 ``` r
 sessionInfo()
-#> R version 4.6.1 (2026-06-24)
+#> R version 4.6.2 (2026-10-29)
 #> Platform: x86_64-pc-linux-gnu
 #> Running under: Ubuntu 24.04.5 LTS
 #> 
@@ -560,25 +570,25 @@ sessionInfo()
 #>  [5] Seqinfo_1.3.2               IRanges_2.47.5             
 #>  [7] S4Vectors_0.51.10           BiocGenerics_0.59.12       
 #>  [9] generics_0.1.4              MatrixGenerics_1.25.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.22           
+#> [11] matrixStats_1.5.0           gDRutils_1.11.23           
 #> [13] BiocStyle_2.41.0           
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10         SparseArray_1.13.4  stringi_1.8.9      
-#>  [4] lattice_0.22-9      magrittr_2.0.5      digest_0.6.39      
-#>  [7] evaluate_1.0.5      grid_4.6.1          bookdown_0.48      
-#> [10] fastmap_1.2.0       qs2_0.3.1           jsonlite_2.0.0     
-#> [13] Matrix_1.7-5        backports_1.5.1     BiocManager_1.30.27
-#> [16] textshaping_1.0.5   jquerylib_0.1.4     abind_1.4-8        
-#> [19] cli_3.6.6           rlang_1.3.0         XVector_0.53.0     
-#> [22] cachem_1.1.0        DelayedArray_0.39.8 yaml_2.3.12        
-#> [25] otel_0.2.0          S4Arrays_1.13.2     tools_4.6.1        
-#> [28] checkmate_2.3.4     vctrs_0.7.3         R6_2.6.1           
-#> [31] lifecycle_1.0.5     stringr_1.6.0       stringfish_0.19.2  
+#>  [4] lattice_0.23-1      magrittr_2.0.5      digest_0.6.39      
+#>  [7] evaluate_1.0.5      grid_4.6.2          bookdown_0.48      
+#> [10] fastmap_1.2.0       qs2_0.4.0           jsonlite_2.0.0     
+#> [13] Matrix_1.7-6        charport_0.1.1      backports_1.5.1    
+#> [16] BiocManager_1.30.27 textshaping_1.0.5   jquerylib_0.1.4    
+#> [19] abind_1.4-8         cli_3.6.6           rlang_1.3.0        
+#> [22] XVector_0.53.0      cachem_1.1.0        DelayedArray_0.39.8
+#> [25] yaml_2.3.12         otel_0.2.0          S4Arrays_1.13.2    
+#> [28] tools_4.6.2         checkmate_2.3.4     vctrs_0.7.3        
+#> [31] R6_2.6.1            lifecycle_1.0.5     stringr_1.6.0      
 #> [34] fs_2.1.0            BumpyMatrix_1.21.0  ragg_1.5.2         
 #> [37] desc_1.4.3          pillar_1.11.1       pkgdown_2.2.1      
 #> [40] RcppParallel_6.2.1  bslib_0.12.0        glue_1.8.1         
 #> [43] data.table_1.18.6.1 Rcpp_1.1.2          systemfonts_1.3.2  
 #> [46] xfun_0.62           knitr_1.52          htmltools_0.5.9    
-#> [49] rmarkdown_2.32      compiler_4.6.1
+#> [49] rmarkdown_2.32      compiler_4.6.2
 ```
