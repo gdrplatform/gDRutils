@@ -56,12 +56,12 @@ test_that("a fit that cannot converge returns NA parameters, not an error", {
 })
 
 
-test_that("a fit landing on an undefined parameterisation is not converged", {
-  # Two real RV curves from a KRAS-G12C panel. LL.3 finishes on a negative
-  # ec50, and log(dose/ec50) is then NaN at every dose: coef() still returns
-  # numbers, but every residual is NaN. Summing those with na.rm = TRUE
-  # reported r2 = 1.0000 next to ec50 = -1.2 — a perfect score for a curve
-  # the model cannot evaluate.
+test_that("curves the unbounded fit could not evaluate are fitted", {
+  # Two real RV curves from a KRAS-G12C panel. Without a lower bound on ec50
+  # drc reached -1.2 and -0.0085: log(dose/ec50) is then NaN at every dose,
+  # coef() still returns numbers, and summing NaN residuals with na.rm = TRUE
+  # scored both as r2 = 1.0000 — a perfect fit to a curve the model cannot
+  # evaluate. Bounded, both fit, and ec50 is a concentration again.
   steep <- data.frame(
     Concentration = c(0, 0.00015241615447757103, 0.000457247142398638,
                       0.0013717406226510097, 0.0041152289299736305,
@@ -83,12 +83,31 @@ test_that("a fit landing on an undefined parameterisation is not converged", {
 
   for (dt in list(steep, shallow)) {
     out <- ll3_fit_fn(dt)
-    expect_false(out$converged)
-    expect_true(is.na(out$r2))
-    expect_true(is.na(out$ec50))
-    # not the too-few-points refusal: the data were ample, the fit was not
+    expect_true(out$converged)
+    expect_gt(out$ec50, 0)
+    # the tell of the old bug: a perfect score from residuals that were all NaN
+    expect_true(is.finite(out$r2) && out$r2 < 1)
     expect_identical(out$n_conc, 9L)
   }
+})
+
+
+test_that("an ec50 the data cannot locate is refused, not reported", {
+  # A real GR slice with no dose-response at all — the response sits between
+  # 0.91 and 1.02 across four orders of magnitude. Bounding ec50 below keeps
+  # it positive but cannot give it a meaning, so the optimiser runs away to
+  # 2e19 with residuals that stay finite. r2 of 0.03 says the fit is worthless;
+  # the ec50 would read as a number.
+  flat_real <- data.frame(
+    Concentration = c(0.0015241580352681, 0.0411522892997364,
+                      0.123456795490086, 0.370370169243018,
+                      1.11111241447565, 3.33333528837957, 10),
+    x = c(0.9191, 0.9551, 0.9665, 0.9478, 0.9146, 1.02, 0.9108)
+  )
+  out <- ll3_fit_fn(flat_real)
+  expect_false(out$converged)
+  expect_true(is.na(out$ec50))
+  expect_identical(out$n_conc, 7L)
 })
 
 

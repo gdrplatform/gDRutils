@@ -114,10 +114,18 @@
   # Errors are failures; warnings are not. drc warns routinely on fits that
   # converge perfectly well, and treating a warning as a failure threw away
   # W1.4 on a clean sigmoid.
+  # ec50 is a concentration, and every model here evaluates log(dose/ec50), so
+  # a negative one makes the model undefined at every dose. Left free, drc's
+  # self-starter reached exactly that on 11 of 24 real curves. Bounding it
+  # below recovers all 11 and costs nothing on the curves that already fitted:
+  # across those it never lowered r2, and raised it on three.
+  lowerl <- rep(-Inf, length(spec$names))
+  lowerl[match("ec50", spec$names)] <- 1e-12
+
   fit <- withCallingHandlers(
     tryCatch(
       drc::drm(resp ~ conc, data = df_, logDose = NULL, fct = fct,
-               control = controls, na.action = na.omit),
+               control = controls, lowerl = lowerl, na.action = na.omit),
       error = function(e) NULL
     ),
     warning = function(w) invokeRestart("muffleWarning")
@@ -148,6 +156,17 @@
   )
   if (length(resid) == 0L || !all(is.finite(resid)) ||
       !all(vapply(out, is.finite, logical(1)))) {
+    return(failed)
+  }
+
+  # The bound keeps ec50 positive; it cannot keep it meaningful. On a response
+  # too flat to have a midpoint the optimiser runs away instead, reaching 1e19
+  # on a 7-point curve here while the residuals stayed finite. A thousandfold
+  # beyond the tested range is far wider than any honest extrapolation — the
+  # genuine ones land within about ten times the top dose — so past it the
+  # parameter was not estimated from these data.
+  conc_rng <- range(df_$conc)
+  if (out$ec50 < conc_rng[1] / 1e3 || out$ec50 > conc_rng[2] * 1e3) {
     return(failed)
   }
 
@@ -190,8 +209,13 @@
 #' \code{converged = FALSE}, rather than raising. A fit that failed is a
 #' result; dropping the cell would make it indistinguishable from one that was
 #' never fitted. \code{converged = FALSE} also covers a fit that finished on
-#' parameters its own model cannot evaluate — a log-logistic reaching a
-#' negative \code{ec50}, for instance, which predicts \code{NaN} at every dose.
+#' parameters that say nothing about the data: one whose own model cannot
+#' evaluate them, and one whose \code{ec50} ran a thousandfold outside the
+#' tested concentrations, which happens on a response too flat to have a
+#' midpoint.
+#'
+#' \code{ec50} is bounded below at a positive value, because every model here
+#' evaluates \code{log(dose/ec50)} and is undefined without it.
 #'
 #' \code{ll3_fit_fn} and \code{hormesis_fit_fn} fix the lower asymptote at
 #' zero, so neither suits a GR-normalized response that goes below it: the
