@@ -132,7 +132,13 @@
   out <- as.list(co[spec$names])
   names(out) <- spec$names
 
-  resid <- stats::residuals(fit)
+  # Muffled for the same reason as the fit itself: drc's predict() warns
+  # "NaNs produced" while evaluating a converged model at the tested doses,
+  # and that noise would otherwise be the package's only test warnings.
+  resid <- withCallingHandlers(
+    stats::residuals(fit),
+    warning = function(w) invokeRestart("muffleWarning")
+  )
   ss_res <- sum(resid^2, na.rm = TRUE)
   ss_tot <- sum((df_$resp - mean(df_$resp, na.rm = TRUE))^2, na.rm = TRUE)
   r2 <- if (ss_tot > 0) 1 - ss_res / ss_tot else NA_real_
