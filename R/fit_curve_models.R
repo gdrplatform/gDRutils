@@ -231,16 +231,21 @@ hormesis_fit_fn <- function(avg_dt, x_col = "x", conc_col = "Concentration") {
 
 # Descriptions attached once, so the provenance and the registry report a model
 # name rather than "a function".
+#
+# The attribute is set directly rather than through set_fit_fn_info(). R sources
+# a package in collation order, and this file sorts before fit_provenance.R
+# where that helper is defined, so calling it here fails the package load with
+# "could not find function". gDRcore's musyc_fit_fn.R can call it only because
+# gDRutils is a different, already-loaded package by then.
 for (.nm in names(.CURVE_MODELS)) {
   .fn_name <- paste0(.nm, "_fit_fn")
-  assign(
-    .fn_name,
-    set_fit_fn_info(
-      get(.fn_name),
-      model = .CURVE_MODELS[[.nm]]$fct,
-      description = .CURVE_MODELS[[.nm]]$note,
-      reference = "Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021"
-    )
+  .fn <- get(.fn_name)
+  attr(.fn, "fit_fn_info") <- list(
+    model = .CURVE_MODELS[[.nm]]$fct,
+    description = .CURVE_MODELS[[.nm]]$note,
+    reference = paste("Ritz et al. 2015, PLoS ONE 10(12):e0146021,",
+                      "doi:10.1371/journal.pone.0146021")
   )
+  assign(.fn_name, .fn)
 }
-rm(.nm, .fn_name)
+rm(.nm, .fn_name, .fn)
