@@ -56,6 +56,42 @@ test_that("a fit that cannot converge returns NA parameters, not an error", {
 })
 
 
+test_that("a fit landing on an undefined parameterisation is not converged", {
+  # Two real RV curves from a KRAS-G12C panel. LL.3 finishes on a negative
+  # ec50, and log(dose/ec50) is then NaN at every dose: coef() still returns
+  # numbers, but every residual is NaN. Summing those with na.rm = TRUE
+  # reported r2 = 1.0000 next to ec50 = -1.2 — a perfect score for a curve
+  # the model cannot evaluate.
+  steep <- data.frame(
+    Concentration = c(0, 0.00015241615447757103, 0.000457247142398638,
+                      0.0013717406226510097, 0.0041152289299736305,
+                      0.012345679549008601, 0.037037016924301704,
+                      0.11111098560477098, 0.33333352883795708, 1),
+    x = c(1.06616363636364, 1.04777272727273, 0.909538461538462,
+          0.629416666666667, 0.257723076923077, 0.0428076923076923,
+          0.0110307692307692, 0.0120846153846154, 0.00700769230769231,
+          0.00862307692307692)
+  )
+  shallow <- data.frame(
+    Concentration = c(0.0015241580352681, 0.0045724714239864,
+                      0.0137174062265101, 0.0411522892997364,
+                      0.123456795490086, 0.370370169243018,
+                      1.11111241447565, 3.33333528837957, 10),
+    x = c(1.1048, 1.0375, 0.9534, 1.0914, 0.6881, 0.5649, 0.4372,
+          0.4605, 0.3762)
+  )
+
+  for (dt in list(steep, shallow)) {
+    out <- ll3_fit_fn(dt)
+    expect_false(out$converged)
+    expect_true(is.na(out$r2))
+    expect_true(is.na(out$ec50))
+    # not the too-few-points refusal: the data were ample, the fit was not
+    expect_identical(out$n_conc, 9L)
+  }
+})
+
+
 test_that("missing columns are handled rather than thrown", {
   for (m in MODELS) {
     out <- do.call(m, list(data.frame(wrong = 1, columns = 2)))

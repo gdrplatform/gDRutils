@@ -132,14 +132,26 @@
   out <- as.list(co[spec$names])
   names(out) <- spec$names
 
-  # Muffled for the same reason as the fit itself: drc's predict() warns
-  # "NaNs produced" while evaluating a converged model at the tested doses,
-  # and that noise would otherwise be the package's only test warnings.
+  # A model can finish on parameters that make its own prediction undefined:
+  # a log-logistic landing on a negative ec50 evaluates log(dose/ec50) and
+  # returns NaN at every dose. coef() still returns numbers, so the residuals
+  # are the only place it shows, and summing them with na.rm = TRUE scores an
+  # all-NaN fit as a perfect one. Seen on real RV data, where it reported
+  # r2 = 1 alongside ec50 = -1.2.
+  #
+  # The warning is still muffled rather than treated as the signal: drc warns
+  # "NaNs produced" during optimisation on fits whose final residuals are all
+  # finite.
   resid <- withCallingHandlers(
     stats::residuals(fit),
     warning = function(w) invokeRestart("muffleWarning")
   )
-  ss_res <- sum(resid^2, na.rm = TRUE)
+  if (length(resid) == 0L || !all(is.finite(resid)) ||
+      !all(vapply(out, is.finite, logical(1)))) {
+    return(failed)
+  }
+
+  ss_res <- sum(resid^2)
   ss_tot <- sum((df_$resp - mean(df_$resp, na.rm = TRUE))^2, na.rm = TRUE)
   r2 <- if (ss_tot > 0) 1 - ss_res / ss_tot else NA_real_
 
@@ -177,7 +189,14 @@
 #' A fit that does not converge returns a row of \code{NA} parameters with
 #' \code{converged = FALSE}, rather than raising. A fit that failed is a
 #' result; dropping the cell would make it indistinguishable from one that was
-#' never fitted.
+#' never fitted. \code{converged = FALSE} also covers a fit that finished on
+#' parameters its own model cannot evaluate — a log-logistic reaching a
+#' negative \code{ec50}, for instance, which predicts \code{NaN} at every dose.
+#'
+#' \code{ll3_fit_fn} and \code{hormesis_fit_fn} fix the lower asymptote at
+#' zero, so neither suits a GR-normalized response that goes below it: the
+#' model cannot reach the data and the misfit shows up as a poor \code{r2}
+#' rather than as a failure.
 #'
 #' @param avg_dt \code{data.table} for one drug, cell line and normalization
 #'   type, as \code{\link{apply_fit}} supplies it.
