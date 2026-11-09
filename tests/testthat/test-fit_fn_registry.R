@@ -22,7 +22,7 @@ test_that("data_type filters, and an unmatched one gives zero rows", {
 
 
 test_that("a function may be registered for several data types", {
-  withr::defer(rm("multi_type_fn", envir = gDRutils:::.fit_fn_env))
+  withr::defer(rm("multi_type_fn", envir = gDRutils:::.fit_fn_registry_env))
   register_fit_fn(
     "multi_type_fn",
     package = "gDRutils",
@@ -37,7 +37,10 @@ test_that("a function may be registered for several data types", {
 test_that("a function carrying no fit_fn_info lists as NA, not as empty text", {
   # NA rather than "" so a caller can tell "nobody described this" from
   # "described as nothing".
-  row <- get_fit_fns()[get_fit_fns()$name == "fit_drug_response_metrics", ]
+  # The built-ins carry fit_fn_info, so register an exported function that does not.
+  register_fit_fn("bare_fn", package = "stats", fn_name = "median", data_type = "single-agent")
+  withr::defer(rm("bare_fn", envir = gDRutils:::.fit_fn_registry_env))
+  row <- get_fit_fns()[get_fit_fns()$name == "bare_fn", ]
   expect_true(is.na(row$model))
   expect_true(is.na(row$description))
   expect_true(is.na(row$reference))
@@ -65,7 +68,7 @@ test_that("fit_fn_info is read into the table when a function carries it", {
 
 
 test_that("an unavailable predicate hides the function without an error", {
-  withr::defer(rm("needs_python_fn", envir = gDRutils:::.fit_fn_env))
+  withr::defer(rm("needs_python_fn", envir = gDRutils:::.fit_fn_registry_env))
   register_fit_fn(
     "needs_python_fn",
     package = "gDRutils",
@@ -79,7 +82,7 @@ test_that("an unavailable predicate hides the function without an error", {
 
 
 test_that("a predicate that errors counts as unavailable, not as a failure", {
-  withr::defer(rm("broken_predicate_fn", envir = gDRutils:::.fit_fn_env))
+  withr::defer(rm("broken_predicate_fn", envir = gDRutils:::.fit_fn_registry_env))
   register_fit_fn(
     "broken_predicate_fn",
     package = "gDRutils",
@@ -93,7 +96,7 @@ test_that("a predicate that errors counts as unavailable, not as a failure", {
 
 
 test_that("an entry from a package that is not installed lists as unavailable", {
-  withr::defer(rm("absent_pkg_fn", envir = gDRutils:::.fit_fn_env))
+  withr::defer(rm("absent_pkg_fn", envir = gDRutils:::.fit_fn_registry_env))
   register_fit_fn(
     "absent_pkg_fn",
     package = "notAnInstalledPackage",
@@ -108,7 +111,7 @@ test_that("an entry from a package that is not installed lists as unavailable", 
 
 
 test_that("registering the same name twice overwrites", {
-  withr::defer(rm("dup_fn", envir = gDRutils:::.fit_fn_env))
+  withr::defer(rm("dup_fn", envir = gDRutils:::.fit_fn_registry_env))
   register_fit_fn("dup_fn", package = "gDRutils",
                   fn_name = "fit_drug_response_metrics",
                   data_type = "single-agent")

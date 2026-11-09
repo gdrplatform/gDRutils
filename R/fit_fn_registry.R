@@ -22,8 +22,8 @@
 #   get_fit_fn(name)         — resolve one to the function itself
 #   register_fit_fn(name, …) — add or update an entry at runtime
 
-.fit_fn_env <- new.env(parent = emptyenv())
-.fit_fn_state <- new.env(parent = emptyenv())
+.fit_fn_registry_env <- new.env(parent = emptyenv())
+.fit_fn_registry_state <- new.env(parent = emptyenv())
 
 # Built-ins are registered on first use, not in .onLoad(), for the same reason
 # the profiles are loaded lazily: work done during loadNamespace() is charged to
@@ -31,10 +31,10 @@
 # down rather than only the fitting layer.
 #' @keywords internal
 .ensure_fit_fns <- function() {
-  if (!isTRUE(.fit_fn_state$loaded)) {
+  if (!isTRUE(.fit_fn_registry_state$loaded)) {
     # Set the flag first. register_fit_fn() calls .ensure_fit_fns(), so
     # registering the built-ins would otherwise recurse.
-    .fit_fn_state$loaded <- TRUE
+    .fit_fn_registry_state$loaded <- TRUE
     .register_builtin_fit_fns()
   }
   invisible(NULL)
@@ -114,7 +114,7 @@ register_fit_fn <- function(name,
     available = available
   )
   .ensure_fit_fns()
-  .fit_fn_env[[name]] <- entry
+  .fit_fn_registry_env[[name]] <- entry
   invisible(entry)
 }
 
@@ -138,11 +138,11 @@ register_fit_fn <- function(name,
 get_fit_fn <- function(name) {
   checkmate::assert_string(name)
   .ensure_fit_fns()
-  entry <- .fit_fn_env[[name]]
+  entry <- .fit_fn_registry_env[[name]]
   if (is.null(entry)) {
     stop(sprintf(
       "Unknown fit function '%s'. Registered: %s",
-      name, toString(ls(.fit_fn_env))
+      name, toString(ls(.fit_fn_registry_env))
     ), call. = FALSE)
   }
   .resolve_fit_fn(entry, must_work = TRUE)
@@ -207,7 +207,7 @@ get_fit_fns <- function(data_type = NULL) {
   checkmate::assert_character(data_type, min.len = 1L, null.ok = TRUE,
                               any.missing = FALSE)
   .ensure_fit_fns()
-  entries <- as.list(.fit_fn_env)
+  entries <- as.list(.fit_fn_registry_env)
   if (!is.null(data_type)) {
     entries <- Filter(
       function(e) length(intersect(e$data_type, data_type)) > 0L,
