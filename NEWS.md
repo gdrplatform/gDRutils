@@ -1,5 +1,5 @@
 ## gDRutils 1.11.24 - 2026-11-08
-* add `register_fit_fn()`, `get_fit_fns()` and `get_fit_fn()`, a registry so the available fit functions can be listed instead of hardcoded
+* add `register_fit_fn()`, `get_fit_fns()` and `get_fit_fn()`, a registry for listing the available fit functions
 
 ## gDRutils 1.11.23 - 2026-11-02
 * fix `predict_smooth_from_combo()` ignoring the co-dilution fits when there is more than one ratio
