@@ -12,8 +12,8 @@ test_that("every model returns the shared core, whatever else it returns", {
   for (m in MODELS) {
     out <- do.call(m, list(.curve_dt()))
     expect_type(out, "list")
-    expect_true(all(c("r2", "converged", "n_conc", "fit_type") %in% names(out)),
-                info = m)
+    expect_true(all(c("r2", "converged", "ec50_extrapolated", "n_conc",
+                      "fit_type") %in% names(out)), info = m)
     expect_length(out$fit_type, 1L)
     # one row, so every element is scalar — apply_fit turns this into one
     # row of the output assay and a vector would silently become several
@@ -89,6 +89,30 @@ test_that("curves the unbounded fit could not evaluate are fitted", {
     expect_true(is.finite(out$r2) && out$r2 < 1)
     expect_identical(out$n_conc, 9L)
   }
+})
+
+
+test_that("an ec50 outside the tested doses is flagged, not hidden", {
+  # A real GR slice for a drug too weak to reach its midpoint on the plate:
+  # the response only falls to 0.74 at the top dose of 10. The fit is a good
+  # one — r2 near 0.98 — but ec50 lands near 66, so it was extrapolated rather
+  # than measured, and ranking potency on it would be ranking on no data.
+  weak <- data.frame(
+    Concentration = c(0.0015241580352681, 0.0045724714239864,
+                      0.0137174062265101, 0.0411522892997364,
+                      0.123456795490086, 0.370370169243018,
+                      1.11111241447565, 3.33333528837957, 10),
+    x = c(1.0241, 1.0152, 0.999, 0.9977, 0.9916, 0.9744, 0.876,
+          0.8433, 0.7369)
+  )
+  out <- ll3_fit_fn(weak)
+  expect_true(out$converged)
+  expect_true(out$ec50_extrapolated)
+  expect_gt(out$ec50, max(weak$Concentration))
+
+  # and the ordinary case is not flagged
+  ok <- ll3_fit_fn(.curve_dt(12))
+  expect_false(ok$ec50_extrapolated)
 })
 
 

@@ -78,7 +78,8 @@
     as.list(rep(NA_real_, length(spec$names))), spec$names
   )
   failed <- c(empty, list(r2 = NA_real_, converged = FALSE,
-                          n_conc = 0L, fit_type = spec$fit_type))
+                          ec50_extrapolated = NA, n_conc = 0L,
+                          fit_type = spec$fit_type))
 
   if (!all(c(x_col, conc_col) %in% names(avg_dt))) {
     return(failed)
@@ -111,9 +112,6 @@
   controls <- drc::drmc(relTol = 1e-04, errorm = FALSE, noMessage = TRUE,
                         rmNA = TRUE)
 
-  # Errors are failures; warnings are not. drc warns routinely on fits that
-  # converge perfectly well, and treating a warning as a failure threw away
-  # W1.4 on a clean sigmoid.
   # ec50 is a concentration, and every model here evaluates log(dose/ec50), so
   # a negative one makes the model undefined at every dose. Left free, drc's
   # self-starter reached exactly that on 11 of 24 real curves. Bounding it
@@ -122,6 +120,9 @@
   lowerl <- rep(-Inf, length(spec$names))
   lowerl[match("ec50", spec$names)] <- 1e-12
 
+  # Errors are failures; warnings are not. drc warns routinely on fits that
+  # converge perfectly well, and treating a warning as a failure threw away
+  # W1.4 on a clean sigmoid.
   fit <- withCallingHandlers(
     tryCatch(
       drc::drm(resp ~ conc, data = df_, logDose = NULL, fct = fct,
@@ -174,8 +175,16 @@
   ss_tot <- sum((df_$resp - mean(df_$resp, na.rm = TRUE))^2, na.rm = TRUE)
   r2 <- if (ss_tot > 0) 1 - ss_res / ss_tot else NA_real_
 
-  c(out, list(r2 = r2, converged = TRUE, n_conc = n_conc,
-              fit_type = spec$fit_type))
+  # Between "estimated" and "runaway" sits a real and common case: a drug too
+  # weak to reach its own midpoint over the doses tested. The fit describes
+  # the data well — on this panel, r2 up to 0.98 with ec50 nine times the top
+  # dose — but the ec50 was extrapolated, not measured, and read as a potency
+  # it would rank that drug against others on a number no plate supports.
+  # Refusing it would throw away a good fit; reporting it silently would not.
+  extrapolated <- out$ec50 < conc_rng[1] || out$ec50 > conc_rng[2]
+
+  c(out, list(r2 = r2, converged = TRUE, ec50_extrapolated = extrapolated,
+              n_conc = n_conc, fit_type = spec$fit_type))
 }
 
 
@@ -203,7 +212,12 @@
 #' \code{Metrics} will understand it.
 #'
 #' All of them also return \code{r2}, \code{converged}, \code{n_conc} and
-#' \code{fit_type}, so two models fitted to the same data can be compared.
+#' \code{fit_type}, so two models fitted to the same data can be compared, and
+#' \code{ec50_extrapolated}, which is \code{TRUE} when the fitted \code{ec50}
+#' lies outside the concentrations tested. That happens whenever a drug is too
+#' weak to reach its own midpoint on the plate: the fit can still be a good
+#' one, but the \code{ec50} is not a measurement and should not be read as a
+#' potency.
 #'
 #' A fit that does not converge returns a row of \code{NA} parameters with
 #' \code{converged = FALSE}, rather than raising. A fit that failed is a
@@ -228,7 +242,8 @@
 #' @param conc_col string; the concentration column.
 #'
 #' @return Named list of one row: the model's parameters, then \code{r2},
-#'   \code{converged}, \code{n_conc} and \code{fit_type}.
+#'   \code{converged}, \code{ec50_extrapolated}, \code{n_conc} and
+#'   \code{fit_type}.
 #'
 #' @examples
 #' dt <- data.frame(Concentration = 10^(-3:3), x = c(1, .98, .9, .5, .2, .1, .08))
