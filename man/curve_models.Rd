@@ -91,4 +91,4 @@ gompertz_fit_fn(dt)
 \seealso{
 \code{\link{apply_fit}}, \code{\link{fit_drug_response_metrics}}
 }
-\keyword{fit_models}
+\keyword{metrics}

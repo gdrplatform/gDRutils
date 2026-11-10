@@ -252,7 +252,7 @@
 #'
 #' @seealso \code{\link{apply_fit}}, \code{\link{fit_drug_response_metrics}}
 #' @name curve_models
-#' @keywords fit_models
+#' @keywords metrics
 NULL
 
 
