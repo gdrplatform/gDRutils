@@ -46,6 +46,13 @@ reference:
   - get_fit_profiles
   - get_fit_profile
   - register_fit_profile
+- title: Fit function registry
+  desc: >
+    Register fit functions and look them up by name.
+- contents:
+  - get_fit_fns
+  - get_fit_fn
+  - register_fit_fn
 - title: JSON conversion
 - contents:
   - has_keyword("json_convert")
