@@ -19,10 +19,11 @@
 # only because 50 is its own complement, which is exactly why this has to be
 # written down rather than inferred.
 #
-# Capping goes through cap_xc50() so a level that extrapolates past the plate
-# gets the same +/-Inf treatment xc50 already gets, rather than a second rule.
+# Capping goes through cap_xc50() with the same lowest tested concentration the
+# fit uses for xc50, so a level that extrapolates past the plate gets the same
+# +/-Inf treatment xc50 already gets, rather than a second rule.
 #' @keywords internal
-.xc_at_levels <- function(metrics, levels, capping_fold = 5) {
+.xc_at_levels <- function(metrics, levels, min_conc = NA_real_, capping_fold = 5) {
   nms <- paste0("xc", levels)
 
   # xc50 is already in the fit's own output and means the same thing. Emitting
@@ -48,9 +49,9 @@
   conc <- predict_conc_from_efficacy(
     efficacy = 1 - levels / 100,
     x_inf = rep(pars[[1L]], n),
-    x_0   = rep(pars[[2L]], n),
-    ec50  = rep(pars[[3L]], n),
-    h     = rep(pars[[4L]], n)
+    x_0 = rep(pars[[2L]], n),
+    ec50 = rep(pars[[3L]], n),
+    h = rep(pars[[4L]], n)
   )
 
   max_log <- metrics[["maxlog10Concentration"]]
@@ -61,7 +62,8 @@
     if (!is.finite(v) || !is.finite(max_conc)) {
       return(as.numeric(v))
     }
-    cap_xc50(xc50 = v, max_conc = max_conc, capping_fold = capping_fold)
+    cap_xc50(xc50 = v, max_conc = max_conc, min_conc = min_conc,
+             capping_fold = capping_fold)
   }, numeric(1))
 
   stats::setNames(as.list(out), nms)
@@ -134,7 +136,7 @@
 #'
 #' @seealso \code{\link{fit_drug_response_metrics}},
 #'   \code{\link{predict_conc_from_efficacy}}, \code{\link{cap_xc50}}
-#' @keywords fit_models
+#' @keywords metrics
 #' @export
 fit_drug_response_metrics_xcx <- function(avg_dt,
                                           x_col = "x",
@@ -164,7 +166,13 @@ fit_drug_response_metrics_xcx <- function(avg_dt,
     cap = cap
   )
 
-  c(metrics, .xc_at_levels(metrics, levels, capping_fold = capping_fold))
+  # The lowest tested concentration, taken as the fit takes it for xc50.
+  conc <- avg_dt[[get_env_identifiers("concentration")]]
+  conc <- conc[!is.na(avg_dt[[x_col]]) & !is.na(conc) & conc > 0]
+  min_conc <- if (length(conc)) min(conc) else NA_real_
+
+  c(metrics, .xc_at_levels(metrics, levels, min_conc = min_conc,
+                           capping_fold = capping_fold))
 }
 
 

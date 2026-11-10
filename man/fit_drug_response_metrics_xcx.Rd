@@ -91,4 +91,4 @@ fit_drug_response_metrics_xcx(dt, levels = c(75, 90))
 \code{\link{fit_drug_response_metrics}},
 \code{\link{predict_conc_from_efficacy}}, \code{\link{cap_xc50}}
 }
-\keyword{fit_models}
+\keyword{metrics}

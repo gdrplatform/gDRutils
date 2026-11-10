@@ -52,8 +52,18 @@ test_that("the helper reproduces the fit's own xc50", {
 test_that("a level the curve never reaches is Inf, not a number", {
   # Plateau at 0.4, so 90% inhibition is unreachable and 50% is not.
   out <- fit_drug_response_metrics_xcx(.xcx_dt(x_inf = 0.4), levels = c(90))
-  expect_false(is.finite(out$xc90))
-  expect_true(is.na(out$xc90) || out$xc90 == Inf)
+  expect_identical(out$xc90, Inf)
+})
+
+
+test_that("levels below the plate are capped like xc50, from the lowest dose", {
+  # xc25 = 3.3e-5 lies between the lowest dose / 5 (2e-4) and the cap without
+  # a lowest dose (max / 5e5 = 2e-5), so only the xc50 rule turns it into -Inf.
+  metrics <- list(x_inf = 0, x_0 = 1, ec50 = 1e-4, h = 1,
+                  maxlog10Concentration = 1)
+  out <- gDRutils:::.xc_at_levels(metrics, levels = c(25, 50), min_conc = 1e-3)
+  expect_identical(out$xc50, -Inf)
+  expect_identical(out$xc25, -Inf)
 })
 
 
