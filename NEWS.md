@@ -1,3 +1,6 @@
+## gDRutils 1.11.26 - 2026-11-09
+* add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
+
 ## gDRutils 1.11.24 - 2026-11-08
 * add `register_fit_fn()`, `get_fit_fns()` and `get_fit_fn()`, a registry for listing the available fit functions
 

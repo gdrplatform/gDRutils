@@ -54,6 +54,11 @@
     package = "gDRutils",
     data_type = "single-agent"
   )
+  register_fit_fn(
+    "fit_drug_response_metrics_xcx",
+    package = "gDRutils",
+    data_type = "single-agent"
+  )
   invisible(NULL)
 }
 
