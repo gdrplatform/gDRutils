@@ -1,5 +1,14 @@
 # Changelog
 
+## gDRutils 1.11.24 - 2026-11-08
+
+- add
+  [`register_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/register_fit_fn.md),
+  [`get_fit_fns()`](https://gdrplatform.github.io/gDRstyle/reference/get_fit_fns.md)
+  and
+  [`get_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/get_fit_fn.md),
+  a registry for listing the available fit functions
+
 ## gDRutils 1.11.23 - 2026-11-02
 
 - fix

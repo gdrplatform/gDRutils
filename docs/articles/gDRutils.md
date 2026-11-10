@@ -545,11 +545,11 @@ combo data:
 sessionInfo()
 #> R version 4.6.2 (2026-10-29)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.5 LTS
+#> Running under: Ubuntu 26.04.1 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.32.so;  LAPACK version 3.12.0
 #> 
 #> locale:
 #>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
@@ -570,7 +570,7 @@ sessionInfo()
 #>  [5] Seqinfo_1.3.2               IRanges_2.47.5             
 #>  [7] S4Vectors_0.51.10           BiocGenerics_0.59.12       
 #>  [9] generics_0.1.4              MatrixGenerics_1.25.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.23           
+#> [11] matrixStats_1.5.0           gDRutils_1.11.24           
 #> [13] BiocStyle_2.41.0           
 #> 
 #> loaded via a namespace (and not attached):
@@ -578,11 +578,11 @@ sessionInfo()
 #>  [4] lattice_0.23-1      magrittr_2.0.5      digest_0.6.39      
 #>  [7] evaluate_1.0.5      grid_4.6.2          bookdown_0.48      
 #> [10] fastmap_1.2.0       qs2_0.4.0           jsonlite_2.0.0     
-#> [13] Matrix_1.7-6        charport_0.1.1      backports_1.5.1    
+#> [13] Matrix_1.7-6        charport_0.2.0      backports_1.5.1    
 #> [16] BiocManager_1.30.27 textshaping_1.0.5   jquerylib_0.1.4    
 #> [19] abind_1.4-8         cli_3.6.6           rlang_1.3.0        
 #> [22] XVector_0.53.0      cachem_1.1.0        DelayedArray_0.39.8
-#> [25] yaml_2.3.12         otel_0.2.0          S4Arrays_1.13.2    
+#> [25] yaml_2.3.12         otel_0.3.0          S4Arrays_1.13.2    
 #> [28] tools_4.6.2         checkmate_2.3.4     vctrs_0.7.3        
 #> [31] R6_2.6.1            lifecycle_1.0.5     stringr_1.6.0      
 #> [34] fs_2.1.0            BumpyMatrix_1.21.0  ragg_1.5.2         

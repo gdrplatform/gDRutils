@@ -70,6 +70,8 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_env_var.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_expect_one_identifiers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_experiment_groups.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_fit_fn.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_fit_fns.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_fit_profile.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_fit_profiles.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_gDR_session_info.html</loc></url>
@@ -119,6 +121,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/refine_coldata.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/refine_rowdata.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/refit_from_provenance.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/register_fit_fn.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/register_fit_profile.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/remove_codrug_data.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/remove_drug_batch.html</loc></url>

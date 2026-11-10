@@ -268,6 +268,17 @@ each experiment type.
 - [`register_fit_profile()`](https://gdrplatform.github.io/gDRstyle/reference/register_fit_profile.md)
   : Register or update a fit profile
 
+## Fit function registry
+
+Register fit functions and look them up by name.
+
+- [`get_fit_fns()`](https://gdrplatform.github.io/gDRstyle/reference/get_fit_fns.md)
+  : List the registered fit functions
+- [`get_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/get_fit_fn.md)
+  : Get a registered fit function
+- [`register_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/register_fit_fn.md)
+  : Register or update a fit function
+
 ## JSON conversion
 
 - [`convert_colData_to_json()`](https://gdrplatform.github.io/gDRstyle/reference/convert_colData_to_json.md)
