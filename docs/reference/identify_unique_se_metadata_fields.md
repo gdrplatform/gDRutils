@@ -29,5 +29,5 @@ SElist <- list(
 )
 identify_unique_se_metadata_fields(SElist)
 #> [1] "identifiers"         "experiment_metadata" "Keys"               
-#> [4] "fit_parameters"      ".internal"          
+#> [4] "provenance"          "fit_parameters"      ".internal"          
 ```

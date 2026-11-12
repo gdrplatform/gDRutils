@@ -63,7 +63,7 @@ apply_bumpy_function(
 )
 #> class: SummarizedExperiment 
 #> dim: 10 10 
-#> metadata(5): identifiers experiment_metadata Keys fit_parameters
+#> metadata(6): identifiers experiment_metadata ... fit_parameters
 #>   .internal
 #> assays(6): RawTreated Controls ... Metrics CorrectedReadout
 #> rownames(10): G00002_drug_002_moa_A_72 G00003_drug_003_moa_A_72 ...

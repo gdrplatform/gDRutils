@@ -44,90 +44,546 @@ merge_metadata(listSE, metadata_fields)
 #> $Keys
 #> NULL
 #> 
+#> $provenance
+#> $provenance$schema_version
+#> [1] 1
+#> 
+#> $provenance$fits
+#> list()
+#> 
+#> $provenance$steps
+#> list()
+#> 
+#> $provenance$sources
+#> $provenance$sources[[1]]
+#> $provenance$sources[[1]]$schema_version
+#> [1] 1
+#> 
+#> $provenance$sources[[1]]$fits
+#> $provenance$sources[[1]]$fits$Metrics
+#> $provenance$sources[[1]]$fits$Metrics$gDR
+#> $provenance$sources[[1]]$fits$Metrics$gDR$called_by
+#> [1] "apply_fit"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$name
+#> [1] "fit_drug_response_metrics"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$package
+#> [1] "gDRutils"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$version
+#> [1] "1.11.22"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$hash
+#> [1] "ff16d78c11f4cdea"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$dependencies
+#>          BumpyMatrix            checkmate            codetools 
+#>             "1.18.0"              "2.3.4"             "0.2.20" 
+#>           data.table               digest                  drc 
+#>             "1.18.4"             "0.6.39"              "3.0.1" 
+#>             gDRutils             jsonlite         jsonvalidate 
+#>            "1.11.22"              "2.0.0"              "1.5.0" 
+#> MultiAssayExperiment                  qs2            S4Vectors 
+#>             "1.36.2"              "0.2.2"             "0.48.1" 
+#>              stringr SummarizedExperiment 
+#>              "1.6.0"             "1.40.0" 
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info$model
+#> [1] "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info$description
+#> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info$reference
+#> [1] "Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021"
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$capping_fold
+#> [1] 5
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$range_conc
+#> [1] 0.005 5.000
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$pcutoff
+#> [1] 0.05
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$n_point_cutoff
+#> [1] 4
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$force_fit
+#> [1] FALSE
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$cap
+#> [1] 0.1
+#> 
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$input_assay
+#> [1] "Averaged"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$output_assay
+#> [1] "Metrics"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$slicing_cols
+#> [1] "normalization_type"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$slicing_values
+#> [1] "GR" "RV"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$merge
+#> [1] "replace"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$run
+#> $provenance$sources[[1]]$fits$Metrics$gDR$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$run$input_hash
+#> [1] "077d8eabaafbd390"
+#> 
+#> $provenance$sources[[1]]$fits$Metrics$gDR$run$n_rows
+#> [1] 200
+#> 
+#> 
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps
+#> $provenance$sources[[1]]$steps$create
+#> $provenance$sources[[1]]$steps$create$settings
+#> $provenance$sources[[1]]$steps$create$settings$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[1]]$steps$create$settings$readout
+#> [1] "ReadoutValue"
+#> 
+#> $provenance$sources[[1]]$steps$create$settings$nested_identifiers
+#> [1] "Concentration"
+#> 
+#> $provenance$sources[[1]]$steps$create$settings$nested_confounders
+#> [1] "Barcode"
+#> 
+#> $provenance$sources[[1]]$steps$create$settings$override_untrt_controls
+#> NULL
+#> 
+#> $provenance$sources[[1]]$steps$create$settings$masked
+#> $provenance$sources[[1]]$steps$create$settings$masked$n_wells
+#> [1] 0
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$create$run
+#> $provenance$sources[[1]]$steps$create$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[1]]$steps$create$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$normalize
+#> $provenance$sources[[1]]$steps$normalize$functions
+#> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn
+#> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$name
+#> [1] "control_mean_fxn"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$package
+#> [1] "gDRcore"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$version
+#> [1] "1.11.26"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$hash
+#> [1] "33fb9ece036126b7"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$source
+#> [1] "function (x) \n{\n    mean(x, trim = 0.25)\n}"
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings
+#> $provenance$sources[[1]]$steps$normalize$settings$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$nested_identifiers
+#> [1] "Concentration"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$nested_confounders
+#> [1] "Barcode"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$ndigit_rounding
+#> [1] 4
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$control_assay
+#> [1] "Controls"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$raw_treated_assay
+#> [1] "RawTreated"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$normalized_assay
+#> [1] "Normalized"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$gr
+#> $provenance$sources[[1]]$steps$normalize$settings$gr$n_pairs
+#>         day0 ref_div_time         none 
+#>            0          100            0 
+#> 
+#> $provenance$sources[[1]]$steps$normalize$settings$gr$ref_div_time_cell_lines
+#>  [1] "cellline_BA" "cellline_CA" "cellline_DA" "cellline_EA" "cellline_FA"
+#>  [6] "cellline_GB" "cellline_HB" "cellline_IB" "cellline_JB" "cellline_KB"
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$normalize$run
+#> $provenance$sources[[1]]$steps$normalize$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[1]]$steps$normalize$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$average
+#> $provenance$sources[[1]]$steps$average$functions
+#> $provenance$sources[[1]]$steps$average$functions$average_FUN
+#> $provenance$sources[[1]]$steps$average$functions$average_FUN$name
+#> [1] "average_FUN"
+#> 
+#> $provenance$sources[[1]]$steps$average$functions$average_FUN$package
+#> [1] "gDRcore"
+#> 
+#> $provenance$sources[[1]]$steps$average$functions$average_FUN$version
+#> [1] "1.11.26"
+#> 
+#> $provenance$sources[[1]]$steps$average$functions$average_FUN$hash
+#> [1] "6f45617f8192fe7c"
+#> 
+#> $provenance$sources[[1]]$steps$average$functions$average_FUN$dependencies
+#>         BiocParallel          BumpyMatrix            checkmate 
+#>             "1.44.0"             "1.18.0"              "2.3.4" 
+#>           data.table                  drc        futile.logger 
+#>             "1.18.4"              "3.0.1"              "1.4.9" 
+#>              gDRcore             gDRutils             jsonlite 
+#>            "1.11.26"            "1.11.22"              "2.0.0" 
+#> MultiAssayExperiment                purrr            S4Vectors 
+#>             "1.36.2"              "1.2.2"             "0.48.1" 
+#>              stringr SummarizedExperiment 
+#>              "1.6.0"             "1.40.0" 
+#> 
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$average$settings
+#> $provenance$sources[[1]]$steps$average$settings$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[1]]$steps$average$settings$series_identifiers
+#> [1] "Concentration"
+#> 
+#> $provenance$sources[[1]]$steps$average$settings$trt_keys
+#> [1] "CellLineName" "clid"         "drug_moa"     "DrugName"     "Duration"    
+#> [6] "Gnumber"      "Tissue"      
+#> 
+#> $provenance$sources[[1]]$steps$average$settings$normalized_assay
+#> [1] "Normalized"
+#> 
+#> $provenance$sources[[1]]$steps$average$settings$averaged_assay
+#> [1] "Averaged"
+#> 
+#> 
+#> $provenance$sources[[1]]$steps$average$run
+#> $provenance$sources[[1]]$steps$average$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[1]]$steps$average$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> 
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]
+#> $provenance$sources[[2]]$schema_version
+#> [1] 1
+#> 
+#> $provenance$sources[[2]]$fits
+#> $provenance$sources[[2]]$fits$Metrics
+#> $provenance$sources[[2]]$fits$Metrics$gDR
+#> $provenance$sources[[2]]$fits$Metrics$gDR$called_by
+#> [1] "apply_fit"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$name
+#> [1] "fit_drug_response_metrics"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$package
+#> [1] "gDRutils"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$version
+#> [1] "1.11.22"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$hash
+#> [1] "ff16d78c11f4cdea"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$dependencies
+#>          BumpyMatrix            checkmate            codetools 
+#>             "1.18.0"              "2.3.4"             "0.2.20" 
+#>           data.table               digest                  drc 
+#>             "1.18.4"             "0.6.39"              "3.0.1" 
+#>             gDRutils             jsonlite         jsonvalidate 
+#>            "1.11.22"              "2.0.0"              "1.5.0" 
+#> MultiAssayExperiment                  qs2            S4Vectors 
+#>             "1.36.2"              "0.2.2"             "0.48.1" 
+#>              stringr SummarizedExperiment 
+#>              "1.6.0"             "1.40.0" 
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info$model
+#> [1] "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info$description
+#> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info$reference
+#> [1] "Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021"
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$capping_fold
+#> [1] 5
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$range_conc
+#> [1] 0.005 5.000
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$pcutoff
+#> [1] 0.05
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$n_point_cutoff
+#> [1] 4
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$force_fit
+#> [1] FALSE
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$cap
+#> [1] 0.1
+#> 
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$input_assay
+#> [1] "Averaged"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$output_assay
+#> [1] "Metrics"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$slicing_cols
+#> [1] "normalization_type"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$slicing_values
+#> [1] "GR" "RV"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$merge
+#> [1] "replace"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$run
+#> $provenance$sources[[2]]$fits$Metrics$gDR$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$run$input_hash
+#> [1] "077d8eabaafbd390"
+#> 
+#> $provenance$sources[[2]]$fits$Metrics$gDR$run$n_rows
+#> [1] 200
+#> 
+#> 
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps
+#> $provenance$sources[[2]]$steps$create
+#> $provenance$sources[[2]]$steps$create$settings
+#> $provenance$sources[[2]]$steps$create$settings$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[2]]$steps$create$settings$readout
+#> [1] "ReadoutValue"
+#> 
+#> $provenance$sources[[2]]$steps$create$settings$nested_identifiers
+#> [1] "Concentration"
+#> 
+#> $provenance$sources[[2]]$steps$create$settings$nested_confounders
+#> [1] "Barcode"
+#> 
+#> $provenance$sources[[2]]$steps$create$settings$override_untrt_controls
+#> NULL
+#> 
+#> $provenance$sources[[2]]$steps$create$settings$masked
+#> $provenance$sources[[2]]$steps$create$settings$masked$n_wells
+#> [1] 0
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$create$run
+#> $provenance$sources[[2]]$steps$create$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[2]]$steps$create$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$normalize
+#> $provenance$sources[[2]]$steps$normalize$functions
+#> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn
+#> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$name
+#> [1] "control_mean_fxn"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$package
+#> [1] "gDRcore"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$version
+#> [1] "1.11.26"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$hash
+#> [1] "33fb9ece036126b7"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$source
+#> [1] "function (x) \n{\n    mean(x, trim = 0.25)\n}"
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings
+#> $provenance$sources[[2]]$steps$normalize$settings$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$nested_identifiers
+#> [1] "Concentration"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$nested_confounders
+#> [1] "Barcode"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$ndigit_rounding
+#> [1] 4
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$control_assay
+#> [1] "Controls"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$raw_treated_assay
+#> [1] "RawTreated"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$normalized_assay
+#> [1] "Normalized"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$gr
+#> $provenance$sources[[2]]$steps$normalize$settings$gr$n_pairs
+#>         day0 ref_div_time         none 
+#>            0          100            0 
+#> 
+#> $provenance$sources[[2]]$steps$normalize$settings$gr$ref_div_time_cell_lines
+#>  [1] "cellline_BA" "cellline_CA" "cellline_DA" "cellline_EA" "cellline_FA"
+#>  [6] "cellline_GB" "cellline_HB" "cellline_IB" "cellline_JB" "cellline_KB"
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$normalize$run
+#> $provenance$sources[[2]]$steps$normalize$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[2]]$steps$normalize$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$average
+#> $provenance$sources[[2]]$steps$average$functions
+#> $provenance$sources[[2]]$steps$average$functions$average_FUN
+#> $provenance$sources[[2]]$steps$average$functions$average_FUN$name
+#> [1] "average_FUN"
+#> 
+#> $provenance$sources[[2]]$steps$average$functions$average_FUN$package
+#> [1] "gDRcore"
+#> 
+#> $provenance$sources[[2]]$steps$average$functions$average_FUN$version
+#> [1] "1.11.26"
+#> 
+#> $provenance$sources[[2]]$steps$average$functions$average_FUN$hash
+#> [1] "6f45617f8192fe7c"
+#> 
+#> $provenance$sources[[2]]$steps$average$functions$average_FUN$dependencies
+#>         BiocParallel          BumpyMatrix            checkmate 
+#>             "1.44.0"             "1.18.0"              "2.3.4" 
+#>           data.table                  drc        futile.logger 
+#>             "1.18.4"              "3.0.1"              "1.4.9" 
+#>              gDRcore             gDRutils             jsonlite 
+#>            "1.11.26"            "1.11.22"              "2.0.0" 
+#> MultiAssayExperiment                purrr            S4Vectors 
+#>             "1.36.2"              "1.2.2"             "0.48.1" 
+#>              stringr SummarizedExperiment 
+#>              "1.6.0"             "1.40.0" 
+#> 
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$average$settings
+#> $provenance$sources[[2]]$steps$average$settings$data_type
+#> [1] "single-agent"
+#> 
+#> $provenance$sources[[2]]$steps$average$settings$series_identifiers
+#> [1] "Concentration"
+#> 
+#> $provenance$sources[[2]]$steps$average$settings$trt_keys
+#> [1] "CellLineName" "clid"         "drug_moa"     "DrugName"     "Duration"    
+#> [6] "Gnumber"      "Tissue"      
+#> 
+#> $provenance$sources[[2]]$steps$average$settings$normalized_assay
+#> [1] "Normalized"
+#> 
+#> $provenance$sources[[2]]$steps$average$settings$averaged_assay
+#> [1] "Averaged"
+#> 
+#> 
+#> $provenance$sources[[2]]$steps$average$run
+#> $provenance$sources[[2]]$steps$average$run$R
+#> [1] "4.5.1"
+#> 
+#> $provenance$sources[[2]]$steps$average$run$gDRutils
+#> [1] "1.11.22"
+#> 
+#> 
+#> 
+#> 
+#> 
+#> 
+#> 
 #> $fit_parameters
 #> NULL
 #> 
 #> $.internal
 #> $.internal$date_processed
-#> [1] "2026-09-17"
+#> [1] "2026-10-26"
 #> 
-#> $.internal$session_info
-#> R version 4.4.0 (2024-04-24)
-#> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 22.04.4 LTS
+#> $.internal$versions
+#> $.internal$versions$R
+#> [1] "4.5.1"
 #> 
-#> Matrix products: default
-#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
+#> $.internal$versions$gDRcore
+#> [1] "1.11.26"
 #> 
-#> locale:
-#>  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-#>  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-#>  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-#>  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
-#>  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-#> [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+#> $.internal$versions$gDRutils
+#> [1] "1.11.22"
 #> 
-#> time zone: Etc/UTC
-#> tzcode source: system (glibc)
-#> 
-#> attached base packages:
-#> [1] stats     graphics  grDevices utils     datasets  methods   base     
-#> 
-#> other attached packages:
-#> [1] gDRcore_1.11.14    gDRtestData_1.11.7 testthat_3.2.1.1  
-#> 
-#> loaded via a namespace (and not attached):
-#>  [1] farver_2.1.2                fastmap_1.2.0              
-#>  [3] BumpyMatrix_1.12.0          TH.data_1.1-2              
-#>  [5] promises_1.5.0              stringfish_0.19.2          
-#>  [7] digest_0.6.39               mime_0.13                  
-#>  [9] lifecycle_1.0.5             ellipsis_0.3.2             
-#> [11] gDRutils_1.11.9             survival_3.5-8             
-#> [13] magrittr_2.0.5              compiler_4.4.0             
-#> [15] rlang_1.3.0                 drc_3.0-1                  
-#> [17] tools_4.4.0                 plotrix_3.8-14             
-#> [19] data.table_1.18.4           lambda.r_1.2.4             
-#> [21] S4Arrays_1.4.1              htmlwidgets_1.6.4          
-#> [23] pkgbuild_1.4.8              DelayedArray_0.30.1        
-#> [25] RColorBrewer_1.1-3          pkgload_1.4.0              
-#> [27] multcomp_1.4-31             abind_1.4-8                
-#> [29] BiocParallel_1.38.0         miniUI_0.1.2               
-#> [31] withr_3.0.3                 purrr_1.2.2                
-#> [33] BiocGenerics_0.50.0         desc_1.4.3                 
-#> [35] grid_4.4.0                  stats4_4.4.0               
-#> [37] urlchecker_1.0.1            profvis_0.3.8              
-#> [39] xtable_1.8-8                scales_1.4.0               
-#> [41] gtools_3.9.5                MASS_7.3-60.2              
-#> [43] MultiAssayExperiment_1.30.2 SummarizedExperiment_1.34.0
-#> [45] cli_3.6.6                   mvtnorm_1.2-5              
-#> [47] crayon_1.5.3                remotes_2.4.2.9000         
-#> [49] RcppParallel_6.2.0          otel_0.2.0                 
-#> [51] rstudioapi_0.18.0           httr_1.4.8                 
-#> [53] sessioninfo_1.2.3           cachem_1.1.0               
-#> [55] stringr_1.6.0               zlibbioc_1.50.0            
-#> [57] splines_4.4.0               parallel_4.4.0             
-#> [59] XVector_0.44.0              formatR_1.14               
-#> [61] matrixStats_1.5.0           vctrs_0.7.3                
-#> [63] devtools_2.4.5              Matrix_1.7-0               
-#> [65] sandwich_3.1-3              jsonlite_2.0.0             
-#> [67] carData_3.0-6               car_3.1-5                  
-#> [69] IRanges_2.38.0              S4Vectors_0.42.0           
-#> [71] Formula_1.2-6               glue_1.8.1                 
-#> [73] codetools_0.2-20            stringi_1.8.9              
-#> [75] futile.logger_1.4.9         later_1.4.8                
-#> [77] GenomeInfoDb_1.40.1         GenomicRanges_1.56.1       
-#> [79] UCSC.utils_1.0.0            htmltools_0.5.9            
-#> [81] brio_1.1.5                  GenomeInfoDbData_1.2.12    
-#> [83] R6_2.6.1                    rprojroot_2.1.1            
-#> [85] Biobase_2.64.0              shiny_1.13.0               
-#> [87] lattice_0.22-6              futile.options_1.0.1       
-#> [89] backports_1.5.1             memoise_2.0.1              
-#> [91] httpuv_1.6.17               Rcpp_1.1.2                 
-#> [93] SparseArray_1.4.8           checkmate_2.3.4            
-#> [95] qs2_0.2.2                   fs_2.1.0                   
-#> [97] MatrixGenerics_1.16.0       zoo_1.9-0                  
-#> [99] usethis_2.2.3              
 #> 
 #> 
 ```

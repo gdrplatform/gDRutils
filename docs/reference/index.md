@@ -208,6 +208,13 @@ SummarizedExperiment objects, plus the reference single-agent fit.
   : apply_fit_to_se
 - [`apply_fits()`](https://gdrplatform.github.io/gDRstyle/reference/apply_fits.md)
   : apply_fits
+- [`ll3_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
+  [`ll5_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
+  [`weibull1_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
+  [`weibull2_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
+  [`gompertz_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
+  [`hormesis_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
+  : Alternative dose-response curve models
 - [`persist_fit_assay()`](https://gdrplatform.github.io/gDRstyle/reference/persist_fit_assay.md)
   : Persist a data.table into a BumpyMatrix assay
 - [`fit_drug_response_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md)

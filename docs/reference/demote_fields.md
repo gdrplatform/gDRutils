@@ -46,7 +46,7 @@ se <- promote_fields(se, "ReadoutValue", 2)
 demote_fields(se, "ReadoutValue")
 #> class: SummarizedExperiment 
 #> dim: 10 10 
-#> metadata(5): identifiers experiment_metadata Keys fit_parameters
+#> metadata(6): identifiers experiment_metadata ... fit_parameters
 #>   .internal
 #> assays(1): RawTreated
 #> rownames(10): 1 4 ... 115 127

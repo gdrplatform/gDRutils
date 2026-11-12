@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.24</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.25</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,90 +81,546 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Keys</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$schema_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$fits</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$steps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$schema_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$called_by</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "apply_fit"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fit_drug_response_metrics"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$package</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gDRutils"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ff16d78c11f4cdea"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$dependencies</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          BumpyMatrix            checkmate            codetools </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.18.0"              "2.3.4"             "0.2.20" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           data.table               digest                  drc </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.18.4"             "0.6.39"              "3.0.1" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             gDRutils             jsonlite         jsonvalidate </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            "1.11.22"              "2.0.0"              "1.5.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> MultiAssayExperiment                  qs2            S4Vectors </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.36.2"              "0.2.2"             "0.48.1" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              stringr SummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              "1.6.0"             "1.40.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info$model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fn$info$reference</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$capping_fold</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$range_conc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.005 5.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$pcutoff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$n_point_cutoff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$force_fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$fit_args$cap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$input_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Averaged"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$output_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Metrics"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$slicing_cols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "normalization_type"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$slicing_values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GR" "RV"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$merge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "replace"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$run$input_hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "077d8eabaafbd390"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$fits$Metrics$gDR$run$n_rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$readout</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ReadoutValue"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$nested_identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$nested_confounders</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Barcode"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$override_untrt_controls</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$masked</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$settings$masked$n_wells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$create$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "control_mean_fxn"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$package</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gDRcore"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.26"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "33fb9ece036126b7"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$functions$control_mean_fxn$source</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "function (x) \n{\n    mean(x, trim = 0.25)\n}"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$nested_identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$nested_confounders</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Barcode"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$ndigit_rounding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$control_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Controls"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$raw_treated_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "RawTreated"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$normalized_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Normalized"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$gr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$gr$n_pairs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         day0 ref_div_time         none </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            0          100            0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$settings$gr$ref_div_time_cell_lines</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "cellline_BA" "cellline_CA" "cellline_DA" "cellline_EA" "cellline_FA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "cellline_GB" "cellline_HB" "cellline_IB" "cellline_JB" "cellline_KB"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$normalize$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions$average_FUN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions$average_FUN$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "average_FUN"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions$average_FUN$package</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gDRcore"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions$average_FUN$version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.26"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions$average_FUN$hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "6f45617f8192fe7c"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$functions$average_FUN$dependencies</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         BiocParallel          BumpyMatrix            checkmate </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.44.0"             "1.18.0"              "2.3.4" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           data.table                  drc        futile.logger </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.18.4"              "3.0.1"              "1.4.9" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              gDRcore             gDRutils             jsonlite </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            "1.11.26"            "1.11.22"              "2.0.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> MultiAssayExperiment                purrr            S4Vectors </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.36.2"              "1.2.2"             "0.48.1" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              stringr SummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              "1.6.0"             "1.40.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$settings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$settings$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$settings$series_identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$settings$trt_keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CellLineName" "clid"         "drug_moa"     "DrugName"     "Duration"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "Gnumber"      "Tissue"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$settings$normalized_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Normalized"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$settings$averaged_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Averaged"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[1]]$steps$average$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$schema_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$called_by</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "apply_fit"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fit_drug_response_metrics"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$package</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gDRutils"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ff16d78c11f4cdea"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$dependencies</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          BumpyMatrix            checkmate            codetools </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.18.0"              "2.3.4"             "0.2.20" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           data.table               digest                  drc </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.18.4"             "0.6.39"              "3.0.1" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             gDRutils             jsonlite         jsonvalidate </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            "1.11.22"              "2.0.0"              "1.5.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> MultiAssayExperiment                  qs2            S4Vectors </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.36.2"              "0.2.2"             "0.48.1" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              stringr SummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              "1.6.0"             "1.40.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info$model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fn$info$reference</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$capping_fold</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$range_conc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.005 5.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$pcutoff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$n_point_cutoff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$force_fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$fit_args$cap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$input_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Averaged"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$output_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Metrics"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$slicing_cols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "normalization_type"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$slicing_values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GR" "RV"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$merge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "replace"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$run$input_hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "077d8eabaafbd390"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$fits$Metrics$gDR$run$n_rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$readout</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ReadoutValue"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$nested_identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$nested_confounders</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Barcode"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$override_untrt_controls</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$masked</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$settings$masked$n_wells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$create$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "control_mean_fxn"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$package</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gDRcore"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.26"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "33fb9ece036126b7"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$functions$control_mean_fxn$source</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "function (x) \n{\n    mean(x, trim = 0.25)\n}"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$nested_identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$nested_confounders</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Barcode"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$ndigit_rounding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$control_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Controls"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$raw_treated_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "RawTreated"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$normalized_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Normalized"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$gr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$gr$n_pairs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         day0 ref_div_time         none </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            0          100            0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$settings$gr$ref_div_time_cell_lines</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "cellline_BA" "cellline_CA" "cellline_DA" "cellline_EA" "cellline_FA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "cellline_GB" "cellline_HB" "cellline_IB" "cellline_JB" "cellline_KB"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$normalize$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions$average_FUN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions$average_FUN$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "average_FUN"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions$average_FUN$package</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gDRcore"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions$average_FUN$version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.26"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions$average_FUN$hash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "6f45617f8192fe7c"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$functions$average_FUN$dependencies</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         BiocParallel          BumpyMatrix            checkmate </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.44.0"             "1.18.0"              "2.3.4" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           data.table                  drc        futile.logger </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.18.4"              "3.0.1"              "1.4.9" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              gDRcore             gDRutils             jsonlite </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            "1.11.26"            "1.11.22"              "2.0.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> MultiAssayExperiment                purrr            S4Vectors </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "1.36.2"              "1.2.2"             "0.48.1" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              stringr SummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              "1.6.0"             "1.40.0" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$settings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$settings$data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "single-agent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$settings$series_identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Concentration"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$settings$trt_keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CellLineName" "clid"         "drug_moa"     "DrugName"     "Duration"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "Gnumber"      "Tissue"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$settings$normalized_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Normalized"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$settings$averaged_assay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Averaged"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$run</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$run$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $provenance$sources[[2]]$steps$average$run$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $fit_parameters</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $.internal</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $.internal$date_processed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-09-17"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-10-26"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $.internal$session_info</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version 4.4.0 (2024-04-24)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Platform: x86_64-pc-linux-gnu</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Running under: Ubuntu 22.04.4 LTS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $.internal$versions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $.internal$versions$R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.5.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Matrix products: default</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $.internal$versions$gDRcore</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.26"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> locale:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $.internal$versions$gDRutils</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.11.22"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> time zone: Etc/UTC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tzcode source: system (glibc)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attached base packages:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> other attached packages:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] gDRcore_1.11.14    gDRtestData_1.11.7 testthat_3.2.1.1  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> loaded via a namespace (and not attached):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] farver_2.1.2                fastmap_1.2.0              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] BumpyMatrix_1.12.0          TH.data_1.1-2              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] promises_1.5.0              stringfish_0.19.2          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] digest_0.6.39               mime_0.13                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] lifecycle_1.0.5             ellipsis_0.3.2             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] gDRutils_1.11.9             survival_3.5-8             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] magrittr_2.0.5              compiler_4.4.0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] rlang_1.3.0                 drc_3.0-1                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] tools_4.4.0                 plotrix_3.8-14             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] data.table_1.18.4           lambda.r_1.2.4             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] S4Arrays_1.4.1              htmlwidgets_1.6.4          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [23] pkgbuild_1.4.8              DelayedArray_0.30.1        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] RColorBrewer_1.1-3          pkgload_1.4.0              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [27] multcomp_1.4-31             abind_1.4-8                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [29] BiocParallel_1.38.0         miniUI_0.1.2               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] withr_3.0.3                 purrr_1.2.2                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] BiocGenerics_0.50.0         desc_1.4.3                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [35] grid_4.4.0                  stats4_4.4.0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] urlchecker_1.0.1            profvis_0.3.8              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [39] xtable_1.8-8                scales_1.4.0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] gtools_3.9.5                MASS_7.3-60.2              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] MultiAssayExperiment_1.30.2 SummarizedExperiment_1.34.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [45] cli_3.6.6                   mvtnorm_1.2-5              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [47] crayon_1.5.3                remotes_2.4.2.9000         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] RcppParallel_6.2.0          otel_0.2.0                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [51] rstudioapi_0.18.0           httr_1.4.8                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [53] sessioninfo_1.2.3           cachem_1.1.0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [55] stringr_1.6.0               zlibbioc_1.50.0            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [57] splines_4.4.0               parallel_4.4.0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [59] XVector_0.44.0              formatR_1.14               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61] matrixStats_1.5.0           vctrs_0.7.3                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [63] devtools_2.4.5              Matrix_1.7-0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [65] sandwich_3.1-3              jsonlite_2.0.0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [67] carData_3.0-6               car_3.1-5                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [69] IRanges_2.38.0              S4Vectors_0.42.0           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [71] Formula_1.2-6               glue_1.8.1                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [73] codetools_0.2-20            stringi_1.8.9              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [75] futile.logger_1.4.9         later_1.4.8                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [77] GenomeInfoDb_1.40.1         GenomicRanges_1.56.1       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [79] UCSC.utils_1.0.0            htmltools_0.5.9            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [81] brio_1.1.5                  GenomeInfoDbData_1.2.12    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [83] R6_2.6.1                    rprojroot_2.1.1            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [85] Biobase_2.64.0              shiny_1.13.0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [87] lattice_0.22-6              futile.options_1.0.1       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [89] backports_1.5.1             memoise_2.0.1              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [91] httpuv_1.6.17               Rcpp_1.1.2                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [93] SparseArray_1.4.8           checkmate_2.3.4            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [95] qs2_0.2.2                   fs_2.1.0                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [97] MatrixGenerics_1.16.0       zoo_1.9-0                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [99] usethis_2.2.3              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

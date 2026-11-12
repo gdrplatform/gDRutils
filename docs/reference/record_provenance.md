@@ -109,5 +109,5 @@ se <- record_processing_step(
   fns = list(rate_fn = function(dt) 0)
 )
 names(get_SE_provenance(se)$steps)
-#> [1] "growth_rates"
+#> [1] "create"       "normalize"    "average"      "growth_rates"
 ```

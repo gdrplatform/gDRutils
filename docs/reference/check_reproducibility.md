@@ -70,7 +70,12 @@ se <- apply_fit(
 #> Warning: NaNs produced
 #> Warning: NaNs produced
 check_reproducibility(se)
-#>          assay fit_source reproducible n_rows        detail
-#>         <char>     <char>       <lgcl>  <int>        <char>
-#> 1: custom_hill       hill         TRUE    200 results match
+#>          assay fit_source reproducible n_rows
+#>         <char>     <char>       <lgcl>  <int>
+#> 1:     Metrics        gDR        FALSE    200
+#> 2: custom_hill       hill         TRUE    200
+#>                                                                                                                                                                       detail
+#>                                                                                                                                                                       <char>
+#> 1: Column 'ec50': Mean relative difference: 2.838961e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.11.25 is installed; results may differ
+#> 2:                                                                                                                                                             results match
 ```

@@ -41,8 +41,7 @@ se1 <- get_synthetic_data("finalMAE_small.qs2")[[1]]
 merge_SE(list(se1 = se1, se2 = se1))
 #> class: SummarizedExperiment 
 #> dim: 10 10 
-#> metadata(5): experiment_metadata Keys fit_parameters .internal
-#>   identifiers
+#> metadata(6): experiment_metadata Keys ... .internal identifiers
 #> assays(5): RawTreated Controls Normalized Averaged Metrics
 #> rownames(10): G00002_drug_002_moa_A_72 G00003_drug_003_moa_A_72 ...
 #>   G00010_drug_010_moa_A_72 G00011_drug_011_moa_B_72
