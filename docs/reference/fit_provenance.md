@@ -110,7 +110,7 @@ summarize_fit_provenance(se)
 #>          assay fit_source                                            fn
 #>         <char>     <char>                                        <char>
 #> 1:     Metrics        gDR gDRutils::fit_drug_response_metrics (1.11.22)
-#> 2: custom_hill hill_loose gDRutils::fit_drug_response_metrics (1.11.25)
+#> 2: custom_hill hill_loose gDRutils::fit_drug_response_metrics (1.11.26)
 #>                                                                                                        fit_args
 #>                                                                                                          <char>
 #> 1: capping_fold = 5, range_conc = c(0.005, 5), pcutoff = 0.05, n_point_cutoff = 4, force_fit = FALSE, cap = 0.1

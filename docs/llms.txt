@@ -237,6 +237,9 @@ SummarizedExperiment objects, plus the reference single-agent fit.
   [`gompertz_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
   [`hormesis_fit_fn()`](https://gdrplatform.github.io/gDRstyle/reference/curve_models.md)
   : Alternative dose-response curve models
+- [`fit_drug_response_metrics_xcx()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_xcx.md)
+  : The pipeline's fit, with the concentration at further response
+  levels
 - [`persist_fit_assay()`](https://gdrplatform.github.io/gDRstyle/reference/persist_fit_assay.md)
   : Persist a data.table into a BumpyMatrix assay
 - [`fit_drug_response_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md)

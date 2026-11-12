@@ -76,6 +76,6 @@ check_reproducibility(se)
 #> 2: custom_hill       hill         TRUE    200
 #>                                                                                                                                                                       detail
 #>                                                                                                                                                                       <char>
-#> 1: Column 'ec50': Mean relative difference: 2.838961e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.11.25 is installed; results may differ
+#> 1: Column 'ec50': Mean relative difference: 2.838961e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.11.26 is installed; results may differ
 #> 2:                                                                                                                                                             results match
 ```

@@ -9,7 +9,7 @@ carries, for presenting a choice."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.26</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,15 +88,16 @@ need the full catalogue.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_fit_fns</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           name  package                      fn_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    fit_drug_response_metrics gDRutils    fit_drug_response_metrics</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 fit_drug_response_metrics_4p gDRutils fit_drug_response_metrics_4p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              gompertz_fit_fn gDRutils              gompertz_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4              hormesis_fit_fn gDRutils              hormesis_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                   ll3_fit_fn gDRutils                   ll3_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                   ll5_fit_fn gDRutils                   ll5_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              weibull1_fit_fn gDRutils              weibull1_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8              weibull2_fit_fn gDRutils              weibull2_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            name  package                       fn_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     fit_drug_response_metrics gDRutils     fit_drug_response_metrics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  fit_drug_response_metrics_4p gDRutils  fit_drug_response_metrics_4p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 fit_drug_response_metrics_xcx gDRutils fit_drug_response_metrics_xcx</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4               gompertz_fit_fn gDRutils               gompertz_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5               hormesis_fit_fn gDRutils               hormesis_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                    ll3_fit_fn gDRutils                    ll3_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                    ll5_fit_fn gDRutils                    ll5_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8               weibull1_fit_fn gDRutils               weibull1_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9               weibull2_fit_fn gDRutils               weibull2_fit_fn</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      data_type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 single-agent</span>
@@ -106,33 +107,37 @@ need the full catalogue.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 single-agent</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                               model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      4-parameter log-logistic (drc::LL.4), upper asymptote fitted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                               G.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                              BC.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                              LL.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                              LL.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                              W1.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                              W2.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3             3-parameter Hill, inverted at further response levels</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                               G.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                              BC.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                              LL.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                              LL.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                              W1.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                                                              W2.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                                           description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                                                                         Hill curve of the response against concentration with a free upper asymptote, fitted per normalization type. Falls back to a constant fit like fit_drug_response_metrics().</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                                                                                                                                                                                    4-parameter Gompertz, asymmetric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                                                                                                                           Brain-Cousens, for a low-dose stimulation a log-logistic cannot represent</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                                                                                                                                                                3-parameter log-logistic, lower asymptote fixed at 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                                                                                                                                                                                5-parameter log-logistic, asymmetric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                                                                                                                                                                              4-parameter Weibull type 1, asymmetric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                                                                                                                                                                              4-parameter Weibull type 2, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                                       The pipeline's own fit, plus the concentration at each requested inhibition level (xc90 = IC90, the concentration at which the response reaches 0.1). The curve is unchanged.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                                                                                                                                                                    4-parameter Gompertz, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                                                                                                                                           Brain-Cousens, for a low-dose stimulation a log-logistic cannot represent</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                                                                                                                                                                3-parameter log-logistic, lower asymptote fixed at 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                                                                                                                                                                                5-parameter log-logistic, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                                                                                                                                                                              4-parameter Weibull type 1, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                                                                                                                                                                                                              4-parameter Weibull type 2, asymmetric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                      reference</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                 Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                 Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        Hafner et al. 2016, Nat Methods 13(6):521-527, doi:10.1038/nmeth.3853</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   available</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE</span>
@@ -142,16 +147,18 @@ need the full catalogue.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      TRUE</span>
 <span class="r-in"><span><span class="fu">get_fit_fns</span><span class="op">(</span>data_type <span class="op">=</span> <span class="st">"single-agent"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           name  package                      fn_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    fit_drug_response_metrics gDRutils    fit_drug_response_metrics</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 fit_drug_response_metrics_4p gDRutils fit_drug_response_metrics_4p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              gompertz_fit_fn gDRutils              gompertz_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4              hormesis_fit_fn gDRutils              hormesis_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                   ll3_fit_fn gDRutils                   ll3_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                   ll5_fit_fn gDRutils                   ll5_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              weibull1_fit_fn gDRutils              weibull1_fit_fn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8              weibull2_fit_fn gDRutils              weibull2_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            name  package                       fn_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     fit_drug_response_metrics gDRutils     fit_drug_response_metrics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  fit_drug_response_metrics_4p gDRutils  fit_drug_response_metrics_4p</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 fit_drug_response_metrics_xcx gDRutils fit_drug_response_metrics_xcx</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4               gompertz_fit_fn gDRutils               gompertz_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5               hormesis_fit_fn gDRutils               hormesis_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                    ll3_fit_fn gDRutils                    ll3_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                    ll5_fit_fn gDRutils                    ll5_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8               weibull1_fit_fn gDRutils               weibull1_fit_fn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9               weibull2_fit_fn gDRutils               weibull2_fit_fn</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      data_type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 single-agent</span>
@@ -161,33 +168,37 @@ need the full catalogue.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 single-agent</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9 single-agent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                               model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      4-parameter log-logistic (drc::LL.4), upper asymptote fitted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                               G.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                              BC.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                              LL.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                              LL.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                              W1.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                              W2.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3             3-parameter Hill, inverted at further response levels</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                               G.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                              BC.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                              LL.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                              LL.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                              W1.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                                                              W2.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                                           description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                                                                         Hill curve of the response against concentration with a free upper asymptote, fitted per normalization type. Falls back to a constant fit like fit_drug_response_metrics().</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                                                                                                                                                                                    4-parameter Gompertz, asymmetric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                                                                                                                           Brain-Cousens, for a low-dose stimulation a log-logistic cannot represent</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                                                                                                                                                                3-parameter log-logistic, lower asymptote fixed at 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                                                                                                                                                                                5-parameter log-logistic, asymmetric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                                                                                                                                                                              4-parameter Weibull type 1, asymmetric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                                                                                                                                                                              4-parameter Weibull type 2, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                                       The pipeline's own fit, plus the concentration at each requested inhibition level (xc90 = IC90, the concentration at which the response reaches 0.1). The curve is unchanged.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                                                                                                                                                                    4-parameter Gompertz, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                                                                                                                                           Brain-Cousens, for a low-dose stimulation a log-logistic cannot represent</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                                                                                                                                                                3-parameter log-logistic, lower asymptote fixed at 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                                                                                                                                                                                                                5-parameter log-logistic, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                                                                                                                                                                                                              4-parameter Weibull type 1, asymmetric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                                                                                                                                                                                                              4-parameter Weibull type 2, asymmetric</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                      reference</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                 Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                 Ritz et al. 2015, PLOS ONE, doi:10.1371/journal.pone.0146021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        Hafner et al. 2016, Nat Methods 13(6):521-527, doi:10.1038/nmeth.3853</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9 Ritz et al. 2015, PLoS ONE 10(12):e0146021, doi:10.1371/journal.pone.0146021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   available</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE</span>
@@ -197,6 +208,7 @@ need the full catalogue.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

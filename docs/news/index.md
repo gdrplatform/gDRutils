@@ -1,5 +1,11 @@
 # Changelog
 
+## gDRutils 1.11.26 - 2026-11-12
+
+- add
+  [`fit_drug_response_metrics_xcx()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_xcx.md),
+  the pipeline’s fit plus the concentration at any inhibition level
+
 ## gDRutils 1.11.25 - 2026-11-09
 
 - add six alternative curve models for
