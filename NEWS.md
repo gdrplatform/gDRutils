@@ -1,3 +1,6 @@
+## gDRutils 1.11.26 - 2026-11-12
+* add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
+
 ## gDRutils 1.11.25 - 2026-11-09
 * add six alternative curve models for `apply_fit()`: LL.3, LL.5, W1.4, W2.4, Gompertz, Brain-Cousens
 
