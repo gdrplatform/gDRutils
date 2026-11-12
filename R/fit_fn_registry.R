@@ -54,6 +54,15 @@
     package = "gDRutils",
     data_type = "single-agent"
   )
+  # The alternative curve shapes. Registered here rather than beside their
+  # definitions so that every gDRutils built-in is announced from one place.
+  for (nm in names(.CURVE_MODELS)) {
+    register_fit_fn(
+      paste0(nm, "_fit_fn"),
+      package = "gDRutils",
+      data_type = "single-agent"
+    )
+  }
   invisible(NULL)
 }
 

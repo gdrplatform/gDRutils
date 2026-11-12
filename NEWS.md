@@ -1,3 +1,6 @@
+## gDRutils 1.11.25 - 2026-11-09
+* add six alternative curve models for `apply_fit()`: LL.3, LL.5, W1.4, W2.4, Gompertz, Brain-Cousens
+
 ## gDRutils 1.11.24 - 2026-11-08
 * add `register_fit_fn()`, `get_fit_fns()` and `get_fit_fn()`, a registry for listing the available fit functions
 
