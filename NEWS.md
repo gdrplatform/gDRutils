@@ -1,3 +1,6 @@
+## gDRutils 1.11.27 - 2026-11-16
+* add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them
+
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
 
