@@ -4,9 +4,10 @@ Identifiers map gDR's logical fields (`drug_name`, `duration`, …) to the colum
 actually uses (`DrugName`, `Duration`, …). Always read them through these functions — never
 hardcode a column name.
 
-Source of truth: `R/identifiers_list.R`, `R/global_cache.R`, `R/identifiers.R`, `R/se_metadata.R`
-and `R/validate_identifiers.R` here, plus the callers named below in gDRimport and gDRcore.
-Checked against `main` of gDRutils `1fb901f8`, gDRimport `74706c9` and gDRcore `bce0cc58`.
+Source of truth: `R/identifiers_list.R`, `R/global_cache.R`, `R/identifiers.R`, `R/se_metadata.R`,
+`R/merge_SE.R`, `R/standardize_MAE.R` and `R/validate_identifiers.R` here, plus the callers named
+below in gDRimport and gDRcore. Checked against `main` of gDRutils `d48580a0`, gDRimport `52e7a93`
+and gDRcore `bce0cc58`.
 
 ## Where the values live
 
@@ -29,11 +30,12 @@ flowchart LR
 
   IL -- "first get_env_identifiers()" --> GC
   IL -- "reset_env_identifiers()" --> GC
-  U(["caller"]) -- "set_env_identifier(k, v)" --> GC
+  U(["caller"]) -- "set_env_identifier(k, v)<br/>before the first read: only k is set" --> GC
   GC -- "get_env_identifiers(k)" --> U
   GC -- "set_SE_identifiers() at create_SE" --> SE
   SE --> MAE
   MAE -- "update_env_idfs_from_mae()" --> GC
+  SE -- "merge_SE(): identifiers of the first SE" --> GC
   SE -- "get_SE_identifiers(se, k)" --> U
   GC -. "fallback with a warning when<br/>k is missing on the SE" .-> SE
 ```
@@ -45,6 +47,7 @@ flowchart LR
   subgraph utils["gDRutils"]
     SYN["SYNONYMS_LIST"]
     GC[("session identifiers")]
+    STD["standardize_se()"]
   end
 
   subgraph imp["gDRimport"]
@@ -55,27 +58,44 @@ flowchart LR
   subgraph core["gDRcore"]
     MD["merge_data<br/>validate_identifiers()"]
     CS["create_SE<br/>set_SE_identifiers()"]
-    NS["normalize_SE, average_SE, ...<br/>get_SE_identifiers(se, k)"]
+    NS["normalize_SE, average_SE, ...<br/>mostly get_env_identifiers(k)"]
+    PL["runDrugResponseProcessingPipeline()"]
   end
 
   SE[("SE metadata")]
 
   SYN --> LF
   GC --> LF
-  GC --> MD --> CS --> SE --> NS
+  GC --> MD --> CS --> SE
+  GC --> NS
+  SE -. "a few get_SE_identifiers(se, k)" .-> NS
   PR == "reset_env_identifiers()<br/>on every call" ==> GC
+  PL == "reset at the end of every run" ==> GC
+  PL -- "MAE input" --> STD
+  STD == "reset_env_identifiers()" ==> GC
 ```
 
 ## Things the diagrams make visible
 
-- **Two scopes.** The session cache governs import and validation; once an SE exists, processing
-  reads the copy stored on the SE. An SE built with custom identifiers keeps them even after the
-  session is reset.
-- **The PRISM converters reset the session cache** (`gDRimport/R/prism_to_gdrDF.R:37`, `:210`) and
-  do not restore it, so identifiers a caller set with `set_env_identifier()` are gone after one
-  PRISM import. (`setEnvForPSet()` resets them too, but setting them is its documented purpose.)
+- **Processing reads the session, not the SE.** gDRcore calls `get_env_identifiers()` about 130
+  times and `get_SE_identifiers()` 8 times. `average_SE` reads no SE identifiers, and
+  `normalize_SE` takes the duration from the SE at `gDRcore/R/normalize_SE.R:105` and from the
+  session at `:355`. An SE with custom identifiers keeps them in its metadata, but most of the
+  processing still uses the session values.
+- **Four places reset the session and do not restore it:** the PRISM converters
+  (`gDRimport/R/prism_to_gdrDF.R:37`, `:210`), the end of every pipeline run
+  (`gDRcore/R/runDrugResponseProcessingPipeline.R:416`) and `standardize_se()`
+  (`R/standardize_MAE.R:44`), which the pipeline calls for MAE input
+  (`runDrugResponseProcessingPipeline.R:273`). Identifiers a caller set with
+  `set_env_identifier()` are gone after any of them. (`setEnvForPSet()` resets them too, but
+  setting them is its documented purpose.)
+- **`merge_SE()` writes to the session:** it copies the identifiers of the first SE into it
+  (`R/merge_SE.R:173-176`).
+- **`set_env_identifier()` before the first read leaves the other identifiers unset.** In a fresh
+  session the cache then holds only the identifier that was set, so `get_env_identifiers("duration")`
+  returns `NULL`; the defaults are filled in only by a read.
 - **Fallback, not failure.** `get_SE_identifiers()` falls back to the session value with a warning
-  when an identifier is missing on the SE (`R/se_metadata.R:199-202`), so an old SE can be read
+  when an identifier is missing on the SE (`R/se_metadata.R:200-203`), so an old SE can be read
   with today's defaults without anyone noticing.
 
 ## Keeping it current
