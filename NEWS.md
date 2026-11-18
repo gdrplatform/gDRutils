@@ -1,3 +1,6 @@
+## gDRutils 1.11.27 - 2026-11-18
+* fix `set_env_identifier()` leaving the other identifiers unset when it is the first call in a session
+
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
 
