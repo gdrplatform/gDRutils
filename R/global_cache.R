@@ -18,11 +18,19 @@ global_cache$identifiers_list <- list()
 }
 
 
+# Fill an empty cache with the defaults, so a first set does not leave the others unset.
 #' @keywords internal
-.get_id <- function(k = NULL) {
+.init_ids <- function() {
   if (length(global_cache$identifiers_list) == 0L) {
     global_cache$identifiers_list <- IDENTIFIERS_LIST
   }
+  invisible(NULL)
+}
+
+
+#' @keywords internal
+.get_id <- function(k = NULL) {
+  .init_ids()
 
   if (!is.null(k)) {
     checkmate::assert_string(k, null.ok = TRUE)
@@ -42,6 +50,7 @@ global_cache$identifiers_list <- list()
   checkmate::assert_string(k, null.ok = FALSE)
   checkmate::assert_choice(k, choices = valid_ids)
 
+  .init_ids()
   global_cache$identifiers_list[[k]] <- v
   invisible(NULL)
 }
