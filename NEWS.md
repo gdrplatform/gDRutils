@@ -1,3 +1,6 @@
+## gDRutils 1.11.27 - 2026-11-19
+* allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours
+
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
 
