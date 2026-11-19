@@ -1,5 +1,6 @@
 ## gDRutils 1.11.27 - 2026-11-19
 * allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours
+* fix merge_MAE() ignoring additional_col_name and discard_keys; it now passes them on to merge_SE()
 
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
