@@ -48,7 +48,7 @@ merge_MAE <- function(MAElist,
       if (exp_name %in% names(mae)) mae[[exp_name]] else NULL
     })
     exp_list <- exp_list[!vapply(exp_list, is.null, FUN.VALUE = logical(1))]
-    merge_SE(exp_list)
+    merge_SE(exp_list, additional_col_name = additional_col_name, discard_keys = discard_keys)
   })
   names(merged_SE_assays) <- experiments
 

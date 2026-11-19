@@ -140,3 +140,11 @@ test_that("merge_MAE works as expected with synthetic metadata injection", {
     SummarizedExperiment::assayNames(MultiAssayExperiment::experiments(mergedMAE2$result)[[1]])
   )
 })
+
+test_that("merge_MAE passes additional_col_name on to merge_SE", {
+  merged <- purrr::quietly(merge_MAE)(listMAE, additional_col_name = "screen")$result
+  metrics <- convert_se_assay_to_dt(merged[[1]], "Metrics")
+  expect_true("screen" %in% names(metrics))
+  expect_false("data_source" %in% names(metrics))
+  expect_setequal(unique(metrics$screen), names(listMAE))
+})
