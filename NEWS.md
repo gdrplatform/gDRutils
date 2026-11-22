@@ -1,3 +1,8 @@
+## gDRutils 1.11.27 - 2026-11-22
+* add a `solver` argument to `fit_drug_response_metrics()`, with `solver_drc()` as default and a solver registry
+* remove the second Hill fit `fit_curves()`/`logisticFit()`: every fit is `fit_drug_response_metrics(x_0 = )`
+* make a constant fit report `x_0` as the mean response, so its parameters describe the flat curve
+
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
 
