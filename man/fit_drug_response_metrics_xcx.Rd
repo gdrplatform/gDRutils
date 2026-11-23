@@ -13,7 +13,9 @@ fit_drug_response_metrics_xcx(
   pcutoff = 0.05,
   n_point_cutoff = 4L,
   force_fit = FALSE,
-  cap = 0.1
+  cap = 0.1,
+  solver = solver_drc,
+  solver_control = list()
 )
 }
 \arguments{
@@ -24,7 +26,7 @@ type, as \code{\link{apply_fit}} supplies it.}
 
 \item{levels}{numeric vector of inhibition percentages between 1 and 99.}
 
-\item{capping_fold, range_conc, pcutoff, n_point_cutoff, force_fit, cap}{passed
+\item{capping_fold, range_conc, pcutoff, n_point_cutoff, force_fit, cap, solver, solver_control}{passed
 to \code{\link{fit_drug_response_metrics}} unchanged.}
 }
 \value{
