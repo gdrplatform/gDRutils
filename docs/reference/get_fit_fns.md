@@ -69,16 +69,16 @@ get_fit_fns()
 #> 7 single-agent
 #> 8 single-agent
 #> 9 single-agent
-#>                                                               model
-#> 1 3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1
-#> 2      4-parameter log-logistic (drc::LL.4), upper asymptote fitted
-#> 3             3-parameter Hill, inverted at further response levels
-#> 4                                                               G.4
-#> 5                                                              BC.4
-#> 6                                                              LL.3
-#> 7                                                              LL.5
-#> 8                                                              W1.4
-#> 9                                                              W2.4
+#>                                                                                                model
+#> 1 3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)
+#> 2      4-parameter log-logistic Hill, upper asymptote fitted (drc::LL.4 with the default solver_drc)
+#> 3                                              3-parameter Hill, inverted at further response levels
+#> 4                                                                                                G.4
+#> 5                                                                                               BC.4
+#> 6                                                                                               LL.3
+#> 7                                                                                               LL.5
+#> 8                                                                                               W1.4
+#> 9                                                                                               W2.4
 #>                                                                                                                                                                                                                                           description
 #> 1 Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff.
 #> 2                                                                         Hill curve of the response against concentration with a free upper asymptote, fitted per normalization type. Falls back to a constant fit like fit_drug_response_metrics().
@@ -130,16 +130,16 @@ get_fit_fns(data_type = "single-agent")
 #> 7 single-agent
 #> 8 single-agent
 #> 9 single-agent
-#>                                                               model
-#> 1 3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1
-#> 2      4-parameter log-logistic (drc::LL.4), upper asymptote fitted
-#> 3             3-parameter Hill, inverted at further response levels
-#> 4                                                               G.4
-#> 5                                                              BC.4
-#> 6                                                              LL.3
-#> 7                                                              LL.5
-#> 8                                                              W1.4
-#> 9                                                              W2.4
+#>                                                                                                model
+#> 1 3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)
+#> 2      4-parameter log-logistic Hill, upper asymptote fitted (drc::LL.4 with the default solver_drc)
+#> 3                                              3-parameter Hill, inverted at further response levels
+#> 4                                                                                                G.4
+#> 5                                                                                               BC.4
+#> 6                                                                                               LL.3
+#> 7                                                                                               LL.5
+#> 8                                                                                               W1.4
+#> 9                                                                                               W2.4
 #>                                                                                                                                                                                                                                           description
 #> 1 Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff.
 #> 2                                                                         Hill curve of the response against concentration with a free upper asymptote, fitted per normalization type. Falls back to a constant fit like fit_drug_response_metrics().

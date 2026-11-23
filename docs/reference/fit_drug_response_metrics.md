@@ -1,15 +1,16 @@
 # fit_drug_response_metrics
 
-Reference fit function replicating standard gDR Hill curve fitting
-(3-parameter model, `x_0` fixed at 1). Produces output column-compatible
-with `fit_SE()` in gDRcore and
-[`logisticFit`](https://gdrplatform.github.io/gDRstyle/reference/logisticFit.md),
-including `p_value`, `rss`, `x_AOC_range`, `x_max`, and `x_sd_avg`. For
-use with
+The gDR Hill curve fit: the one fitting path for single-agent,
+co-dilution, combination and time-course data. By default a 3-parameter
+model with `x_0` fixed at 1; set `x_0` to fix it elsewhere (the
+combination co-treatment fits) or to `NA` to fit it (4-parameter model).
+Priors and bounds per normalization type come from
+`inst/extdata/fit_profiles.json`. The optimiser is `solver`,
+[`solver_drc`](https://gdrplatform.github.io/gDRstyle/reference/solver_drc.md)
+by default; any function with its signature can replace it. For use with
 [`apply_fit_to_se`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit_to_se.md)
 or
-[`apply_fit`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md)
-on single-agent or time-course data.
+[`apply_fit`](https://gdrplatform.github.io/gDRstyle/reference/apply_fit.md).
 
 ## Usage
 
@@ -22,7 +23,10 @@ fit_drug_response_metrics(
   pcutoff = 0.05,
   n_point_cutoff = 4L,
   force_fit = FALSE,
-  cap = 0.1
+  cap = 0.1,
+  x_0 = 1,
+  solver = solver_drc,
+  solver_control = list()
 )
 ```
 
@@ -71,6 +75,24 @@ fit_drug_response_metrics(
   numeric; upper cap on `xc50` relative to the concentration range.
   Default `0.1`.
 
+- x_0:
+
+  numeric; the upper asymptote, fixed in the fit. Default `1`. `NA` fits
+  it (4-parameter model).
+
+- solver:
+
+  function fitting the Hill parameters, with the signature of
+  [`solver_drc`](https://gdrplatform.github.io/gDRstyle/reference/solver_drc.md)
+  (the default). See
+  [`get_solvers`](https://gdrplatform.github.io/gDRstyle/reference/get_solvers.md).
+
+- solver_control:
+
+  named list passed to `solver` as its `control` argument (for
+  `solver_drc`, [`drc::drmc()`](https://rdrr.io/pkg/drc/man/drmc.html)
+  settings).
+
 ## Value
 
 Named list of fit metrics fully compatible with the standard gDR
@@ -91,9 +113,7 @@ Named list of fit metrics fully compatible with the standard gDR
 
 - `"DRCInvalidFitResult"`: the solver failed; no curve parameters.
 
-The same labels as
-[`logisticFit`](https://gdrplatform.github.io/gDRstyle/reference/logisticFit.md)
-gives for the same data.
+A constant fit reports the flat curve: `x_0 = x_inf = x_mean`.
 
 ## See also
 
@@ -140,8 +160,7 @@ fit_drug_response_metrics(dt)
 #> [1] 0.09530136
 #> 
 #> $h
-#> h:(Intercept) 
-#>     0.6523032 
+#> [1] 0.6523032
 #> 
 #> $r2
 #> [1] 0.9996676
@@ -200,8 +219,7 @@ fit_drug_response_metrics(dt2, x_col = "NormalizedGrowthRate")
 #> [1] 0.1259556
 #> 
 #> $h
-#> h:(Intercept) 
-#>     0.6665989 
+#> [1] 0.6665989
 #> 
 #> $r2
 #> [1] 0.9981679

@@ -568,27 +568,27 @@ sessionInfo()
 #>  [1] MultiAssayExperiment_1.39.1 SummarizedExperiment_1.43.0
 #>  [3] Biobase_2.73.2              GenomicRanges_1.65.4       
 #>  [5] Seqinfo_1.3.2               IRanges_2.47.5             
-#>  [7] S4Vectors_0.51.10           BiocGenerics_0.59.12       
+#>  [7] S4Vectors_0.51.10           BiocGenerics_0.59.13       
 #>  [9] generics_0.1.4              MatrixGenerics_1.25.0      
-#> [11] matrixStats_1.5.0           gDRutils_1.11.26           
+#> [11] matrixStats_1.5.0           gDRutils_1.11.27           
 #> [13] BiocStyle_2.41.0           
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] sass_0.4.10         SparseArray_1.13.4  stringi_1.8.9      
+#>  [1] sass_0.5.0          SparseArray_1.13.5  stringi_1.8.9      
 #>  [4] lattice_0.23-1      magrittr_2.0.5      digest_0.6.39      
 #>  [7] evaluate_1.0.5      grid_4.6.2          bookdown_0.48      
 #> [10] fastmap_1.2.0       qs2_0.4.0           jsonlite_2.0.0     
 #> [13] Matrix_1.7-6        charport_0.2.0      backports_1.5.1    
-#> [16] BiocManager_1.30.27 textshaping_1.0.5   jquerylib_0.1.4    
+#> [16] BiocManager_1.30.27 textshaping_1.1.0   jquerylib_0.1.4    
 #> [19] abind_1.4-8         cli_3.6.6           rlang_1.3.0        
 #> [22] XVector_0.53.0      cachem_1.1.0        DelayedArray_0.39.8
-#> [25] yaml_2.3.12         otel_0.3.0          S4Arrays_1.13.2    
+#> [25] yaml_2.3.12         otel_0.3.0          S4Arrays_1.13.3    
 #> [28] tools_4.6.2         checkmate_2.3.4     vctrs_0.7.3        
 #> [31] R6_2.6.1            lifecycle_1.0.5     stringr_1.6.0      
 #> [34] fs_2.1.0            BumpyMatrix_1.21.0  ragg_1.5.2         
 #> [37] desc_1.4.3          pillar_1.11.1       pkgdown_2.2.1      
 #> [40] RcppParallel_6.2.1  bslib_0.12.0        glue_1.8.1         
-#> [43] data.table_1.18.6.1 Rcpp_1.1.2          systemfonts_1.3.2  
+#> [43] data.table_1.18.6.1 Rcpp_1.1.2          systemfonts_1.3.4  
 #> [46] xfun_0.62           knitr_1.52          htmltools_0.5.9    
 #> [49] rmarkdown_2.32      compiler_4.6.2
 ```

@@ -11,7 +11,7 @@ IC75, and so on."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.26</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.27</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,9 @@ IC75, and so on.</p>
 <span>  pcutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  n_point_cutoff <span class="op">=</span> <span class="fl">4L</span>,</span>
 <span>  force_fit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cap <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>  cap <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  solver <span class="op">=</span> <span class="va">solver_drc</span>,</span>
+<span>  solver_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,7 +78,7 @@ type, as <code><a href="apply_fit.html">apply_fit</a></code> supplies it.</p></d
 <dd><p>numeric vector of inhibition percentages between 1 and 99.</p></dd>
 
 
-<dt id="arg-capping-fold-range-conc-pcutoff-n-point-cutoff-force-fit-cap">capping_fold, range_conc, pcutoff, n_point_cutoff, force_fit, cap<a class="anchor" aria-label="anchor" href="#arg-capping-fold-range-conc-pcutoff-n-point-cutoff-force-fit-cap"></a></dt>
+<dt id="arg-capping-fold-range-conc-pcutoff-n-point-cutoff-force-fit-cap-solver-solver-control">capping_fold, range_conc, pcutoff, n_point_cutoff, force_fit, cap, solver, solver_control<a class="anchor" aria-label="anchor" href="#arg-capping-fold-range-conc-pcutoff-n-point-cutoff-force-fit-cap-solver-solver-control"></a></dt>
 <dd><p>passed
 to <code><a href="fit_drug_response_metrics.html">fit_drug_response_metrics</a></code> unchanged.</p></dd>
 
@@ -170,8 +172,7 @@ trap already sprung.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.070997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $h</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> h:(Intercept) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     0.8944381 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8944381</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $r2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9990855</span>

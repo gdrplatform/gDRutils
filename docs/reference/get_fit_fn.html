@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.26</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.27</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,18 +66,18 @@ package is not installed.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_fit_fn</span><span class="op">(</span><span class="st">"fit_drug_response_metrics"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (avg_dt, x_col = "x", capping_fold = 5, range_conc = c(0.005, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     5), pcutoff = 0.05, n_point_cutoff = 4L, force_fit = FALSE, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cap = 0.1) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cap = 0.1, x_0 = 1, solver = solver_drc, solver_control = list()) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     .fit_drug_response_metrics_impl(avg_dt, x_0 = 1, x_col = x_col, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     .fit_drug_response_metrics_impl(avg_dt, x_0 = x_0, x_col = x_col, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         capping_fold = capping_fold, range_conc = range_conc, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         pcutoff = pcutoff, n_point_cutoff = n_point_cutoff, force_fit = force_fit, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         cap = cap)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         cap = cap, solver = solver, solver_control = solver_control)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x5690d69607c8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x5defff675580&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:gDRutils&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"fit_fn_info")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"fit_fn_info")$model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"fit_fn_info")$description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."</span>

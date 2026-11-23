@@ -40,6 +40,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-apply_summary_fn.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_mae_summary_to_json.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-convert_norm_specific_metrics.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-hill_model.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-make_fit_wrapper.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-metric_output_template.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-prep_cd_conc_cap_dict.html</loc></url>
@@ -47,7 +48,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-snap_conc_to_model.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/dot-standardize_conc.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/extend_normalization_type_name.html</loc></url>
-<url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_curves.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_4p.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics_xcx.html</loc></url>
@@ -85,6 +86,8 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_optional_rowdata_fields.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_required_identifiers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_settings_from_json.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_solver_info.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_solvers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_supported_experiments.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_synthetic_data.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/get_testdata.html</loc></url>
@@ -102,7 +105,6 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/is_combo_data.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/is_exp_empty.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/is_mae_empty.html</loc></url>
-<url><loc>https://gdrplatform.github.io/gDRstyle/reference/logisticFit.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/loop.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/map_conc_to_standardized_conc.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/mcolData.html</loc></url>
@@ -125,6 +127,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/refit_from_provenance.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/register_fit_fn.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/register_fit_profile.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/register_solver.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/remove_codrug_data.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/remove_drug_batch.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/rename_DFrame.html</loc></url>
@@ -139,6 +142,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_identifiers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/set_unique_names_dt.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/shorten_normalization_type_name.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/solver_drc.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/split_SE_components.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/split_big_table_for_xlsx.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/standardize_mae.html</loc></url>

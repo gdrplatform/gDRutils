@@ -17,7 +17,9 @@ fit_drug_response_metrics_4p(
   pcutoff = 0.05,
   n_point_cutoff = 4L,
   force_fit = FALSE,
-  cap = 0.1
+  cap = 0.1,
+  solver = solver_drc,
+  solver_control = list()
 )
 ```
 
@@ -65,6 +67,19 @@ fit_drug_response_metrics_4p(
 
   numeric; upper cap on `xc50` relative to the concentration range.
   Default `0.1`.
+
+- solver:
+
+  function fitting the Hill parameters, with the signature of
+  [`solver_drc`](https://gdrplatform.github.io/gDRstyle/reference/solver_drc.md)
+  (the default). See
+  [`get_solvers`](https://gdrplatform.github.io/gDRstyle/reference/get_solvers.md).
+
+- solver_control:
+
+  named list passed to `solver` as its `control` argument (for
+  `solver_drc`, [`drc::drmc()`](https://rdrr.io/pkg/drc/man/drmc.html)
+  settings).
 
 ## Value
 
@@ -116,8 +131,7 @@ fit_drug_response_metrics_4p(dt)
 #> [1] 0.09549121
 #> 
 #> $h
-#> h:(Intercept) 
-#>      0.659329 
+#> [1] 0.659329
 #> 
 #> $r2
 #> [1] 0.9996739

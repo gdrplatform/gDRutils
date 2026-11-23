@@ -17,7 +17,9 @@ fit_drug_response_metrics_xcx(
   pcutoff = 0.05,
   n_point_cutoff = 4L,
   force_fit = FALSE,
-  cap = 0.1
+  cap = 0.1,
+  solver = solver_drc,
+  solver_control = list()
 )
 ```
 
@@ -37,7 +39,8 @@ fit_drug_response_metrics_xcx(
 
   numeric vector of inhibition percentages between 1 and 99.
 
-- capping_fold, range_conc, pcutoff, n_point_cutoff, force_fit, cap:
+- capping_fold, range_conc, pcutoff, n_point_cutoff, force_fit, cap,
+  solver, solver_control:
 
   passed to
   [`fit_drug_response_metrics`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md)
@@ -142,8 +145,7 @@ fit_drug_response_metrics_xcx(dt, levels = c(75, 90))
 #> [1] 1.070997
 #> 
 #> $h
-#> h:(Intercept) 
-#>     0.8944381 
+#> [1] 0.8944381
 #> 
 #> $r2
 #> [1] 0.9990855

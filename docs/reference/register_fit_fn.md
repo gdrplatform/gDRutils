@@ -67,18 +67,18 @@ register_fit_fn(
 get_fit_fn("fit_drug_response_metrics")
 #> function (avg_dt, x_col = "x", capping_fold = 5, range_conc = c(0.005, 
 #>     5), pcutoff = 0.05, n_point_cutoff = 4L, force_fit = FALSE, 
-#>     cap = 0.1) 
+#>     cap = 0.1, x_0 = 1, solver = solver_drc, solver_control = list()) 
 #> {
-#>     .fit_drug_response_metrics_impl(avg_dt, x_0 = 1, x_col = x_col, 
+#>     .fit_drug_response_metrics_impl(avg_dt, x_0 = x_0, x_col = x_col, 
 #>         capping_fold = capping_fold, range_conc = range_conc, 
 #>         pcutoff = pcutoff, n_point_cutoff = n_point_cutoff, force_fit = force_fit, 
-#>         cap = cap)
+#>         cap = cap, solver = solver, solver_control = solver_control)
 #> }
-#> <bytecode: 0x5690d69607c8>
+#> <bytecode: 0x5defff675580>
 #> <environment: namespace:gDRutils>
 #> attr(,"fit_fn_info")
 #> attr(,"fit_fn_info")$model
-#> [1] "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1"
+#> [1] "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)"
 #> 
 #> attr(,"fit_fn_info")$description
 #> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."

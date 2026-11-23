@@ -13,7 +13,7 @@ partial agonists, non-standard assay readouts)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.26</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.27</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,9 @@ partial agonists, non-standard assay readouts).</p>
 <span>  pcutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  n_point_cutoff <span class="op">=</span> <span class="fl">4L</span>,</span>
 <span>  force_fit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cap <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>  cap <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  solver <span class="op">=</span> <span class="va">solver_drc</span>,</span>
+<span>  solver_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,6 +110,16 @@ of points is below <code>n_point_cutoff</code>. Default <code>FALSE</code>.</p><
 <dt id="arg-cap">cap<a class="anchor" aria-label="anchor" href="#arg-cap"></a></dt>
 <dd><p>numeric; upper cap on <code>xc50</code> relative to the concentration
 range. Default <code>0.1</code>.</p></dd>
+
+
+<dt id="arg-solver">solver<a class="anchor" aria-label="anchor" href="#arg-solver"></a></dt>
+<dd><p>function fitting the Hill parameters, with the signature of
+<code><a href="solver_drc.html">solver_drc</a></code> (the default). See <code><a href="get_solvers.html">get_solvers</a></code>.</p></dd>
+
+
+<dt id="arg-solver-control">solver_control<a class="anchor" aria-label="anchor" href="#arg-solver-control"></a></dt>
+<dd><p>named list passed to <code>solver</code> as its <code>control</code>
+argument (for <code>solver_drc</code>, <code><a href="https://rdrr.io/pkg/drc/man/drmc.html" class="external-link">drc::drmc()</a></code> settings).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -160,8 +172,7 @@ range. Default <code>0.1</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.09549121</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $h</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> h:(Intercept) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      0.659329 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.659329</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $r2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9996739</span>

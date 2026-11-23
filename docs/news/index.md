@@ -1,5 +1,19 @@
 # Changelog
 
+## gDRutils 1.11.27 - 2026-11-22
+
+- add a `solver` argument to
+  [`fit_drug_response_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md),
+  default
+  [`solver_drc()`](https://gdrplatform.github.io/gDRstyle/reference/solver_drc.md),
+  and a registry
+  ([`get_solver_info()`](https://gdrplatform.github.io/gDRstyle/reference/get_solver_info.md))
+- remove the second Hill fit
+  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)/[`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md):
+  every fit is `fit_drug_response_metrics(x_0 = )`
+- make a constant fit report `x_0` as the mean response, so its
+  parameters describe the flat curve
+
 ## gDRutils 1.11.26 - 2026-11-12
 
 - add
@@ -36,7 +50,7 @@
 - fix a flat response, also one above the cap, being an invalid fit, and
   keep p-value and rss of a rejected fit
 - fix
-  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves.md)
+  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)
   stopping on a solver error, by labelling the curve
   `DRCInvalidFitResult`
 

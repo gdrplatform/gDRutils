@@ -184,18 +184,25 @@
   : Cap XC50 value.
 - [`.set_invalid_fit_params()`](https://gdrplatform.github.io/gDRstyle/reference/dot-set_invalid_fit_params.md)
   : Set fit parameters for an invalid fit.
-- [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves.md)
-  : Fit curves
-- [`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/logisticFit.md)
-  : Logistic fit
+- [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)
+  [`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)
+  : Defunct: fit curves with the old fitting path
+- [`get_solver_info()`](https://gdrplatform.github.io/gDRstyle/reference/get_solver_info.md)
+  : Describe the registered solvers
+- [`get_solvers()`](https://gdrplatform.github.io/gDRstyle/reference/get_solvers.md)
+  : List the registered solvers
 - [`predict_conc_from_efficacy()`](https://gdrplatform.github.io/gDRstyle/reference/predict_conc_from_efficacy.md)
   : Predict a concentration for a given efficacy with fit parameters.
 - [`predict_efficacy_from_conc()`](https://gdrplatform.github.io/gDRstyle/reference/predict_efficacy_from_conc.md)
   : Predict efficacy values given fit parameters and a concentration.
 - [`predict_smooth_from_combo()`](https://gdrplatform.github.io/gDRstyle/reference/predict_smooth_from_combo.md)
   : Predict a smoothed response for a drug combination
+- [`register_solver()`](https://gdrplatform.github.io/gDRstyle/reference/register_solver.md)
+  : Register a solver for the Hill fit
 - [`set_constant_fit_params()`](https://gdrplatform.github.io/gDRstyle/reference/set_constant_fit_params.md)
   : Set fit parameters for a constant fit.
+- [`solver_drc()`](https://gdrplatform.github.io/gDRstyle/reference/solver_drc.md)
+  : Hill fit solver using drc
 
 ## Custom fitting
 

@@ -55,7 +55,7 @@ for a low-dose stimulation that a log-logistic cannot represent at all.
 
 Each returns the model's own parameters rather than the `Metrics`
 schema. Parameters playing the same role across models share the names
-[`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/logisticFit.md)
+[`fit_drug_response_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md)
 uses — `h` for the slope, `x_0` and `x_inf` for the asymptotes, `ec50`
 for the inflection point — and the rest are named for what they are.
 Write them to an assay of their own: an assay of these is not the
