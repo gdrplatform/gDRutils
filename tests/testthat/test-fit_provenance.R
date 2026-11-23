@@ -422,3 +422,15 @@ test_that("record_processing_step stores functions and settings of a step", {
   se <- record_processing_step(se_prov, "import", settings = list(files = files), max_bytes = 1e6)
   expect_identical(get_SE_provenance(se)$steps$import$settings$files, files)
 })
+
+
+test_that("a function nested in a list argument is recorded and restored", {
+  solver <- function(conc, x, model, control = list()) NULL
+  split <- gDRutils:::.split_nested_fns(list(fit_args = list(solver = solver, cap = 0.2), n = 1L))
+  expect_identical(names(split$fn_args), "fit_args$solver")
+  expect_identical(split$args, list(fit_args = list(cap = 0.2), n = 1L))
+  joined <- gDRutils:::.join_nested_fns(split$args, list(`fit_args$solver` = solver))
+  expect_identical(joined$fit_args$solver, solver)
+  expect_identical(joined$fit_args$cap, 0.2)
+  expect_identical(joined$n, 1L)
+})

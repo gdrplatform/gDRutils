@@ -1,3 +1,7 @@
+## gDRutils 1.11.31 - 2026-11-23
+* deprecate `fit_curves()` and `logisticFit()` for one release, as wrappers over `fit_drug_response_metrics()`
+* fix the fit provenance dropping a function passed inside a list argument, e.g. a combination solver
+
 ## gDRutils 1.11.30 - 2026-11-23
 * add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them
 
