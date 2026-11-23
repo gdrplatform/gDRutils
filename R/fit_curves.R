@@ -8,35 +8,124 @@
 # build Metrics rows.
 
 
-#' Defunct: fit curves with the old fitting path
+#' Deprecated: fit curves with the old interface
 #'
-#' \code{fit_curves()} and \code{logisticFit()} were a second copy of the gDR Hill fit
-#' with hard-coded priors. Every fit now goes through
-#' \code{\link{fit_drug_response_metrics}}, whose priors and bounds come from
-#' \code{inst/extdata/fit_profiles.json} and whose optimiser is a parameter
-#' (\code{\link{solver_drc}} by default).
+#' \code{fit_curves()} and \code{logisticFit()} were a second copy of the gDR Hill fit,
+#' with hard-coded priors. They are now thin wrappers over
+#' \code{\link{fit_drug_response_metrics}}, the single gDR Hill fit, whose priors and
+#' bounds come from \code{inst/extdata/fit_profiles.json} and whose optimiser is a
+#' parameter (\code{\link{solver_drc}} by default). They are deprecated and will be
+#' defunct in the next release: call \code{fit_drug_response_metrics(avg_dt, x_0 = )}
+#' once per normalization type instead.
 #'
-#' @param ... ignored.
-#' @return Does not return; stops with a message pointing to
+#' @param df_ \code{data.table} or \code{DFrame} with the concentrations in
+#'   \code{series_identifiers}, the responses in \code{x}, optionally their standard
+#'   deviation in \code{x_std}, and \code{normalization_type}.
+#' @param series_identifiers string, the concentration column of \code{df_}.
+#' @param e_0,GR_0 upper asymptote of the RV and of the GR fit.
+#' @param n_point_cutoff,range_conc,force_fit,pcutoff,cap,capping_fold passed to
 #'   \code{fit_drug_response_metrics()}.
+#' @param normalization_type normalization types to fit, among \code{"GR"} and
+#'   \code{"RV"}.
+#' @param concs concentrations, not logged.
+#' @param norm_values responses, the same length as \code{concs}.
+#' @param std_norm_values their standard deviation.
+#' @param x_0 upper asymptote, or \code{NA} to fit it.
+#' @param priors,lower ignored: the start values and bounds are those of the
+#'   normalization type's fit profile. A \code{lower} value below zero for
+#'   \code{x_inf} still selects the GR profile, as the GR priors did.
+#'
+#' @return \code{fit_curves()}: a \code{data.table} with one row per normalization type,
+#'   \code{fit_source} \code{"gDR"}, and rownames \code{"<type>_gDR"}.
+#'   \code{logisticFit()}: a one-row \code{data.table} of metrics and fit parameters.
+#'
+#' @examples
+#' suppressWarnings(logisticFit(
+#'   c(0.001, 0.00316227766016838, 0.01, 0.0316227766016838),
+#'   c(0.9999964000144, 0.999964001439942, 0.999640143942423, 0.996414342629482),
+#'   rep(0.1, 4)
+#' ))
+#'
 #' @keywords fit_curves
-#' @name fit_curves-defunct
+#' @name fit_curves-deprecated
 NULL
 
-#' @rdname fit_curves-defunct
+#' @rdname fit_curves-deprecated
 #' @export
-fit_curves <- function(...) {
-  .Defunct("fit_drug_response_metrics", package = "gDRutils",
-           msg = paste("fit_curves() is defunct: fit each normalization type with",
-                       "fit_drug_response_metrics(avg_dt, x_0 = ...)."))
+fit_curves <- function(df_,
+                       series_identifiers,
+                       e_0 = 1,
+                       GR_0 = 1,
+                       n_point_cutoff = 4,
+                       range_conc = c(5e-3, 5),
+                       force_fit = FALSE,
+                       pcutoff = 0.05,
+                       cap = 0.1,
+                       normalization_type = c("GR", "RV")) {
+  .Deprecated("fit_drug_response_metrics", package = "gDRutils",
+              msg = paste("fit_curves() is deprecated and will be defunct in the next release:",
+                          "fit each normalization type with",
+                          "fit_drug_response_metrics(avg_dt, x_0 = ...)."))
+  checkmate::assert_string(series_identifiers)
+  checkmate::assert_subset(normalization_type, c("GR", "RV"))
+  stopifnot(inherits(df_, "data.table") || inherits(df_, "DFrame"))
+  df_ <- data.table::as.data.table(df_)
+  if (!all(c(series_identifiers, "x") %in% names(df_))) {
+    stop(sprintf("missing one of the required fields: '%s'",
+                 toString(c(series_identifiers, "x"))))
+  }
+  conc_id <- get_env_identifiers("concentration")
+  has_std <- "x_std" %in% names(df_)
+  # RV first, then GR, as the old copy returned them
+  out <- lapply(intersect(c("RV", "GR"), normalization_type), function(nt) {
+    sel <- df_$normalization_type == nt
+    avg <- data.table::data.table(
+      conc = df_[[series_identifiers]][sel],
+      x = df_$x[sel],
+      x_std = if (has_std) df_$x_std[sel] else NA_real_,
+      normalization_type = nt
+    )
+    data.table::setnames(avg, "conc", conc_id)
+    data.table::as.data.table(fit_drug_response_metrics(
+      avg, x_0 = if (nt == "RV") e_0 else GR_0, n_point_cutoff = n_point_cutoff,
+      range_conc = range_conc, force_fit = force_fit, pcutoff = pcutoff, cap = cap
+    ))
+  })
+  out <- data.table::rbindlist(out, fill = TRUE)
+  out$fit_source <- "gDR"
+  rownames(out) <- paste0(out$normalization_type, "_", out$fit_source)
+  out
 }
 
-#' @rdname fit_curves-defunct
+#' @rdname fit_curves-deprecated
 #' @export
-logisticFit <- function(...) {
-  .Defunct("fit_drug_response_metrics", package = "gDRutils",
-           msg = paste("logisticFit() is defunct: use",
-                       "fit_drug_response_metrics(avg_dt, x_0 = ...)."))
+logisticFit <- function(concs,
+                        norm_values,
+                        std_norm_values = NA,
+                        x_0 = 1,
+                        priors = NULL,
+                        lower = NULL,
+                        range_conc = c(5e-3, 5),
+                        force_fit = FALSE,
+                        pcutoff = 0.05,
+                        cap = 0.1,
+                        n_point_cutoff = 4,
+                        capping_fold = 5) {
+  .Deprecated("fit_drug_response_metrics", package = "gDRutils",
+              msg = paste("logisticFit() is deprecated and will be defunct in the next release:",
+                          "use fit_drug_response_metrics(avg_dt, x_0 = ...)."))
+  if (length(concs) != length(norm_values)) {
+    stop("unequal vector lengths for 'conc' and 'norm_values'")
+  }
+  # The old GR priors were the ones with x_inf allowed below zero.
+  nt <- if (length(lower) >= 2L && isTRUE(lower[[2]] < 0)) "GR" else "RV"
+  avg <- data.table::data.table(conc = concs, x = norm_values,
+                                x_std = std_norm_values, normalization_type = nt)
+  data.table::setnames(avg, "conc", get_env_identifiers("concentration"))
+  data.table::as.data.table(fit_drug_response_metrics(
+    avg, x_0 = x_0, capping_fold = capping_fold, range_conc = range_conc,
+    pcutoff = pcutoff, n_point_cutoff = n_point_cutoff, force_fit = force_fit, cap = cap
+  ))
 }
 
 #' Predict efficacy values given fit parameters and a concentration.

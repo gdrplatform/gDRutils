@@ -238,7 +238,7 @@ refit_from_provenance <- function(se, assay, fit_source, allow_source = FALSE) {
   if (is.null(fit_args)) fit_args <- list()
   # functions passed as arguments (e.g. a score function) are stored as records
   fn_args <- lapply(recipe[["fn_args"]], .restore_fn, allow_source = allow_source)
-  fit_args <- c(fit_args, fn_args)
+  fit_args <- .join_nested_fns(fit_args, fn_args)
   output_assay <- recipe$output_assay
 
   # Re-run with merge = "merge" whatever the original call used: "replace" would
@@ -513,7 +513,12 @@ record_processing_step <- function(se,
                         n_rows) {
   is_fn <- vapply(fit_args, is.function, logical(1))
   fn_args <- lapply(fit_args[is_fn], .describe_fn)
-  stored_args <- .split_storable(fit_args[!is_fn])
+  # A function one level down, e.g. fit_args = list(fit_args = list(solver = f)) for
+  # a function that forwards its own fit_args, is described the same way and stored
+  # under "<arg>$<name>"; the rest of that list is stored as plain data.
+  nested <- .split_nested_fns(fit_args[!is_fn])
+  fn_args <- c(fn_args, nested$fn_args)
+  stored_args <- .split_storable(nested$args)
   .drop_null(list(
     called_by = called_by,
     fn = fn_record,
@@ -769,6 +774,38 @@ record_processing_step <- function(se,
     return(all(vapply(x, .is_plain_data, logical(1))))
   }
   FALSE
+}
+
+
+# Move the functions held in list arguments out to fn_args, named "<arg>$<name>".
+#' @keywords internal
+.split_nested_fns <- function(args) {
+  fn_args <- list()
+  for (a in names(args)) {
+    x <- args[[a]]
+    if (!is.list(x) || is.data.frame(x) || is.null(names(x))) next
+    is_fn <- vapply(x, is.function, logical(1))
+    if (!any(is_fn)) next
+    fn_args[paste0(a, "$", names(x)[is_fn])] <- lapply(x[is_fn], .describe_fn)
+    args[[a]] <- x[!is_fn]
+  }
+  list(args = args, fn_args = fn_args)
+}
+
+
+# Put restored functions back: "<arg>$<name>" into list argument <arg>, the rest at the
+# top level.
+#' @keywords internal
+.join_nested_fns <- function(fit_args, fn_args) {
+  nested <- grepl("$", names(fn_args), fixed = TRUE)
+  for (nm in names(fn_args)[nested]) {
+    parts <- strsplit(nm, "$", fixed = TRUE)[[1]]
+    a <- parts[1]
+    inner <- paste(parts[-1], collapse = "$")
+    if (is.null(fit_args[[a]])) fit_args[[a]] <- list()
+    fit_args[[a]][[inner]] <- fn_args[[nm]]
+  }
+  c(fit_args, fn_args[!nested])
 }
 
 
