@@ -83,7 +83,7 @@ flowchart LR
   session at `:355`. An SE with custom identifiers keeps them in its metadata, but most of the
   processing still uses the session values.
 - **Four places reset the session and do not restore it:** the PRISM converters
-  (`gDRimport/R/prism_to_gdrDF.R:37`, `:210`), the end of every pipeline run
+  (`gDRimport/R/prism_to_gdrDF.R:37`, `:275`), the end of every pipeline run
   (`gDRcore/R/runDrugResponseProcessingPipeline.R:416`) and `standardize_se()`
   (`R/standardize_MAE.R:44`), which the pipeline calls for MAE input
   (`runDrugResponseProcessingPipeline.R:273`). Identifiers a caller set with

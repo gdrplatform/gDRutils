@@ -1,5 +1,10 @@
-## gDRutils 1.11.27 - 2026-11-16
+## gDRutils 1.11.28 - 2026-11-23
 * add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them
+
+## gDRutils 1.11.27 - 2026-11-22
+* add a `solver` argument to `fit_drug_response_metrics()`, default `solver_drc()`, and a registry (`get_solver_info()`)
+* remove the second Hill fit `fit_curves()`/`logisticFit()`: every fit is `fit_drug_response_metrics(x_0 = )`
+* make a constant fit report `x_0` as the mean response, so its parameters describe the flat curve
 
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
