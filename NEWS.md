@@ -1,3 +1,7 @@
+## gDRutils 1.11.28 - 2026-11-23
+* deprecate `fit_curves()` and `logisticFit()` for one release, as wrappers over `fit_drug_response_metrics()`
+* fix the fit provenance dropping a function passed inside a list argument, e.g. a combination solver
+
 ## gDRutils 1.11.27 - 2026-11-22
 * add a `solver` argument to `fit_drug_response_metrics()`, default `solver_drc()`, and a registry (`get_solver_info()`)
 * remove the second Hill fit `fit_curves()`/`logisticFit()`: every fit is `fit_drug_response_metrics(x_0 = )`

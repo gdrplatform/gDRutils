@@ -20,10 +20,24 @@
 }
 
 
-test_that("fit_curves() and logisticFit() are defunct", {
-  expect_error(fit_curves(df_resp, series_identifiers = "Concentration"),
-               "fit_drug_response_metrics")
-  expect_error(logisticFit(c(0.1, 1), c(0.9, 0.5)), "fit_drug_response_metrics")
+test_that("fit_curves() and logisticFit() are deprecated wrappers over the single fit", {
+  df_ <- data.table::copy(df_resp)
+  df_$normalization_type <- df_$normalization_types
+  expect_warning(got <- fit_curves(df_, series_identifiers = "Concentration", e_0 = 1,
+                                   GR_0 = 1),
+                 "deprecated")
+  expect_equal(got, .fit_per_type(df_resp), ignore_attr = TRUE)
+  expect_identical(rownames(got), c("RV_gDR", "GR_gDR"))
+
+  rv <- df_[normalization_type == "RV"]
+  expect_warning(one <- logisticFit(rv$Concentration, rv$x, rv$x_std), "deprecated")
+  expect_equal(one, data.table::as.data.table(fit_drug_response_metrics(rv)),
+               ignore_attr = TRUE)
+  # the old GR priors (x_inf allowed below zero) select the GR profile
+  gr <- df_[normalization_type == "GR"]
+  expect_warning(one_gr <- logisticFit(gr$Concentration, gr$x, gr$x_std,
+                                       lower = c(0.1, -1, -1, 1e-4)), "deprecated")
+  expect_identical(one_gr$normalization_type, "GR")
 })
 
 
