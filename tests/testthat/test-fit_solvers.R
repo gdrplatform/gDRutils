@@ -141,4 +141,11 @@ test_that("register_solver adds to the menu", {
   on.exit(rm("never_available", envir = gDRutils:::.solver_registry), add = TRUE)
   expect_false("never_available" %in% names(get_solvers()))
   expect_true("never_available" %in% names(get_solvers(available_only = FALSE)))
+
+  info <- get_solver_info()
+  expect_identical(names(info), c("name", "description", "available"))
+  expect_identical(sort(info$name), sort(names(get_solvers(available_only = FALSE))))
+  expect_false(info$available[info$name == "never_available"])
+  expect_identical(info$description[info$name == "nls_port_test"], "nls port, for the tests")
+  expect_false("never_available" %in% get_solver_info(available_only = TRUE)$name)
 })

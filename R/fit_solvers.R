@@ -197,6 +197,45 @@ get_solvers <- function(available_only = TRUE) {
 }
 
 
+#' Describe the registered solvers
+#'
+#' The menu \code{get_solvers()} returns, with what each solver does and whether it
+#' can run here, so a caller can offer a choice without knowing the solvers in
+#' advance.
+#'
+#' @param available_only logical; if \code{TRUE}, only solvers whose
+#'   \code{available()} check passes. Defaults to \code{FALSE}, so a solver that
+#'   cannot run is still listed, and marked.
+#'
+#' @return \code{data.frame} with one row per solver: \code{name},
+#'   \code{description} and \code{available}.
+#'
+#' @examples
+#' get_solver_info()
+#'
+#' @keywords fit_curves
+#' @export
+get_solver_info <- function(available_only = FALSE) {
+  checkmate::assert_flag(available_only)
+  .ensure_solvers()
+  nms <- ls(.solver_registry)
+  entries <- lapply(nms, function(nm) get(nm, envir = .solver_registry))
+  out <- data.frame(
+    name = nms,
+    description = vapply(entries, function(s) as.character(s$description), character(1)),
+    available = vapply(entries, function(s) isTRUE(tryCatch(s$available(),
+                                                             error = function(e) FALSE)),
+                       logical(1)),
+    stringsAsFactors = FALSE
+  )
+  if (available_only) {
+    out <- out[out$available, , drop = FALSE]
+  }
+  rownames(out) <- NULL
+  out
+}
+
+
 #' @keywords internal
 .register_default_solvers <- function() {
   register_solver("drc", solver_drc,

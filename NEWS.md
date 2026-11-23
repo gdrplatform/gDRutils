@@ -1,5 +1,5 @@
 ## gDRutils 1.11.27 - 2026-11-22
-* add a `solver` argument to `fit_drug_response_metrics()`, with `solver_drc()` as default and a solver registry
+* add a `solver` argument to `fit_drug_response_metrics()`, default `solver_drc()`, and a registry (`get_solver_info()`)
 * remove the second Hill fit `fit_curves()`/`logisticFit()`: every fit is `fit_drug_response_metrics(x_0 = )`
 * make a constant fit report `x_0` as the mean response, so its parameters describe the flat curve
 
