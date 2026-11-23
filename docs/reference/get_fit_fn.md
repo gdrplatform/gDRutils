@@ -36,7 +36,7 @@ get_fit_fn("fit_drug_response_metrics")
 #>         pcutoff = pcutoff, n_point_cutoff = n_point_cutoff, force_fit = force_fit, 
 #>         cap = cap, solver = solver, solver_control = solver_control)
 #> }
-#> <bytecode: 0x5defff675580>
+#> <bytecode: 0x56ca87f8e388>
 #> <environment: namespace:gDRutils>
 #> attr(,"fit_fn_info")
 #> attr(,"fit_fn_info")$model
