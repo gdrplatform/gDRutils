@@ -1,3 +1,7 @@
+## gDRutils 1.11.32 - 2026-11-23
+* allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours
+* fix merge_MAE() ignoring additional_col_name and discard_keys; it now passes them on to merge_SE()
+
 ## gDRutils 1.11.31 - 2026-11-23
 * deprecate `fit_curves()` and `logisticFit()` for one release, as wrappers over `fit_drug_response_metrics()`
 * fix the fit provenance dropping a function passed inside a list argument, e.g. a combination solver
