@@ -16,8 +16,9 @@ test_that("get_env_identifiers and set_env_identifier work", {
 
 
 test_that("set_env_identifier keeps the other identifiers when it is the first call in a session", {
+  old <- global_cache$identifiers_list
+  on.exit(global_cache$identifiers_list <- old, add = TRUE)
   global_cache$identifiers_list <- list()
-  on.exit(reset_env_identifiers(), add = TRUE)
 
   set_env_identifier("drug", "MyDrug")
   expect_equal(get_env_identifiers("drug", simplify = TRUE), "MyDrug")
