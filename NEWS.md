@@ -1,3 +1,7 @@
+## gDRutils 1.11.31 - 2026-11-23
+* fix `get_env_identifiers(simplify = FALSE)` returning an empty list instead of every identifier when no key is given
+* fix `set_env_identifier()` deleting the identifier when given `NULL`; it now requires a non-empty character vector
+
 ## gDRutils 1.11.30 - 2026-11-23
 * add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them
 

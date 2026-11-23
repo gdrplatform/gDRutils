@@ -49,6 +49,8 @@ global_cache$identifiers_list <- list()
 
   checkmate::assert_string(k, null.ok = FALSE)
   checkmate::assert_choice(k, choices = valid_ids)
+  # a NULL would delete the key instead of setting it
+  checkmate::assert_character(v, min.len = 1L, any.missing = FALSE)
 
   .init_ids()
   global_cache$identifiers_list[[k]] <- v
