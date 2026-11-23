@@ -1,5 +1,8 @@
-## gDRutils 1.11.28 - 2026-11-23
+## gDRutils 1.11.30 - 2026-11-23
 * add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them
+
+## gDRutils 1.11.29 - 2026-11-23
+* fix `set_env_identifier()` leaving the other identifiers unset when it is the first call in a session
 
 ## gDRutils 1.11.27 - 2026-11-22
 * add a `solver` argument to `fit_drug_response_metrics()`, default `solver_drc()`, and a registry (`get_solver_info()`)
