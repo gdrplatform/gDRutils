@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.31</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.32</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,11 @@
       <small>Source: <a href="https://github.com/gdrplatform/gDRutils/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.32" id="gdrutils-11132---2026-11-23">gDRutils 1.11.32 - 2026-11-23<a class="anchor" aria-label="anchor" href="#gdrutils-11132---2026-11-23"></a></h2>
+<ul><li>allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours</li>
+<li>fix merge_MAE() ignoring additional_col_name and discard_keys; it now passes them on to merge_SE()</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.31" id="gdrutils-11131---2026-11-23">gDRutils 1.11.31 - 2026-11-23<a class="anchor" aria-label="anchor" href="#gdrutils-11131---2026-11-23"></a></h2>
 <ul><li>deprecate <code><a href="../reference/fit_curves-deprecated.html">fit_curves()</a></code> and <code><a href="../reference/fit_curves-deprecated.html">logisticFit()</a></code> for one release, as wrappers over <code><a href="../reference/fit_drug_response_metrics.html">fit_drug_response_metrics()</a></code>

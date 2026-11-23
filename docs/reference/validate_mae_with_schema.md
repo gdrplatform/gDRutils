@@ -98,16 +98,16 @@ validate_mae_with_schema(mae)
 #> 2                                            eqlin
 #> 3                                            eqlin
 #> 4                                            eqlin
-#>                   parentSchema.properties.duration.description
-#> 1 Number of days cells were treated with perturbation in days.
-#> 2 Number of days cells were treated with perturbation in days.
-#> 3 Number of days cells were treated with perturbation in days.
-#> 4 Number of days cells were treated with perturbation in days.
-#>   parentSchema.properties.duration.type parentSchema.properties.duration.type
-#> 1                                 array                               integer
-#> 2                                 array                               integer
-#> 3                                 array                               integer
-#> 4                                 array                               integer
+#>                                                  parentSchema.properties.duration.description
+#> 1 Number of hours cells were treated with perturbation, or NA when the data does not give it.
+#> 2 Number of hours cells were treated with perturbation, or NA when the data does not give it.
+#> 3 Number of hours cells were treated with perturbation, or NA when the data does not give it.
+#> 4 Number of hours cells were treated with perturbation, or NA when the data does not give it.
+#>   parentSchema.properties.duration.type parentSchema.properties.duration.anyOf
+#> 1                                 array                           c("integ....
+#> 2                                 array                           c("integ....
+#> 3                                 array                           c("integ....
+#> 4                                 array                           c("integ....
 #>   parentSchema.properties.cellline.description
 #> 1            Identifier of the given cell line
 #> 2            Identifier of the given cell line
