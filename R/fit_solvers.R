@@ -223,9 +223,9 @@ get_solver_info <- function(available_only = FALSE) {
   out <- data.frame(
     name = nms,
     description = vapply(entries, function(s) as.character(s$description), character(1)),
-    available = vapply(entries, function(s) isTRUE(tryCatch(s$available(),
-                                                             error = function(e) FALSE)),
-                       logical(1)),
+    available = vapply(entries, function(s) {
+      isTRUE(tryCatch(s$available(), error = function(e) FALSE))
+    }, logical(1)),
     stringsAsFactors = FALSE
   )
   if (available_only) {
