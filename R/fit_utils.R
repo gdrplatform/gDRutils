@@ -749,7 +749,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
                                             solver_control = list()) {
   checkmate::assert_string(x_col)
   checkmate::assert_number(x_0, na.ok = TRUE)
-  checkmate::assert_function(solver, args = c("conc", "x", "model"))
+  checkmate::assert_function(solver, args = c("conc", "x", "model", "control"))
   checkmate::assert_list(solver_control, names = "unique")
   if (!x_col %in% names(avg_dt)) {
     stop(sprintf("Column '%s' not found in avg_dt. Available: %s",
@@ -832,9 +832,13 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   }
 
   # A solver that fails returns converged = FALSE; one that throws is treated the same,
-  # so the curve is labelled DRCInvalidFitResult rather than stopping the whole fit.
+  # so the curve is labelled DRCInvalidFitResult rather than stopping the whole fit. The
+  # error is passed on as a warning, so a broken solver does not look like bad data.
   sol <- tryCatch(solver(conc, x, model, solver_control),
-                  error = function(e) list(converged = FALSE, message = conditionMessage(e)))
+                  error = function(e) {
+                    warning("the solver failed: ", conditionMessage(e), call. = FALSE)
+                    list(converged = FALSE, message = conditionMessage(e))
+                  })
 
   if (isTRUE(sol$converged)) {
     coefs <- sol$params

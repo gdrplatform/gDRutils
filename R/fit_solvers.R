@@ -53,7 +53,8 @@
 #'   \code{lower}, \code{upper} over the free parameters.
 #' @param control named list of \code{drc::drmc()} settings overriding the defaults
 #'   (\code{relTol = 1e-4}, \code{errorm = FALSE}, \code{noMessage = TRUE},
-#'   \code{rmNA = TRUE}).
+#'   \code{rmNA = TRUE}). With the bounds of the model drc optimises with L-BFGS-B, which
+#'   ignores \code{relTol}.
 #'
 #' @return list with \code{params} (named \code{h}, \code{x_inf}, \code{x_0},
 #'   \code{ec50}), \code{rss}, \code{converged} and \code{message}.
@@ -102,9 +103,12 @@ solver_drc <- function(conc, x, model, control = list()) {
              na.action = na.omit),
     error = function(e) e
   )
-  if (inherits(fit, "error")) {
+  # With errorm = FALSE a failed optimisation is not an error: drm() warns and returns a
+  # plain list with convergence = FALSE, which has no coefficients.
+  if (inherits(fit, "error") || !inherits(fit, "drc") || !isTRUE(fit$fit$convergence)) {
+    msg <- if (inherits(fit, "error")) conditionMessage(fit) else "drc::drm() did not converge"
     return(list(params = c(h = NA_real_, x_inf = NA_real_, x_0 = NA_real_, ec50 = NA_real_),
-                rss = NA_real_, converged = FALSE, message = conditionMessage(fit)))
+                rss = NA_real_, converged = FALSE, message = msg))
   }
 
   coefs <- stats::coef(fit)
@@ -163,7 +167,7 @@ solver_drc <- function(conc, x, model, control = list()) {
 register_solver <- function(name, fn, description = NA_character_,
                             available = function() TRUE) {
   checkmate::assert_string(name)
-  checkmate::assert_function(fn, args = c("conc", "x", "model"))
+  checkmate::assert_function(fn, args = c("conc", "x", "model", "control"))
   checkmate::assert_string(description, na.ok = TRUE)
   checkmate::assert_function(available)
   .ensure_solvers()
