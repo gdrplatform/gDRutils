@@ -184,9 +184,9 @@
   : Cap XC50 value.
 - [`.set_invalid_fit_params()`](https://gdrplatform.github.io/gDRstyle/reference/dot-set_invalid_fit_params.md)
   : Set fit parameters for an invalid fit.
-- [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)
-  [`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)
-  : Defunct: fit curves with the old fitting path
+- [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md)
+  [`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md)
+  : Deprecated: fit curves with the old interface
 - [`get_solver_info()`](https://gdrplatform.github.io/gDRstyle/reference/get_solver_info.md)
   : Describe the registered solvers
 - [`get_solvers()`](https://gdrplatform.github.io/gDRstyle/reference/get_solvers.md)

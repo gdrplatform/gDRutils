@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.30</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.31</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,12 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.31" id="gdrutils-11131---2026-11-23">gDRutils 1.11.31 - 2026-11-23<a class="anchor" aria-label="anchor" href="#gdrutils-11131---2026-11-23"></a></h2>
+<ul><li>deprecate <code><a href="../reference/fit_curves-deprecated.html">fit_curves()</a></code> and <code><a href="../reference/fit_curves-deprecated.html">logisticFit()</a></code> for one release, as wrappers over <code><a href="../reference/fit_drug_response_metrics.html">fit_drug_response_metrics()</a></code>
+</li>
+<li>fix the fit provenance dropping a function passed inside a list argument, e.g. a combination solver</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.30" id="gdrutils-11130---2026-11-23">gDRutils 1.11.30 - 2026-11-23<a class="anchor" aria-label="anchor" href="#gdrutils-11130---2026-11-23"></a></h2>
 <ul><li>add <code>architecture/identifiers.md</code>, diagrams of where identifiers live and how the gDR packages use them</li>
 </ul></div>
@@ -44,7 +50,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.27" id="gdrutils-11127---2026-11-22">gDRutils 1.11.27 - 2026-11-22<a class="anchor" aria-label="anchor" href="#gdrutils-11127---2026-11-22"></a></h2>
 <ul><li>add a <code>solver</code> argument to <code><a href="../reference/fit_drug_response_metrics.html">fit_drug_response_metrics()</a></code>, default <code><a href="../reference/solver_drc.html">solver_drc()</a></code>, and a registry (<code><a href="../reference/get_solver_info.html">get_solver_info()</a></code>)</li>
-<li>remove the second Hill fit <code><a href="../reference/fit_curves-defunct.html">fit_curves()</a></code>/<code><a href="../reference/fit_curves-defunct.html">logisticFit()</a></code>: every fit is <code>fit_drug_response_metrics(x_0 = )</code>
+<li>remove the second Hill fit <code><a href="../reference/fit_curves-deprecated.html">fit_curves()</a></code>/<code><a href="../reference/fit_curves-deprecated.html">logisticFit()</a></code>: every fit is <code>fit_drug_response_metrics(x_0 = )</code>
 </li>
 <li>make a constant fit report <code>x_0</code> as the mean response, so its parameters describe the flat curve</li>
 </ul></div>
@@ -69,7 +75,7 @@
 <ul><li>fix <code><a href="../reference/fit_drug_response_metrics.html">fit_drug_response_metrics()</a></code> labelling too few concentrations as a flat curve, not <code>DRCTooFewPointsToFit</code>
 </li>
 <li>fix a flat response, also one above the cap, being an invalid fit, and keep p-value and rss of a rejected fit</li>
-<li>fix <code><a href="../reference/fit_curves-defunct.html">fit_curves()</a></code> stopping on a solver error, by labelling the curve <code>DRCInvalidFitResult</code>
+<li>fix <code><a href="../reference/fit_curves-deprecated.html">fit_curves()</a></code> stopping on a solver error, by labelling the curve <code>DRCInvalidFitResult</code>
 </li>
 </ul></div>
     <div class="section level2">

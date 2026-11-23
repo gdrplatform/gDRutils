@@ -1,5 +1,16 @@
 # Changelog
 
+## gDRutils 1.11.31 - 2026-11-23
+
+- deprecate
+  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md)
+  and
+  [`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md)
+  for one release, as wrappers over
+  [`fit_drug_response_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/fit_drug_response_metrics.md)
+- fix the fit provenance dropping a function passed inside a list
+  argument, e.g. a combination solver
+
 ## gDRutils 1.11.30 - 2026-11-23
 
 - add `architecture/identifiers.md`, diagrams of where identifiers live
@@ -21,7 +32,7 @@
   and a registry
   ([`get_solver_info()`](https://gdrplatform.github.io/gDRstyle/reference/get_solver_info.md))
 - remove the second Hill fit
-  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)/[`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md):
+  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md)/[`logisticFit()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md):
   every fit is `fit_drug_response_metrics(x_0 = )`
 - make a constant fit report `x_0` as the mean response, so its
   parameters describe the flat curve
@@ -62,7 +73,7 @@
 - fix a flat response, also one above the cap, being an invalid fit, and
   keep p-value and rss of a rejected fit
 - fix
-  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-defunct.md)
+  [`fit_curves()`](https://gdrplatform.github.io/gDRstyle/reference/fit_curves-deprecated.md)
   stopping on a solver error, by labelling the curve
   `DRCInvalidFitResult`
 
