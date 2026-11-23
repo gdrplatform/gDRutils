@@ -12,7 +12,7 @@
 # pattern musyc_fit_fn set and what apply_fit() supports for a custom assay:
 # forcing a Gompertz into columns named for a log-logistic would fill them with
 # values that do not mean what the column name says. Parameters that play the
-# same role across models reuse the vocabulary logisticFit() already uses —
+# same role across models reuse the vocabulary of the Hill fit —
 # h, x_inf, x_0, ec50 — and model-specific ones are named for themselves.
 #
 # Every function also returns r2, converged, n_conc and fit_type, so two models
@@ -100,7 +100,7 @@
 
   # drm() writes this argument into the global na.action option exactly as
   # written and never restores it, so an unqualified na.omit is deliberate and
-  # the option is put back by hand. See the same note in fit_curves.R.
+  # the option is put back by hand. See the same note in fit_solvers.R.
   old_na_action <- getOption("na.action")
   on.exit(options(na.action = old_na_action), add = TRUE)
 
@@ -205,7 +205,7 @@
 #'
 #' Each returns the model's own parameters rather than the \code{Metrics}
 #' schema. Parameters playing the same role across models share the names
-#' \code{logisticFit()} uses — \code{h} for the slope, \code{x_0} and
+#' \code{fit_drug_response_metrics()} uses — \code{h} for the slope, \code{x_0} and
 #' \code{x_inf} for the asymptotes, \code{ec50} for the inflection point — and
 #' the rest are named for what they are. Write them to an assay of their own:
 #' an assay of these is not the \code{Metrics} schema, so nothing reading

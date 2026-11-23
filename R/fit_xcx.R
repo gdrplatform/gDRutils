@@ -120,7 +120,7 @@
 #'   type, as \code{\link{apply_fit}} supplies it.
 #' @param x_col string; the response column.
 #' @param levels numeric vector of inhibition percentages between 1 and 99.
-#' @param capping_fold,range_conc,pcutoff,n_point_cutoff,force_fit,cap passed
+#' @param capping_fold,range_conc,pcutoff,n_point_cutoff,force_fit,cap,solver,solver_control passed
 #'   to \code{\link{fit_drug_response_metrics}} unchanged.
 #'
 #' @return The named list \code{\link{fit_drug_response_metrics}} returns, plus
@@ -146,7 +146,9 @@ fit_drug_response_metrics_xcx <- function(avg_dt,
                                           pcutoff = 0.05,
                                           n_point_cutoff = 4L,
                                           force_fit = FALSE,
-                                          cap = 0.1) {
+                                          cap = 0.1,
+                                          solver = solver_drc,
+                                          solver_control = list()) {
   # Integer levels only: they become column names, and xc33.33333 is not one.
   # 0 and 100 are excluded because both are degenerate - 0% inhibition is the
   # zero dose and 100% is never reached by a curve with a non-zero asymptote.
@@ -163,7 +165,9 @@ fit_drug_response_metrics_xcx <- function(avg_dt,
     pcutoff = pcutoff,
     n_point_cutoff = n_point_cutoff,
     force_fit = force_fit,
-    cap = cap
+    cap = cap,
+    solver = solver,
+    solver_control = solver_control
   )
 
   # The lowest tested concentration, taken as the fit takes it for xc50.

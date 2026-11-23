@@ -1,7 +1,18 @@
-## gDRutils 1.11.28 - 2026-11-23
-* add `local_identifiers()`, `with_identifiers()` and `with_SE_identifiers()`, restoring the session on exit
-* make the SE entry points (`convert_se_assay_to_dt()`, `validate_SE()`, `apply_fit()`) use the SE's identifiers
+## gDRutils 1.11.32 - 2026-11-23
+* add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
 * add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment
+* add a `validate_SE()` check that the SE's identifiers name columns it has
+
+## gDRutils 1.11.30 - 2026-11-23
+* add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them
+
+## gDRutils 1.11.29 - 2026-11-23
+* fix `set_env_identifier()` leaving the other identifiers unset when it is the first call in a session
+
+## gDRutils 1.11.27 - 2026-11-22
+* add a `solver` argument to `fit_drug_response_metrics()`, default `solver_drc()`, and a registry (`get_solver_info()`)
+* remove the second Hill fit `fit_curves()`/`logisticFit()`: every fit is `fit_drug_response_metrics(x_0 = )`
+* make a constant fit report `x_0` as the mean response, so its parameters describe the flat curve
 
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level

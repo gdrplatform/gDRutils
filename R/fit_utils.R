@@ -538,13 +538,14 @@ apply_fits <- function(se,
 
 #' fit_drug_response_metrics
 #'
-#' Reference fit function replicating standard gDR Hill curve fitting
-#' (3-parameter model, \code{x_0} fixed at 1).  Produces output
-#' column-compatible with \code{fit_SE()} in gDRcore and
-#' \code{\link{logisticFit}}, including \code{p_value},
-#' \code{rss}, \code{x_AOC_range}, \code{x_max}, and \code{x_sd_avg}.
-#' For use with \code{\link{apply_fit_to_se}} or \code{\link{apply_fit}}
-#' on single-agent or time-course data.
+#' The gDR Hill curve fit: the one fitting path for single-agent, co-dilution,
+#' combination and time-course data. By default a 3-parameter model with \code{x_0}
+#' fixed at 1; set \code{x_0} to fix it elsewhere (the combination co-treatment fits)
+#' or to \code{NA} to fit it (4-parameter model). Priors and bounds per
+#' normalization type come from \code{inst/extdata/fit_profiles.json}. The optimiser
+#' is \code{solver}, \code{\link{solver_drc}} by default; any function with its
+#' signature can replace it. For use with \code{\link{apply_fit_to_se}} or
+#' \code{\link{apply_fit}}.
 #'
 #' @param avg_dt \code{data.table} of averaged data for one
 #'   (drug x cell line x normalization_type) triplet.  Should contain
@@ -567,6 +568,12 @@ apply_fits <- function(se,
 #'   of points is below \code{n_point_cutoff}. Default \code{FALSE}.
 #' @param cap numeric; upper cap on \code{xc50} relative to the concentration
 #'   range. Default \code{0.1}.
+#' @param x_0 numeric; the upper asymptote, fixed in the fit. Default \code{1}.
+#'   \code{NA} fits it (4-parameter model).
+#' @param solver function fitting the Hill parameters, with the signature of
+#'   \code{\link{solver_drc}} (the default). See \code{\link{get_solvers}}.
+#' @param solver_control named list passed to \code{solver} as its \code{control}
+#'   argument (for \code{solver_drc}, \code{drc::drmc()} settings).
 #'
 #' @return Named list of fit metrics fully compatible with the standard gDR
 #'   \code{Metrics} assay schema: \code{ec50}, \code{xc50}, \code{h},
@@ -584,7 +591,7 @@ apply_fits <- function(se,
 #'       concentrations with a response; no curve parameters;
 #'     \item \code{"DRCInvalidFitResult"}: the solver failed; no curve parameters.
 #'   }
-#'   The same labels as \code{\link{logisticFit}} gives for the same data.
+#'   A constant fit reports the flat curve: \code{x_0 = x_inf = x_mean}.
 #'
 #' @seealso \code{\link{fit_drug_response_metrics_4p}} for a 4-parameter
 #'   variant that fits \code{x_0} freely.
@@ -612,15 +619,20 @@ fit_drug_response_metrics <- function(avg_dt, x_col = "x",
                                       pcutoff = 0.05,
                                       n_point_cutoff = 4L,
                                       force_fit = FALSE,
-                                      cap = 0.1) {
-  .fit_drug_response_metrics_impl(avg_dt, x_0 = 1,
+                                      cap = 0.1,
+                                      x_0 = 1,
+                                      solver = solver_drc,
+                                      solver_control = list()) {
+  .fit_drug_response_metrics_impl(avg_dt, x_0 = x_0,
                                   x_col = x_col,
                                   capping_fold = capping_fold,
                                   range_conc = range_conc,
                                   pcutoff = pcutoff,
                                   n_point_cutoff = n_point_cutoff,
                                   force_fit = force_fit,
-                                  cap = cap)
+                                  cap = cap,
+                                  solver = solver,
+                                  solver_control = solver_control)
 }
 
 
@@ -654,21 +666,20 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
                                          pcutoff = 0.05,
                                          n_point_cutoff = 4L,
                                          force_fit = FALSE,
-                                         cap = 0.1) {
-  .fit_drug_response_metrics_impl(avg_dt, x_0 = NA_real_,
-                                  x_col = x_col,
-                                  capping_fold = capping_fold,
-                                  range_conc = range_conc,
-                                  pcutoff = pcutoff,
-                                  n_point_cutoff = n_point_cutoff,
-                                  force_fit = force_fit,
-                                  cap = cap)
+                                         cap = 0.1,
+                                         solver = solver_drc,
+                                         solver_control = list()) {
+  fit_drug_response_metrics(avg_dt, x_col = x_col, capping_fold = capping_fold,
+                            range_conc = range_conc, pcutoff = pcutoff,
+                            n_point_cutoff = n_point_cutoff, force_fit = force_fit,
+                            cap = cap, x_0 = NA_real_, solver = solver,
+                            solver_control = solver_control)
 }
 
 # What the reference fits do, copied into the recipe apply_fit() records.
 fit_drug_response_metrics <- set_fit_fn_info(
   fit_drug_response_metrics,
-  model = "3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1",
+  model = "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)",
   description = paste(
     "Hill curve of the response against concentration, fitted per normalization type.",
     "Falls back to a constant fit when fewer than n_point_cutoff concentrations are",
@@ -679,7 +690,7 @@ fit_drug_response_metrics <- set_fit_fn_info(
 
 fit_drug_response_metrics_4p <- set_fit_fn_info(
   fit_drug_response_metrics_4p,
-  model = "4-parameter log-logistic (drc::LL.4), upper asymptote fitted",
+  model = "4-parameter log-logistic Hill, upper asymptote fitted (drc::LL.4 with the default solver_drc)",
   description = paste(
     "Hill curve of the response against concentration with a free upper asymptote,",
     "fitted per normalization type. Falls back to a constant fit like",
@@ -735,8 +746,13 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
                                             pcutoff = 0.05,
                                             n_point_cutoff = 4L,
                                             force_fit = FALSE,
-                                            cap = 0.1) {
+                                            cap = 0.1,
+                                            solver = solver_drc,
+                                            solver_control = list()) {
   checkmate::assert_string(x_col)
+  checkmate::assert_number(x_0, na.ok = TRUE)
+  checkmate::assert_function(solver, args = c("conc", "x", "model"))
+  checkmate::assert_list(solver_control, names = "unique")
   if (!x_col %in% names(avg_dt)) {
     stop(sprintf("Column '%s' not found in avg_dt. Available: %s",
                  x_col, toString(names(avg_dt))))
@@ -747,12 +763,15 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   x <- avg_dt[[x_col]]
   x_std <- if ("x_std" %in% names(avg_dt)) avg_dt$x_std else rep(NA_real_, length(x))
 
+  if (any(conc < 0, na.rm = TRUE)) {
+    stop("the fit takes unlogged concentrations: negative concentrations found")
+  }
   keep <- !is.na(x) & !is.na(conc) & conc != 0
   x_std <- x_std[keep]
   x <- x[keep]
   conc <- conc[keep]
 
-  # Cap x values as logisticFit does (pmin to x_0 + cap), before anything is decided
+  # Cap x values (pmin to x_0 + cap) before anything is decided
   # or summarized from them: a flat response above the cap is then one value, and
   # x_mean and x_max of every outcome use the capped values
   checkmate::assert_number(cap, lower = 0)
@@ -763,7 +782,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   }
   x <- pmin(x, x_cap_limit)
 
-  # The three ways a curve ends up without a dose-response fit, as in logisticFit():
+  # The three ways a curve ends up without a dose-response fit:
   # - fewer than n_point_cutoff concentrations (none at all included): nothing to fit
   #   a curve to, so no curve parameters -> DRCTooFewPointsToFit
   # - one distinct response: nothing to fit (drc would stop on it) -> DRCConstantFitResult
@@ -775,7 +794,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
     .constant_fit_result(norm_type, x, conc, x_std, x_0, range_conc)
   } else {
 
-  x_sd_avg <- mean(x_std, na.rm = TRUE)         # matches logisticFit line 239
+  x_sd_avg <- mean(x_std, na.rm = TRUE)
   N_conc <- length(unique(conc))
   maxlog10Conc <- log10(max(conc, na.rm = TRUE))
 
@@ -796,53 +815,36 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
   med_conc <- stats::median(conc)
   min_conc <- min(conc)
   max_conc <- max(conc)
-  controls <- drc::drmc(relTol = 1e-04, errorm = FALSE, noMessage = TRUE, rmNA = TRUE)
-
   # Compute mean on capped x (must be after capping so rss1 uses consistent data)
   x_mean_obs <- mean(x, na.rm = TRUE)
 
   four_param <- is.na(x_0)
-  fit_param <- c("h", "x_inf", "x_0", "ec50")
-
-  if (four_param) {
-    fct <- drc::LL.4(names = fit_param)
-    start <- c(2, x_inf_prior, 1, med_conc)
-    lowerl <- c(0.1, lower_x_inf, lower_x_0, min_conc / 10)
-    upperl <- c(5, 1, 1 + cap, max_conc * 10)
+  # Start values and bounds over the free parameters, in .hill_model()'s order:
+  # h, x_inf, [x_0,] ec50.
+  model <- if (four_param) {
+    .hill_model(x_0,
+                start = c(2, x_inf_prior, 1, med_conc),
+                lower = c(0.1, lower_x_inf, lower_x_0, min_conc / 10),
+                upper = c(5, 1, 1 + cap, max_conc * 10))
   } else {
-    fit_param_3p <- fit_param[-3]   # drop x_0
-    fct <- drc::LL.3u(upper = x_0, names = fit_param_3p)
-    start <- c(2, x_inf_prior, med_conc)
-    lowerl <- c(0.1, lower_x_inf, min_conc / 10)
-    upperl <- c(5, min(x_0 + cap, 1), max_conc * 10)
+    .hill_model(x_0,
+                start = c(2, x_inf_prior, med_conc),
+                lower = c(0.1, lower_x_inf, min_conc / 10),
+                upper = c(5, min(x_0 + cap, 1), max_conc * 10))
   }
 
-  # See the note in .prepareFitModel() - drc leaks na.action into the global
-  # option, and a qualified name there breaks every later stats::lm().
-  old_na_action <- getOption("na.action")
-  on.exit(options(na.action = old_na_action), add = TRUE)
+  # A solver that fails returns converged = FALSE; one that throws is treated the same,
+  # so the curve is labelled DRCInvalidFitResult rather than stopping the whole fit.
+  sol <- tryCatch(solver(conc, x, model, solver_control),
+                  error = function(e) list(converged = FALSE, message = conditionMessage(e)))
 
-  fit <- tryCatch(
-    drc::drm(x ~ conc,
-             data = data.table::data.table(x = x, conc = conc),
-             logDose = NULL,
-             fct = fct,
-             start = start,
-             lowerl = lowerl,
-             upperl = upperl,
-             control = controls,
-             # Unqualified on purpose - see the note in .prepareFitModel().
-             na.action = na.omit),
-    error = function(e) NULL
-  )
-
-  if (!is.null(fit)) {
-    coefs <- stats::coef(fit)
-    rss <- sum(stats::residuals(fit)^2, na.rm = TRUE)
+  if (isTRUE(sol$converged)) {
+    coefs <- sol$params
+    rss <- sol$rss
     rss1 <- sum((x - x_mean_obs)^2)
     r2 <- 1 - rss / rss1
 
-    # F-test p-value (matches .calculate_f_pval in gDRutils/fit_curves.R)
+    # F-test of the sigmoidal fit against a flat line
     if (four_param) {
       n_param <- 4L
     } else {
@@ -854,40 +856,37 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
     p_value <- stats::pf(f_value, df1, df2, lower.tail = FALSE)
 
     # pcutoff: a fit that is not statistically significant falls back to a constant
-    # fit, which keeps the p-value and rss of the rejected fit, as logisticFit() does
+    # fit, which keeps the p-value and rss of the rejected fit
     if (!force_fit && !is.na(p_value) && p_value >= pcutoff) {
       .constant_fit_result(norm_type, x, conc, x_std, x_0, range_conc,
                            p_value = p_value, rss = rss)
     } else {
-      # Helper: mean of model predictions over a concentration range
-      .predict_mean <- function(model, lo, hi) {
-        mean(stats::predict(model, data.table::data.table(
-          conc = 10^seq(log10(lo), log10(hi), length.out = 101L)
-        )), na.rm = TRUE)
+      ec50_val <- unname(coefs[["ec50"]])
+      x_0_val <- unname(coefs[["x_0"]])
+      x_inf_val <- unname(coefs[["x_inf"]])
+      h_val <- unname(coefs[["h"]])
+      fit_type <- if (four_param) "DRC4pHillFitModel" else "DRC3pHillFitModelFixS0"
+
+      # Mean of the fitted curve over a concentration range, on 101 log-spaced points.
+      # From the Hill closed form rather than the solver's own object, so it is the
+      # same for every solver.
+      .predict_mean <- function(lo, hi) {
+        grid <- 10^seq(log10(lo), log10(hi), length.out = 101L)
+        mean(predict_efficacy_from_conc(grid, rep(x_inf_val, length(grid)),
+                                        rep(x_0_val, length(grid)),
+                                        rep(ec50_val, length(grid)),
+                                        rep(h_val, length(grid))), na.rm = TRUE)
       }
 
-      # x_mean: model-predicted mean over observed range (matches logisticFit)
-      x_mean_model <- .predict_mean(fit, min(conc), max(conc))
+      # x_mean: model-predicted mean over the observed range
+      x_mean_model <- .predict_mean(min(conc), max(conc))
 
-      # x_AOC_range: model-predicted mean over full range_conc (matches logisticFit line 290)
-      # logisticFit integrates over [range_conc[1], range_conc[2]] without
-      # clamping to the observed concentration range — we must do the same for parity.
+      # x_AOC_range: model-predicted mean over the full range_conc, not clamped to the
+      # observed concentrations, so experiments with different ranges compare
       if (range_conc[1] < range_conc[2]) {
-        x_AOC_range <- 1 - .predict_mean(fit, range_conc[1], range_conc[2])
+        x_AOC_range <- 1 - .predict_mean(range_conc[1], range_conc[2])
       } else {
         x_AOC_range <- 1 - x_mean_model
-      }
-
-      if (four_param) {
-        ec50_val <- coefs[["ec50:(Intercept)"]]
-        x_0_val <- coefs[["x_0:(Intercept)"]]
-        x_inf_val <- coefs[["x_inf:(Intercept)"]]
-        fit_type <- "DRC4pHillFitModel"
-      } else {
-        ec50_val <- coefs[["ec50:(Intercept)"]]
-        x_0_val <- x_0
-        x_inf_val <- coefs[["x_inf:(Intercept)"]]
-        fit_type <- "DRC3pHillFitModelFixS0"
       }
       list(
         normalization_type = norm_type,
@@ -901,9 +900,10 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
         ec50 = ec50_val,
         xc50 = {
           # xc50 = concentration at which response = 0.5
-          # (not ec50 — matches .calculate_xc50 + .extendWithXc50 in gDRutils/fit_curves.R)
+          # (not ec50)
           xc50_raw <- tryCatch(
-            predict_conc_from_efficacy(0.5, x_inf_val, x_0_val, ec50_val, coefs[1]),
+            predict_conc_from_efficacy(.xc50_threshold_for(norm_type), x_inf_val, x_0_val,
+                                       ec50_val, h_val),
             error = function(e) NA_real_
           )
           if (is.na(xc50_raw)) {
@@ -916,7 +916,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
                                capping_fold = capping_fold)
           }
         },
-        h = coefs[1],
+        h = h_val,
         r2 = r2,
         rss = rss,
         p_value = p_value,
@@ -1168,8 +1168,9 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
 }
 
 
-# Constant fit: p_value >= pcutoff or too few points — matches set_constant_fit_params()
-# in gDRutils/fit_curves.R (ec50=0, h=0.0001, r2=0, x_mean=x_inf=x_0=mean(x))
+# Constant fit: one distinct response, or p_value >= pcutoff. The curve is flat at the
+# mean response, so x_0 = x_inf = x_mean = mean(x), with ec50 = 0, h = 0.0001, r2 = 0,
+# as set_constant_fit_params() reports it.
 #' @keywords internal
 .constant_fit_result <- function(norm_type, x, conc, x_std, x_0, range_conc,
                                  p_value = NA_real_, rss = NA_real_) {
@@ -1187,7 +1188,7 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     NA_real_
   }
   # xc50 sign follows the mean normalized value, as .set_mean_params() does in
-  # gDRutils/fit_curves.R: above the threshold the curve never reaches 50% (Inf), at or
+  # fit_curves.R: above the threshold the curve never reaches 50% (Inf), at or
   # below it is already past 50% at the lowest dose (-Inf). The threshold is per
   # normalization type — see fit_config in fit_profiles.json
   xc50_val <- .estimate_xc50_fallback(mn, .xc50_threshold_for(norm_type))
@@ -1206,7 +1207,7 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     r2 = 0,
     rss = rss,
     p_value = p_value,
-    x_0 = if (is.na(x_0)) mn else x_0,
+    x_0 = mn,
     x_inf = mn,
     fit_type = "DRCConstantFitResult"
   )
@@ -1215,7 +1216,7 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
 
 # Too few concentrations to fit a curve: the summary of the measured values, without
 # curve parameters. xc50 is +/-Inf only when every response is on the same side of the
-# threshold, as .set_too_few_fit_params() does in fit_curves.R.
+# threshold.
 #' @keywords internal
 .too_few_fit_result <- function(norm_type, x, conc, x_std) {
   out <- .empty_fit_result(norm_type)

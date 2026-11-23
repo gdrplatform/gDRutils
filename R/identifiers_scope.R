@@ -11,7 +11,15 @@
 #' \code{SummarizedExperiment}. Keys absent from \code{ids} keep their current value.
 #'
 #' Prefer these to \code{set_env_identifier()}, which changes the identifiers for the
-#' rest of the session.
+#' rest of the session. Called at the top level (the console), there is no function to
+#' return from, so \code{local_identifiers()} warns and the identifiers stay set, as with
+#' \code{set_env_identifier()}.
+#'
+#' An SE built by gDRcore stores the identifiers it was built with, and the functions
+#' that read an SE (\code{convert_se_assay_to_dt()}, \code{validate_SE()},
+#' \code{apply_fit()}, ...) use them in preference to the session's. A key the SE does
+#' not store is taken from the session, as \code{get_SE_identifiers()} always did. To
+#' correct an object's identifiers, use \code{set_SE_identifiers()}.
 #'
 #' @param ids named list of identifiers, a subset of \code{names(get_default_identifiers())}.
 #' @param .local_envir environment whose exit restores the previous identifiers.
@@ -33,9 +41,13 @@
 #' @keywords identifiers
 #' @export
 local_identifiers <- function(ids, .local_envir = parent.frame()) {
-  checkmate::assert_list(ids, names = "unique")
+  checkmate::assert_list(ids, types = "character", names = "unique")
   checkmate::assert_subset(names(ids), names(IDENTIFIERS_LIST))
   checkmate::assert_environment(.local_envir)
+  if (identical(.local_envir, globalenv())) {
+    warning("local_identifiers() called at the top level: nothing will restore the ",
+            "previous identifiers, so this works like set_env_identifier()", call. = FALSE)
+  }
   old <- .get_id()
   for (k in names(ids)) {
     .set_id(k, ids[[k]])
@@ -64,16 +76,18 @@ with_SE_identifiers <- function(se, code) {
 }
 
 
-# The identifiers stored on an SE that are known keys. An object without stored
-# identifiers, or with only some of them, leaves the rest as they are in the session,
-# which is the fallback get_SE_identifiers() has always used.
+# The identifiers stored on an SE that are known keys with a value. An object without
+# stored identifiers, or with only some of them, leaves the rest as they are in the
+# session, which is the fallback get_SE_identifiers() has always used. A key that is no
+# longer an identifier, or a NULL / non-character value, counts as not stored.
 #' @keywords internal
 .SE_scope_ids <- function(se) {
   ids <- S4Vectors::metadata(se)[["identifiers"]]
   if (!is.list(ids) || length(ids) == 0L) {
     return(list())
   }
-  ids[intersect(names(ids), names(IDENTIFIERS_LIST))]
+  ids <- ids[intersect(names(ids), names(IDENTIFIERS_LIST))]
+  Filter(function(v) is.character(v) && length(v) > 0L, ids)
 }
 
 
@@ -93,19 +107,26 @@ with_SE_identifiers <- function(se, code) {
 
 #' Canonical form of a set of identifiers, and whether two sets agree
 #'
-#' \code{canonical_identifiers()} completes \code{ids} with the default value of
-#' every key it lacks, recording those keys in \code{attr(, "assumed")}. Given
+#' \code{canonical_identifiers()} completes \code{ids} with the session's value of
+#' every key it lacks (\code{fill}), recording those keys in \code{attr(, "assumed")}:
+#' a key an object does not store is read from the session, so it is compared as the
+#' session's value too. Keys that are not identifiers (e.g. from an older object) are
+#' left out and named in \code{attr(, "unknown")}. Given
 #' \code{data}, it also resolves an identifier that lists alternative columns (e.g.
 #' \code{barcode = c("Barcode", "Plate")}) to the one present, so two objects built
 #' the same way store the same identifiers.
 #'
 #' \code{same_identifiers()} is \code{TRUE} when two sets name the same columns. A
-#' key resolved to one column agrees with a list of alternatives that contains it.
+#' key resolved to one column agrees with a list of alternatives that contains it, and
+#' lists of alternatives or tags (\code{barcode}, \code{template},
+#' \code{untreated_tag}) are compared as sets; \code{well_position} keeps its order.
 #' The keys that differ are in \code{attr(, "differ")}.
 #'
 #' @param ids,a,b named lists of identifiers.
 #' @param data optional \code{data.frame}, or character vector of column names, the
 #'   identifiers describe.
+#' @param fill named list giving the value of a key \code{ids} lacks. Defaults to the
+#'   session's identifiers.
 #'
 #' @return \code{canonical_identifiers()}: a named list over every identifier key.
 #'   \code{same_identifiers()}: a flag.
@@ -118,14 +139,15 @@ with_SE_identifiers <- function(se, code) {
 #'
 #' @keywords identifiers
 #' @export
-canonical_identifiers <- function(ids, data = NULL) {
+canonical_identifiers <- function(ids, data = NULL, fill = get_env_identifiers()) {
   checkmate::assert_list(ids, names = "unique")
+  checkmate::assert_list(fill, names = "unique")
   unknown <- setdiff(names(ids), names(IDENTIFIERS_LIST))
-  if (length(unknown) > 0L) {
-    stop(sprintf("unknown identifier key(s): %s", toString(sQuote(unknown, FALSE))))
-  }
+  ids <- ids[setdiff(names(ids), unknown)]
+  ids <- ids[!vapply(ids, is.null, logical(1))]
   assumed <- setdiff(names(IDENTIFIERS_LIST), names(ids))
-  out <- c(ids, IDENTIFIERS_LIST[assumed])[names(IDENTIFIERS_LIST)]
+  filled <- fill[intersect(assumed, names(fill))]
+  out <- c(ids, filled, IDENTIFIERS_LIST[setdiff(assumed, names(fill))])[names(IDENTIFIERS_LIST)]
   if (!is.null(data)) {
     cols <- if (is.character(data)) data else colnames(data)
     checkmate::assert_character(cols)
@@ -137,6 +159,7 @@ canonical_identifiers <- function(ids, data = NULL) {
     }
   }
   attr(out, "assumed") <- assumed
+  attr(out, "unknown") <- unknown
   out
 }
 
@@ -152,9 +175,16 @@ same_identifiers <- function(a, b) {
 }
 
 
+# Identifiers whose value is a set (alternative columns, or tags), not an ordered list.
+.UNORDERED_IDENTIFIERS <- c("barcode", "template", "untreated_tag")
+
+
 #' @keywords internal
 .same_id_value <- function(k, x, y) {
   if (identical(x, y)) {
+    return(TRUE)
+  }
+  if (k %in% .UNORDERED_IDENTIFIERS && setequal(x, y)) {
     return(TRUE)
   }
   if (k %in% EXPECT_ONE_IDENTIFIERS && xor(length(x) == 1L, length(y) == 1L)) {

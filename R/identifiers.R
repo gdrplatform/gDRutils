@@ -264,6 +264,15 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 update_env_idfs_from_mae <- function(mae_idfs) {
   checkmate::assert_list(mae_idfs)
 
+  # A key that is no longer an identifier (an older object) is left out, with a warning,
+  # instead of failing the whole update.
+  unknown <- unique(unlist(lapply(mae_idfs, function(x) setdiff(names(x), names(IDENTIFIERS_LIST)))))
+  if (length(unknown) > 0L) {
+    warning(sprintf("ignoring identifier key(s) that are no longer identifiers: %s",
+                    toString(sQuote(unknown, FALSE))), call. = FALSE)
+    mae_idfs <- lapply(mae_idfs, function(x) x[setdiff(names(x), unknown)])
+  }
+
   # every experiment, not just the first two, must agree
   for (i in seq_along(mae_idfs)[-1L]) {
     same <- same_identifiers(mae_idfs[[1]], mae_idfs[[i]])
