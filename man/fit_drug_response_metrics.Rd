@@ -12,7 +12,10 @@ fit_drug_response_metrics(
   pcutoff = 0.05,
   n_point_cutoff = 4L,
   force_fit = FALSE,
-  cap = 0.1
+  cap = 0.1,
+  x_0 = 1,
+  solver = solver_drc,
+  solver_control = list()
 )
 }
 \arguments{
@@ -44,6 +47,15 @@ of points is below \code{n_point_cutoff}. Default \code{FALSE}.}
 
 \item{cap}{numeric; upper cap on \code{xc50} relative to the concentration
 range. Default \code{0.1}.}
+
+\item{x_0}{numeric; the upper asymptote, fixed in the fit. Default \code{1}.
+\code{NA} fits it (4-parameter model).}
+
+\item{solver}{function fitting the Hill parameters, with the signature of
+\code{\link{solver_drc}} (the default). See \code{\link{get_solvers}}.}
+
+\item{solver_control}{named list passed to \code{solver} as its \code{control}
+argument (for \code{solver_drc}, \code{drc::drmc()} settings).}
 }
 \value{
 Named list of fit metrics fully compatible with the standard gDR
@@ -62,16 +74,17 @@ the curve is flat at the mean response;
 concentrations with a response; no curve parameters;
 \item \code{"DRCInvalidFitResult"}: the solver failed; no curve parameters.
 }
-The same labels as \code{\link{logisticFit}} gives for the same data.
+A constant fit reports the flat curve: \code{x_0 = x_inf = x_mean}.
 }
 \description{
-Reference fit function replicating standard gDR Hill curve fitting
-(3-parameter model, \code{x_0} fixed at 1).  Produces output
-column-compatible with \code{fit_SE()} in gDRcore and
-\code{\link{logisticFit}}, including \code{p_value},
-\code{rss}, \code{x_AOC_range}, \code{x_max}, and \code{x_sd_avg}.
-For use with \code{\link{apply_fit_to_se}} or \code{\link{apply_fit}}
-on single-agent or time-course data.
+The gDR Hill curve fit: the one fitting path for single-agent, co-dilution,
+combination and time-course data. By default a 3-parameter model with \code{x_0}
+fixed at 1; set \code{x_0} to fix it elsewhere (the combination co-treatment fits)
+or to \code{NA} to fit it (4-parameter model). Priors and bounds per
+normalization type come from \code{inst/extdata/fit_profiles.json}. The optimiser
+is \code{solver}, \code{\link{solver_drc}} by default; any function with its
+signature can replace it. For use with \code{\link{apply_fit_to_se}} or
+\code{\link{apply_fit}}.
 }
 \examples{
 dt <- data.table::data.table(
