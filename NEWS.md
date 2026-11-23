@@ -1,3 +1,8 @@
+## gDRutils 1.11.28 - 2026-11-23
+* add `local_identifiers()`, `with_identifiers()` and `with_SE_identifiers()`, restoring the session on exit
+* make the SE entry points (`convert_se_assay_to_dt()`, `validate_SE()`, `apply_fit()`) use the SE's identifiers
+* add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment
+
 ## gDRutils 1.11.26 - 2026-11-12
 * add `fit_drug_response_metrics_xcx()`, the pipeline's fit plus the concentration at any inhibition level
 

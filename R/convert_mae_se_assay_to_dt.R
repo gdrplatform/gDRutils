@@ -43,6 +43,7 @@ convert_se_assay_to_dt <- function(se,
                                    drop_masked = TRUE,
                                    merge_additional_variables = FALSE) {
   checkmate::assert_class(se, "SummarizedExperiment")
+  .local_SE_identifiers(se)
   checkmate::assert_string(assay_name)
   checkmate::assert_flag(include_metadata)
   checkmate::assert_flag(retain_nested_rownames)
@@ -344,6 +345,7 @@ convert_se_assay_to_custom_dt <- function(se,
                                           cap_values = FALSE) {
 
   checkmate::assert_class(se, "SummarizedExperiment")
+  .local_SE_identifiers(se)
   checkmate::assert_string(assay_name)
   checkmate::assert_string(output_table, null.ok = TRUE)
   checkmate::assert_choice(tolower(assay_name), as.character(tolower(get_assay_names())))

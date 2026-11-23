@@ -138,10 +138,19 @@ test_that("update_env_identifers_from_mae works as expected", {
   update_env_idfs_from_mae(mae_idfs3)
   expect_equal(get_env_identifiers("barcode"), c("my_barcode", "my_plate"))
 
+  # one barcode column and a list of alternatives containing it name the same column
   reset_env_identifiers()
-  expect_error(update_env_idfs_from_mae(mae_idfs4),
-               "identical(mae_idfs[[1]], mae_idfs[[2]]) is not TRUE",
-               fixed = TRUE)
+  update_env_idfs_from_mae(mae_idfs4)
+  expect_equal(get_env_identifiers("barcode"), "my_barcode")
+
+  # a third experiment is checked too, not only the second
+  mae_idfs5 <- mae_idfs2
+  mae_idfs5[["third_SE"]] <- mae_idfs1[["first_SE"]]
+  mae_idfs5[["third_SE"]][["drug"]] <- "DrugID"
+  reset_env_identifiers()
+  expect_error(update_env_idfs_from_mae(mae_idfs5),
+               "experiments 1 and 3 have different identifiers: drug", fixed = TRUE)
+  reset_env_identifiers()
   expect_error(update_env_idfs_from_mae("test"),
                "Assertion on 'mae_idfs' failed: Must be of type 'list', not 'character'.",
                fixed = TRUE)

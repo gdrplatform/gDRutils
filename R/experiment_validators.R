@@ -80,6 +80,7 @@ validate_SE <- function(se,
                         expect_single_agent = FALSE) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
+  .local_SE_identifiers(se)
   exp_assay_names <- c("Normalized", "Averaged")
   if (expect_single_agent) {
     exp_assay_names <- c(exp_assay_names, "Metrics")

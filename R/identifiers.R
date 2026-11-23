@@ -264,8 +264,13 @@ get_identifiers_dt <- function(k = NULL, get_description = FALSE, get_example = 
 update_env_idfs_from_mae <- function(mae_idfs) {
   checkmate::assert_list(mae_idfs)
 
-  if (length(mae_idfs) > 1L) {
-    stopifnot(identical(mae_idfs[[1]], mae_idfs[[2]]))
+  # every experiment, not just the first two, must agree
+  for (i in seq_along(mae_idfs)[-1L]) {
+    same <- same_identifiers(mae_idfs[[1]], mae_idfs[[i]])
+    if (!same) {
+      stop(sprintf("experiments 1 and %d have different identifiers: %s",
+                   i, toString(attr(same, "differ"))))
+    }
   }
 
   mae_idfs <- mae_idfs[[1]]
