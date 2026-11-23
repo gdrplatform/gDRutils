@@ -12,7 +12,9 @@ fit_drug_response_metrics_4p(
   pcutoff = 0.05,
   n_point_cutoff = 4L,
   force_fit = FALSE,
-  cap = 0.1
+  cap = 0.1,
+  solver = solver_drc,
+  solver_control = list()
 )
 }
 \arguments{
@@ -44,6 +46,12 @@ of points is below \code{n_point_cutoff}. Default \code{FALSE}.}
 
 \item{cap}{numeric; upper cap on \code{xc50} relative to the concentration
 range. Default \code{0.1}.}
+
+\item{solver}{function fitting the Hill parameters, with the signature of
+\code{\link{solver_drc}} (the default). See \code{\link{get_solvers}}.}
+
+\item{solver_control}{named list passed to \code{solver} as its \code{control}
+argument (for \code{solver_drc}, \code{drc::drmc()} settings).}
 }
 \value{
 Named list of fit metrics.  \code{fit_type} will be

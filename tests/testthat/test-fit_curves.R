@@ -4,37 +4,43 @@
 }
 
 
-test_that("fit_curves fails with expected errors", {
-  expect_error(fit_curves(list()))
+# The single fitting path, called the way fit_curves() used to call its copy: once per
+# normalization type, with that type's x_0. The test data names its column
+# normalization_types.
+.fit_per_type <- function(df_, e_0 = 1, GR_0 = 1, normalization_type = c("RV", "GR"), ...) {
+  out <- lapply(normalization_type, function(nt) {
+    sub <- data.table::as.data.table(df_)[normalization_types == nt]
+    sub$normalization_type <- nt
+    res <- fit_drug_response_metrics(sub, x_0 = if (nt == "RV") e_0 else GR_0, ...)
+    data.table::as.data.table(c(res, fit_source = "gDR"))
+  })
+  out <- data.table::rbindlist(out, fill = TRUE)
+  rownames(out) <- paste0(out$normalization_type, "_gDR")
+  out
+}
 
-  # Log10 concentrations.
-  df_resp2 <- df_resp
-  df_resp2$Concentration <- df_resp2$Concentration * -1
-  expect_error(fit_curves(df_resp2, series_identifiers = "Concentration"),
-    reg = "logisticFit accepts only unlogged concentrations")
 
-  # Invalid normalization_type.
-  expect_error(fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "BOGUS"),
-    reg = "unknown curve type")
-  expect_error(fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = c("GRvalue", "BOGUS")),
-    reg = "unknown curve type")
-
-  expect_error(fit_curves(
-    df_resp,
-    series_identifiers = c("Concentration", "add_conc"),
-    normalization_type = c("GRvalue")
-  ),
-  reg = "gDR does not yet support multiple series_identifiers, feature coming soon")
+test_that("fit_curves() and logisticFit() are defunct", {
+  expect_error(fit_curves(df_resp, series_identifiers = "Concentration"),
+               "fit_drug_response_metrics")
+  expect_error(logisticFit(c(0.1, 1), c(0.9, 0.5)), "fit_drug_response_metrics")
 })
 
-test_that("NA values are handled correctly", {
-  df_resp_NA <- df_resp
-  df_resp_NA[, "x"] <- NA
-  expect_warning(fit_curves(df_resp_NA, series_identifiers = "Concentration"))
 
-  df_result_NA <- purrr::quietly(fit_curves)(df_resp_NA, series_identifiers = "Concentration")
-  expect_length(df_result_NA$warnings, 2)
-  expect_true(all(is.na(df_result_NA$result[, "xc50"])))
+test_that("the fit rejects logged concentrations", {
+  df_resp2 <- data.table::copy(df_resp)[normalization_types == "RV"]
+  df_resp2$normalization_type <- "RV"
+  df_resp2$Concentration <- log10(df_resp2$Concentration)
+  expect_error(fit_drug_response_metrics(df_resp2), "negative concentrations")
+})
+
+
+test_that("NA values are handled correctly", {
+  df_resp_NA <- data.table::copy(df_resp)
+  df_resp_NA[, "x"] <- NA
+  df_result_NA <- .fit_per_type(df_resp_NA)
+  expect_true(all(df_result_NA$fit_type == "DRCTooFewPointsToFit"))
+  expect_true(all(is.na(df_result_NA$xc50)))
 })
 
 
@@ -43,7 +49,7 @@ test_that("appropriate fit type is assigned for various use cases", {
 
   # Test a 3P fit.
   ## Note that this should correspond to a cytotoxic response.
-  df_result <- fit_curves(df_resp, series_identifiers = "Concentration")
+  df_result <- .fit_per_type(df_resp)
   expect_equal(round(df_result[, names(params), with = FALSE], 4), expected, tolerance = 1e-5)
 
   obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
@@ -51,27 +57,24 @@ test_that("appropriate fit type is assigned for various use cases", {
   expect_equal(dim(df_result), expected_dims)
 
   # Test a 4P fit (without the x_0 value).
-  df_result <- fit_curves(df_resp, series_identifiers = "Concentration", e_0 = NA, GR_0 = NA)
+  df_result <- .fit_per_type(df_resp, e_0 = NA, GR_0 = NA)
   expect_equal(round(df_result[, names(params), with = FALSE], 4), expected, tolerance = 1e-5)
   obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
   expect_equal(obs_fit, "DRC4pHillFitModel")
   expect_equal(dim(df_result), expected_dims)
 
-  # Test for constant fit.
-  df_resp4 <- df_resp
-  df_resp4[df_resp4$normalization_types == "RV", "x"] <-
-    df_resp4[df_resp4$normalization_types == "GR", "x"] <- 0.5
-
-  expect_warning(df_result <- fit_curves(df_resp4, series_identifiers = "Concentration"),
-    reg = "overriding original x_0 argument") # Override.
+  # Test for constant fit: the curve is flat at the mean, x_0 included.
+  df_resp4 <- data.table::copy(df_resp)
+  df_resp4[, "x"] <- 0.5
+  df_result <- .fit_per_type(df_resp4)
   obs_fit <- unname(unlist(unique(df_result[, "fit_type"])))
   expect_equal(obs_fit, "DRCConstantFitResult")
-  expect_equal(unname(unlist(df_result[1, c("x_0", "x_inf", "x_mean", "x_AOC", "x_AOC_range")])),
-    rep(unname(unlist(unique(df_resp4[df_resp4$normalization_types == "RV", "x"]))), 5))
+  expect_equal(unname(unlist(df_result[1, c("x_0", "x_inf", "x_mean")])), rep(0.5, 3))
+  expect_equal(unname(unlist(df_result[1, c("x_AOC", "x_AOC_range")])), rep(0.5, 2))
   expect_equal(dim(df_result), expected_dims)
 
   ## Test for all values below 0.5.
-  df_resp5 <- df_resp
+  df_resp5 <- data.table::copy(df_resp)
 
   # Scale all readouts.
   max_rv <- max(df_resp[df_resp$normalization_types == "RV", "x"])
@@ -86,21 +89,21 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_resp5[df_resp5$normalization_types == "GR", "x"] <-
     (df_resp[df_resp$normalization_types == "GR", "x"] / (max_gr - min_gr)) *
     ((max_gr - min_gr) / 2)
-  df_result5 <- fit_curves(df_resp5, series_identifiers = "Concentration")
+  df_result5 <- .fit_per_type(df_resp5)
   expect_equal(unname(unlist(df_result5[, c("x_inf")])), c(0, -1))
   obs_fit <- unname(unlist(unique(df_result5[, "fit_type"])))
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
 
   # Test for all values above 0.5.
   ## Note that this corresponds to partial growth inhibition.
-  df_result6 <- fit_curves(df_resp_above, series_identifiers = "Concentration")
+  df_result6 <- .fit_per_type(df_resp_above)
   expect_equal(unname(unlist(df_result6[, c("x_inf")])), c(0.5, 0.5), tolerance = 1e-5)
   expect_true(all(df_result6[, c("xc50")] > 500))
   obs_fit <- unname(unlist(unique(df_result6[, "fit_type"])))
   expect_equal(obs_fit, "DRC3pHillFitModelFixS0")
 
   # Test for a pushed constant fit by adding noise.
-  df_resp7 <- df_resp_above
+  df_resp7 <- data.table::copy(df_resp_above)
   noise <- sample(seq(-1, 1, 0.1), NROW(df_resp7) / 2)
   emax <- 0.8
   df_resp7[df_resp7$normalization_types == "RV", "x"] <-
@@ -108,67 +111,48 @@ test_that("appropriate fit type is assigned for various use cases", {
   df_resp7[df_resp7$normalization_types == "GR", "x"] <-
     pmin(unname(unlist(df_resp7[df_resp7$normalization_types == "GR", "x"])) + noise, emax)
 
-  expect_warning(
-    df_result7 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE),
-    ".*overriding original x_0 argument.*"
-  )
+  df_result7 <- .fit_per_type(df_resp7, force_fit = FALSE)
   expect_equal(unname(unlist(unique(df_result7[, "fit_type"]))), "DRCConstantFitResult")
   expect_equal(unique(unname(unlist(df_result7[, c("x_mean", "x_inf", "x_0")]))),
     0.70781, tolerance = 1e-5)
 
   # Test that force argument overrides as expected.
-  df_result8 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = TRUE)
+  df_result8 <- .fit_per_type(df_resp7, force_fit = TRUE)
   expect_equal(unname(unlist(unique(df_result8[, "fit_type"]))), "DRC3pHillFitModelFixS0")
 
   # Test that pcutoff argument works as expected.
-  expect_warning(
-    df_result9 <- fit_curves(df_resp7, series_identifiers = "Concentration", force_fit = FALSE, pcutoff = 1),
-    ".*overriding original x_0 argument.*"
-  )
-
+  df_result9 <- .fit_per_type(df_resp7, force_fit = FALSE, pcutoff = 1)
   expect_equal(unname(unlist(df_result9[, "fit_type"])), c("DRC3pHillFitModelFixS0", "DRCConstantFitResult"))
-  df_result10 <- fit_curves(df_resp7, series_identifiers = "Concentration",
-    force_fit = FALSE, pcutoff = 1.01) # Essentially equivalent to a 'force = TRUE'.
+  df_result10 <- .fit_per_type(df_resp7, force_fit = FALSE, pcutoff = 1.01) # Essentially 'force = TRUE'.
   expect_equal(unname(unlist(unique(df_result10[, "fit_type"]))), "DRC3pHillFitModelFixS0")
 
   # Test for GR values from 0-1.
   ## Note that this correspond to a fully cytostatic response (no growth).
-  df_resp11 <- df_resp
+  df_resp11 <- data.table::copy(df_resp)
   df_resp11[df_resp11$normalization_types == "GR", "x"] <-
     df_resp11[df_resp11$normalization_types == "RV", "x"]
 
-  df_result11 <- fit_curves(df_resp11, series_identifiers = "Concentration")
+  df_result11 <- .fit_per_type(df_resp11)
   expect_equal(unname(unlist(unique(df_result11[, "x_inf"]))), c(0.1, 0.1), tolerance = 1e-5)
 
   # Test for too few points.
-  df_result <- purrr::quietly(fit_curves)(df_resp[c(3:5, 12:14), ],
-                          series_identifiers = "Concentration", n_point_cutoff = 4)
-  expect_length(df_result$warnings, 2)
-  obs_fit <- unique(unlist(df_result$result[, "fit_type"]))
+  df_result <- .fit_per_type(df_resp[c(3:5, 12:14), ], n_point_cutoff = 4)
+  obs_fit <- unique(unlist(df_result[, "fit_type"]))
   expect_equal(obs_fit, "DRCTooFewPointsToFit")
-  expect_equal(dim(df_result$result), expected_dims)
-
-  #nolint start
-    # TODO: Test for invalid fit. Maybe try a bunch of noise.
-    #  expect_warning(df_result <- fit_curves(df_resp[3:5, ], series_identifiers = "Concentration", n_point_cutoff = 1),
-      #reg = "fitting failed with error")
-    #
-    #  obs_fit <- unique(df_result[, "fit_type"])
-    #  expect_equal(obs_fit, "DRCInvalidFitResult")
-    #  expect_equal(dim(df_result), expected_dims)
-  #nolint end
+  expect_equal(dim(df_result), expected_dims)
 })
 
 
-test_that("normalization_type can be specified", {
-  GR_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "GR")
+test_that("one normalization type can be fitted alone", {
+  GR_df_result <- .fit_per_type(df_resp, normalization_type = "GR")
   expect_equal(rownames(GR_df_result), "GR_gDR")
   expect_equal(round(GR_df_result[, names(params), with = FALSE], 4), expected[2, ], tolerance = 1e-5)
 
-  RV_df_result <- fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RV")
+  RV_df_result <- .fit_per_type(df_resp, normalization_type = "RV")
   expect_equal(rownames(RV_df_result), "RV_gDR")
   expect_equal(round(RV_df_result[, names(params), with = FALSE], 4), expected[1, ], tolerance = 1e-5)
 })
+
 
 test_that("predict_efficacy_from_conc works as expected", {
   c <- 1
@@ -266,18 +250,6 @@ test_that(".estimate_xc50 works as expected", {
 })
 
 
-test_that("average_dups works as expected", {
-  df <- data.table::data.table(concs = rep(seq(5), each = 2),
-                               norm_value = seq(10))
-  expect_equal(average_dups(df, "concs"),
-               data.table::data.table(concs = seq(5), norm_value = seq(1.5, 9.5, 2)))
-})
-
-
-###########
-# Setters
-###########
-
 test_that(".set_mean_params works as expected", {
   out <- list()
 
@@ -349,26 +321,6 @@ test_that(".set_invalid_fit_params works as expected", {
 ###############
 # Calculations
 ###############
-
-test_that(".calculate_x_max works as expected", {
-  n <- 4
-  df <- data.frame(concs = c(0.01, 1, 0.03, 5), norm_values = seq(n))
-  expect_equal(.calculate_x_max(df), 2)
-
-  df$norm_values <- rep(NA, n)
-  expect_equal(.calculate_x_max(df), NA)
-})
-
-
-test_that(".calculate_xc50 works as expected", {
-  Vinf <- 0.1
-  V0 <- 1
-  h <- 2
-  EC50 <- 0.5
-  obs <- .calculate_xc50(ec50 = EC50, x0 = V0, xInf = Vinf, h = h)
-  expect_equal(obs, 0.559017)
-})
-
 
 test_that("cap_xc50 works as expected", {
   expect_error(cap_xc50(xc50 = c(1, 2), max_conc = c(10, 10), capping_fold = 5))
@@ -487,7 +439,7 @@ test_that("fitting does not change the global na.action option", {
   # 4.0-0 or newer; on drc 3.0.1 nothing touches the option either way.
   withr::local_options(na.action = "na.exclude")
 
-  fit_curves(df_resp, series_identifiers = "Concentration", normalization_type = "RV")
+  .fit_per_type(df_resp, normalization_type = "RV")
 
   expect_identical(getOption("na.action"), "na.exclude")
   lm_fit <- stats::lm(y ~ x, data = data.frame(x = seq_len(5), y = c(1.1, 2, 3.2, 3.9, 5.1)))
