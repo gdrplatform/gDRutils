@@ -1,3 +1,6 @@
+## gDRutils 1.13.1 - 2026-11-24
+* synchronize Bioconductor and GitHub versioning
+
 ## gDRutils 1.11.32 - 2026-11-23
 * allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours
 * fix merge_MAE() ignoring additional_col_name and discard_keys; it now passes them on to merge_SE()
