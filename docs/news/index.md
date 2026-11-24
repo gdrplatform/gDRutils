@@ -1,5 +1,9 @@
 # Changelog
 
+## gDRutils 1.13.1 - 2026-11-24
+
+- synchronize Bioconductor and GitHub versioning
+
 ## gDRutils 1.11.32 - 2026-11-23
 
 - allow NA duration in the SE JSON schema, as for PRISM data without
