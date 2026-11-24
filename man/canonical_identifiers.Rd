@@ -5,7 +5,7 @@
 \alias{same_identifiers}
 \title{Canonical form of a set of identifiers, and whether two sets agree}
 \usage{
-canonical_identifiers(ids, data = NULL)
+canonical_identifiers(ids, data = NULL, fill = get_env_identifiers())
 
 same_identifiers(a, b)
 }
@@ -14,21 +14,29 @@ same_identifiers(a, b)
 
 \item{data}{optional \code{data.frame}, or character vector of column names, the
 identifiers describe.}
+
+\item{fill}{named list giving the value of a key \code{ids} lacks. Defaults to the
+session's identifiers.}
 }
 \value{
 \code{canonical_identifiers()}: a named list over every identifier key.
 \code{same_identifiers()}: a flag.
 }
 \description{
-\code{canonical_identifiers()} completes \code{ids} with the default value of
-every key it lacks, recording those keys in \code{attr(, "assumed")}. Given
+\code{canonical_identifiers()} completes \code{ids} with the session's value of
+every key it lacks (\code{fill}), recording those keys in \code{attr(, "assumed")}:
+a key an object does not store is read from the session, so it is compared as the
+session's value too. Keys that are not identifiers (e.g. from an older object) are
+left out and named in \code{attr(, "unknown")}. Given
 \code{data}, it also resolves an identifier that lists alternative columns (e.g.
 \code{barcode = c("Barcode", "Plate")}) to the one present, so two objects built
 the same way store the same identifiers.
 }
 \details{
 \code{same_identifiers()} is \code{TRUE} when two sets name the same columns. A
-key resolved to one column agrees with a list of alternatives that contains it.
+key resolved to one column agrees with a list of alternatives that contains it, and
+lists of alternatives or tags (\code{barcode}, \code{template},
+\code{untreated_tag}) are compared as sets; \code{well_position} keeps its order.
 The keys that differ are in \code{attr(, "differ")}.
 }
 \examples{

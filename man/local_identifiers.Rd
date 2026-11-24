@@ -34,7 +34,15 @@ expression, and \code{with_SE_identifiers()} uses the identifiers stored on a
 }
 \details{
 Prefer these to \code{set_env_identifier()}, which changes the identifiers for the
-rest of the session.
+rest of the session. Called at the top level (the console), there is no function to
+return from, so \code{local_identifiers()} warns and the identifiers stay set, as with
+\code{set_env_identifier()}.
+
+An SE built by gDRcore stores the identifiers it was built with, and the functions
+that read an SE (\code{convert_se_assay_to_dt()}, \code{validate_SE()},
+\code{apply_fit()}, ...) use them in preference to the session's. A key the SE does
+not store is taken from the session, as \code{get_SE_identifiers()} always did. To
+correct an object's identifiers, use \code{set_SE_identifiers()}.
 }
 \examples{
 f <- function() {
