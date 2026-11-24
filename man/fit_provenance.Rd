@@ -4,12 +4,21 @@
 \alias{fit_provenance}
 \alias{get_SE_provenance}
 \alias{get_fit_provenance}
+\alias{get_fit_recipe}
 \alias{summarize_fit_provenance}
 \title{Get the provenance of fits stored in a SummarizedExperiment}
 \usage{
 get_SE_provenance(se)
 
-get_fit_provenance(se, assay, fit_source, data_source = NULL)
+get_fit_provenance(
+  se,
+  assay,
+  fit_source = NULL,
+  data_source = NULL,
+  fit_id = NULL
+)
+
+get_fit_recipe(se, assay, fit_id, data_source = NULL)
 
 summarize_fit_provenance(se)
 }
@@ -23,12 +32,18 @@ summarize_fit_provenance(se)
 \item{data_source}{string; for an SE built by \code{\link{merge_SE}}, the
 name of the merged object the rows come from (the \code{data_source}
 column). \code{NULL} reads the fits done on \code{se} itself.}
+
+\item{fit_id}{string; value of the \code{fit_id} column, which names one recipe.
+A \code{fit_source} that holds rows of several recipes (a partial refit with
+other settings) needs it. \code{NULL} takes the only recipe of \code{fit_source}.}
 }
 \value{
 \code{get_SE_provenance()}: the whole provenance entry, or
-\code{NULL} for objects without one. \code{get_fit_provenance()}: one
-recipe. \code{summarize_fit_provenance()}: a \code{data.table} with one
-row per recorded fit.
+\code{NULL} for objects without one. \code{get_fit_provenance()} and
+\code{get_fit_recipe()}: one recipe, which names its \code{fit_id} and
+\code{fit_source}. \code{summarize_fit_provenance()}: a \code{data.table}
+with one row per recorded fit: its \code{fit_id}, \code{fit_source},
+function, solver and arguments.
 }
 \description{
 \code{\link{apply_fit}} and \code{\link{apply_fits}} record a recipe for

@@ -69,7 +69,9 @@
 #' @param on_error \code{"warn"} (skip failed cells with a warning) or
 #'   \code{"stop"} (propagate the error).
 #' @param fit_source character string recorded in the \code{fit_source} column
-#'   of every output row.  Forms part of the upsert key.
+#'   of every output row.  Forms part of the upsert key. Every row also gets a
+#'   \code{fit_id}, which names the recipe in the provenance that produced it
+#'   (see \code{\link{get_fit_recipe}}).
 #' @param fit_args named list of extra arguments passed to \code{fit_fn} after
 #'   the data, e.g. \code{list(pcutoff = 0.1)}.  Recorded in the provenance.
 #'
@@ -155,15 +157,6 @@ apply_fit <- function(se,
     new_metrics <- data.table::as.data.table(new_df)
 
     if (NROW(new_metrics) > 0L) {
-      upsert_key <- c("fit_source", slicing_cols)
-      se <- persist_fit_assay(se, new_metrics, merge, output_assay, "row", "column", upsert_key)
-
-      if (!is.null(summary_fn)) {
-        se <- .apply_summary_fn(
-          se, new_metrics, summary_fn, summary_assay, merge, fit_source, on_error
-        )
-      }
-
       recipe <- .fit_recipe(
         called_by = "apply_fit",
         fn_record = .describe_fn(fit_fn, fit_fn_name),
@@ -177,10 +170,26 @@ apply_fit <- function(se,
         slicing_values = slicing_values,
         merge = merge,
         input_hash = input_hash,
-        n_rows = NROW(new_metrics)
+        n_rows = NROW(new_metrics),
+        solver = .recipe_solver(fit_fn, fit_args)
       )
-      se <- .record_fit(se, output_assay, fit_source, recipe,
+      fit_id <- .recipe_id(recipe, fit_source)
+
+      # summary_fn sees the fit rows as the fit function wrote them
+      fit_rows <- data.table::copy(new_metrics)
+      data.table::set(fit_rows, j = "fit_id", value = fit_id)
+      upsert_key <- c("fit_source", slicing_cols)
+      se <- persist_fit_assay(se, fit_rows, merge, output_assay, "row", "column", upsert_key)
+
+      if (!is.null(summary_fn)) {
+        se <- .apply_summary_fn(
+          se, new_metrics, summary_fn, summary_assay, merge, fit_source, on_error, fit_id
+        )
+      }
+
+      se <- .record_fit(se, output_assay, fit_id, fit_source, recipe,
                         replace = merge == "replace", summary_assay = summary_assay)
+      se <- .prune_fit_recipes(se, c(output_assay, summary_assay))
     }
   }
 
@@ -341,7 +350,7 @@ apply_fit_to_se <- function(se,
 #' @param merge \code{"merge"} or \code{"replace"}.
 #' @param on_error \code{"warn"} or \code{"stop"}.
 #' @param fit_source character string stamped as \code{fit_source} in every
-#'   output row.
+#'   output row, with a \code{fit_id} naming the recipe that produced it.
 #' @param fit_args named list of argument lists, keyed by names of
 #'   \code{fit_fns}, e.g. \code{list(custom_bliss = list(q = 0.9))}.  Each list
 #'   is passed to its function after the data and recorded in the provenance.
@@ -507,8 +516,6 @@ apply_fits <- function(se,
     rows <- assay_results[[assay_nm]]
     if (length(rows) == 0L) next
     merged_dt <- data.table::rbindlist(rows, fill = TRUE)
-    se <- persist_fit_assay(se, merged_dt, merge, assay_nm, "row", "column", upsert_key)
-
     producer <- producers[[assay_nm]]
     recipe <- .fit_recipe(
       called_by = "apply_fits",
@@ -523,9 +530,14 @@ apply_fits <- function(se,
       slicing_values = slicing_values,
       merge = merge,
       input_hash = input_hash,
-      n_rows = NROW(merged_dt)
+      n_rows = NROW(merged_dt),
+      solver = .recipe_solver(fit_fns[[producer]], fit_args[[producer]])
     )
-    se <- .record_fit(se, assay_nm, fit_source, recipe, replace = merge == "replace")
+    fit_id <- .recipe_id(recipe, fit_source)
+    data.table::set(merged_dt, j = "fit_id", value = fit_id)
+    se <- persist_fit_assay(se, merged_dt, merge, assay_nm, "row", "column", upsert_key)
+    se <- .record_fit(se, assay_nm, fit_id, fit_source, recipe, replace = merge == "replace")
+    se <- .prune_fit_recipes(se, assay_nm)
   }
 
   se
@@ -580,7 +592,9 @@ apply_fits <- function(se,
 #'   \code{x_inf}, \code{x_0}, \code{r2}, \code{rss}, \code{p_value},
 #'   \code{x_mean}, \code{x_AOC}, \code{x_AOC_range}, \code{x_max},
 #'   \code{x_sd_avg}, \code{N_conc}, \code{maxlog10Concentration},
-#'   \code{fit_type}, \code{normalization_type}. \code{fit_type} is one of:
+#'   \code{fit_type}, \code{fit_message}, \code{normalization_type}.
+#'   \code{fit_message} is the message of the solver when it failed (\code{fit_type}
+#'   \code{"DRCInvalidFitResult"}) and \code{NA} otherwise. \code{fit_type} is one of:
 #'   \itemize{
 #'     \item \code{"DRC3pHillFitModelFixS0"} (\code{"DRC4pHillFitModel"} for the
 #'       4-parameter variant): the curve was fitted;
@@ -679,7 +693,7 @@ fit_drug_response_metrics_4p <- function(avg_dt, x_col = "x",
 # What the reference fits do, copied into the recipe apply_fit() records.
 fit_drug_response_metrics <- set_fit_fn_info(
   fit_drug_response_metrics,
-  model = "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)",
+  model = "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u; the solver is recorded with the fit)",
   description = paste(
     "Hill curve of the response against concentration, fitted per normalization type.",
     "Falls back to a constant fit when fewer than n_point_cutoff concentrations are",
@@ -690,7 +704,7 @@ fit_drug_response_metrics <- set_fit_fn_info(
 
 fit_drug_response_metrics_4p <- set_fit_fn_info(
   fit_drug_response_metrics_4p,
-  model = "4-parameter log-logistic Hill, upper asymptote fitted (drc::LL.4 with the default solver_drc)",
+  model = "4-parameter log-logistic Hill, upper asymptote fitted (drc::LL.4; the solver is recorded with the fit)",
   description = paste(
     "Hill curve of the response against concentration with a free upper asymptote,",
     "fitted per normalization type. Falls back to a constant fit like",
@@ -922,7 +936,8 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
         p_value = p_value,
         x_0 = x_0_val,
         x_inf = x_inf_val,
-        fit_type = fit_type
+        fit_type = fit_type,
+        fit_message = NA_character_
       )
     }
   } else {
@@ -943,7 +958,8 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
       p_value = NA_real_,
       x_0 = if (four_param) NA_real_ else x_0,
       x_inf = NA_real_,
-      fit_type = "DRCInvalidFitResult"
+      fit_type = "DRCInvalidFitResult",
+      fit_message = if (is.null(sol$message)) NA_character_ else as.character(sol$message)[1L]
     )
   }
   } # end else (enough conc points)
@@ -1043,12 +1059,13 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
 #' @param merge merge strategy
 #' @param fit_source fit_source label
 #' @param on_error error handling strategy
+#' @param fit_id fit_id stamped on the summary rows, or \code{NULL}
 #'
 #' @return updated SummarizedExperiment
 #'
 #' @keywords internal
 .apply_summary_fn <- function(se, fit_dt, summary_fn, summary_assay,
-                              merge, fit_source, on_error) {
+                              merge, fit_source, on_error, fit_id = NULL) {
   cell_list <- split(fit_dt, by = c("row", "column"), sorted = FALSE)
 
   summary_rows <- lapply(cell_list, function(cell_fit) {
@@ -1070,6 +1087,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
       result[["row"]] <- r
       result[["column"]] <- cc
       result[["fit_source"]] <- fit_source
+      if (!is.null(fit_id)) result[["fit_id"]] <- fit_id
     }
     result
   })
@@ -1209,7 +1227,8 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     p_value = p_value,
     x_0 = mn,
     x_inf = mn,
-    fit_type = "DRCConstantFitResult"
+    fit_type = "DRCConstantFitResult",
+    fit_message = NA_character_
   )
 }
 
@@ -1255,7 +1274,8 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     p_value = NA_real_,
     x_0 = NA_real_,
     x_inf = NA_real_,
-    fit_type = "DRCInvalidFitResult"
+    fit_type = "DRCInvalidFitResult",
+    fit_message = NA_character_
   )
 }
 

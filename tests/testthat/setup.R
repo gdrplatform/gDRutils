@@ -29,7 +29,7 @@ params_GR$x_inf <- -0.4
 
 expected <- data.table::data.table(rbind(params, params_GR))
 rownames(expected) <- c("RV_gDR", "GR_gDR")
-expected_dims <- c(2, 18)
+expected_dims <- c(2, 19) # the 18 metrics and fit_message
 
 conc <- 10 ^ (seq(-3, 1, 0.5))
 

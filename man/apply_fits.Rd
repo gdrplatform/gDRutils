@@ -38,7 +38,7 @@ list of named lists for the shared pre-computation pattern).}
 \item{on_error}{\code{"warn"} or \code{"stop"}.}
 
 \item{fit_source}{character string stamped as \code{fit_source} in every
-output row.}
+output row, with a \code{fit_id} naming the recipe that produced it.}
 
 \item{fit_args}{named list of argument lists, keyed by names of
 \code{fit_fns}, e.g. \code{list(custom_bliss = list(q = 0.9))}.  Each list

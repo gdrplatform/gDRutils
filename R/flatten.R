@@ -46,6 +46,17 @@ flatten <- function(tbl, groups, wide_cols, sep = "_") {
     groups <- setdiff(groups, "fit_source")
   }
 
+  # fit_id and fit_message say how a row was fitted. One recipe for all the rows is
+  # in the provenance already, so they stay out of the wide table; several recipes
+  # (e.g. one normalization refitted with other settings) are shown per group, as
+  # fit_type is.
+  how <- intersect(c("fit_id", "fit_message"), colnames(tbl))
+  if ("fit_id" %in% how && data.table::uniqueN(tbl[["fit_id"]]) > 1L) {
+    wide_cols <- union(wide_cols, how)
+  } else if (length(how) > 0L) {
+    tbl <- tbl[, setdiff(colnames(tbl), how), with = FALSE]
+  }
+
   if (!all(groups %in% colnames(tbl))) {
     stop(sprintf("missing expected uniquifying groups: '%s'",
       toString(setdiff(groups, colnames(tbl)))))

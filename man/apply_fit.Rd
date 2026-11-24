@@ -64,7 +64,9 @@ Required when \code{summary_fn} is provided.}
 \code{"stop"} (propagate the error).}
 
 \item{fit_source}{character string recorded in the \code{fit_source} column
-of every output row.  Forms part of the upsert key.}
+of every output row.  Forms part of the upsert key. Every row also gets a
+\code{fit_id}, which names the recipe in the provenance that produced it
+(see \code{\link{get_fit_recipe}}).}
 
 \item{fit_args}{named list of extra arguments passed to \code{fit_fn} after
 the data, e.g. \code{list(pcutoff = 0.1)}.  Recorded in the provenance.}

@@ -39,7 +39,7 @@ test_that("apply_fit records a package function by reference with its fit_args",
   expect_identical(recipe$output_assay, "hill")
   expect_identical(recipe$slicing_values, c("GR", "RV"))
   expect_identical(recipe$run$n_rows, NROW(.rows(se, "hill", "loose")))
-  expect_identical(get_SE_provenance(se)$schema_version, 1L)
+  expect_identical(get_SE_provenance(se)$schema_version, 2L)
 })
 
 
@@ -72,6 +72,7 @@ test_that("fit_args reach the fit function and give the same result as a closure
   by_args <- .rows(se, "hill", "args")
   by_closure <- .rows(se, "hill", "closure")
   by_args$fit_source <- by_closure$fit_source <- NULL
+  by_args$fit_id <- by_closure$fit_id <- NULL
   expect_equal(by_args, by_closure)
 })
 
@@ -151,11 +152,14 @@ test_that("re-fitting replaces the recipe, and merge = 'replace' drops the other
   se <- apply_fit(se, mean_fn, "single-agent", output_assay = "custom", fit_source = "b")
   se <- apply_fit(se, mean_fn, "single-agent", output_assay = "custom", fit_source = "a",
                   fit_args = list())
-  expect_identical(names(get_SE_provenance(se)$fits$custom), c("a", "b"))
+  sources_of <- function(se) {
+    vapply(get_SE_provenance(se)$fits$custom, `[[`, character(1), "fit_source", USE.NAMES = FALSE)
+  }
+  expect_setequal(sources_of(se), c("a", "b"))
 
   se <- apply_fit(se, mean_fn, "single-agent", output_assay = "custom", fit_source = "c",
                   merge = "replace")
-  expect_identical(names(get_SE_provenance(se)$fits$custom), "c")
+  expect_identical(sources_of(se), "c")
 })
 
 
@@ -166,7 +170,11 @@ test_that("a summary assay points at the recipe of the fit that wrote it", {
     summary_fn = summary_fn, summary_assay = "custom_summary"
   )
   prov <- get_SE_provenance(se)
-  expect_identical(prov$fits$custom_summary$s, list(summary_of = "custom"))
+  fit_id <- names(prov$fits$custom)
+  expect_identical(
+    prov$fits$custom_summary[[fit_id]],
+    list(fit_id = fit_id, fit_source = "s", summary_of = "custom")
+  )
 
   recipe <- get_fit_provenance(se, "custom_summary", "s")
   expect_identical(recipe$output_assay, "custom")
@@ -186,9 +194,11 @@ test_that("apply_fits records one recipe per output assay", {
   )
   prov <- get_SE_provenance(se)
   expect_setequal(names(prov$fits), c("mean_assay", "sd_assay"))
-  expect_identical(prov$fits$sd_assay$pair$called_by, "apply_fits")
-  expect_identical(prov$fits$sd_assay$pair$fn$name, "sd_fn")
-  expect_identical(prov$fits$sd_assay$pair$fn$captured, list(k = 1))
+  sd_recipe <- get_fit_provenance(se, "sd_assay", "pair")
+  expect_identical(names(prov$fits$sd_assay), sd_recipe$fit_id)
+  expect_identical(sd_recipe$called_by, "apply_fits")
+  expect_identical(sd_recipe$fn$name, "sd_fn")
+  expect_identical(sd_recipe$fn$captured, list(k = 1))
 
   res <- check_reproducibility(se, allow_source = TRUE)
   expect_identical(NROW(res), 2L)
@@ -211,8 +221,8 @@ test_that("apply_fits records the function behind a shared pre-computation", {
   expect_identical(NROW(.rows(se, "a_assay", "shared")), NROW(.rows(se, "b_assay", "shared")))
   expect_identical(NROW(.rows(se, "a_assay", "shared")), 2L * NROW(se_prov) * NCOL(se_prov))
   prov <- get_SE_provenance(se)
-  expect_identical(prov$fits$a_assay$shared$fn$name, "shared_fn")
-  expect_identical(prov$fits$b_assay$shared$fn$name, "shared_fn")
+  expect_identical(get_fit_provenance(se, "a_assay", "shared")$fn$name, "shared_fn")
+  expect_identical(get_fit_provenance(se, "b_assay", "shared")$fn$name, "shared_fn")
   expect_true(all(check_reproducibility(se, allow_source = TRUE)$reproducible))
 })
 
@@ -252,7 +262,7 @@ test_that("refit_from_provenance warns when the recorded function changed", {
   ))
   prov <- get_SE_provenance(se)
 
-  prov$fits$custom$v$fn$version <- "0.0.1"
+  prov$fits$custom[[get_fit_provenance(se, "custom", "v")$fit_id]]$fn$version <- "0.0.1"
   S4Vectors::metadata(se)$provenance <- prov
   expect_warning(
     suppressWarnings(refit_from_provenance(se, "custom", "v"), classes = "simpleWarning"),
@@ -260,8 +270,9 @@ test_that("refit_from_provenance warns when the recorded function changed", {
     class = "gDRutils_provenance_warning"
   )
 
-  prov$fits$custom$v$fn$version <- as.character(utils::packageVersion("gDRutils"))
-  prov$fits$custom$v$fn$hash <- "0000000000000000"
+  v_id <- get_fit_provenance(se, "custom", "v")$fit_id
+  prov$fits$custom[[v_id]]$fn$version <- as.character(utils::packageVersion("gDRutils"))
+  prov$fits$custom[[v_id]]$fn$hash <- "0000000000000000"
   S4Vectors::metadata(se)$provenance <- prov
   expect_warning(
     suppressWarnings(refit_from_provenance(se, "custom", "v"), classes = "simpleWarning"),
@@ -281,7 +292,7 @@ test_that("the provenance is plain data, small, and survives qs2 and merge_SE", 
 
   expect_true(.is_plain_data(prov))
   # a recipe stays around a kilobyte once compressed
-  expect_lt(length(qs2::qs_serialize(prov$fits$Metrics$gDR)), 3000)
+  expect_lt(length(qs2::qs_serialize(get_fit_provenance(se, "Metrics", "gDR"))), 3000)
 
   f <- tempfile(fileext = ".qs2")
   qs2::qs_save(se, f)

@@ -1,3 +1,10 @@
+## gDRutils 1.11.33 - 2026-11-24
+* add a `fit_id` column to every fit written by `apply_fit()`/`apply_fits()`, a hash of the recipe; provenance recipes are keyed by it and carry their `fit_source`, so a partial refit with other settings no longer overwrites the recipe of the rows it did not touch
+* add `get_fit_recipe()`; `get_fit_provenance()`, `refit_from_provenance()` and `check_reproducibility()` take a `fit_id`, and `summarize_fit_provenance()` shows it with the solver
+* record the solver of a fit by its registry name
+* add a `fit_message` column to `fit_drug_response_metrics()` with the solver's failure message
+* provenance schema 2; objects and rows without a `fit_id` take their `fit_source` as `fit_id`
+
 ## gDRutils 1.11.32 - 2026-11-23
 * add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
 * add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment

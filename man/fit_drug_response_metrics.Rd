@@ -63,7 +63,9 @@ Named list of fit metrics fully compatible with the standard gDR
 \code{x_inf}, \code{x_0}, \code{r2}, \code{rss}, \code{p_value},
 \code{x_mean}, \code{x_AOC}, \code{x_AOC_range}, \code{x_max},
 \code{x_sd_avg}, \code{N_conc}, \code{maxlog10Concentration},
-\code{fit_type}, \code{normalization_type}. \code{fit_type} is one of:
+\code{fit_type}, \code{fit_message}, \code{normalization_type}.
+\code{fit_message} is the message of the solver when it failed (\code{fit_type}
+\code{"DRCInvalidFitResult"}) and \code{NA} otherwise. \code{fit_type} is one of:
 \itemize{
 \item \code{"DRC3pHillFitModelFixS0"} (\code{"DRC4pHillFitModel"} for the
 4-parameter variant): the curve was fitted;
