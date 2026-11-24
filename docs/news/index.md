@@ -1,5 +1,21 @@
 # Changelog
 
+## gDRutils 1.13.2 - 2026-11-24
+
+- add
+  [`local_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/local_identifiers.md);
+  SE entry points read with the SE’s own identifiers, ahead of the
+  session’s
+- add
+  [`canonical_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/canonical_identifiers.md)
+  and
+  [`same_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/canonical_identifiers.md);
+  [`update_env_idfs_from_mae()`](https://gdrplatform.github.io/gDRstyle/reference/update_env_idfs_from_mae.md)
+  checks every experiment
+- add a
+  [`validate_SE()`](https://gdrplatform.github.io/gDRstyle/reference/validate_SE.md)
+  check that the SE’s identifiers name columns it has
+
 ## gDRutils 1.13.1 - 2026-11-24
 
 - synchronize Bioconductor and GitHub versioning

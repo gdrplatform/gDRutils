@@ -18,6 +18,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/average_biological_replicates_dt.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/average_pvalues.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/calc_sd.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/canonical_identifiers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/capVals.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/cap_assay_infinities.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/cap_xc50.html</loc></url>
@@ -105,6 +106,7 @@
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/is_combo_data.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/is_exp_empty.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/is_mae_empty.html</loc></url>
+<url><loc>https://gdrplatform.github.io/gDRstyle/reference/local_identifiers.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/loop.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/map_conc_to_standardized_conc.html</loc></url>
 <url><loc>https://gdrplatform.github.io/gDRstyle/reference/mcolData.html</loc></url>

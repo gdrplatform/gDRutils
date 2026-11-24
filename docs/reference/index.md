@@ -76,6 +76,9 @@
 
 ## Identifiers helpers/operators
 
+- [`canonical_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/canonical_identifiers.md)
+  [`same_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/canonical_identifiers.md)
+  : Canonical form of a set of identifiers, and whether two sets agree
 - [`get_default_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/get_default_identifiers.md)
   : Get gDR default identifiers required for downstream analysis.
 - [`get_expect_one_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/get_expect_one_identifiers.md)
@@ -93,6 +96,10 @@
   [`set_env_identifier()`](https://gdrplatform.github.io/gDRstyle/reference/identifiers.md)
   [`reset_env_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/identifiers.md)
   : Get, set, or reset identifiers for one or all identifier field(s)
+- [`local_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/local_identifiers.md)
+  [`with_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/local_identifiers.md)
+  [`with_SE_identifiers()`](https://gdrplatform.github.io/gDRstyle/reference/local_identifiers.md)
+  : Use a set of identifiers for the duration of a call
 - [`prettify_flat_metrics()`](https://gdrplatform.github.io/gDRstyle/reference/prettify_flat_metrics.md)
   : Prettify metric names in flat 'Metrics' assay
 - [`update_env_idfs_from_mae()`](https://gdrplatform.github.io/gDRstyle/reference/update_env_idfs_from_mae.md)
