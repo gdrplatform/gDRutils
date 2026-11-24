@@ -1,3 +1,8 @@
+## gDRutils 1.13.2 - 2026-11-24
+* add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
+* add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment
+* add a `validate_SE()` check that the SE's identifiers name columns it has
+
 ## gDRutils 1.13.1 - 2026-11-24
 * synchronize Bioconductor and GitHub versioning
 

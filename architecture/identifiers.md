@@ -30,7 +30,7 @@ flowchart LR
 
   IL -- "first get_env_identifiers()" --> GC
   IL -- "reset_env_identifiers()" --> GC
-  U(["caller"]) -- "set_env_identifier(k, v)<br/>before the first read: only k is set" --> GC
+  U(["caller"]) -- "set_env_identifier(k, v)" --> GC
   GC -- "get_env_identifiers(k)" --> U
   GC -- "set_SE_identifiers() at create_SE" --> SE
   SE --> MAE
@@ -84,19 +84,50 @@ flowchart LR
   processing still uses the session values.
 - **Four places reset the session and do not restore it:** the PRISM converters
   (`gDRimport/R/prism_to_gdrDF.R:37`, `:275`), the end of every pipeline run
-  (`gDRcore/R/runDrugResponseProcessingPipeline.R:416`) and `standardize_se()`
+  (`gDRcore/R/runDrugResponseProcessingPipeline.R:443`) and `standardize_se()`
   (`R/standardize_MAE.R:44`), which the pipeline calls for MAE input
-  (`runDrugResponseProcessingPipeline.R:273`). Identifiers a caller set with
+  (`runDrugResponseProcessingPipeline.R:291`). Identifiers a caller set with
   `set_env_identifier()` are gone after any of them. (`setEnvForPSet()` resets them too, but
-  setting them is its documented purpose.)
+  setting them is its documented purpose.) GDR-3862 replaces these resets with
+  `local_identifiers()`, one package at a time; the gDRcore and gDRimport ones are next.
 - **`merge_SE()` writes to the session:** it copies the identifiers of the first SE into it
-  (`R/merge_SE.R:173-176`).
-- **`set_env_identifier()` before the first read leaves the other identifiers unset.** In a fresh
-  session the cache then holds only the identifier that was set, so `get_env_identifiers("duration")`
-  returns `NULL`; the defaults are filled in only by a read.
+  (`R/merge_SE.R:173-176`). GDR-3864 replaces this with a scoped, harmonized merge.
 - **Fallback, not failure.** `get_SE_identifiers()` falls back to the session value with a warning
   when an identifier is missing on the SE (`R/se_metadata.R:200-203`), so an old SE can be read
   with today's defaults without anyone noticing.
+
+## Scoped identifiers (gDRutils 1.11.32)
+
+`local_identifiers(ids)` makes `ids` the active identifiers until the calling function returns,
+on success or error, then restores the previous ones. `with_identifiers()` does the same around
+one expression, and `with_SE_identifiers(se, code)` uses the identifiers stored on `se`.
+
+```mermaid
+flowchart LR
+  SE[("SE metadata<br/>'identifiers'")]
+  GC[("session identifiers")]
+  EP["SE entry point<br/>convert_se_assay_to_dt(), validate_SE(), apply_fit(), ..."]
+  R["readers beneath it<br/>get_env_identifiers(k)"]
+  SE -- ".local_SE_identifiers(se)<br/>on entry" --> GC
+  GC --> R
+  EP --> R
+  EP -. "on exit: previous identifiers restored" .-> GC
+```
+
+- **The SE's identifiers take precedence** in the entry points listed below. A key the SE does not
+  store keeps the session's value, as `get_SE_identifiers()` always did, and `same_identifiers()`
+  compares a missing key as the session's value too. `set_SE_identifiers()` corrects an object;
+  `set_env_identifier()` no longer overrides what an SE stores in these functions.
+- **Scoped entry points** (gDRutils): `convert_se_assay_to_dt()`, `convert_se_assay_to_custom_dt()`,
+  `convert_mae_assay_to_dt()` (through the former), `validate_SE()`, `apply_fit()`, `apply_fits()`.
+  Everything else still reads the session.
+- **Mixed reads remain** where a function calls a scoped entry point and then reads the session
+  itself, e.g. `merge_assay()` (gDRutils, GDR-3864) and gDRcore's `.compute_growth_rates()`
+  (`fit_SE.timecourse.R:578-584`). They agree for objects with default identifiers; the gDRcore
+  follow-up of GDR-3862 scopes them.
+- **`validate_SE()` checks** that the stored `cellline`, `cellline_name`, `drug`, `drug_name` and
+  `concentration` name columns the SE has, so a stale identifier fails loudly instead of being
+  read silently with the wrong column.
 
 ## Keeping it current
 
