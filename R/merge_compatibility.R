@@ -177,9 +177,10 @@ print.merge_compatibility <- function(x, ...) {
 #' @keywords internal
 .compatibility_issues <- function(nms, ids, assays, norm, recipes, fit_parameters, versions,
                                   recorded) {
-  rows <- list()
+  found <- new.env(parent = emptyenv())
+  found$rows <- list()
   add <- function(severity, topic, detail) {
-    rows[[length(rows) + 1L]] <<- data.table::data.table(
+    found$rows[[length(found$rows) + 1L]] <- data.table::data.table(
       severity = severity, topic = topic, detail = detail
     )
   }
@@ -269,10 +270,10 @@ print.merge_compatibility <- function(x, ...) {
     }
   }
 
-  if (length(rows) == 0L) {
+  if (length(found$rows) == 0L) {
     return(data.table::data.table(severity = character(0), topic = character(0), detail = character(0)))
   }
-  data.table::rbindlist(rows)
+  data.table::rbindlist(found$rows)
 }
 
 
