@@ -1,3 +1,7 @@
+## gDRutils 1.13.3 - 2026-11-24
+* fix `solver_drc()` reporting a failed drc fit as converged, so the curve gets `DRCInvalidFitResult`
+* make solvers take `control`, and warn with the error when a solver fails
+
 ## gDRutils 1.13.2 - 2026-11-24
 * add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
 * add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment

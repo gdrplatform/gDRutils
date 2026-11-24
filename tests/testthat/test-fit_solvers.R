@@ -97,7 +97,10 @@ test_that("a solver that fails or throws gives an invalid fit, not an error", {
   }
   throws <- function(conc, x, model, control = list()) stop("boom")
   expect_equal(fit_drug_response_metrics(dt, solver = not_converged)$fit_type, "DRCInvalidFitResult")
-  expect_equal(fit_drug_response_metrics(dt, solver = throws)$fit_type, "DRCInvalidFitResult")
+  expect_warning(fit <- fit_drug_response_metrics(dt, solver = throws), "boom")
+  expect_equal(fit$fit_type, "DRCInvalidFitResult")
+  # a solver that only reports converged = FALSE does not warn
+  expect_silent(fit_drug_response_metrics(dt, solver = not_converged))
 })
 
 
@@ -148,4 +151,30 @@ test_that("register_solver adds to the menu", {
   expect_false(info$available[info$name == "never_available"])
   expect_identical(info$description[info$name == "nls_port_test"], "nls port, for the tests")
   expect_false("never_available" %in% get_solver_info(available_only = TRUE)$name)
+})
+
+
+test_that("solver_drc reports a silent drc failure as not converged", {
+  dt <- .solver_dt()
+  nan_start <- function(conc, x, model, control = list()) {
+    model$start[] <- NaN
+    solver_drc(conc, x, model, control)
+  }
+  model <- gDRutils:::.hill_model(1, start = c(2, 0.4, 0.1), lower = c(0.1, 0, 1e-4), upper = c(5, 1, 100))
+  sol <- suppressWarnings(nan_start(dt$Concentration, dt$x, model))
+  expect_false(sol$converged)
+  expect_true(all(is.na(sol$params)))
+  fit <- suppressWarnings(fit_drug_response_metrics(dt, solver = nan_start))
+  expect_equal(fit$fit_type, "DRCInvalidFitResult")
+})
+
+
+test_that("a solver must take control, and its errors are not silent", {
+  dt <- .solver_dt()
+  no_control <- function(conc, x, model) solver_drc(conc, x, model)
+  expect_error(fit_drug_response_metrics(dt, solver = no_control), "control")
+  expect_error(register_solver("no_control", no_control), "control")
+  broken <- function(conc, x, model, control = list()) not_a_solver_function(conc)
+  expect_warning(fit <- fit_drug_response_metrics(dt, solver = broken), "not_a_solver_function")
+  expect_equal(fit$fit_type, "DRCInvalidFitResult")
 })
