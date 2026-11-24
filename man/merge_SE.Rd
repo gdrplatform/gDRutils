@@ -8,7 +8,8 @@ merge_SE(
   SElist,
   additional_col_name = "data_source",
   discard_keys = c("normalization_type", "fit_source", "record_id", "isDay0", "swap_sa",
-    "control_type", "iso_level", "conc_1", "conc_2")
+    "control_type", "iso_level", "conc_1", "conc_2"),
+  allow_mismatch = FALSE
 )
 }
 \arguments{
@@ -20,12 +21,26 @@ that can arise from multiple projects}
 
 \item{discard_keys}{character vector of string that will be discarded
 during creating BumpyMatrix object}
+
+\item{allow_mismatch}{logical; merge even when the inputs contradict each other,
+i.e. the same \code{fit_source} was produced by different fits in different
+inputs. A warning then lists the contradictions. See \code{\link{merge_compatibility}}.}
 }
 \value{
 merged SummarizedExperiment object
 }
 \description{
 Merge multiple Summarized Experiments
+}
+\details{
+The inputs are first compared with \code{\link{merge_compatibility}}; the report
+is kept in \code{metadata(se)$merge_report}. The identifiers of the first input are
+the identifiers of the result: a column another input names differently (e.g. its
+\code{drug} column) is renamed to the first input's before the inputs are stacked.
+The session identifiers are not changed. The provenance of every input, with its
+identifiers, fit parameters and package versions, is kept under
+\code{metadata(se)$provenance$sources}, named as in \code{SElist}; an input without
+provenance is listed there with \code{recorded = FALSE}.
 }
 \examples{
 se1 <- get_synthetic_data("finalMAE_small.qs2")[[1]]
