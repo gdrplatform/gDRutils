@@ -17,10 +17,13 @@
             "examples": ["eqlin"]
         },
         "duration": {
-            "description": "Number of days cells were treated with perturbation in days.",
+            "description": "Number of hours cells were treated with perturbation, or NA when the data does not give it.",
             "type": "array",
             "items": {
-                 "type": "integer"
+                 "anyOf": [
+                     {"type": "integer"},
+                     {"type": "string", "enum": ["NA"]}
+                 ]
             }
         },
         "cellline": {

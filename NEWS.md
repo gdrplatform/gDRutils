@@ -1,4 +1,4 @@
-## gDRutils 1.11.33 - 2026-11-24
+## gDRutils 1.13.4 - 2026-11-24
 * add a `fit_id` column to every fit written by `apply_fit()`/`apply_fits()`, a hash of the recipe; provenance recipes are keyed by it and carry their `fit_source`, so a partial refit with other settings no longer overwrites the recipe of the rows it did not touch
 * add `get_fit_recipe()`; `get_fit_provenance()`, `refit_from_provenance()` and `check_reproducibility()` take a `fit_id`, and `summarize_fit_provenance()` shows it with the solver
 * record the solver of a fit by its registry name
@@ -6,10 +6,17 @@
 * provenance schema 2; objects and rows without a `fit_id` take their `fit_source` as `fit_id`
 * register `fit_id` and `fit_message` as data fields (`get_header("metrics_results")`), so `merge_SE()` of objects fitted by different recipes, or by none, no longer reads them as treatment metadata
 
-## gDRutils 1.11.32 - 2026-11-23
+## gDRutils 1.13.2 - 2026-11-24
 * add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
 * add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment
 * add a `validate_SE()` check that the SE's identifiers name columns it has
+
+## gDRutils 1.13.1 - 2026-11-24
+* synchronize Bioconductor and GitHub versioning
+
+## gDRutils 1.11.32 - 2026-11-23
+* allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours
+* fix merge_MAE() ignoring additional_col_name and discard_keys; it now passes them on to merge_SE()
 
 ## gDRutils 1.11.31 - 2026-11-23
 * deprecate `fit_curves()` and `logisticFit()` for one release, as wrappers over `fit_drug_response_metrics()`
