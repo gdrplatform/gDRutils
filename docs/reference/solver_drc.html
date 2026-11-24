@@ -13,7 +13,7 @@ stats::optim(method = &quot;L-BFGS-B&quot;)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,8 @@ fitted), within the bounds of the model. With bounds, drc optimises with
 <dt id="arg-control">control<a class="anchor" aria-label="anchor" href="#arg-control"></a></dt>
 <dd><p>named list of <code><a href="https://rdrr.io/pkg/drc/man/drmc.html" class="external-link">drc::drmc()</a></code> settings overriding the defaults
 (<code>relTol = 1e-4</code>, <code>errorm = FALSE</code>, <code>noMessage = TRUE</code>,
-<code>rmNA = TRUE</code>).</p></dd>
+<code>rmNA = TRUE</code>). With the bounds of the model drc optimises with L-BFGS-B, which
+ignores <code>relTol</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

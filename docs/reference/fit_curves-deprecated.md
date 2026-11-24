@@ -108,8 +108,8 @@ suppressWarnings(logisticFit(
 #> 1:                 RV 0.9994663 0.0005336782  0.07214082 0.9964143      0.1
 #>    N_conc maxlog10Concentration      ec50  xc50        h    r2          rss
 #>     <int>                 <num>     <num> <num>    <num> <num>        <num>
-#> 1:      4                  -1.5 0.2030077   Inf 2.014503     1 3.425793e-13
+#> 1:      4                  -1.5 0.2030077   Inf 2.014503     1 3.425795e-13
 #>         p_value   x_0     x_inf               fit_type
 #>           <num> <num>     <num>                 <char>
-#> 1: 3.799065e-08     1 0.8446057 DRC3pHillFitModelFixS0
+#> 1: 3.799066e-08     1 0.8446057 DRC3pHillFitModelFixS0
 ```

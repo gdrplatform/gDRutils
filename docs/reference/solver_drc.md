@@ -34,7 +34,8 @@ solver_drc(conc, x, model, control = list())
 
   named list of [`drc::drmc()`](https://rdrr.io/pkg/drc/man/drmc.html)
   settings overriding the defaults (`relTol = 1e-4`, `errorm = FALSE`,
-  `noMessage = TRUE`, `rmNA = TRUE`).
+  `noMessage = TRUE`, `rmNA = TRUE`). With the bounds of the model drc
+  optimises with L-BFGS-B, which ignores `relTol`.
 
 ## Value
 
