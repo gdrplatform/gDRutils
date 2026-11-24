@@ -62,3 +62,26 @@ test_that("validate works as expected", {
   expect_true(v_st[[exp_names_v[2]]])
 
 })
+
+test_that("validate accepts an unknown duration", {
+  identifiers <- list(drug = "drug", drug_name = "drug_name", drug_moa = "drug_moa", duration = "duration",
+                      cellline = "cellline", cellline_name = "cellline_name", cellline_tissue = "cellline_tissue",
+                      cellline_ref_div_time = "cellline_ref_div_time")
+  make_se <- function(duration) {
+    rdata <- data.table::data.table(drug = c("A", "B"), drug_name = c("AA", "AB"),
+                                    drug_moa = c("action1", "action2"), duration = duration)
+    cdata <- data.table::data.table(cellline = c("ID1", "ID2"), cellline_name = c("ABC", "DEF"),
+                                    cellline_tissue = c("Breast", "Lung"), cellline_ref_div_time = c(NA, 2))
+    se <- SummarizedExperiment::SummarizedExperiment(rowData = rdata, colData = cdata)
+    se <- set_SE_identifiers(se, identifiers)
+    set_SE_experiment_metadata(se, list(sources = list(list(name = "PRISM", id = "ID-1")),
+                                        description = "d", title = "t", experimentalist = "abcde"))
+  }
+  schema_path <- file.path(system.file("schemas", package = "gDRutils"), "se.json")
+
+  # PRISM data has no assay time; NA reaches the JSON as the string "NA"
+  expect_true(validate_json(convert_se_to_json(make_se(c(NA_real_, NA_real_))), schema_path = schema_path))
+  expect_true(validate_json(convert_se_to_json(make_se(c(72, NA_real_))), schema_path = schema_path))
+  # any other text is still rejected
+  expect_false(validate_json(convert_se_to_json(make_se(c("72h", "NA"))), schema_path = schema_path))
+})
