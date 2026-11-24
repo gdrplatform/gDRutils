@@ -1205,22 +1205,36 @@ record_processing_step <- function(se,
 
 
 # fit_id: a short hash of the fit_source and of what the recipe does, not of what it was run
-# on. It leaves out the slices fitted (a refit of one slice with the same function and
-# settings is the same fit), the run block (data hash, row count), the assay names and the
-# labels of the functions, so the same label, code and settings give the same id on any
-# data. The label is part of it because a recipe carries one fit_source.
+# on, nor of the build it was run with. It leaves out the slices fitted (a refit of one slice
+# with the same function and settings is the same fit), the run block (data hash, row count),
+# the assay names and the labels of the functions, so the same label, function and settings
+# give the same id on any data. The label is part of it because a recipe carries one fit_source.
+#
+# A function from an installed package is identified by its package and its name there, not by
+# its version, git sha or code hash: those change with every release and build (and the code
+# hash with the R version's formatting), which would change the id of every stored fit and make
+# any reference dataset impossible to reproduce elsewhere. They stay in the recipe, where
+# refit_from_provenance() warns when they differ. Any other function (written in the session,
+# an inline function, a closure) has nothing but its code and the values it reads, so those
+# are what identifies it.
+#' @keywords internal
+.fn_identity <- function(rec) {
+  if (is.null(rec)) return(NULL)
+  if (!is.null(rec$package) && is.null(rec$source)) {
+    return(list(package = rec$package, name = rec$name))
+  }
+  rec[intersect(c("source", "captured", "helpers", "aliases"), names(rec))]
+}
+
 #' @keywords internal
 .recipe_id <- function(recipe, fit_source) {
-  fn_identity <- function(rec) {
-    if (is.null(rec)) NULL else rec[setdiff(names(rec), c("name", "info", "env", "not_stored"))]
-  }
   identity <- list(
     fit_source = fit_source,
     called_by = recipe$called_by,
-    fn = fn_identity(recipe$fn),
-    summary_fn = fn_identity(recipe$summary_fn),
+    fn = .fn_identity(recipe$fn),
+    summary_fn = .fn_identity(recipe$summary_fn),
     fit_args = recipe[["fit_args"]],
-    fn_args = lapply(recipe[["fn_args"]], fn_identity),
+    fn_args = lapply(recipe[["fn_args"]], .fn_identity),
     args_not_stored = recipe$args_not_stored,
     solver = recipe$solver,
     data_type = recipe$data_type,
