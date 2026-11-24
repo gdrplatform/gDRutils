@@ -446,7 +446,7 @@ test_that("a function nested in a list argument is recorded and restored", {
   expect_identical(joined$n, 1L)
 })
 
-test_that("fit_id ignores the version, git sha and code hash of a package function, but not the function or its settings", {
+test_that("fit_id ignores version, git sha and code hash of a package function, not its name or settings", {
   # these change with every release, build and R version, so an id that depended on them
   # could not be reproduced elsewhere (reference datasets, another machine)
   rec <- list(

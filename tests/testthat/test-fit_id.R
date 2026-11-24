@@ -231,7 +231,9 @@ test_that("fit_message holds the failure message of the solver, and is NA otherw
   expect_identical(bad$fit_message, "the optimiser gave up")
 
   throws <- .as_user(function(conc, x, model, control = list()) stop("it threw"))
-  expect_identical(fit_drug_response_metrics(dt, solver = throws)$fit_message, "it threw")
+  # an error inside a solver is reported as a warning too (gDRutils 1.13.3)
+  expect_warning(threw <- fit_drug_response_metrics(dt, solver = throws), "it threw")
+  expect_identical(threw$fit_message, "it threw")
 
   good <- fit_drug_response_metrics(dt)
   expect_true(is.na(good$fit_message))
