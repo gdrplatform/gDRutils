@@ -4,6 +4,7 @@
 * record the solver of a fit by its registry name
 * add a `fit_message` column to `fit_drug_response_metrics()` with the solver's failure message
 * provenance schema 2; objects and rows without a `fit_id` take their `fit_source` as `fit_id`
+* register `fit_id` and `fit_message` as data fields (`get_header("metrics_results")`), so `merge_SE()` of objects fitted by different recipes, or by none, no longer reads them as treatment metadata
 
 ## gDRutils 1.11.32 - 2026-11-23
 * add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's

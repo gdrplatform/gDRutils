@@ -270,3 +270,23 @@ test_that("flatten leaves fit_id and fit_message out of the wide table, unless r
   expect_identical(several$GR_fit_id, "B")
   expect_identical(several$GR_fit_message, "failed")
 })
+
+
+test_that("objects fitted by different recipes, or by none, merge into the same treatments", {
+  other_fn <- .as_user(function(dt) list(x_mean = mean(dt$x, na.rm = TRUE)))
+  a <- .fit_hill(se_id, "gDR")
+  b <- suppressWarnings(apply_fit(
+    se_id, other_fn, "single-agent", output_assay = "hill", fit_source = "gDR"
+  ))
+  reference <- merge_SE(list(a = a, b = a))
+
+  # a fit_id that differs between inputs is a value of the rows, not a treatment
+  merged <- merge_SE(list(a = a, b = b))
+  expect_identical(dim(merged), dim(reference))
+  expect_true("fit_id" %in% names(convert_se_assay_to_dt(merged, "hill")))
+
+  # and so is its absence in an input that was not fitted
+  one_only <- merge_SE(list(fitted = a, bare = se_id))
+  expect_identical(dim(one_only), dim(reference))
+  expect_true(all(c("fit_id", "fit_message") %in% get_header("metrics_results")))
+})

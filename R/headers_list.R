@@ -30,6 +30,10 @@
     "ratio_sd",
     "dilution_drug",
     "count",
+    # how a fit row was made: data fields, so that merging objects fitted differently
+    # does not read them as treatment or cell line metadata
+    "fit_id",
+    "fit_message",
     HEADERS_LIST[["response_metrics"]],
     as.character(HEADERS_LIST[["metrics_names"]])
   )
