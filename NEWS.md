@@ -1,6 +1,6 @@
 ## gDRutils 1.13.4 - 2026-11-24
 * add a `fit_id` column, a hash of the fit source, function and settings (not versions), and `get_fit_recipe()`
-* add a `fit_message` column with the solver's failure message and record the solver by its registry name
+* add a `fit_message` column (the solver's failure message, empty if none) and record the solver by its registry name
 * change the provenance schema to 2; rows and objects without a `fit_id` take their `fit_source` as `fit_id`
 
 ## gDRutils 1.13.3 - 2026-11-24

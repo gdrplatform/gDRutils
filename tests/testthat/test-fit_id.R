@@ -215,7 +215,7 @@ test_that("the model text no longer names a default solver", {
 })
 
 
-test_that("fit_message holds the failure message of the solver, and is NA otherwise", {
+test_that("fit_message holds the failure message of the solver, and is empty otherwise", {
   failing <- .as_user(function(conc, x, model, control = list()) {
     list(params = c(h = NA_real_, x_inf = NA_real_, x_0 = NA_real_, ec50 = NA_real_),
          rss = NA_real_, converged = FALSE, message = "the optimiser gave up")
@@ -236,11 +236,12 @@ test_that("fit_message holds the failure message of the solver, and is NA otherw
   expect_identical(threw$fit_message, "it threw")
 
   good <- fit_drug_response_metrics(dt)
-  expect_true(is.na(good$fit_message))
+  # empty, not NA: na.omit() / complete.cases() on a Metrics table must not drop every row
+  expect_identical(good$fit_message, "")
   expect_true(is.character(good$fit_message))
 
   # constant fits and series with too few points have no solver message
-  expect_true(is.na(fit_drug_response_metrics(dt[1:2])$fit_message))
+  expect_identical(fit_drug_response_metrics(dt[1:2])$fit_message, "")
 
   se <- .fit_hill(se_id, "failing", fit_args = list(solver = failing))
   rows <- gDRutils:::.assay_dt(se, "hill")
@@ -255,7 +256,7 @@ test_that("flatten leaves fit_id and fit_message out of the wide table, unless r
     data.table::data.table(
       drug = "d", normalization_type = c("RV", "GR"), fit_source = "gDR",
       fit_type = "DRC4pHillFitModel", xc50 = c(1, 2),
-      fit_id = ids, fit_message = c(NA_character_, "failed")
+      fit_id = ids, fit_message = c("", "failed")
     )
   }
   groups <- c("normalization_type", "fit_source") # as convert_se_assay_to_dt() calls it
