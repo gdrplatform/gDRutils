@@ -1,9 +1,7 @@
 ## gDRutils 1.13.5 - 2026-11-24
 * add `merge_compatibility()`, a report of what the inputs of `merge_SE()` have in common and where they differ
-* `merge_SE()` renames the identifier columns of every input to the first input's instead of stacking differently named columns as NA-filled duplicates, and no longer changes the session identifiers
-* `merge_SE()` stops when the same `fit_source` was produced by different fits in different inputs, unless `allow_mismatch = TRUE`; the report is kept in `metadata(se)$merge_report`
-* `merge_SE()` keeps the provenance, identifiers, fit parameters and versions of every input under `provenance$sources`, including inputs without provenance
-* `merge_MAE()` passes `allow_mismatch` on to `merge_SE()`, next to `additional_col_name` and `discard_keys`
+* change `merge_SE()` to rename identifiers to the first input's and keep every input's provenance in `provenance$sources`
+* change `merge_SE()` and `merge_MAE()` to stop on a `fit_source` fitted differently, unless `allow_mismatch = TRUE`
 
 ## gDRutils 1.13.4 - 2026-11-24
 * add a `fit_id` column, a hash of the fit source, function and settings (not versions), and `get_fit_recipe()`
