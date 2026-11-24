@@ -941,7 +941,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
         x_0 = x_0_val,
         x_inf = x_inf_val,
         fit_type = fit_type,
-        fit_message = NA_character_
+        fit_message = ""
       )
     }
   } else {
@@ -963,7 +963,7 @@ fit_drug_response_metrics_4p <- set_fit_fn_info(
       x_0 = if (four_param) NA_real_ else x_0,
       x_inf = NA_real_,
       fit_type = "DRCInvalidFitResult",
-      fit_message = if (is.null(sol$message)) NA_character_ else as.character(sol$message)[1L]
+      fit_message = if (is.null(sol$message)) "" else as.character(sol$message)[1L]
     )
   }
   } # end else (enough conc points)
@@ -1232,7 +1232,7 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     x_0 = mn,
     x_inf = mn,
     fit_type = "DRCConstantFitResult",
-    fit_message = NA_character_
+    fit_message = ""
   )
 }
 
@@ -1279,7 +1279,7 @@ persist_fit_assay <- function(se, new_dt, merge, assay_name, row, col,
     x_0 = NA_real_,
     x_inf = NA_real_,
     fit_type = "DRCInvalidFitResult",
-    fit_message = NA_character_
+    fit_message = ""
   )
 }
 
