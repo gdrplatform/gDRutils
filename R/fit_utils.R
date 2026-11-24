@@ -115,6 +115,7 @@ apply_fit <- function(se,
   if (is.null(input_assay)) input_assay <- profile$input_assay
 
   checkmate::assert_class(se, "SummarizedExperiment")
+  .local_SE_identifiers(se)
   checkmate::assert_function(fit_fn)
   checkmate::assert_character(slicing_cols, min.len = 1L)
   checkmate::assert_character(slicing_values, null.ok = TRUE, min.len = 1L)
@@ -386,6 +387,7 @@ apply_fits <- function(se,
   if (is.null(input_assay)) input_assay <- profile$input_assay
 
   checkmate::assert_class(se, "SummarizedExperiment")
+  .local_SE_identifiers(se)
   checkmate::assert_list(fit_fns, min.len = 1L, types = "function", names = "unique")
   checkmate::assert_character(slicing_cols, min.len = 1L)
   checkmate::assert_character(slicing_values, null.ok = TRUE, min.len = 1L)

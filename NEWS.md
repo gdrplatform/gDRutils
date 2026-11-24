@@ -1,6 +1,14 @@
-## gDRutils 1.11.33 - 2026-11-23
+## gDRutils 1.13.3 - 2026-11-24
 * fix `solver_drc()` reporting a failed drc fit as converged, so the curve gets `DRCInvalidFitResult`
 * make solvers take `control`, and warn with the error when a solver fails
+
+## gDRutils 1.13.2 - 2026-11-24
+* add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
+* add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment
+* add a `validate_SE()` check that the SE's identifiers name columns it has
+
+## gDRutils 1.13.1 - 2026-11-24
+* synchronize Bioconductor and GitHub versioning
 
 ## gDRutils 1.11.32 - 2026-11-23
 * allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours

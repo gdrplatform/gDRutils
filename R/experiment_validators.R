@@ -80,6 +80,7 @@ validate_SE <- function(se,
                         expect_single_agent = FALSE) {
   # Validate the SE structure, assays and metadata, as well as dimnames of assays
   checkmate::assert_class(se, "SummarizedExperiment")
+  .local_SE_identifiers(se)
   exp_assay_names <- c("Normalized", "Averaged")
   if (expect_single_agent) {
     exp_assay_names <- c(exp_assay_names, "Metrics")
@@ -89,6 +90,7 @@ validate_SE <- function(se,
   checkmate::assert_true(all(exp_metadata_names %in% names(S4Vectors::metadata(se))))
   validate_dimnames(se, assay(se, "Normalized"))
   validate_dimnames(se, assay(se, "Averaged"))
+  .check_SE_identifier_columns(se)
   if (expect_single_agent) {
     validate_dimnames(se, assay(se, "Metrics"))
     checkmate::assert_true(all(c("normalization_type", "fit_source") %in%
@@ -121,6 +123,35 @@ validate_SE <- function(se,
     if (concentration2 %in% names(rowdata)) {
       checkmate::assert_subset(rowdata[[concentration2]], 0)
     }
+  }
+  invisible(NULL)
+}
+
+# The identifiers an SE stores are now what reads it (see local_identifiers()), so one
+# that names a column the SE does not have would be read wrongly without an error.
+# Check the keys every SE has: each must name at least one column of rowData, colData or
+# the Normalized/Averaged assays. (masked_tag is not among them: masked wells are
+# dropped before Normalized is stored, so the column is usually absent.)
+#' @keywords internal
+.check_SE_identifier_columns <- function(se) {
+  stored <- .SE_scope_ids(se)
+  keys <- intersect(c("cellline", "cellline_name", "drug", "drug_name", "concentration"),
+                   names(stored))
+  if (length(keys) == 0L) {
+    return(invisible(NULL))
+  }
+  assay_cols <- unlist(lapply(intersect(c("Normalized", "Averaged"), assayNames(se)), function(a) {
+    x <- assay(se, a)
+    if (methods::is(x, "BumpyDataFrameMatrix")) BumpyMatrix::commonColnames(x) else character(0)
+  }), use.names = FALSE)
+  cols <- unique(c(names(rowData(se)), names(colData(se)), assay_cols))
+  missing <- keys[!vapply(keys, function(k) any(stored[[k]] %in% cols), logical(1))]
+  if (length(missing) > 0L) {
+    stop(sprintf(paste0("the SE's identifiers name columns it does not have: %s. ",
+                        "Correct them with set_SE_identifiers()."),
+                 toString(sprintf("%s = '%s'", missing,
+                                  vapply(stored[missing], toString, character(1))))),
+         call. = FALSE)
   }
   invisible(NULL)
 }
