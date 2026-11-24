@@ -447,3 +447,45 @@ test_that("a function nested in a list argument is recorded and restored", {
   expect_identical(joined$fit_args$cap, 0.2)
   expect_identical(joined$n, 1L)
 })
+
+test_that("fit_id ignores the version, git sha and code hash of a package function, but not the function or its settings", {
+  # these change with every release, build and R version, so an id that depended on them
+  # could not be reproduced elsewhere (reference datasets, another machine)
+  rec <- list(
+    called_by = "apply_fit",
+    fn = list(name = "fit_drug_response_metrics", package = "gDRutils", version = "1.13.4",
+              git_sha = "aaa", hash = "h1", dependencies = list(drc = "3.0.1")),
+    fit_args = list(pcutoff = 0.1)
+  )
+  id <- .recipe_id(rec, "gDR")
+
+  newer <- rec
+  newer$fn$version <- "9.9.9"
+  newer$fn$git_sha <- "bbb"
+  newer$fn$hash <- "h2"
+  newer$fn$dependencies <- list(drc = "4.0.0")
+  expect_identical(.recipe_id(newer, "gDR"), id)
+
+  # the function, its settings and the label still make another id
+  other_fn <- rec
+  other_fn$fn$name <- "fit_xcx"
+  expect_false(identical(.recipe_id(other_fn, "gDR"), id))
+  other_args <- rec
+  other_args$fit_args$pcutoff <- 0.05
+  expect_false(identical(.recipe_id(other_args, "gDR"), id))
+  expect_false(identical(.recipe_id(rec, "other_label"), id))
+
+  # a function that is not in a package is identified by its code and what it reads
+  session <- list(called_by = "apply_fit",
+                  fn = list(name = "f", source = "function(x) x", captured = list(a = 1), hash = "h1"))
+  relabelled <- session
+  relabelled$fn$name <- "g"
+  relabelled$fn$hash <- "zzz"
+  expect_identical(.recipe_id(relabelled, "gDR"), .recipe_id(session, "gDR"))
+  other_code <- session
+  other_code$fn$source <- "function(x) x + 1"
+  expect_false(identical(.recipe_id(other_code, "gDR"), .recipe_id(session, "gDR")))
+  other_state <- session
+  other_state$fn$captured <- list(a = 2)
+  expect_false(identical(.recipe_id(other_state, "gDR"), .recipe_id(session, "gDR")))
+})
