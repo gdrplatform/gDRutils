@@ -12,7 +12,8 @@ check_reproducibility(
   assay = NULL,
   fit_source = NULL,
   tolerance = sqrt(.Machine$double.eps),
-  allow_source = FALSE
+  allow_source = FALSE,
+  fit_id = NULL
 )
 ```
 
@@ -39,11 +40,15 @@ check_reproducibility(
 
   logical; evaluate fit functions stored as source code.
 
+- fit_id:
+
+  string or `NULL`; check only this recipe.
+
 ## Value
 
 `data.table` with one row per checked fit: `assay`, `fit_source`,
-`reproducible` (`NA` when the fit could not be re-run), `n_rows` and
-`detail`.
+`fit_id`, `reproducible` (`NA` when the fit could not be re-run),
+`n_rows` and `detail`.
 
 ## Examples
 
@@ -62,12 +67,12 @@ se <- apply_fit(
 #> Warning: NaNs produced
 #> Warning: NaNs produced
 check_reproducibility(se)
-#>          assay fit_source reproducible n_rows
-#>         <char>     <char>       <lgcl>  <int>
-#> 1:     Metrics        gDR        FALSE    200
-#> 2: custom_hill       hill         TRUE    200
-#>                                                                                                                                                                      detail
-#>                                                                                                                                                                      <char>
-#> 1: Column 'ec50': Mean relative difference: 1.744271e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.13.3 is installed; results may differ
-#> 2:                                                                                                                                                            results match
+#>          assay fit_source       fit_id reproducible n_rows
+#>         <char>     <char>       <char>       <lgcl>  <int>
+#> 1:     Metrics        gDR          gDR        FALSE    200
+#> 2: custom_hill       hill 74e28759241a         TRUE    200
+#>                                                                                                                                                                                                                    detail
+#>                                                                                                                                                                                                                    <char>
+#> 1: Column 'ec50': Mean relative difference: 2.838961e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.13.4 is installed; results may differ; the fit now has fit_id 7207b9e81092, not gDR
+#> 2:                                                                                                                                                                                                          results match
 ```

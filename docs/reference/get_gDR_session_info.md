@@ -25,7 +25,7 @@ data.table with gDR packages and their versions
 get_gDR_session_info()
 #>        Package Version
 #>         <char>  <char>
-#> 1:    gDRutils  1.13.3
-#> 2:    gDRstyle  1.11.6
+#> 1:    gDRutils  1.13.4
+#> 2:    gDRstyle  1.12.0
 #> 3: gDRtestData 1.11.13
 ```

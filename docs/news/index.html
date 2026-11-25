@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,13 @@
       <small>Source: <a href="https://github.com/gdrplatform/gDRutils/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.13.4" id="gdrutils-1134---2026-11-24">gDRutils 1.13.4 - 2026-11-24<a class="anchor" aria-label="anchor" href="#gdrutils-1134---2026-11-24"></a></h2>
+<ul><li>add a <code>fit_id</code> column (hash of fit source, function, settings) and <code><a href="../reference/fit_provenance.html">get_fit_recipe()</a></code>; wide tables widen it</li>
+<li>add a <code>fit_message</code> column (solver failure message, empty if none) and record the solver by its registry name</li>
+<li>change the provenance schema to 2; rows and objects without a <code>fit_id</code> take their <code>fit_source</code> as <code>fit_id</code>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.13.3" id="gdrutils-1133---2026-11-24">gDRutils 1.13.3 - 2026-11-24<a class="anchor" aria-label="anchor" href="#gdrutils-1133---2026-11-24"></a></h2>
 <ul><li>fix <code><a href="../reference/solver_drc.html">solver_drc()</a></code> reporting a failed drc fit as converged, so the curve gets <code>DRCInvalidFitResult</code>

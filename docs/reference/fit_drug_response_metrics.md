@@ -98,8 +98,12 @@ fit_drug_response_metrics(
 Named list of fit metrics fully compatible with the standard gDR
 `Metrics` assay schema: `ec50`, `xc50`, `h`, `x_inf`, `x_0`, `r2`,
 `rss`, `p_value`, `x_mean`, `x_AOC`, `x_AOC_range`, `x_max`, `x_sd_avg`,
-`N_conc`, `maxlog10Concentration`, `fit_type`, `normalization_type`.
-`fit_type` is one of:
+`N_conc`, `maxlog10Concentration`, `fit_type`, `fit_message`,
+`normalization_type`. `fit_message` is the message of the solver when it
+failed (`fit_type` `"DRCInvalidFitResult"`) and an empty string
+otherwise, never `NA`, so that
+[`na.omit()`](https://rdrr.io/r/stats/na.fail.html) on a Metrics table
+keeps its rows. `fit_type` is one of:
 
 - `"DRC3pHillFitModelFixS0"` (`"DRC4pHillFitModel"` for the 4-parameter
   variant): the curve was fitted;
@@ -180,6 +184,9 @@ fit_drug_response_metrics(dt)
 #> $fit_type
 #> [1] "DRC3pHillFitModelFixS0"
 #> 
+#> $fit_message
+#> [1] ""
+#> 
 
 # Custom response column (e.g. time-course growth rates):
 dt2 <- data.table::data.table(
@@ -238,5 +245,8 @@ fit_drug_response_metrics(dt2, x_col = "NormalizedGrowthRate")
 #> 
 #> $fit_type
 #> [1] "DRC3pHillFitModelFixS0"
+#> 
+#> $fit_message
+#> [1] ""
 #> 
 ```

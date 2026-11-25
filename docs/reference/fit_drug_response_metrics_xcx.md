@@ -165,6 +165,9 @@ fit_drug_response_metrics_xcx(dt, levels = c(75, 90))
 #> $fit_type
 #> [1] "DRC3pHillFitModelFixS0"
 #> 
+#> $fit_message
+#> [1] ""
+#> 
 #> $xc75
 #> [1] 4.804318
 #> 

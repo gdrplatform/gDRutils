@@ -123,47 +123,48 @@ get_header(k = NULL)
 #>  [5] "cotrt_value"              "cotrt_value_sd"          
 #>  [7] "ratio"                    "ratio_sd"                
 #>  [9] "dilution_drug"            "count"                   
-#> [11] "x_mean"                   "x_AOC"                   
-#> [13] "x_AOC_range"              "xc50"                    
-#> [15] "x_max"                    "ec50"                    
-#> [17] "x_inf"                    "x_0"                     
-#> [19] "h"                        "r2"                      
-#> [21] "p_value"                  "rss"                     
-#> [23] "maxlog10Concentration"    "N_conc"                  
-#> [25] "x_sd_avg"                 "fit_type"                
-#> [27] "x_mean_sd"                "x_AOC_sd"                
-#> [29] "x_AOC_range_sd"           "xc50_sd"                 
-#> [31] "x_max_sd"                 "ec50_sd"                 
-#> [33] "x_inf_sd"                 "x_0_sd"                  
-#> [35] "h_sd"                     "r2_sd"                   
-#> [37] "x_sd_avg_sd"              "RV_mean"                 
-#> [39] "GR_mean"                  "RV_AOC"                  
-#> [41] "GR_AOC"                   "RV_AOC_range"            
-#> [43] "GR_AOC_range"             "IC50"                    
-#> [45] "GR50"                     "E_max"                   
-#> [47] "GR_max"                   "EC50"                    
-#> [49] "GEC50"                    "E_inf"                   
-#> [51] "GR_inf"                   "E_0"                     
-#> [53] "GR_0"                     "h_RV"                    
-#> [55] "h_GR"                     "RV_r2"                   
-#> [57] "GR_r2"                    "RV_p_value"              
-#> [59] "GR_p_value"               "RV_rss"                  
-#> [61] "GR_rss"                   "RV_maxlog10Concentration"
-#> [63] "GR_maxlog10Concentration" "RV_N_conc"               
-#> [65] "GR_N_conc"                "RV_sd_avg"               
-#> [67] "GR_sd_avg"                "fit_type_RV"             
-#> [69] "fit_type_GR"              "RV_mean_sd"              
-#> [71] "GR_mean_sd"               "RV_AOC_sd"               
-#> [73] "GR_AOC_sd"                "RV_AOC_range_sd"         
-#> [75] "GR_AOC_range_sd"          "IC50_sd"                 
-#> [77] "GR50_sd"                  "E_max_sd"                
-#> [79] "GR_max_sd"                "EC50_sd"                 
-#> [81] "GEC50_sd"                 "E_inf_sd"                
-#> [83] "GR_inf_sd"                "E_0_sd"                  
-#> [85] "GR_0_sd"                  "h_RV_sd"                 
-#> [87] "h_GR_sd"                  "RV_r2_sd"                
-#> [89] "GR_r2_sd"                 "RV_sd_avg_sd"            
-#> [91] "GR_sd_avg_sd"            
+#> [11] "fit_id"                   "fit_message"             
+#> [13] "x_mean"                   "x_AOC"                   
+#> [15] "x_AOC_range"              "xc50"                    
+#> [17] "x_max"                    "ec50"                    
+#> [19] "x_inf"                    "x_0"                     
+#> [21] "h"                        "r2"                      
+#> [23] "p_value"                  "rss"                     
+#> [25] "maxlog10Concentration"    "N_conc"                  
+#> [27] "x_sd_avg"                 "fit_type"                
+#> [29] "x_mean_sd"                "x_AOC_sd"                
+#> [31] "x_AOC_range_sd"           "xc50_sd"                 
+#> [33] "x_max_sd"                 "ec50_sd"                 
+#> [35] "x_inf_sd"                 "x_0_sd"                  
+#> [37] "h_sd"                     "r2_sd"                   
+#> [39] "x_sd_avg_sd"              "RV_mean"                 
+#> [41] "GR_mean"                  "RV_AOC"                  
+#> [43] "GR_AOC"                   "RV_AOC_range"            
+#> [45] "GR_AOC_range"             "IC50"                    
+#> [47] "GR50"                     "E_max"                   
+#> [49] "GR_max"                   "EC50"                    
+#> [51] "GEC50"                    "E_inf"                   
+#> [53] "GR_inf"                   "E_0"                     
+#> [55] "GR_0"                     "h_RV"                    
+#> [57] "h_GR"                     "RV_r2"                   
+#> [59] "GR_r2"                    "RV_p_value"              
+#> [61] "GR_p_value"               "RV_rss"                  
+#> [63] "GR_rss"                   "RV_maxlog10Concentration"
+#> [65] "GR_maxlog10Concentration" "RV_N_conc"               
+#> [67] "GR_N_conc"                "RV_sd_avg"               
+#> [69] "GR_sd_avg"                "fit_type_RV"             
+#> [71] "fit_type_GR"              "RV_mean_sd"              
+#> [73] "GR_mean_sd"               "RV_AOC_sd"               
+#> [75] "GR_AOC_sd"                "RV_AOC_range_sd"         
+#> [77] "GR_AOC_range_sd"          "IC50_sd"                 
+#> [79] "GR50_sd"                  "E_max_sd"                
+#> [81] "GR_max_sd"                "EC50_sd"                 
+#> [83] "GEC50_sd"                 "E_inf_sd"                
+#> [85] "GR_inf_sd"                "E_0_sd"                  
+#> [87] "GR_0_sd"                  "h_RV_sd"                 
+#> [89] "h_GR_sd"                  "RV_r2_sd"                
+#> [91] "GR_r2_sd"                 "RV_sd_avg_sd"            
+#> [93] "GR_sd_avg_sd"            
 #> 
 #> $controlled
 #> $controlled[[1]]
@@ -403,252 +404,258 @@ get_header(k = NULL)
 #> [1] "count"
 #> 
 #> $reserved[[55]]
-#> [1] "x_mean"
+#> [1] "fit_id"
 #> 
 #> $reserved[[56]]
-#> [1] "x_AOC"
+#> [1] "fit_message"
 #> 
 #> $reserved[[57]]
-#> [1] "x_AOC_range"
+#> [1] "x_mean"
 #> 
 #> $reserved[[58]]
-#> [1] "xc50"
+#> [1] "x_AOC"
 #> 
 #> $reserved[[59]]
-#> [1] "x_max"
+#> [1] "x_AOC_range"
 #> 
 #> $reserved[[60]]
-#> [1] "ec50"
+#> [1] "xc50"
 #> 
 #> $reserved[[61]]
-#> [1] "x_inf"
+#> [1] "x_max"
 #> 
 #> $reserved[[62]]
-#> [1] "x_0"
+#> [1] "ec50"
 #> 
 #> $reserved[[63]]
-#> [1] "h"
+#> [1] "x_inf"
 #> 
 #> $reserved[[64]]
-#> [1] "r2"
+#> [1] "x_0"
 #> 
 #> $reserved[[65]]
-#> [1] "p_value"
+#> [1] "h"
 #> 
 #> $reserved[[66]]
-#> [1] "rss"
+#> [1] "r2"
 #> 
 #> $reserved[[67]]
-#> [1] "maxlog10Concentration"
+#> [1] "p_value"
 #> 
 #> $reserved[[68]]
-#> [1] "N_conc"
+#> [1] "rss"
 #> 
 #> $reserved[[69]]
-#> [1] "x_sd_avg"
+#> [1] "maxlog10Concentration"
 #> 
 #> $reserved[[70]]
-#> [1] "fit_type"
+#> [1] "N_conc"
 #> 
 #> $reserved[[71]]
-#> [1] "x_mean_sd"
+#> [1] "x_sd_avg"
 #> 
 #> $reserved[[72]]
-#> [1] "x_AOC_sd"
+#> [1] "fit_type"
 #> 
 #> $reserved[[73]]
-#> [1] "x_AOC_range_sd"
+#> [1] "x_mean_sd"
 #> 
 #> $reserved[[74]]
-#> [1] "xc50_sd"
+#> [1] "x_AOC_sd"
 #> 
 #> $reserved[[75]]
-#> [1] "x_max_sd"
+#> [1] "x_AOC_range_sd"
 #> 
 #> $reserved[[76]]
-#> [1] "ec50_sd"
+#> [1] "xc50_sd"
 #> 
 #> $reserved[[77]]
-#> [1] "x_inf_sd"
+#> [1] "x_max_sd"
 #> 
 #> $reserved[[78]]
-#> [1] "x_0_sd"
+#> [1] "ec50_sd"
 #> 
 #> $reserved[[79]]
-#> [1] "h_sd"
+#> [1] "x_inf_sd"
 #> 
 #> $reserved[[80]]
-#> [1] "r2_sd"
+#> [1] "x_0_sd"
 #> 
 #> $reserved[[81]]
-#> [1] "x_sd_avg_sd"
+#> [1] "h_sd"
 #> 
 #> $reserved[[82]]
-#> [1] "RV_mean"
+#> [1] "r2_sd"
 #> 
 #> $reserved[[83]]
-#> [1] "GR_mean"
+#> [1] "x_sd_avg_sd"
 #> 
 #> $reserved[[84]]
-#> [1] "RV_AOC"
+#> [1] "RV_mean"
 #> 
 #> $reserved[[85]]
-#> [1] "GR_AOC"
+#> [1] "GR_mean"
 #> 
 #> $reserved[[86]]
-#> [1] "RV_AOC_range"
+#> [1] "RV_AOC"
 #> 
 #> $reserved[[87]]
-#> [1] "GR_AOC_range"
+#> [1] "GR_AOC"
 #> 
 #> $reserved[[88]]
-#> [1] "IC50"
+#> [1] "RV_AOC_range"
 #> 
 #> $reserved[[89]]
-#> [1] "GR50"
+#> [1] "GR_AOC_range"
 #> 
 #> $reserved[[90]]
-#> [1] "E_max"
+#> [1] "IC50"
 #> 
 #> $reserved[[91]]
-#> [1] "GR_max"
+#> [1] "GR50"
 #> 
 #> $reserved[[92]]
-#> [1] "EC50"
+#> [1] "E_max"
 #> 
 #> $reserved[[93]]
-#> [1] "GEC50"
+#> [1] "GR_max"
 #> 
 #> $reserved[[94]]
-#> [1] "E_inf"
+#> [1] "EC50"
 #> 
 #> $reserved[[95]]
-#> [1] "GR_inf"
+#> [1] "GEC50"
 #> 
 #> $reserved[[96]]
-#> [1] "E_0"
+#> [1] "E_inf"
 #> 
 #> $reserved[[97]]
-#> [1] "GR_0"
+#> [1] "GR_inf"
 #> 
 #> $reserved[[98]]
-#> [1] "h_RV"
+#> [1] "E_0"
 #> 
 #> $reserved[[99]]
-#> [1] "h_GR"
+#> [1] "GR_0"
 #> 
 #> $reserved[[100]]
-#> [1] "RV_r2"
+#> [1] "h_RV"
 #> 
 #> $reserved[[101]]
-#> [1] "GR_r2"
+#> [1] "h_GR"
 #> 
 #> $reserved[[102]]
-#> [1] "RV_p_value"
+#> [1] "RV_r2"
 #> 
 #> $reserved[[103]]
-#> [1] "GR_p_value"
+#> [1] "GR_r2"
 #> 
 #> $reserved[[104]]
-#> [1] "RV_rss"
+#> [1] "RV_p_value"
 #> 
 #> $reserved[[105]]
-#> [1] "GR_rss"
+#> [1] "GR_p_value"
 #> 
 #> $reserved[[106]]
-#> [1] "RV_maxlog10Concentration"
+#> [1] "RV_rss"
 #> 
 #> $reserved[[107]]
-#> [1] "GR_maxlog10Concentration"
+#> [1] "GR_rss"
 #> 
 #> $reserved[[108]]
-#> [1] "RV_N_conc"
+#> [1] "RV_maxlog10Concentration"
 #> 
 #> $reserved[[109]]
-#> [1] "GR_N_conc"
+#> [1] "GR_maxlog10Concentration"
 #> 
 #> $reserved[[110]]
-#> [1] "RV_sd_avg"
+#> [1] "RV_N_conc"
 #> 
 #> $reserved[[111]]
-#> [1] "GR_sd_avg"
+#> [1] "GR_N_conc"
 #> 
 #> $reserved[[112]]
-#> [1] "fit_type_RV"
+#> [1] "RV_sd_avg"
 #> 
 #> $reserved[[113]]
-#> [1] "fit_type_GR"
+#> [1] "GR_sd_avg"
 #> 
 #> $reserved[[114]]
-#> [1] "RV_mean_sd"
+#> [1] "fit_type_RV"
 #> 
 #> $reserved[[115]]
-#> [1] "GR_mean_sd"
+#> [1] "fit_type_GR"
 #> 
 #> $reserved[[116]]
-#> [1] "RV_AOC_sd"
+#> [1] "RV_mean_sd"
 #> 
 #> $reserved[[117]]
-#> [1] "GR_AOC_sd"
+#> [1] "GR_mean_sd"
 #> 
 #> $reserved[[118]]
-#> [1] "RV_AOC_range_sd"
+#> [1] "RV_AOC_sd"
 #> 
 #> $reserved[[119]]
-#> [1] "GR_AOC_range_sd"
+#> [1] "GR_AOC_sd"
 #> 
 #> $reserved[[120]]
-#> [1] "IC50_sd"
+#> [1] "RV_AOC_range_sd"
 #> 
 #> $reserved[[121]]
-#> [1] "GR50_sd"
+#> [1] "GR_AOC_range_sd"
 #> 
 #> $reserved[[122]]
-#> [1] "E_max_sd"
+#> [1] "IC50_sd"
 #> 
 #> $reserved[[123]]
-#> [1] "GR_max_sd"
+#> [1] "GR50_sd"
 #> 
 #> $reserved[[124]]
-#> [1] "EC50_sd"
+#> [1] "E_max_sd"
 #> 
 #> $reserved[[125]]
-#> [1] "GEC50_sd"
+#> [1] "GR_max_sd"
 #> 
 #> $reserved[[126]]
-#> [1] "E_inf_sd"
+#> [1] "EC50_sd"
 #> 
 #> $reserved[[127]]
-#> [1] "GR_inf_sd"
+#> [1] "GEC50_sd"
 #> 
 #> $reserved[[128]]
-#> [1] "E_0_sd"
+#> [1] "E_inf_sd"
 #> 
 #> $reserved[[129]]
-#> [1] "GR_0_sd"
+#> [1] "GR_inf_sd"
 #> 
 #> $reserved[[130]]
-#> [1] "h_RV_sd"
+#> [1] "E_0_sd"
 #> 
 #> $reserved[[131]]
-#> [1] "h_GR_sd"
+#> [1] "GR_0_sd"
 #> 
 #> $reserved[[132]]
-#> [1] "RV_r2_sd"
+#> [1] "h_RV_sd"
 #> 
 #> $reserved[[133]]
-#> [1] "GR_r2_sd"
+#> [1] "h_GR_sd"
 #> 
 #> $reserved[[134]]
-#> [1] "RV_sd_avg_sd"
+#> [1] "RV_r2_sd"
 #> 
 #> $reserved[[135]]
-#> [1] "GR_sd_avg_sd"
+#> [1] "GR_r2_sd"
 #> 
 #> $reserved[[136]]
-#> [1] "WellRow"
+#> [1] "RV_sd_avg_sd"
 #> 
 #> $reserved[[137]]
+#> [1] "GR_sd_avg_sd"
+#> 
+#> $reserved[[138]]
+#> [1] "WellRow"
+#> 
+#> $reserved[[139]]
 #> [1] "WellColumn"
 #> 
 #> 
@@ -734,297 +741,303 @@ get_header(k = NULL)
 #> [1] "count"
 #> 
 #> $ordered_2[[25]]
-#> [1] "x_mean"
+#> [1] "fit_id"
 #> 
 #> $ordered_2[[26]]
-#> [1] "x_AOC"
+#> [1] "fit_message"
 #> 
 #> $ordered_2[[27]]
-#> [1] "x_AOC_range"
+#> [1] "x_mean"
 #> 
 #> $ordered_2[[28]]
-#> [1] "xc50"
+#> [1] "x_AOC"
 #> 
 #> $ordered_2[[29]]
-#> [1] "x_max"
+#> [1] "x_AOC_range"
 #> 
 #> $ordered_2[[30]]
-#> [1] "ec50"
+#> [1] "xc50"
 #> 
 #> $ordered_2[[31]]
-#> [1] "x_inf"
+#> [1] "x_max"
 #> 
 #> $ordered_2[[32]]
-#> [1] "x_0"
+#> [1] "ec50"
 #> 
 #> $ordered_2[[33]]
-#> [1] "h"
+#> [1] "x_inf"
 #> 
 #> $ordered_2[[34]]
-#> [1] "r2"
+#> [1] "x_0"
 #> 
 #> $ordered_2[[35]]
-#> [1] "p_value"
+#> [1] "h"
 #> 
 #> $ordered_2[[36]]
-#> [1] "rss"
+#> [1] "r2"
 #> 
 #> $ordered_2[[37]]
-#> [1] "maxlog10Concentration"
+#> [1] "p_value"
 #> 
 #> $ordered_2[[38]]
-#> [1] "N_conc"
+#> [1] "rss"
 #> 
 #> $ordered_2[[39]]
-#> [1] "x_sd_avg"
+#> [1] "maxlog10Concentration"
 #> 
 #> $ordered_2[[40]]
-#> [1] "fit_type"
+#> [1] "N_conc"
 #> 
 #> $ordered_2[[41]]
-#> [1] "x_mean_sd"
+#> [1] "x_sd_avg"
 #> 
 #> $ordered_2[[42]]
-#> [1] "x_AOC_sd"
+#> [1] "fit_type"
 #> 
 #> $ordered_2[[43]]
-#> [1] "x_AOC_range_sd"
+#> [1] "x_mean_sd"
 #> 
 #> $ordered_2[[44]]
-#> [1] "xc50_sd"
+#> [1] "x_AOC_sd"
 #> 
 #> $ordered_2[[45]]
-#> [1] "x_max_sd"
+#> [1] "x_AOC_range_sd"
 #> 
 #> $ordered_2[[46]]
-#> [1] "ec50_sd"
+#> [1] "xc50_sd"
 #> 
 #> $ordered_2[[47]]
-#> [1] "x_inf_sd"
+#> [1] "x_max_sd"
 #> 
 #> $ordered_2[[48]]
-#> [1] "x_0_sd"
+#> [1] "ec50_sd"
 #> 
 #> $ordered_2[[49]]
-#> [1] "h_sd"
+#> [1] "x_inf_sd"
 #> 
 #> $ordered_2[[50]]
-#> [1] "r2_sd"
+#> [1] "x_0_sd"
 #> 
 #> $ordered_2[[51]]
-#> [1] "x_sd_avg_sd"
+#> [1] "h_sd"
 #> 
 #> $ordered_2[[52]]
-#> [1] "RV_mean"
+#> [1] "r2_sd"
 #> 
 #> $ordered_2[[53]]
-#> [1] "GR_mean"
+#> [1] "x_sd_avg_sd"
 #> 
 #> $ordered_2[[54]]
-#> [1] "RV_AOC"
+#> [1] "RV_mean"
 #> 
 #> $ordered_2[[55]]
-#> [1] "GR_AOC"
+#> [1] "GR_mean"
 #> 
 #> $ordered_2[[56]]
-#> [1] "RV_AOC_range"
+#> [1] "RV_AOC"
 #> 
 #> $ordered_2[[57]]
-#> [1] "GR_AOC_range"
+#> [1] "GR_AOC"
 #> 
 #> $ordered_2[[58]]
-#> [1] "IC50"
+#> [1] "RV_AOC_range"
 #> 
 #> $ordered_2[[59]]
-#> [1] "GR50"
+#> [1] "GR_AOC_range"
 #> 
 #> $ordered_2[[60]]
-#> [1] "E_max"
+#> [1] "IC50"
 #> 
 #> $ordered_2[[61]]
-#> [1] "GR_max"
+#> [1] "GR50"
 #> 
 #> $ordered_2[[62]]
-#> [1] "EC50"
+#> [1] "E_max"
 #> 
 #> $ordered_2[[63]]
-#> [1] "GEC50"
+#> [1] "GR_max"
 #> 
 #> $ordered_2[[64]]
-#> [1] "E_inf"
+#> [1] "EC50"
 #> 
 #> $ordered_2[[65]]
-#> [1] "GR_inf"
+#> [1] "GEC50"
 #> 
 #> $ordered_2[[66]]
-#> [1] "E_0"
+#> [1] "E_inf"
 #> 
 #> $ordered_2[[67]]
-#> [1] "GR_0"
+#> [1] "GR_inf"
 #> 
 #> $ordered_2[[68]]
-#> [1] "h_RV"
+#> [1] "E_0"
 #> 
 #> $ordered_2[[69]]
-#> [1] "h_GR"
+#> [1] "GR_0"
 #> 
 #> $ordered_2[[70]]
-#> [1] "RV_r2"
+#> [1] "h_RV"
 #> 
 #> $ordered_2[[71]]
-#> [1] "GR_r2"
+#> [1] "h_GR"
 #> 
 #> $ordered_2[[72]]
-#> [1] "RV_p_value"
+#> [1] "RV_r2"
 #> 
 #> $ordered_2[[73]]
-#> [1] "GR_p_value"
+#> [1] "GR_r2"
 #> 
 #> $ordered_2[[74]]
-#> [1] "RV_rss"
+#> [1] "RV_p_value"
 #> 
 #> $ordered_2[[75]]
-#> [1] "GR_rss"
+#> [1] "GR_p_value"
 #> 
 #> $ordered_2[[76]]
-#> [1] "RV_maxlog10Concentration"
+#> [1] "RV_rss"
 #> 
 #> $ordered_2[[77]]
-#> [1] "GR_maxlog10Concentration"
+#> [1] "GR_rss"
 #> 
 #> $ordered_2[[78]]
-#> [1] "RV_N_conc"
+#> [1] "RV_maxlog10Concentration"
 #> 
 #> $ordered_2[[79]]
-#> [1] "GR_N_conc"
+#> [1] "GR_maxlog10Concentration"
 #> 
 #> $ordered_2[[80]]
-#> [1] "RV_sd_avg"
+#> [1] "RV_N_conc"
 #> 
 #> $ordered_2[[81]]
-#> [1] "GR_sd_avg"
+#> [1] "GR_N_conc"
 #> 
 #> $ordered_2[[82]]
-#> [1] "fit_type_RV"
+#> [1] "RV_sd_avg"
 #> 
 #> $ordered_2[[83]]
-#> [1] "fit_type_GR"
+#> [1] "GR_sd_avg"
 #> 
 #> $ordered_2[[84]]
-#> [1] "RV_mean_sd"
+#> [1] "fit_type_RV"
 #> 
 #> $ordered_2[[85]]
-#> [1] "GR_mean_sd"
+#> [1] "fit_type_GR"
 #> 
 #> $ordered_2[[86]]
-#> [1] "RV_AOC_sd"
+#> [1] "RV_mean_sd"
 #> 
 #> $ordered_2[[87]]
-#> [1] "GR_AOC_sd"
+#> [1] "GR_mean_sd"
 #> 
 #> $ordered_2[[88]]
-#> [1] "RV_AOC_range_sd"
+#> [1] "RV_AOC_sd"
 #> 
 #> $ordered_2[[89]]
-#> [1] "GR_AOC_range_sd"
+#> [1] "GR_AOC_sd"
 #> 
 #> $ordered_2[[90]]
-#> [1] "IC50_sd"
+#> [1] "RV_AOC_range_sd"
 #> 
 #> $ordered_2[[91]]
-#> [1] "GR50_sd"
+#> [1] "GR_AOC_range_sd"
 #> 
 #> $ordered_2[[92]]
-#> [1] "E_max_sd"
+#> [1] "IC50_sd"
 #> 
 #> $ordered_2[[93]]
-#> [1] "GR_max_sd"
+#> [1] "GR50_sd"
 #> 
 #> $ordered_2[[94]]
-#> [1] "EC50_sd"
+#> [1] "E_max_sd"
 #> 
 #> $ordered_2[[95]]
-#> [1] "GEC50_sd"
+#> [1] "GR_max_sd"
 #> 
 #> $ordered_2[[96]]
-#> [1] "E_inf_sd"
+#> [1] "EC50_sd"
 #> 
 #> $ordered_2[[97]]
-#> [1] "GR_inf_sd"
+#> [1] "GEC50_sd"
 #> 
 #> $ordered_2[[98]]
-#> [1] "E_0_sd"
+#> [1] "E_inf_sd"
 #> 
 #> $ordered_2[[99]]
-#> [1] "GR_0_sd"
+#> [1] "GR_inf_sd"
 #> 
 #> $ordered_2[[100]]
-#> [1] "h_RV_sd"
+#> [1] "E_0_sd"
 #> 
 #> $ordered_2[[101]]
-#> [1] "h_GR_sd"
+#> [1] "GR_0_sd"
 #> 
 #> $ordered_2[[102]]
-#> [1] "RV_r2_sd"
+#> [1] "h_RV_sd"
 #> 
 #> $ordered_2[[103]]
-#> [1] "GR_r2_sd"
+#> [1] "h_GR_sd"
 #> 
 #> $ordered_2[[104]]
-#> [1] "RV_sd_avg_sd"
+#> [1] "RV_r2_sd"
 #> 
 #> $ordered_2[[105]]
-#> [1] "GR_sd_avg_sd"
+#> [1] "GR_r2_sd"
 #> 
 #> $ordered_2[[106]]
-#> [1] "ReadoutValue"
+#> [1] "RV_sd_avg_sd"
 #> 
 #> $ordered_2[[107]]
-#> [1] "BackgroundValue"
+#> [1] "GR_sd_avg_sd"
 #> 
 #> $ordered_2[[108]]
-#> [1] "UntrtReadout"
+#> [1] "ReadoutValue"
 #> 
 #> $ordered_2[[109]]
-#> [1] "Day0Readout"
+#> [1] "BackgroundValue"
 #> 
 #> $ordered_2[[110]]
-#> [1] "masked"
+#> [1] "UntrtReadout"
 #> 
 #> $ordered_2[[111]]
-#> [1] "ReferenceDivisionTime"
+#> [1] "Day0Readout"
 #> 
 #> $ordered_2[[112]]
-#> [1] "clid"
+#> [1] "masked"
 #> 
 #> $ordered_2[[113]]
-#> [1] "Gnumber"
+#> [1] "ReferenceDivisionTime"
 #> 
 #> $ordered_2[[114]]
-#> [1] "Gnumber_2"
+#> [1] "clid"
 #> 
 #> $ordered_2[[115]]
-#> [1] "Gnumber_3"
+#> [1] "Gnumber"
 #> 
 #> $ordered_2[[116]]
-#> [1] "Gnumber_4"
+#> [1] "Gnumber_2"
 #> 
 #> $ordered_2[[117]]
-#> [1] "Gnumber_5"
+#> [1] "Gnumber_3"
 #> 
 #> $ordered_2[[118]]
-#> [1] "Gnumber_6"
+#> [1] "Gnumber_4"
 #> 
 #> $ordered_2[[119]]
-#> [1] "Gnumber_7"
+#> [1] "Gnumber_5"
 #> 
 #> $ordered_2[[120]]
-#> [1] "Gnumber_8"
+#> [1] "Gnumber_6"
 #> 
 #> $ordered_2[[121]]
-#> [1] "Gnumber_9"
+#> [1] "Gnumber_7"
 #> 
 #> $ordered_2[[122]]
+#> [1] "Gnumber_8"
+#> 
+#> $ordered_2[[123]]
+#> [1] "Gnumber_9"
+#> 
+#> $ordered_2[[124]]
 #> [1] "Gnumber_10"
 #> 
 #> $ordered_2$barcode
@@ -1036,10 +1049,10 @@ get_header(k = NULL)
 #> $ordered_2$duration
 #> [1] "Duration"
 #> 
-#> $ordered_2[[126]]
+#> $ordered_2[[128]]
 #> [1] "WellRow"
 #> 
-#> $ordered_2[[127]]
+#> $ordered_2[[129]]
 #> [1] "WellColumn"
 #> 
 #> 

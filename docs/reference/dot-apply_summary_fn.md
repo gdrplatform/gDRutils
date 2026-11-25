@@ -12,7 +12,8 @@ Apply summary_fn across cells and persist into summary_assay
   summary_assay,
   merge,
   fit_source,
-  on_error
+  on_error,
+  fit_id = NULL
 )
 ```
 
@@ -45,6 +46,10 @@ Apply summary_fn across cells and persist into summary_assay
 - on_error:
 
   error handling strategy
+
+- fit_id:
+
+  fit_id stamped on the summary rows, or `NULL`
 
 ## Value
 

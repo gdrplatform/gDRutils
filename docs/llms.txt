@@ -270,6 +270,7 @@ of a SummarizedExperiment.
   : Check that recorded fits can be reproduced
 - [`get_SE_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
   [`get_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
+  [`get_fit_recipe()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
   [`summarize_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)
   : Get the provenance of fits stored in a SummarizedExperiment
 - [`record_fit_provenance()`](https://gdrplatform.github.io/gDRstyle/reference/record_provenance.md)

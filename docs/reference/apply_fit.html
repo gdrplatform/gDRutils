@@ -13,7 +13,7 @@ the results into a named output assay."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,7 +134,9 @@ Required when <code>summary_fn</code> is provided.</p></dd>
 
 <dt id="arg-fit-source">fit_source<a class="anchor" aria-label="anchor" href="#arg-fit-source"></a></dt>
 <dd><p>character string recorded in the <code>fit_source</code> column
-of every output row.  Forms part of the upsert key.</p></dd>
+of every output row.  Forms part of the upsert key. Every row also gets a
+<code>fit_id</code>, which names the recipe in the provenance that produced it
+(see <code><a href="fit_provenance.html">get_fit_recipe</a></code>).</p></dd>
 
 
 <dt id="arg-fit-args">fit_args<a class="anchor" aria-label="anchor" href="#arg-fit-args"></a></dt>

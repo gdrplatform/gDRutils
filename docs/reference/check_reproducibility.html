@@ -9,7 +9,7 @@ compare the new rows with the stored ones."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,8 @@ compare the new rows with the stored ones.</p>
 <span>  assay <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fit_source <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">.Machine</span><span class="op">$</span><span class="va">double.eps</span><span class="op">)</span>,</span>
-<span>  allow_source <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  allow_source <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  fit_id <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,11 +77,15 @@ compare the new rows with the stored ones.</p>
 <dt id="arg-allow-source">allow_source<a class="anchor" aria-label="anchor" href="#arg-allow-source"></a></dt>
 <dd><p>logical; evaluate fit functions stored as source code.</p></dd>
 
+
+<dt id="arg-fit-id">fit_id<a class="anchor" aria-label="anchor" href="#arg-fit-id"></a></dt>
+<dd><p>string or <code>NULL</code>; check only this recipe.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>data.table</code> with one row per checked fit: <code>assay</code>,
-<code>fit_source</code>, <code>reproducible</code> (<code>NA</code> when the fit could not
+<code>fit_source</code>, <code>fit_id</code>, <code>reproducible</code> (<code>NA</code> when the fit could not
 be re-run), <code>n_rows</code> and <code>detail</code>.</p>
     </div>
 
@@ -100,14 +105,14 @@ be re-run), <code>n_rows</code> and <code>detail</code>.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-in"><span><span class="fu">check_reproducibility</span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          assay fit_source reproducible n_rows</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;char&gt;     &lt;char&gt;       &lt;lgcl&gt;  &lt;int&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     Metrics        gDR        FALSE    200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: custom_hill       hill         TRUE    200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                      detail</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                      &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: Column 'ec50': Mean relative difference: 1.744271e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.13.3 is installed; results may differ</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                                                                                                                                                            results match</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          assay fit_source       fit_id reproducible n_rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;char&gt;     &lt;char&gt;       &lt;char&gt;       &lt;lgcl&gt;  &lt;int&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     Metrics        gDR          gDR        FALSE    200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: custom_hill       hill 74e28759241a         TRUE    200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                    detail</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                    &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: Column 'ec50': Mean relative difference: 2.838961e-07; gDRutils::fit_drug_response_metrics was recorded with version 1.11.22 but 1.13.4 is installed; results may differ; the fit now has fit_id 7207b9e81092, not gDR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                                                                                                                                                                                                          results match</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -74,11 +74,11 @@ get_fit_fn("fit_drug_response_metrics")
 #>         pcutoff = pcutoff, n_point_cutoff = n_point_cutoff, force_fit = force_fit, 
 #>         cap = cap, solver = solver, solver_control = solver_control)
 #> }
-#> <bytecode: 0x5f95299ddfd8>
+#> <bytecode: 0x602111e867b8>
 #> <environment: namespace:gDRutils>
 #> attr(,"fit_fn_info")
 #> attr(,"fit_fn_info")$model
-#> [1] "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)"
+#> [1] "3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u; the solver is recorded with the fit)"
 #> 
 #> attr(,"fit_fn_info")$description
 #> [1] "Hill curve of the response against concentration, fitted per normalization type. Falls back to a constant fit when fewer than n_point_cutoff concentrations are available or, unless force_fit = TRUE, when the F-test p-value is at least pcutoff."

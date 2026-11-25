@@ -11,7 +11,7 @@ and fit the data again. The rows of fit_source in the output assay
 
     <a class="navbar-brand me-2" href="../index.html">gDRutils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.13.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,13 @@ and fit the data again. The rows of <code>fit_source</code> in the output assay
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">refit_from_provenance</span><span class="op">(</span><span class="va">se</span>, <span class="va">assay</span>, <span class="va">fit_source</span>, allow_source <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">refit_from_provenance</span><span class="op">(</span></span>
+<span>  <span class="va">se</span>,</span>
+<span>  <span class="va">assay</span>,</span>
+<span>  fit_source <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  allow_source <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  fit_id <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,6 +73,12 @@ and fit the data again. The rows of <code>fit_source</code> in the output assay
 
 <dt id="arg-allow-source">allow_source<a class="anchor" aria-label="anchor" href="#arg-allow-source"></a></dt>
 <dd><p>logical; evaluate fit functions stored as source code.</p></dd>
+
+
+<dt id="arg-fit-id">fit_id<a class="anchor" aria-label="anchor" href="#arg-fit-id"></a></dt>
+<dd><p>string; value of the <code>fit_id</code> column, which names one recipe.
+A <code>fit_source</code> that holds rows of several recipes (a partial refit with
+other settings) needs it. <code>NULL</code> takes the only recipe of <code>fit_source</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -46,7 +46,7 @@ merge_metadata(listSE, metadata_fields)
 #> 
 #> $provenance
 #> $provenance$schema_version
-#> [1] 1
+#> [1] 2
 #> 
 #> $provenance$fits
 #> list()

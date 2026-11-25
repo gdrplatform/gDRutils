@@ -7,7 +7,13 @@ and fit the data again. The rows of `fit_source` in the output assay
 ## Usage
 
 ``` r
-refit_from_provenance(se, assay, fit_source, allow_source = FALSE)
+refit_from_provenance(
+  se,
+  assay,
+  fit_source = NULL,
+  allow_source = FALSE,
+  fit_id = NULL
+)
 ```
 
 ## Arguments
@@ -27,6 +33,13 @@ refit_from_provenance(se, assay, fit_source, allow_source = FALSE)
 - allow_source:
 
   logical; evaluate fit functions stored as source code.
+
+- fit_id:
+
+  string; value of the `fit_id` column, which names one recipe. A
+  `fit_source` that holds rows of several recipes (a partial refit with
+  other settings) needs it. `NULL` takes the only recipe of
+  `fit_source`.
 
 ## Value
 

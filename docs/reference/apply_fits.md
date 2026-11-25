@@ -59,7 +59,8 @@ apply_fits(
 
 - fit_source:
 
-  character string stamped as `fit_source` in every output row.
+  character string stamped as `fit_source` in every output row, with a
+  `fit_id` naming the recipe that produced it.
 
 - fit_args:
 

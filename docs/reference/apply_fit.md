@@ -90,7 +90,9 @@ apply_fit(
 - fit_source:
 
   character string recorded in the `fit_source` column of every output
-  row. Forms part of the upsert key.
+  row. Forms part of the upsert key. Every row also gets a `fit_id`,
+  which names the recipe in the provenance that produced it (see
+  [`get_fit_recipe`](https://gdrplatform.github.io/gDRstyle/reference/fit_provenance.md)).
 
 - fit_args:
 

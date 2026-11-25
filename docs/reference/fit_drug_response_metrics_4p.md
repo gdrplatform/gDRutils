@@ -151,4 +151,7 @@ fit_drug_response_metrics_4p(dt)
 #> $fit_type
 #> [1] "DRC4pHillFitModel"
 #> 
+#> $fit_message
+#> [1] ""
+#> 
 ```

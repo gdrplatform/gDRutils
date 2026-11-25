@@ -11,7 +11,15 @@ functions read it back.
 ``` r
 get_SE_provenance(se)
 
-get_fit_provenance(se, assay, fit_source, data_source = NULL)
+get_fit_provenance(
+  se,
+  assay,
+  fit_source = NULL,
+  data_source = NULL,
+  fit_id = NULL
+)
+
+get_fit_recipe(se, assay, fit_id, data_source = NULL)
 
 summarize_fit_provenance(se)
 ```
@@ -37,12 +45,20 @@ summarize_fit_provenance(se)
   the name of the merged object the rows come from (the `data_source`
   column). `NULL` reads the fits done on `se` itself.
 
+- fit_id:
+
+  string; value of the `fit_id` column, which names one recipe. A
+  `fit_source` that holds rows of several recipes (a partial refit with
+  other settings) needs it. `NULL` takes the only recipe of
+  `fit_source`.
+
 ## Value
 
 `get_SE_provenance()`: the whole provenance entry, or `NULL` for objects
-without one. `get_fit_provenance()`: one recipe.
-`summarize_fit_provenance()`: a `data.table` with one row per recorded
-fit.
+without one. `get_fit_provenance()` and `get_fit_recipe()`: one recipe,
+which names its `fit_id` and `fit_source`. `summarize_fit_provenance()`:
+a `data.table` with one row per recorded fit: its `fit_id`,
+`fit_source`, function, solver and arguments.
 
 ## Details
 
@@ -99,18 +115,22 @@ se <- apply_fit(
 #> Warning: NaNs produced
 #> Warning: NaNs produced
 summarize_fit_provenance(se)
-#>          assay fit_source                                            fn
-#>         <char>     <char>                                        <char>
-#> 1:     Metrics        gDR gDRutils::fit_drug_response_metrics (1.11.22)
-#> 2: custom_hill hill_loose  gDRutils::fit_drug_response_metrics (1.13.3)
+#>          assay fit_source       fit_id
+#>         <char>     <char>       <char>
+#> 1:     Metrics        gDR          gDR
+#> 2: custom_hill hill_loose 619a8233dc7f
+#>                                               fn solver
+#>                                           <char> <char>
+#> 1: gDRutils::fit_drug_response_metrics (1.11.22)   <NA>
+#> 2:  gDRutils::fit_drug_response_metrics (1.13.4)    drc
 #>                                                                                                        fit_args
 #>                                                                                                          <char>
 #> 1: capping_fold = 5, range_conc = c(0.005, 5), pcutoff = 0.05, n_point_cutoff = 4, force_fit = FALSE, cap = 0.1
 #> 2:                                                                                                pcutoff = 0.1
-#>                                                                                                 model
-#>                                                                                                <char>
-#> 1:                                  3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1
-#> 2: 3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u with the default solver_drc)
+#>                                                                                                          model
+#>                                                                                                         <char>
+#> 1:                                           3-parameter log-logistic (drc::LL.3u), upper asymptote fixed at 1
+#> 2: 3-parameter log-logistic Hill, upper asymptote fixed at 1 (drc::LL.3u; the solver is recorded with the fit)
 get_fit_provenance(se, "custom_hill", "hill_loose")$fit_args
 #> $pcutoff
 #> [1] 0.1
