@@ -4,7 +4,13 @@
 \alias{refit_from_provenance}
 \title{Re-run a recorded fit}
 \usage{
-refit_from_provenance(se, assay, fit_source, allow_source = FALSE)
+refit_from_provenance(
+  se,
+  assay,
+  fit_source = NULL,
+  allow_source = FALSE,
+  fit_id = NULL
+)
 }
 \arguments{
 \item{se}{\code{\link[SummarizedExperiment]{SummarizedExperiment}}}
@@ -14,6 +20,10 @@ refit_from_provenance(se, assay, fit_source, allow_source = FALSE)
 \item{fit_source}{string; value of the \code{fit_source} column.}
 
 \item{allow_source}{logical; evaluate fit functions stored as source code.}
+
+\item{fit_id}{string; value of the \code{fit_id} column, which names one recipe.
+A \code{fit_source} that holds rows of several recipes (a partial refit with
+other settings) needs it. \code{NULL} takes the only recipe of \code{fit_source}.}
 }
 \value{
 \code{se} with the fit re-run.

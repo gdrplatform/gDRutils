@@ -11,7 +11,8 @@
   summary_assay,
   merge,
   fit_source,
-  on_error
+  on_error,
+  fit_id = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@
 \item{fit_source}{fit_source label}
 
 \item{on_error}{error handling strategy}
+
+\item{fit_id}{fit_id stamped on the summary rows, or \code{NULL}}
 }
 \value{
 updated SummarizedExperiment

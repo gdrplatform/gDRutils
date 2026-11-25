@@ -1,3 +1,8 @@
+## gDRutils 1.13.4 - 2026-11-24
+* add a `fit_id` column (hash of fit source, function, settings) and `get_fit_recipe()`; wide tables widen it
+* add a `fit_message` column (solver failure message, empty if none) and record the solver by its registry name
+* change the provenance schema to 2; rows and objects without a `fit_id` take their `fit_source` as `fit_id`
+
 ## gDRutils 1.13.3 - 2026-11-24
 * fix `solver_drc()` reporting a failed drc fit as converged, so the curve gets `DRCInvalidFitResult`
 * make solvers take `control`, and warn with the error when a solver fails
