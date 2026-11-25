@@ -594,7 +594,8 @@ apply_fits <- function(se,
 #'   \code{x_sd_avg}, \code{N_conc}, \code{maxlog10Concentration},
 #'   \code{fit_type}, \code{fit_message}, \code{normalization_type}.
 #'   \code{fit_message} is the message of the solver when it failed (\code{fit_type}
-#'   \code{"DRCInvalidFitResult"}) and \code{NA} otherwise. \code{fit_type} is one of:
+#'   \code{"DRCInvalidFitResult"}) and an empty string otherwise, never \code{NA}, so that
+#'   \code{na.omit()} on a Metrics table keeps its rows. \code{fit_type} is one of:
 #'   \itemize{
 #'     \item \code{"DRC3pHillFitModelFixS0"} (\code{"DRC4pHillFitModel"} for the
 #'       4-parameter variant): the curve was fitted;
