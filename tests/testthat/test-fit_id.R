@@ -290,3 +290,21 @@ test_that("objects fitted by different recipes, or by none, merge into the same 
   expect_identical(dim(one_only), dim(reference))
   expect_true(all(c("fit_id", "fit_message") %in% get_header("metrics_results")))
 })
+
+test_that("the wide table keeps one row per cell when GR and RV differ in fit_id or fit_message", {
+  # convert_se_assay_to_dt(wide_structure = TRUE) does not go through flatten(): fit_id and fit_message
+  # have to widen with the metrics, or a cell fitted differently per normalization splits in two
+  before <- .fit_hill(se_id, "gDR")
+  wide_before <- convert_se_assay_to_dt(before, "hill", include_metadata = FALSE, wide_structure = TRUE)
+
+  # refit only GR with another setting: GR and RV now have different fit_id
+  after <- .fit_hill(before, "gDR", slicing_values = "GR", fit_args = list(pcutoff = 0.5))
+  ids <- gDRutils:::.assay_dt(after, "hill")
+  expect_gt(length(unique(as.character(ids$fit_id))), 1L)
+
+  wide_after <- convert_se_assay_to_dt(after, "hill", include_metadata = FALSE, wide_structure = TRUE)
+  expect_identical(NROW(wide_after), NROW(wide_before))
+  expect_true(all(c("fit_id", "fit_message") %in% names(ids)))
+  expect_length(grep("fit_id", names(wide_after)), 2L)
+  expect_length(grep("fit_message", names(wide_after)), 2L)
+})

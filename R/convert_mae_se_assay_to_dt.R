@@ -100,9 +100,12 @@ convert_se_assay_to_dt <- function(se,
     id_col <- paste0(assay_name, "_rownames")
     dt$id <- gsub("_.*", "", dt[[id_col]])
     dt[[id_col]] <- NULL
+    # fit_id and fit_message describe how each normalization type was fitted, so they widen with the
+    # metrics; left on the row side they would split a cell in two when GR and RV differ in either
     normalization_cols <- unique(c(grep("^x$|x_+", names(dt), value = TRUE),
                                    intersect(unlist(get_header()[c("excess", "scores", "response_metrics")]),
-                                             names(dt))))
+                                             names(dt)),
+                                   intersect(c("fit_id", "fit_message"), names(dt))))
     rest_cols <- setdiff(colnames(dt), c(normalization_cols, "normalization_type"))
     dcast_formula <- paste0(paste(rest_cols, collapse = " + "), " ~ normalization_type")
     new_cols <- as.vector(outer(normalization_cols, unique(dt$normalization_type),
