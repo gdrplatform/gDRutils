@@ -197,7 +197,7 @@ print.merge_compatibility <- function(x, ...) {
         add("difference", "fit_recipes", sprintf(
           "fit_source '%s' in assay '%s' comes from different steps: %s",
           g$fit_source[[1L]], g$assay[[1L]],
-          paste(unique(sprintf("%s (%s)", g$data_source, g$fn)), collapse = ", ")
+          toString(unique(sprintf("%s (%s)", g$data_source, g$fn)))
         ))
       }
     }
@@ -209,8 +209,8 @@ print.merge_compatibility <- function(x, ...) {
         add("contradiction", "fit_recipes", sprintf(
           "fit_source '%s' in assay '%s' was fitted differently: %s",
           g$fit_source[[1L]], g$assay[[1L]],
-          paste(sprintf("%s (%s)", unique(g[, c("data_source", "fn")])$data_source,
-                        unique(g[, c("data_source", "fn")])$fn), collapse = ", ")
+          toString(sprintf("%s (%s)", unique(g[, c("data_source", "fn")])$data_source,
+                           unique(g[, c("data_source", "fn")])$fn))
         ))
       } else if (length(per_input) > 1L) {
         same_settings <- length(unique(vapply(
