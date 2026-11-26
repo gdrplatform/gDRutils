@@ -276,11 +276,8 @@ test_that("flatten leaves fit_id and fit_message out of the wide table, unless r
 
 
 test_that("objects fitted by different recipes, or by none, merge into the same treatments", {
-  other_fn <- .as_user(function(dt) list(x_mean = mean(dt$x, na.rm = TRUE)))
   a <- .fit_hill(se_id, "gDR")
-  b <- suppressWarnings(apply_fit(
-    se_id, other_fn, "single-agent", output_assay = "hill", fit_source = "gDR"
-  ))
+  b <- .fit_hill(se_id, "gDR", fit_args = list(pcutoff = 0.5))
   reference <- merge_SE(list(a = a, b = a))
 
   # a fit_id that differs between inputs is a value of the rows, not a treatment

@@ -615,11 +615,26 @@ record_processing_step <- function(se,
 
 
 # Provenance of an SE built by merge_SE(): nothing was fitted on the merged object
-# itself, so each input keeps its own provenance under its data_source name.
+# itself, so each input keeps its own provenance under its data_source name, with the
+# identifiers, fit parameters and package versions it was processed with. An input
+# without provenance is listed too, as recorded = FALSE.
 #' @keywords internal
 .merge_provenance <- function(SElist) {
-  sources <- lapply(SElist, function(se) S4Vectors::metadata(se)[["provenance"]])
-  sources <- sources[!vapply(sources, is.null, logical(1))]
+  sources <- lapply(SElist, function(se) {
+    prov <- S4Vectors::metadata(se)[["provenance"]]
+    if (is.null(prov)) {
+      prov <- list(schema_version = .provenance_schema_version, fits = list(), steps = list(),
+                   recorded = FALSE)
+    }
+    processing <- tryCatch(get_SE_processing_metadata(se), error = function(e) NULL)
+    prov$metadata <- .drop_null(list(
+      identifiers = S4Vectors::metadata(se)[["identifiers"]],
+      fit_parameters = tryCatch(get_SE_fit_parameters(se), error = function(e) NULL),
+      date_processed = if (!is.null(processing$date_processed)) as.character(processing$date_processed),
+      versions = processing$versions
+    ))
+    prov
+  })
   list(
     schema_version = .provenance_schema_version,
     fits = list(),

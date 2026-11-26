@@ -1,3 +1,8 @@
+## gDRutils 1.13.5 - 2026-11-24
+* add `merge_compatibility()`, a report of what the inputs of `merge_SE()` have in common and where they differ
+* change `merge_SE()` to rename identifiers to the first input's and keep every input's provenance in `provenance$sources`
+* change `merge_SE()` and `merge_MAE()` to stop on a `fit_source` fitted differently, unless `allow_mismatch = TRUE`
+
 ## gDRutils 1.13.4 - 2026-11-24
 * add a `fit_id` column (hash of fit source, function, settings) and `get_fit_recipe()`; wide tables widen it
 * add a `fit_message` column (solver failure message, empty if none) and record the solver by its registry name

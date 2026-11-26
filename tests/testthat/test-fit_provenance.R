@@ -299,8 +299,10 @@ test_that("the provenance is plain data, small, and survives qs2 and merge_SE", 
   expect_identical(get_SE_provenance(qs2::qs_read(f)), prov)
 
   merged <- merge_metadata(list(first = se, second = se_prov), "provenance")$provenance
-  expect_identical(names(merged$sources), "first")
-  expect_identical(merged$sources$first, prov)
+  # an input without provenance is listed too, as not recorded
+  expect_identical(names(merged$sources), c("first", "second"))
+  expect_identical(merged$sources$first[names(prov)], prov)
+  expect_false(merged$sources$second$recorded)
   expect_identical(
     get_fit_provenance(se, "custom", "user"),
     .find_recipe(merged$sources$first, "custom", "user")

@@ -8,7 +8,8 @@ merge_assay(
   SElist,
   assay_name,
   additional_col_name = "data_source",
-  discard_keys = NULL
+  discard_keys = NULL,
+  target_identifiers = NULL
 )
 }
 \arguments{
@@ -22,6 +23,10 @@ that can arise from multiple projects}
 
 \item{discard_keys}{character vector of string that will be discarded
 during creating BumpyMatrix object}
+
+\item{target_identifiers}{named list of identifiers that name the columns of the
+result; the columns of an input that names them otherwise are renamed. \code{NULL}
+takes the identifiers of the first input.}
 }
 \value{
 BumpyMatrix or list with data.table + BumpyMatrix

@@ -6,6 +6,9 @@
 #' that can arise from multiple projects.
 #' @param discard_keys Character vector of strings that will be discarded
 #' during creating BumpyMatrix object.
+#' @param allow_mismatch Logical; merge even when the inputs contradict each other,
+#' i.e. the same \code{fit_source} was produced by different fits (see
+#' \code{\link{merge_compatibility}}). A warning then lists the contradictions.
 #' @param title String specifying the final DataSetDB title. If NULL, auto-generates.
 #' @param description String specifying the final DataSetDB description. If NULL, auto-generates.
 #' @param source_name String specifying the standard DSDB source name. If NULL, auto-detects or uses "merged_analysis".
@@ -30,6 +33,7 @@ merge_MAE <- function(MAElist,
                                        "iso_level",
                                        "conc_1",
                                        "conc_2"),
+                      allow_mismatch = FALSE,
                       title = NULL,
                       description = NULL,
                       source_name = NULL,
@@ -48,7 +52,10 @@ merge_MAE <- function(MAElist,
       if (exp_name %in% names(mae)) mae[[exp_name]] else NULL
     })
     exp_list <- exp_list[!vapply(exp_list, is.null, FUN.VALUE = logical(1))]
-    merge_SE(exp_list, additional_col_name = additional_col_name, discard_keys = discard_keys)
+    merge_SE(exp_list,
+             additional_col_name = additional_col_name,
+             discard_keys = discard_keys,
+             allow_mismatch = allow_mismatch)
   })
   names(merged_SE_assays) <- experiments
 
@@ -146,7 +153,20 @@ merge_MAE <- function(MAElist,
 #' that can arise from multiple projects
 #' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
+#' @param allow_mismatch logical; merge even when the inputs contradict each other,
+#' i.e. the same \code{fit_source} was produced by different fits in different
+#' inputs. A warning then lists the contradictions. See \code{\link{merge_compatibility}}.
 #' @keywords SE_operators
+#'
+#' @details
+#' The inputs are first compared with \code{\link{merge_compatibility}}; the report
+#' is kept in \code{metadata(se)$merge_report}. The identifiers of the first input are
+#' the identifiers of the result: a column another input names differently (e.g. its
+#' \code{drug} column) is renamed to the first input's before the inputs are stacked.
+#' The session identifiers are not changed. The provenance of every input, with its
+#' identifiers, fit parameters and package versions, is kept under
+#' \code{metadata(se)$provenance$sources}, named as in \code{SElist}; an input without
+#' provenance is listed there with \code{recorded = FALSE}.
 #'
 #' @examples
 #' se1 <- get_synthetic_data("finalMAE_small.qs2")[[1]]
@@ -165,15 +185,27 @@ merge_SE <- function(SElist,
                                       "control_type",
                                       "iso_level",
                                       "conc_1",
-                                      "conc_2")) {
+                                      "conc_2"),
+                     allow_mismatch = FALSE) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
+  checkmate::assert_flag(allow_mismatch)
 
-  SE_identifiers <- unique(lapply(SElist, get_SE_identifiers))[[1]]
-  lapply(names(SE_identifiers), function(x) {
-    set_env_identifier(x, SE_identifiers[[x]])
-  })
+  report <- merge_compatibility(SElist)
+  contradictions <- report$issues[report$issues$severity == "contradiction", ]
+  if (NROW(contradictions) > 0L) {
+    msg <- paste0("the inputs contradict each other:\n  ",
+                  paste(contradictions$detail, collapse = "\n  "))
+    if (!allow_mismatch) {
+      stop(msg, "\nmerge anyway with allow_mismatch = TRUE", call. = FALSE)
+    }
+    warning(msg, call. = FALSE)
+  }
+
+  # the first input's identifiers name the columns of the result; the session is left alone
+  SE_identifiers <- get_SE_identifiers(SElist[[1L]])
+  local_identifiers(SE_identifiers)
 
   discard_keys <- c(discard_keys, unique(unlist(
     lapply(SElist, get_SE_identifiers,
@@ -187,7 +219,8 @@ merge_SE <- function(SElist,
     merge_assay(SElist = SElist,
                 assay_name = x,
                 additional_col_name = additional_col_name,
-                discard_keys = discard_keys)
+                discard_keys = discard_keys,
+                target_identifiers = SE_identifiers)
   })
 
   names(merged_assays) <- se_assays
@@ -210,6 +243,7 @@ merge_SE <- function(SElist,
 
   metadata <- merge_metadata(SElist, metadataNames)
   metadata <- c(metadata, identifiers)
+  metadata$merge_report <- .merge_report(report, SE_identifiers, allow_mismatch)
 
   assays <- lapply(
     merged_assays,
@@ -243,6 +277,9 @@ merge_SE <- function(SElist,
 #' that can arise from multiple projects
 #' @param discard_keys character vector of string that will be discarded
 #' during creating BumpyMatrix object
+#' @param target_identifiers named list of identifiers that name the columns of the
+#' result; the columns of an input that names them otherwise are renamed. \code{NULL}
+#' takes the identifiers of the first input.
 #' @keywords SE_operators
 #'
 #' @return BumpyMatrix or list with data.table + BumpyMatrix
@@ -261,12 +298,17 @@ merge_SE <- function(SElist,
 merge_assay <- function(SElist,
                         assay_name,
                         additional_col_name = "data_source",
-                        discard_keys = NULL) {
+                        discard_keys = NULL,
+                        target_identifiers = NULL) {
 
   checkmate::assert_list(SElist, types = "SummarizedExperiment")
   checkmate::assert_string(assay_name)
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
+  checkmate::assert_list(target_identifiers, types = "character", names = "unique", null.ok = TRUE)
+
+  if (is.null(target_identifiers)) target_identifiers <- get_SE_identifiers(SElist[[1L]])
+  local_identifiers(target_identifiers)
 
   SElist <- lapply(SElist, function(x) {
     if (assay_name %in% SummarizedExperiment::assayNames(x)) {
@@ -282,7 +324,11 @@ merge_assay <- function(SElist,
   DT <- data.table::rbindlist(lapply(stats::setNames(names(SElist),
                                                      names(SElist)),
                                      function(y) {
-                                       convert_se_assay_to_dt(SElist[[y]], assay_name)
+                                       .to_target_identifiers(
+                                         convert_se_assay_to_dt(SElist[[y]], assay_name),
+                                         get_SE_identifiers(SElist[[y]]),
+                                         target_identifiers
+                                       )
                                      }), fill = TRUE, idcol = additional_col_name)
 
   # A dataset missing the "fit_source" column contributes NA via fill = TRUE.

@@ -9,6 +9,7 @@ merge_MAE(
   additional_col_name = "data_source",
   discard_keys = c("normalization_type", "fit_source", "record_id", "isDay0", "swap_sa",
     "control_type", "iso_level", "conc_1", "conc_2"),
+  allow_mismatch = FALSE,
   title = NULL,
   description = NULL,
   source_name = NULL,
@@ -24,6 +25,10 @@ that can arise from multiple projects.}
 
 \item{discard_keys}{Character vector of strings that will be discarded
 during creating BumpyMatrix object.}
+
+\item{allow_mismatch}{Logical; merge even when the inputs contradict each other,
+i.e. the same \code{fit_source} was produced by different fits (see
+\code{\link{merge_compatibility}}). A warning then lists the contradictions.}
 
 \item{title}{String specifying the final DataSetDB title. If NULL, auto-generates.}
 
