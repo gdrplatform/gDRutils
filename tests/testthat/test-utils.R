@@ -1108,6 +1108,12 @@ test_that(".standardize_conc works as expected", {
   concs <- 10 ^ (seq(-1, 1, 0.9))
   obs <- .standardize_conc(concs)
   expect_equal(obs, c(0.1, 0.794, 6.31))
+
+  # a series of more than four concentrations covers the whole range, also with a top
+  # concentration above 1
+  concs <- 10 ^ (seq(-3, 1, 0.5))
+  expect_equal(.standardize_conc(concs), round_concentration(concs, 3))
+  expect_equal(.standardize_conc(concs / 1000), round_concentration(concs / 1000, 3))
 })
 
 test_that(".calculate_dilution_ratio works as expected", {
