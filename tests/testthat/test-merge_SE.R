@@ -72,6 +72,27 @@ test_that("merge_SE works as expected", {
   reset_env_identifiers()
 })
 
+test_that("merge_SE names an input without a name by its position", {
+  merged <- purrr::quietly(merge_SE)(unname(listSE))$result
+  expect_setequal(unique(convert_se_assay_to_dt(merged, "Metrics")$data_source), c("1", "2"))
+
+  partly <- purrr::quietly(merge_SE)(list(a = listSE[[1]], listSE[[2]]))$result
+  expect_setequal(unique(convert_se_assay_to_dt(partly, "Metrics")$data_source), c("a", "2"))
+})
+
+test_that("merge_SE keeps the identifiers it was built with in the metadata", {
+  merged <- purrr::quietly(merge_SE)(listSE)$result
+  expect_identical(S4Vectors::metadata(merged)$identifiers,
+                   S4Vectors::metadata(listSE[[1]])$identifiers)
+
+  # the first input has no identifiers of its own
+  no_ids <- listSE[[1]]
+  S4Vectors::metadata(no_ids)$identifiers <- NULL
+  md <- S4Vectors::metadata(purrr::quietly(merge_SE)(list(a = no_ids, b = listSE[[2]]))$result)
+  expect_false(anyNA(names(md)))
+  expect_identical(md$identifiers, md$merge_report$target_identifiers)
+})
+
 
 test_that("merge_SE works as expected with combo matrix data", {
   mergedSE <- purrr::quietly(merge_SE)(listSE2)
