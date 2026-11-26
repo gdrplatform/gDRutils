@@ -230,7 +230,8 @@ loop <- function(x,
     total_iterations <- length(x)
     batch_size <- min(batch_size, total_iterations)
 
-    indices <- seq(batch_size, total_iterations, by = batch_size)
+    # the last index of every batch; the last batch may be shorter
+    indices <- unique(c(seq(batch_size, total_iterations, by = batch_size), total_iterations))
 
     completed_batches <- vapply(indices, function(start_index) {
       file_path <- file.path(temp_dir,
@@ -247,10 +248,10 @@ loop <- function(x,
       start_index <- indices[length(indices)] + batch_size
     }
 
-    apply_fun(indices[indices >= start_index], function(start_index) {
-      end_index <- min(start_index, total_iterations)
-      process_batch(x[(start_index - batch_size + 1):end_index],
-                    start_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
+    apply_fun(indices[indices >= start_index], function(end_index) {
+      first_index <- max(c(0, indices[indices < end_index])) + 1
+      process_batch(x[first_index:end_index],
+                    end_index, fun_name, unique_id, total_iterations, temp_dir, FUN, ...)
     })
 
     final_results <- vector("list", length(indices))
