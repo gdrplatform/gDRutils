@@ -12,7 +12,8 @@
           "enum": [
             "single-agent",
             "co-dilution",
-            "combination"
+            "combination",
+            "time-course"
           ]
         },
       "minItems": 1,

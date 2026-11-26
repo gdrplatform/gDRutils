@@ -85,3 +85,12 @@ test_that("validate accepts an unknown duration", {
   # any other text is still rejected
   expect_false(validate_json(convert_se_to_json(make_se(c("72h", "NA"))), schema_path = schema_path))
 })
+
+test_that("the MAE schema accepts every supported experiment type", {
+  se <- get_synthetic_data("finalMAE_small")[[1]]
+  experiments <- stats::setNames(rep(list(se), length(get_supported_experiments())),
+                                 get_supported_experiments())
+  mae <- MultiAssayExperiment::MultiAssayExperiment(experiments = experiments)
+  mae_schema <- file.path(system.file("schemas", package = "gDRutils"), "mae.json")
+  expect_true(validate_json(convert_mae_to_json(mae)[["mae"]], mae_schema))
+})

@@ -1,3 +1,6 @@
+## gDRutils 1.13.6 - 2026-11-26
+* fix the MAE JSON schema to accept time-course experiments
+
 ## gDRutils 1.13.5 - 2026-11-24
 * add `merge_compatibility()`, a report of what the inputs of `merge_SE()` have in common and where they differ
 * change `merge_SE()` to rename identifiers to the first input's and keep every input's provenance in `provenance$sources`
