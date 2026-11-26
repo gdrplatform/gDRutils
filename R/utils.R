@@ -1341,7 +1341,7 @@ map_conc_to_standardized_conc <- function(conc1, conc2) {
     # 4 is determined by the fewest number of concentrations required to be
     # considered a "matrix".
     log10_step <- .calculate_dilution_ratio(conc)
-    num_steps <- round((log10(max(conc)) - log10(min(conc)) / log10_step), 0)
+    num_steps <- round((log10(max(conc)) - log10(min(conc))) / log10_step, 0)
     seqs <- log10(max(conc)) - (log10_step * c(0:num_steps))
     sort(round_concentration(10 ^ seqs, 3))
   } else {
