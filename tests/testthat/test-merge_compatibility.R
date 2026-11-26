@@ -81,6 +81,29 @@ test_that("the same fit_source made by different methods is a contradiction; oth
 })
 
 
+test_that("another function or solver from the same package is another method", {
+  rec <- function(fn, solver = NULL, name = NULL) {
+    list(called_by = "apply_fit", fn = .describe_fn(fn, name),
+         fn_args = if (!is.null(solver)) list(solver = .describe_fn(solver)))
+  }
+  sig <- function(...) .recipe_signature(rec(...))
+
+  expect_false(identical(sig(stats::median), sig(stats::quantile)))
+  expect_false(identical(sig(stats::median, stats::optim), sig(stats::median, stats::nlminb)))
+  expect_identical(sig(stats::median, stats::optim), sig(stats::median, stats::optim))
+
+  # the package version is not part of the method
+  other_version <- rec(stats::median)
+  other_version$fn$version <- "0.0.1"
+  other_version$fn$hash <- "0"
+  expect_identical(.recipe_signature(other_version), sig(stats::median))
+
+  # a function written in the session is known by its code, not by the name it was given
+  user_fn <- .as_user_mc(function(x) mean(x))
+  expect_identical(sig(user_fn, name = "f"), sig(user_fn, name = "g"))
+})
+
+
 test_that("fits of different kinds under one label are a difference, not a contradiction", {
   # e.g. the Metrics of a combination experiment come from another step than those of a
   # single-agent experiment, both labelled "gDR"
