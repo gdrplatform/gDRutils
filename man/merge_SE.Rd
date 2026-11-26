@@ -13,7 +13,8 @@ merge_SE(
 )
 }
 \arguments{
-\item{SElist}{named list of Summarized Experiments}
+\item{SElist}{named list of Summarized Experiments; an input without a name is
+named by its position}
 
 \item{additional_col_name}{string with the name of the column that will be
 added to assay data for the distinction of possible duplicated metrics
