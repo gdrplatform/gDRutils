@@ -156,14 +156,16 @@ print.merge_compatibility <- function(x, ...) {
 
 
 # The method of a fit as a signature: the function and any function passed to it (a
-# solver), not its settings, the package version it ran in, the label of the function
-# or the data it ran on.
+# solver), not its settings, the package version it ran in or the data it ran on. A
+# package function is identified by its package and name; a function whose source is
+# stored by that source, so the name it was given in the session does not count.
 #' @keywords internal
 .recipe_signature <- function(recipe) {
   keep <- function(rec) {
-    if (is.null(rec)) NULL else rec[setdiff(names(rec), c(
-      "name", "info", "env", "not_stored", "version", "git_sha", "hash", "dependencies"
-    ))]
+    if (is.null(rec)) return(NULL)
+    drop <- c("info", "env", "not_stored", "version", "git_sha", "hash", "dependencies")
+    if (!is.null(rec$source)) drop <- c(drop, "name")
+    rec[setdiff(names(rec), drop)]
   }
   digest::digest(list(
     called_by = recipe$called_by,
