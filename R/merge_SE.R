@@ -236,11 +236,12 @@ merge_SE <- function(SElist,
                               nested_keys = intersect(additional_col_name, names(merged_assays$Averaged$DT)))
   data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
+  # the result keeps the identifiers it was built with, also when the first input
+  # has none of its own
   identifiers <- NULL
-  identifiersNames <- "identifiers"
-  if (identifiersNames %in% metadataNames) {
-    metadataNames <- setdiff(metadataNames, identifiersNames)
-    identifiers <- S4Vectors::metadata(SElist[[1]])[identifiersNames]
+  if ("identifiers" %in% metadataNames) {
+    metadataNames <- setdiff(metadataNames, "identifiers")
+    identifiers <- list(identifiers = SE_identifiers)
   }
 
   metadata <- merge_metadata(SElist, metadataNames)
