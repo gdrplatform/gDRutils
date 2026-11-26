@@ -13,7 +13,8 @@ merge_assay(
 )
 }
 \arguments{
-\item{SElist}{named list of Summarized Experiments}
+\item{SElist}{named list of Summarized Experiments; an input without a name is
+named by its position}
 
 \item{assay_name}{name of the assay that should be extracted and merged}
 

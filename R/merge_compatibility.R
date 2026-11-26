@@ -46,10 +46,8 @@
 #' @export
 merge_compatibility <- function(SElist) {
   checkmate::assert_list(SElist, types = "SummarizedExperiment", min.len = 1L)
+  SElist <- .name_inputs(SElist)
   nms <- names(SElist)
-  if (is.null(nms)) nms <- rep("", length(SElist))
-  nms[nms == ""] <- as.character(which(nms == ""))
-  names(SElist) <- nms
   first <- nms[[1L]]
 
   paste_value <- function(x) paste(format(x), collapse = " | ")
@@ -286,6 +284,18 @@ print.merge_compatibility <- function(x, ...) {
     target_identifiers = target_identifiers,
     allow_mismatch = allow_mismatch
   ))
+}
+
+
+# Name the inputs of a merge: an input without a name is named by its position, so
+# every input has a name for the data_source column and the provenance.
+#' @keywords internal
+.name_inputs <- function(x) {
+  nms <- names(x)
+  if (is.null(nms)) nms <- rep("", length(x))
+  nms[is.na(nms) | nms == ""] <- as.character(which(is.na(nms) | nms == ""))
+  names(x) <- nms
+  x
 }
 
 

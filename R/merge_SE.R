@@ -147,7 +147,8 @@ merge_MAE <- function(MAElist,
 
 #' Merge multiple Summarized Experiments
 #'
-#' @param SElist named list of Summarized Experiments
+#' @param SElist named list of Summarized Experiments; an input without a name is
+#' named by its position
 #' @param additional_col_name string with the name of the column that will be
 #' added to assay data for the distinction of possible duplicated metrics
 #' that can arise from multiple projects
@@ -191,6 +192,7 @@ merge_SE <- function(SElist,
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   checkmate::assert_flag(allow_mismatch)
+  SElist <- .name_inputs(SElist)
 
   report <- merge_compatibility(SElist)
   contradictions <- report$issues[report$issues$severity == "contradiction", ]
@@ -234,11 +236,12 @@ merge_SE <- function(SElist,
                               nested_keys = intersect(additional_col_name, names(merged_assays$Averaged$DT)))
   data$treatment_md$cId <- NULL
   metadataNames <- identify_unique_se_metadata_fields(SElist)
+  # the result keeps the identifiers it was built with, also when the first input
+  # has none of its own
   identifiers <- NULL
-  identifiersNames <- "identifiers"
-  if (identifiersNames %in% metadataNames) {
-    metadataNames <- setdiff(metadataNames, identifiersNames)
-    identifiers <- S4Vectors::metadata(SElist[[1]])[identifiersNames]
+  if ("identifiers" %in% metadataNames) {
+    metadataNames <- setdiff(metadataNames, "identifiers")
+    identifiers <- list(identifiers = SE_identifiers)
   }
 
   metadata <- merge_metadata(SElist, metadataNames)
@@ -270,7 +273,8 @@ merge_SE <- function(SElist,
 
 #' Merge assay data
 #'
-#' @param SElist named list of Summarized Experiments
+#' @param SElist named list of Summarized Experiments; an input without a name is
+#' named by its position
 #' @param assay_name name of the assay that should be extracted and merged
 #' @param additional_col_name string of column name that will be
 #' added to assay data for the distinction of possible duplicated metrics
@@ -306,6 +310,7 @@ merge_assay <- function(SElist,
   checkmate::assert_string(additional_col_name, null.ok = TRUE)
   checkmate::assert_character(discard_keys, null.ok = TRUE)
   checkmate::assert_list(target_identifiers, types = "character", names = "unique", null.ok = TRUE)
+  SElist <- .name_inputs(SElist)
 
   if (is.null(target_identifiers)) target_identifiers <- get_SE_identifiers(SElist[[1L]])
   local_identifiers(target_identifiers)
