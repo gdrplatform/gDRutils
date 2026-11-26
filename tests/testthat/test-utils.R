@@ -191,6 +191,17 @@ test_that("loop works as expected", {
   expect_equal(names(sumOfNamedListBatch), names(namedListRunif))
 })
 
+test_that("loop keeps the last batch when it is shorter than batch_size", {
+  temp_dir <- withr::local_tempdir()
+  squares <- loop(as.list(1:10), function(x) x^2, parallelize = FALSE, use_batch = TRUE,
+                  batch_size = 3, temp_dir = temp_dir)
+  expect_equal(unlist(squares), (1:10)^2)
+
+  # a single batch larger than the input
+  expect_equal(unlist(loop(as.list(1:4), function(x) x^2, parallelize = FALSE, use_batch = TRUE,
+                           batch_size = 10, temp_dir = temp_dir)), (1:4)^2)
+})
+
 test_that(".get_parallel_workers caps the number of workers", {
   mockery::stub(.get_parallel_workers, "parallel::detectCores", 256L)
 
