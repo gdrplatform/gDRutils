@@ -1,6 +1,36 @@
-## gDRutils 1.11.31 - 2026-11-23
+## gDRutils 1.13.6 - 2026-11-27
 * fix `get_env_identifiers(simplify = FALSE)` returning an empty list instead of every identifier when no key is given
-* fix `set_env_identifier()` deleting the identifier when given `NULL`; it now requires a non-empty character vector
+* fix `set_env_identifier()` deleting the identifier when given `NULL`; it now stops on `NULL` or an empty vector
+
+## gDRutils 1.13.5 - 2026-11-24
+* add `merge_compatibility()`, a report of what the inputs of `merge_SE()` have in common and where they differ
+* change `merge_SE()` to rename identifiers to the first input's and keep every input's provenance in `provenance$sources`
+* change `merge_SE()` and `merge_MAE()` to stop on a `fit_source` fitted differently, unless `allow_mismatch = TRUE`
+
+## gDRutils 1.13.4 - 2026-11-24
+* add a `fit_id` column (hash of fit source, function, settings) and `get_fit_recipe()`; wide tables widen it
+* add a `fit_message` column (solver failure message, empty if none) and record the solver by its registry name
+* change the provenance schema to 2; rows and objects without a `fit_id` take their `fit_source` as `fit_id`
+
+## gDRutils 1.13.3 - 2026-11-24
+* fix `solver_drc()` reporting a failed drc fit as converged, so the curve gets `DRCInvalidFitResult`
+* make solvers take `control`, and warn with the error when a solver fails
+
+## gDRutils 1.13.2 - 2026-11-24
+* add `local_identifiers()`; SE entry points read with the SE's own identifiers, ahead of the session's
+* add `canonical_identifiers()` and `same_identifiers()`; `update_env_idfs_from_mae()` checks every experiment
+* add a `validate_SE()` check that the SE's identifiers name columns it has
+
+## gDRutils 1.13.1 - 2026-11-24
+* synchronize Bioconductor and GitHub versioning
+
+## gDRutils 1.11.32 - 2026-11-23
+* allow NA duration in the SE JSON schema, as for PRISM data without assay time, and describe it in hours
+* fix merge_MAE() ignoring additional_col_name and discard_keys; it now passes them on to merge_SE()
+
+## gDRutils 1.11.31 - 2026-11-23
+* deprecate `fit_curves()` and `logisticFit()` for one release, as wrappers over `fit_drug_response_metrics()`
+* fix the fit provenance dropping a function passed inside a list argument, e.g. a combination solver
 
 ## gDRutils 1.11.30 - 2026-11-23
 * add `architecture/identifiers.md`, diagrams of where identifiers live and how the gDR packages use them

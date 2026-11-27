@@ -9,11 +9,15 @@
 #
 #   provenance
 #     schema_version  integer, bumped when the layout changes
-#     fits            <assay> -> <fit_source> -> recipe
+#     fits            <assay> -> <fit_id> -> recipe (each recipe carries its fit_source)
 #     steps           processing steps before the fit (filled by gDRcore)
 #     sources         <data_source> -> provenance of each SE combined by merge_SE()
 #
-# The fit_source column of an assay is the key into fits[[assay]]. A recipe holds a
+# The fit_id column of an assay is the key into fits[[assay]]: a hash of what the recipe
+# does, so a partial refit with other settings under the same fit_source leaves the
+# recipe of the rows it did not touch alone. Rows without a fit_id (objects from before
+# schema 2, or results written without apply_fit()) take their fit_source as fit_id.
+# A recipe holds a
 # record of the fit function (.describe_fn()), the arguments passed in fit_args, the
 # call settings and a short run block.
 #
@@ -23,7 +27,7 @@
 # session, an inline function, a closure) is stored as source code together with
 # the values and helper functions it uses, since it cannot be recovered otherwise.
 
-.provenance_schema_version <- 1L
+.provenance_schema_version <- 2L
 
 # Captured values and fit_args are stored only when they are plain data no larger
 # than this; anything bigger is listed by name instead, so a fit never grows the SE
@@ -128,11 +132,16 @@ set_fit_fn_info <- function(fn,
 #' @param data_source string; for an SE built by \code{\link{merge_SE}}, the
 #'   name of the merged object the rows come from (the \code{data_source}
 #'   column). \code{NULL} reads the fits done on \code{se} itself.
+#' @param fit_id string; value of the \code{fit_id} column, which names one recipe.
+#'   A \code{fit_source} that holds rows of several recipes (a partial refit with
+#'   other settings) needs it. \code{NULL} takes the only recipe of \code{fit_source}.
 #'
 #' @return \code{get_SE_provenance()}: the whole provenance entry, or
-#'   \code{NULL} for objects without one. \code{get_fit_provenance()}: one
-#'   recipe. \code{summarize_fit_provenance()}: a \code{data.table} with one
-#'   row per recorded fit.
+#'   \code{NULL} for objects without one. \code{get_fit_provenance()} and
+#'   \code{get_fit_recipe()}: one recipe, which names its \code{fit_id} and
+#'   \code{fit_source}. \code{summarize_fit_provenance()}: a \code{data.table}
+#'   with one row per recorded fit: its \code{fit_id}, \code{fit_source},
+#'   function, solver and arguments.
 #'
 #' @examples
 #' mae <- get_synthetic_data("finalMAE_small.qs2")
@@ -162,11 +171,13 @@ get_SE_provenance <- function(se) {
 #' @rdname fit_provenance
 #' @export
 #'
-get_fit_provenance <- function(se, assay, fit_source, data_source = NULL) {
+get_fit_provenance <- function(se, assay, fit_source = NULL, data_source = NULL, fit_id = NULL) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay)
-  checkmate::assert_string(fit_source)
+  checkmate::assert_string(fit_source, null.ok = TRUE)
   checkmate::assert_string(data_source, null.ok = TRUE)
+  checkmate::assert_string(fit_id, null.ok = TRUE)
+  if (is.null(fit_source) && is.null(fit_id)) stop("give a fit_source or a fit_id")
 
   prov <- get_SE_provenance(se)
   if (!is.null(data_source)) {
@@ -175,7 +186,16 @@ get_fit_provenance <- function(se, assay, fit_source, data_source = NULL) {
       stop(sprintf("no provenance recorded for data_source '%s'", data_source))
     }
   }
-  .find_recipe(prov, assay, fit_source)
+  .find_recipe(prov, assay, fit_source, fit_id)
+}
+
+
+#' @rdname fit_provenance
+#' @export
+#'
+get_fit_recipe <- function(se, assay, fit_id, data_source = NULL) {
+  checkmate::assert_string(fit_id)
+  get_fit_provenance(se, assay, data_source = data_source, fit_id = fit_id)
 }
 
 
@@ -221,10 +241,12 @@ summarize_fit_provenance <- function(se) {
 #' @keywords provenance
 #' @export
 #'
-refit_from_provenance <- function(se, assay, fit_source, allow_source = FALSE) {
+refit_from_provenance <- function(se, assay, fit_source = NULL, allow_source = FALSE, fit_id = NULL) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_flag(allow_source)
-  recipe <- get_fit_provenance(se, assay, fit_source)
+  recipe <- get_fit_provenance(se, assay, fit_source, fit_id = fit_id)
+  fit_source <- recipe$fit_source
+  ids_before <- .recipes_for(get_SE_provenance(se), recipe$output_assay, fit_source)
 
   fn <- .restore_fn(recipe$fn, allow_source)
   summary_fn <- if (!is.null(recipe$summary_fn)) .restore_fn(recipe$summary_fn, allow_source)
@@ -238,7 +260,7 @@ refit_from_provenance <- function(se, assay, fit_source, allow_source = FALSE) {
   if (is.null(fit_args)) fit_args <- list()
   # functions passed as arguments (e.g. a score function) are stored as records
   fn_args <- lapply(recipe[["fn_args"]], .restore_fn, allow_source = allow_source)
-  fit_args <- c(fit_args, fn_args)
+  fit_args <- .join_nested_fns(fit_args, fn_args)
   output_assay <- recipe$output_assay
 
   # Re-run with merge = "merge" whatever the original call used: "replace" would
@@ -277,14 +299,18 @@ refit_from_provenance <- function(se, assay, fit_source, allow_source = FALSE) {
 
   # The new recipe describes the rebuilt function, which no longer carries the
   # name it was called by or its runtime hook; keep those from the original.
-  new_recipe <- S4Vectors::metadata(se)$provenance$fits[[output_assay]][[fit_source]]
+  # Re-fitting with other code or settings gives another fit_id; the old recipe goes
+  # once none of its rows is left.
+  ids_after <- .recipes_for(get_SE_provenance(se), output_assay, fit_source)
+  new_id <- if (recipe$fit_id %in% ids_after) recipe$fit_id else setdiff(ids_after, ids_before)[1L]
+  new_recipe <- if (!is.na(new_id)) S4Vectors::metadata(se)$provenance$fits[[output_assay]][[new_id]]
   if (!is.null(new_recipe)) {
     for (slot in c("fn", "summary_fn")) {
       for (field in c("name", "env", "info")) {
         if (!is.null(recipe[[slot]][[field]])) new_recipe[[slot]][[field]] <- recipe[[slot]][[field]]
       }
     }
-    S4Vectors::metadata(se)$provenance$fits[[output_assay]][[fit_source]] <- new_recipe
+    S4Vectors::metadata(se)$provenance$fits[[output_assay]][[new_id]] <- new_recipe
   }
   se
 }
@@ -298,11 +324,12 @@ refit_from_provenance <- function(se, assay, fit_source, allow_source = FALSE) {
 #' @inheritParams refit_from_provenance
 #' @param assay string or \code{NULL}; check only fits written to this assay.
 #' @param fit_source string or \code{NULL}; check only this fit source.
+#' @param fit_id string or \code{NULL}; check only this recipe.
 #' @param tolerance numeric; relative tolerance for numeric columns, as in
 #'   \code{\link[base]{all.equal}}.
 #'
 #' @return \code{data.table} with one row per checked fit: \code{assay},
-#'   \code{fit_source}, \code{reproducible} (\code{NA} when the fit could not
+#'   \code{fit_source}, \code{fit_id}, \code{reproducible} (\code{NA} when the fit could not
 #'   be re-run), \code{n_rows} and \code{detail}.
 #'
 #' @examples
@@ -321,33 +348,37 @@ check_reproducibility <- function(se,
                                   assay = NULL,
                                   fit_source = NULL,
                                   tolerance = sqrt(.Machine$double.eps),
-                                  allow_source = FALSE) {
+                                  allow_source = FALSE,
+                                  fit_id = NULL) {
   checkmate::assert_class(se, "SummarizedExperiment")
   checkmate::assert_string(assay, null.ok = TRUE)
   checkmate::assert_string(fit_source, null.ok = TRUE)
+  checkmate::assert_string(fit_id, null.ok = TRUE)
   checkmate::assert_number(tolerance, lower = 0)
   checkmate::assert_flag(allow_source)
 
-  fits <- get_SE_provenance(se)$fits
+  fits <- .normalize_provenance(get_SE_provenance(se))$fits
   targets <- list()
   for (a in names(fits)) {
-    for (s in names(fits[[a]])) {
+    for (k in names(fits[[a]])) {
+      recipe <- fits[[a]][[k]]
       # summary assays point at the fit that wrote them and are checked with it
-      if (!is.null(fits[[a]][[s]]$summary_of)) next
+      if (!is.null(recipe$summary_of)) next
       if (!is.null(assay) && a != assay) next
-      if (!is.null(fit_source) && s != fit_source) next
-      targets[[length(targets) + 1L]] <- c(assay = a, fit_source = s)
+      if (!is.null(fit_source) && recipe$fit_source != fit_source) next
+      if (!is.null(fit_id) && k != fit_id) next
+      targets[[length(targets) + 1L]] <- c(assay = a, fit_source = recipe$fit_source, fit_id = k)
     }
   }
   if (length(targets) == 0L) {
     return(data.table::data.table(
-      assay = character(0), fit_source = character(0), reproducible = logical(0),
-      n_rows = integer(0), detail = character(0)
+      assay = character(0), fit_source = character(0), fit_id = character(0),
+      reproducible = logical(0), n_rows = integer(0), detail = character(0)
     ))
   }
 
   data.table::rbindlist(lapply(targets, function(t) {
-    .check_one_fit(se, t[["assay"]], t[["fit_source"]], tolerance, allow_source)
+    .check_one_fit(se, t[["assay"]], t[["fit_source"]], t[["fit_id"]], tolerance, allow_source)
   }))
 }
 
@@ -441,7 +472,8 @@ record_fit_provenance <- function(se,
     input_hash = if (!is.null(input_assay)) .assay_hash(se, input_assay),
     n_rows = NROW(.fit_rows(se, assay, fit_source))
   )
-  .record_fit(se, assay, fit_source, recipe, replace = replace)
+  # the rows were written by the caller, without a fit_id: they stand for it by fit_source
+  .record_fit(se, assay, fit_source, fit_source, recipe, replace = replace)
 }
 
 
@@ -510,16 +542,23 @@ record_processing_step <- function(se,
                         slicing_values,
                         merge,
                         input_hash,
-                        n_rows) {
+                        n_rows,
+                        solver = NULL) {
   is_fn <- vapply(fit_args, is.function, logical(1))
   fn_args <- lapply(fit_args[is_fn], .describe_fn)
-  stored_args <- .split_storable(fit_args[!is_fn])
+  # A function one level down, e.g. fit_args = list(fit_args = list(solver = f)) for
+  # a function that forwards its own fit_args, is described the same way and stored
+  # under "<arg>$<name>"; the rest of that list is stored as plain data.
+  nested <- .split_nested_fns(fit_args[!is_fn])
+  fn_args <- c(fn_args, nested$fn_args)
+  stored_args <- .split_storable(nested$args)
   .drop_null(list(
     called_by = called_by,
     fn = fn_record,
     fit_args = if (length(stored_args$stored) > 0L) stored_args$stored,
     fn_args = if (length(fn_args) > 0L) fn_args,
     args_not_stored = if (length(stored_args$not_stored) > 0L) stored_args$not_stored,
+    solver = solver,
     summary_fn = summary_record,
     data_type = data_type,
     input_assay = input_assay,
@@ -540,19 +579,25 @@ record_processing_step <- function(se,
 }
 
 
-# Store a recipe under fits[[assay]][[fit_source]]. merge = "replace" overwrote the
-# whole assay, so the recipes of the other fit sources in it no longer apply.
+# Store a recipe under fits[[assay]][[fit_id]]. merge = "replace" overwrote the
+# whole assay, so the recipes of the other fits in it no longer apply.
 #' @keywords internal
-.record_fit <- function(se, assay, fit_source, recipe, replace = FALSE, summary_assay = NULL) {
+.record_fit <- function(se, assay, fit_id, fit_source, recipe, replace = FALSE,
+                        summary_assay = NULL) {
   prov <- S4Vectors::metadata(se)[["provenance"]]
   if (is.null(prov)) {
     prov <- list(schema_version = .provenance_schema_version, fits = list(), steps = list())
   }
+  # an object from before schema 2 keys its recipes by fit_source; name them as they are read
+  prov <- .normalize_provenance(prov)
+  prov$schema_version <- .provenance_schema_version
   if (replace || is.null(prov$fits[[assay]])) prov$fits[[assay]] <- list()
-  prov$fits[[assay]][[fit_source]] <- recipe
+  prov$fits[[assay]][[fit_id]] <- c(list(fit_id = fit_id, fit_source = fit_source), recipe)
   if (!is.null(summary_assay)) {
     if (is.null(prov$fits[[summary_assay]])) prov$fits[[summary_assay]] <- list()
-    prov$fits[[summary_assay]][[fit_source]] <- list(summary_of = assay)
+    prov$fits[[summary_assay]][[fit_id]] <- list(
+      fit_id = fit_id, fit_source = fit_source, summary_of = assay
+    )
   }
   S4Vectors::metadata(se)[["provenance"]] <- prov
 
@@ -570,11 +615,26 @@ record_processing_step <- function(se,
 
 
 # Provenance of an SE built by merge_SE(): nothing was fitted on the merged object
-# itself, so each input keeps its own provenance under its data_source name.
+# itself, so each input keeps its own provenance under its data_source name, with the
+# identifiers, fit parameters and package versions it was processed with. An input
+# without provenance is listed too, as recorded = FALSE.
 #' @keywords internal
 .merge_provenance <- function(SElist) {
-  sources <- lapply(SElist, function(se) S4Vectors::metadata(se)[["provenance"]])
-  sources <- sources[!vapply(sources, is.null, logical(1))]
+  sources <- lapply(SElist, function(se) {
+    prov <- S4Vectors::metadata(se)[["provenance"]]
+    if (is.null(prov)) {
+      prov <- list(schema_version = .provenance_schema_version, fits = list(), steps = list(),
+                   recorded = FALSE)
+    }
+    processing <- tryCatch(get_SE_processing_metadata(se), error = function(e) NULL)
+    prov$metadata <- .drop_null(list(
+      identifiers = S4Vectors::metadata(se)[["identifiers"]],
+      fit_parameters = tryCatch(get_SE_fit_parameters(se), error = function(e) NULL),
+      date_processed = if (!is.null(processing$date_processed)) as.character(processing$date_processed),
+      versions = processing$versions
+    ))
+    prov
+  })
   list(
     schema_version = .provenance_schema_version,
     fits = list(),
@@ -772,6 +832,38 @@ record_processing_step <- function(se,
 }
 
 
+# Move the functions held in list arguments out to fn_args, named "<arg>$<name>".
+#' @keywords internal
+.split_nested_fns <- function(args) {
+  fn_args <- list()
+  for (a in names(args)) {
+    x <- args[[a]]
+    if (!is.list(x) || is.data.frame(x) || is.null(names(x))) next
+    is_fn <- vapply(x, is.function, logical(1))
+    if (!any(is_fn)) next
+    fn_args[paste0(a, "$", names(x)[is_fn])] <- lapply(x[is_fn], .describe_fn)
+    args[[a]] <- x[!is_fn]
+  }
+  list(args = args, fn_args = fn_args)
+}
+
+
+# Put restored functions back: "<arg>$<name>" into list argument <arg>, the rest at the
+# top level.
+#' @keywords internal
+.join_nested_fns <- function(fit_args, fn_args) {
+  nested <- grepl("$", names(fn_args), fixed = TRUE)
+  for (nm in names(fn_args)[nested]) {
+    parts <- strsplit(nm, "$", fixed = TRUE)[[1]]
+    a <- parts[1]
+    inner <- paste(parts[-1], collapse = "$")
+    if (is.null(fit_args[[a]])) fit_args[[a]] <- list()
+    fit_args[[a]][[inner]] <- fn_args[[nm]]
+  }
+  c(fit_args, fn_args[!nested])
+}
+
+
 #' @keywords internal
 .split_storable <- function(x, max_bytes = .provenance_max_value_bytes) {
   if (length(x) == 0L) return(list(stored = list(), not_stored = character(0)))
@@ -926,8 +1018,9 @@ record_processing_step <- function(se,
 
 # Re-run one fit and compare it with the stored rows.
 #' @keywords internal
-.check_one_fit <- function(se, assay, fit_source, tolerance, allow_source) {
-  recipe <- get_fit_provenance(se, assay, fit_source)
+.check_one_fit <- function(se, assay, fit_source, fit_id, tolerance, allow_source) {
+  recipe <- get_fit_provenance(se, assay, fit_source, fit_id = fit_id)
+  ids_before <- .recipes_for(get_SE_provenance(se), assay, fit_source)
   notes <- character(0)
   input_assay <- recipe$input_assay
   if (!is.null(input_assay) && input_assay %in% SummarizedExperiment::assayNames(se) &&
@@ -939,7 +1032,7 @@ record_processing_step <- function(se,
   # raised when the fit was first run.
   refit <- tryCatch(
     withCallingHandlers(
-      refit_from_provenance(se, assay, fit_source, allow_source = allow_source),
+      refit_from_provenance(se, assay, fit_source, allow_source = allow_source, fit_id = fit_id),
       gDRutils_provenance_warning = function(w) {
         notes <<- c(notes, conditionMessage(w))
         invokeRestart("muffleWarning")
@@ -949,19 +1042,25 @@ record_processing_step <- function(se,
     error = function(e) e
   )
 
-  stored <- .fit_rows(se, assay, fit_source)
+  stored <- .fit_rows(se, assay, fit_source, fit_id)
   if (inherits(refit, "error")) {
     return(data.table::data.table(
-      assay = assay, fit_source = fit_source, reproducible = NA,
+      assay = assay, fit_source = fit_source, fit_id = fit_id, reproducible = NA,
       n_rows = NROW(stored), detail = paste(c(conditionMessage(refit), notes), collapse = "; ")
     ))
   }
 
-  diffs <- .compare_rows(stored, .fit_rows(refit, assay, fit_source), tolerance)
+  # other code or settings give another fit_id; the rows are then compared by it
+  ids_after <- .recipes_for(get_SE_provenance(refit), assay, fit_source)
+  new_id <- if (fit_id %in% ids_after) fit_id else setdiff(ids_after, ids_before)[1L]
+  if (!is.na(new_id) && !identical(new_id, fit_id)) {
+    notes <- c(notes, sprintf("the fit now has fit_id %s, not %s", new_id, fit_id))
+  }
+  diffs <- .compare_rows(stored, .fit_rows(refit, assay, fit_source, new_id), tolerance)
   if (!is.null(recipe$summary_assay)) {
     summary_diffs <- .compare_rows(
-      .fit_rows(se, recipe$summary_assay, fit_source),
-      .fit_rows(refit, recipe$summary_assay, fit_source),
+      .fit_rows(se, recipe$summary_assay, fit_source, fit_id),
+      .fit_rows(refit, recipe$summary_assay, fit_source, new_id),
       tolerance
     )
     if (length(summary_diffs) > 0L) diffs <- c(diffs, paste(recipe$summary_assay, summary_diffs))
@@ -970,6 +1069,7 @@ record_processing_step <- function(se,
   data.table::data.table(
     assay = assay,
     fit_source = fit_source,
+    fit_id = fit_id,
     reproducible = length(diffs) == 0L,
     n_rows = NROW(stored),
     detail = paste(c(if (length(diffs) == 0L) "results match" else diffs, notes), collapse = "; ")
@@ -977,18 +1077,18 @@ record_processing_step <- function(se,
 }
 
 
-# Rows of one fit source in an assay, in a stable order and with factors as strings.
+# Rows of one fit source (and, when given, one recipe) in an assay, in a stable order and
+# with factors as strings.
 #' @keywords internal
-.fit_rows <- function(se, assay, fit_source) {
+.fit_rows <- function(se, assay, fit_source, fit_id = NULL) {
   if (!assay %in% SummarizedExperiment::assayNames(se)) return(data.table::data.table())
-  dt <- data.table::as.data.table(BumpyMatrix::unsplitAsDataFrame(
-    SummarizedExperiment::assay(se, assay), row.field = "row", column.field = "column"
-  ))
+  dt <- .assay_dt(se, assay)
   # an assay without a fit_source column (e.g. combination excess) holds one fit
   if ("fit_source" %in% names(dt)) {
     # compute the filter outside [.data.table, where `fit_source` would name the column;
     # a single symbol in i is evaluated in the calling scope
     keep <- as.character(dt[["fit_source"]]) == fit_source
+    if (!is.null(fit_id)) keep <- keep & .row_fit_id(dt) == fit_id
     dt <- dt[keep]
   }
   for (col in names(dt)) {
@@ -1004,6 +1104,12 @@ record_processing_step <- function(se,
 # Differences between two sets of fit rows, as short messages (empty when equal).
 #' @keywords internal
 .compare_rows <- function(stored, refit, tolerance) {
+  # fit_id is compared through the recipes; fit_message only when both sides have it
+  # (rows from before schema 2 have neither)
+  drop <- union("fit_id", if (!all(c("fit_message") %in% names(stored)) ||
+                              !all(c("fit_message") %in% names(refit))) "fit_message")
+  stored <- stored[, setdiff(names(stored), drop), with = FALSE]
+  refit <- refit[, setdiff(names(refit), drop), with = FALSE]
   if (!identical(names(stored), names(refit))) {
     return(sprintf("columns differ: %s", toString(sort(union(
       setdiff(names(stored), names(refit)), setdiff(names(refit), names(stored))
@@ -1022,30 +1128,173 @@ record_processing_step <- function(se,
 ####
 
 #' @keywords internal
-.find_recipe <- function(prov, assay, fit_source) {
-  recipe <- prov$fits[[assay]][[fit_source]]
-  if (is.null(recipe)) {
-    stop(sprintf("no recipe recorded for fit_source '%s' in assay '%s'", fit_source, assay))
+.find_recipe <- function(prov, assay, fit_source = NULL, fit_id = NULL) {
+  recipes <- .normalize_provenance(prov)$fits[[assay]]
+  if (!is.null(fit_id)) {
+    recipe <- recipes[[fit_id]]
+    if (is.null(recipe) || (!is.null(fit_source) && !identical(recipe$fit_source, fit_source))) {
+      stop(sprintf("no recipe recorded for fit_id '%s' in assay '%s'", fit_id, assay))
+    }
+  } else {
+    ids <- .recipes_for(prov, assay, fit_source, summaries = TRUE)
+    if (length(ids) == 0L) {
+      stop(sprintf("no recipe recorded for fit_source '%s' in assay '%s'", fit_source, assay))
+    }
+    if (length(ids) > 1L) {
+      stop(sprintf(
+        "%d recipes are recorded for fit_source '%s' in assay '%s' (fit_id %s); give the fit_id",
+        length(ids), fit_source, assay, toString(ids)
+      ))
+    }
+    recipe <- recipes[[ids]]
   }
-  if (!is.null(recipe$summary_of)) recipe <- .find_recipe(prov, recipe$summary_of, fit_source)
+  if (!is.null(recipe$summary_of)) {
+    recipe <- .find_recipe(prov, recipe$summary_of, recipe$fit_source, recipe$fit_id)
+  }
   recipe
+}
+
+
+# fit_id of the recipes recorded for a fit_source in an assay.
+#' @keywords internal
+.recipes_for <- function(prov, assay, fit_source = NULL, summaries = FALSE) {
+  recipes <- .normalize_provenance(prov)$fits[[assay]]
+  keep <- vapply(recipes, function(r) {
+    (summaries || is.null(r$summary_of)) && (is.null(fit_source) || identical(r$fit_source, fit_source))
+  }, logical(1))
+  names(recipes)[keep]
+}
+
+
+# Provenance before schema 2 keys its recipes by fit_source and does not name them: the
+# key is both their fit_source and their fit_id.
+#' @keywords internal
+.normalize_provenance <- function(prov) {
+  if (is.null(prov)) return(NULL)
+  for (a in names(prov$fits)) {
+    for (k in names(prov$fits[[a]])) {
+      if (is.null(prov$fits[[a]][[k]]$fit_id)) prov$fits[[a]][[k]]$fit_id <- k
+      if (is.null(prov$fits[[a]][[k]]$fit_source)) prov$fits[[a]][[k]]$fit_source <- k
+    }
+  }
+  for (src in names(prov$sources)) prov$sources[[src]] <- .normalize_provenance(prov$sources[[src]])
+  prov
+}
+
+
+# The recipe each row of an assay was fitted with: its fit_id, or its fit_source where it
+# has none. NULL for an assay that has neither column.
+#' @keywords internal
+.row_fit_id <- function(dt) {
+  src <- if ("fit_source" %in% names(dt)) as.character(dt[["fit_source"]])
+  id <- if ("fit_id" %in% names(dt)) as.character(dt[["fit_id"]])
+  if (is.null(id)) return(src)
+  if (is.null(src)) return(id)
+  ifelse(is.na(id), src, id)
+}
+
+
+#' @keywords internal
+.assay_dt <- function(se, assay) {
+  data.table::as.data.table(BumpyMatrix::unsplitAsDataFrame(
+    SummarizedExperiment::assay(se, assay), row.field = "row", column.field = "column"
+  ))
+}
+
+
+# Drop the recipes of an assay that no row refers to any more, after a refit replaced
+# every row they produced.
+#' @keywords internal
+.prune_fit_recipes <- function(se, assays) {
+  prov <- S4Vectors::metadata(se)[["provenance"]]
+  for (assay in assays) {
+    if (is.null(assay) || length(prov$fits[[assay]]) == 0L ||
+        !assay %in% SummarizedExperiment::assayNames(se)) next
+    live <- unique(.row_fit_id(.assay_dt(se, assay)))
+    if (is.null(live)) next
+    prov$fits[[assay]] <- prov$fits[[assay]][names(prov$fits[[assay]]) %in% live]
+  }
+  S4Vectors::metadata(se)[["provenance"]] <- prov
+  se
+}
+
+
+# fit_id: a short hash of the fit_source and of what the recipe does, not of what it was run
+# on, nor of the build it was run with. It leaves out the slices fitted (a refit of one slice
+# with the same function and settings is the same fit), the run block (data hash, row count),
+# the assay names and the labels of the functions, so the same label, function and settings
+# give the same id on any data. The label is part of it because a recipe carries one fit_source.
+#
+# A function from an installed package is identified by its package and its name there, not by
+# its version, git sha or code hash: those change with every release and build (and the code
+# hash with the R version's formatting), which would change the id of every stored fit and make
+# any reference dataset impossible to reproduce elsewhere. They stay in the recipe, where
+# refit_from_provenance() warns when they differ. Any other function (written in the session,
+# an inline function, a closure) has nothing but its code and the values it reads, so those
+# are what identifies it.
+#' @keywords internal
+.fn_identity <- function(rec) {
+  if (is.null(rec)) return(NULL)
+  if (!is.null(rec$package) && is.null(rec$source)) {
+    return(list(package = rec$package, name = rec$name))
+  }
+  rec[intersect(c("source", "captured", "helpers", "aliases"), names(rec))]
+}
+
+#' @keywords internal
+.recipe_id <- function(recipe, fit_source) {
+  identity <- list(
+    fit_source = fit_source,
+    called_by = recipe$called_by,
+    fn = .fn_identity(recipe$fn),
+    summary_fn = .fn_identity(recipe$summary_fn),
+    fit_args = recipe[["fit_args"]],
+    fn_args = lapply(recipe[["fn_args"]], .fn_identity),
+    args_not_stored = recipe$args_not_stored,
+    solver = recipe$solver,
+    data_type = recipe$data_type,
+    input_assay = recipe$input_assay
+  )
+  substr(digest::digest(identity, algo = "xxhash64"), 1L, 12L)
+}
+
+
+# The solver a fit uses, by its registry name ("custom" for one that is not registered):
+# the one passed in fit_args, or the default of the fit function.
+#' @keywords internal
+.recipe_solver <- function(fn, fit_args) {
+  solver <- fit_args[["solver"]]
+  if (is.null(solver)) solver <- fit_args[["fit_args"]][["solver"]]
+  if (is.null(solver) && "solver" %in% names(formals(fn))) {
+    solver <- tryCatch(eval(formals(fn)[["solver"]], environment(fn)), error = function(e) NULL)
+  }
+  if (is.character(solver) && length(solver) == 1L) return(solver)
+  if (!is.function(solver)) return(NULL)
+  .ensure_solvers()
+  for (nm in ls(.solver_registry)) {
+    if (identical(get(nm, envir = .solver_registry)$fn, solver)) return(nm)
+  }
+  "custom"
 }
 
 
 #' @keywords internal
 .summarize_provenance <- function(prov, data_source) {
   rows <- list()
+  prov <- .normalize_provenance(prov)
   for (a in names(prov$fits)) {
-    for (s in names(prov$fits[[a]])) {
-      recipe <- prov$fits[[a]][[s]]
+    for (id in names(prov$fits[[a]])) {
+      recipe <- prov$fits[[a]][[id]]
       is_summary <- !is.null(recipe$summary_of)
-      if (is_summary) recipe <- .find_recipe(prov, recipe$summary_of, s)
+      if (is_summary) recipe <- .find_recipe(prov, recipe$summary_of, fit_id = id)
       fn <- if (is_summary) recipe$summary_fn else recipe$fn
       rows[[length(rows) + 1L]] <- data.table::data.table(
         data_source = data_source,
         assay = a,
-        fit_source = s,
+        fit_source = recipe$fit_source,
+        fit_id = id,
         fn = .format_fn(fn),
+        solver = if (is_summary || is.null(recipe$solver)) NA_character_ else recipe$solver,
         fit_args = if (is_summary) "" else .format_args(recipe[["fit_args"]]),
         model = if (is.null(fn$info$model)) NA_character_ else fn$info$model
       )

@@ -9,7 +9,8 @@ check_reproducibility(
   assay = NULL,
   fit_source = NULL,
   tolerance = sqrt(.Machine$double.eps),
-  allow_source = FALSE
+  allow_source = FALSE,
+  fit_id = NULL
 )
 }
 \arguments{
@@ -23,10 +24,12 @@ check_reproducibility(
 \code{\link[base]{all.equal}}.}
 
 \item{allow_source}{logical; evaluate fit functions stored as source code.}
+
+\item{fit_id}{string or \code{NULL}; check only this recipe.}
 }
 \value{
 \code{data.table} with one row per checked fit: \code{assay},
-\code{fit_source}, \code{reproducible} (\code{NA} when the fit could not
+\code{fit_source}, \code{fit_id}, \code{reproducible} (\code{NA} when the fit could not
 be re-run), \code{n_rows} and \code{detail}.
 }
 \description{

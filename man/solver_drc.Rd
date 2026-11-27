@@ -17,7 +17,8 @@ solver_drc(conc, x, model, control = list())
 
 \item{control}{named list of \code{drc::drmc()} settings overriding the defaults
 (\code{relTol = 1e-4}, \code{errorm = FALSE}, \code{noMessage = TRUE},
-\code{rmNA = TRUE}).}
+\code{rmNA = TRUE}). With the bounds of the model drc optimises with L-BFGS-B, which
+ignores \code{relTol}.}
 }
 \value{
 list with \code{params} (named \code{h}, \code{x_inf}, \code{x_0},
