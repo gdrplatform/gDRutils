@@ -1,3 +1,7 @@
+## gDRutils 1.13.6 - 2026-11-27
+* fix `get_env_identifiers(simplify = FALSE)` returning an empty list instead of every identifier when no key is given
+* fix `set_env_identifier()` deleting the identifier when given `NULL`; it now stops on `NULL` or an empty vector
+
 ## gDRutils 1.13.5 - 2026-11-24
 * add `merge_compatibility()`, a report of what the inputs of `merge_SE()` have in common and where they differ
 * change `merge_SE()` to rename identifiers to the first input's and keep every input's provenance in `provenance$sources`

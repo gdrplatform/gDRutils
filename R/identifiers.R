@@ -56,6 +56,8 @@ get_env_identifiers <- function(k = NULL, simplify = TRUE) {
     } else {
       .get_id(k)
     }
+  } else if (is.null(k)) {
+    .get_id()
   } else {
     id_vector <- Vectorize(function(i) .get_id(i), SIMPLIFY = FALSE)
     id_vector(k)
