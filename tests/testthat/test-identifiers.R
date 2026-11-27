@@ -181,7 +181,10 @@ test_that("set_env_identifier rejects a value that would delete the identifier",
   on.exit(global_cache$identifiers_list <- old, add = TRUE)
 
   expect_error(set_env_identifier("drug", NULL), "Must be of type 'character'")
-  expect_error(set_env_identifier("drug", NA_character_), "missing values")
   expect_error(set_env_identifier("drug", character(0)), "length >= 1")
   expect_true("drug" %in% names(global_cache$identifiers_list))
+
+  # validate_identifiers() returns NA for an identifier absent from the data
+  set_env_identifier("drug2", NA)
+  expect_identical(global_cache$identifiers_list[["drug2"]], NA)
 })
